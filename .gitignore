@@ -1,0 +1,25 @@
+﻿# ============================================================
+# PRANATA UNY - Local/private source materials
+# ============================================================
+
+/reference-inputs/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE/editor local state
+.idea/
+.vscode/

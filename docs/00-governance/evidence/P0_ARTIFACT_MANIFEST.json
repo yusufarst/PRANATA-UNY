@@ -1,0 +1,302 @@
+{
+  "project": "PRANATA UNY",
+  "date": "2026-10-04",
+  "timezone": "Asia/Jakarta",
+  "role": "PLANNING AGENT",
+  "authorization": "P0 APPROVAL RECORDING + INITIAL CHECKPOINT ONLY / AUTH-002",
+  "phase_status": "DONE",
+  "owner_phase_approval": "APPROVED / APPR-001",
+  "planning_freeze": "NOT REACHED",
+  "tasks": "NONE",
+  "task_baseline": "NOT READY",
+  "git_branch": "main",
+  "manifest_excludes_itself": true,
+  "manifest_path": "docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json",
+  "new_files_including_manifest": 39,
+  "pre_existing_files_modified": [],
+  "files": [
+    {
+      "path": ".gitignore",
+      "disposition": "PRE_EXISTING_UNCHANGED",
+      "bytes": 362,
+      "sha256": "93f182f0548487276fe26c189d5f0c96561a1e30a3e46537b7ac47c8265e8807"
+    },
+    {
+      "path": "AGENTS.md",
+      "disposition": "CREATED",
+      "bytes": 4071,
+      "sha256": "46835372a7f8ef38506d3a64d4ff2cc8bf30de34c225f9bfe8ebfd63e148f55d"
+    },
+    {
+      "path": "CLAUDE.md",
+      "disposition": "CREATED",
+      "bytes": 290,
+      "sha256": "becddce2d73c5c72d21914a6e9cdf3ce3ff9db25fa0974e094586f99fb9c26bb"
+    },
+    {
+      "path": "README.md",
+      "disposition": "CREATED",
+      "bytes": 1531,
+      "sha256": "e01c5d94e56a80f914fe3043190fa2fdc4680134018ae1bb440056bfcdb5e7ff"
+    },
+    {
+      "path": "docs/00-governance/AGENT_OPERATING_MODEL.md",
+      "disposition": "CREATED",
+      "bytes": 4960,
+      "sha256": "09c2c323ff30529fabea7f03a13b50d37d72afaa71d5426b598e60e22e793a87"
+    },
+    {
+      "path": "docs/00-governance/APPROVAL_RECORDS.md",
+      "disposition": "CREATED",
+      "bytes": 7645,
+      "sha256": "11e151f625e20e29dece78a66ba6f8761184c89cda0187df5a13e57ad2d354de"
+    },
+    {
+      "path": "docs/00-governance/CHANGE_CONTROL.md",
+      "disposition": "CREATED",
+      "bytes": 4759,
+      "sha256": "352cc20831e5db042f1594050e53610af7ee150ddee3ec9f59899a207b80e5a7"
+    },
+    {
+      "path": "docs/00-governance/COST_POLICY.md",
+      "disposition": "CREATED",
+      "bytes": 2831,
+      "sha256": "d435b42602efbac806bc47cb181232ca5bcb1009eb45bcd793c38e7a761ddb96"
+    },
+    {
+      "path": "docs/00-governance/DECISION_INDEX.md",
+      "disposition": "CREATED",
+      "bytes": 3239,
+      "sha256": "5b8cd38b4fd731f38f127e8178c055bcf92ab7b13d2d25ee6037272017376d01"
+    },
+    {
+      "path": "docs/00-governance/DECISION_LOG.md",
+      "disposition": "CREATED",
+      "bytes": 10854,
+      "sha256": "18c7adfcb7d77a1d41b638a9f779150492a4af0b0b3e26b062b720cdd324e81a"
+    },
+    {
+      "path": "docs/00-governance/ENGINEERING_PRINCIPLES.md",
+      "disposition": "CREATED",
+      "bytes": 5367,
+      "sha256": "7c53aa1b26811d63ce3bfa732f95cc96b9d03f240fea1f1af6c0b3cacf733476"
+    },
+    {
+      "path": "docs/00-governance/EVIDENCE_POLICY.md",
+      "disposition": "CREATED",
+      "bytes": 4027,
+      "sha256": "d4cc1ab78a8918e35ed98c4c5b2f93d155af53d56d6375ea1675be4b117e55c2"
+    },
+    {
+      "path": "docs/00-governance/GAP_REGISTER.md",
+      "disposition": "CREATED",
+      "bytes": 11596,
+      "sha256": "65e8feb239daa3bde620c54814d59ecfb63869e7e8d3eb037e4369dc461c5fd8"
+    },
+    {
+      "path": "docs/00-governance/GIT_WORKFLOW.md",
+      "disposition": "CREATED",
+      "bytes": 3520,
+      "sha256": "99ace8504115c69500c10108a86c60a9b3852457a341a7c3c816c0671d70dd70"
+    },
+    {
+      "path": "docs/00-governance/PRODUCTION_DATA_SAFETY.md",
+      "disposition": "CREATED",
+      "bytes": 3394,
+      "sha256": "75e72e8043b52c0910d1f0651e41e37edc76faadecf0b6a9967d9455f4f6a966"
+    },
+    {
+      "path": "docs/00-governance/PROJECT_CHARTER.md",
+      "disposition": "CREATED",
+      "bytes": 4079,
+      "sha256": "e0bf7b54abdc4df58ea375fa3e664d0553de1ad978217789bb4d2a50f8918e16"
+    },
+    {
+      "path": "docs/00-governance/SOURCE_INVENTORY.md",
+      "disposition": "CREATED",
+      "bytes": 26230,
+      "sha256": "3a19765a6211f2c313ce1befd256de846f3b4e4e7415950ce45a50cd170d9cf7"
+    },
+    {
+      "path": "docs/00-governance/SOURCE_OF_TRUTH.md",
+      "disposition": "CREATED",
+      "bytes": 6507,
+      "sha256": "e9232b9498de0e6165a1b698d3343415c7b69808f732c825d723e0411b515d5c"
+    },
+    {
+      "path": "docs/00-governance/TOOLCHAIN.md",
+      "disposition": "CREATED",
+      "bytes": 9166,
+      "sha256": "c4e5d6d00190551d135d7eea1c15972eb6cf219435d91f67c0e999b14fa1cc43"
+    },
+    {
+      "path": "docs/00-governance/evidence/ASSET_SOURCE_REVIEW.md",
+      "disposition": "CREATED",
+      "bytes": 20781,
+      "sha256": "4c02803796783fb92310397fcc38fac8a5f1f531a380a29d7924bea64ad45c4d"
+    },
+    {
+      "path": "docs/00-governance/evidence/FRAMEWORK_ADOPTION.md",
+      "disposition": "CREATED",
+      "bytes": 13326,
+      "sha256": "48057aa2f2e7591e39f8421553efafe91e43c541bf70d0dd78b8af7c55877d03"
+    },
+    {
+      "path": "docs/00-governance/evidence/P0_QUALITY_GATE.md",
+      "disposition": "CREATED",
+      "bytes": 19004,
+      "sha256": "d2441ab5a1fe88a0ed6e2eab7cc4d22e4e0c2bdcf70005668d330bbe6765e952"
+    },
+    {
+      "path": "docs/00-governance/evidence/PROCUREMENT_SOURCE_REVIEW.md",
+      "disposition": "CREATED",
+      "bytes": 25378,
+      "sha256": "ebff32a3b87e7e1ca8bdcd37ac1d0f1259806ecfd91756283ea1c2469daa6819"
+    },
+    {
+      "path": "docs/00-governance/evidence/VISUAL_SOURCE_REVIEW.md",
+      "disposition": "CREATED",
+      "bytes": 2340,
+      "sha256": "eac42abf6232635042a8a633637c7f999391a1983f336b594ccbb9040599e5ef"
+    },
+    {
+      "path": "docs/00-governance/sources/AI_First_Complex_WebApp_Task_Framework_v4.3_EN.md",
+      "disposition": "PRE_EXISTING_UNCHANGED",
+      "bytes": 76025,
+      "sha256": "bb578adabcd8ebddcb97c278e6589b935137f26f851b7218dd86c141744b70fe"
+    },
+    {
+      "path": "docs/01-product/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/02-domain/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/03-workflows/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/04-architecture/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/05-security/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/06-api-performance/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/07-ux-design/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/08-testing/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/09-operations/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/10-release/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/11-tasks/.gitkeep",
+      "disposition": "CREATED",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/CONTEXT_INDEX.md",
+      "disposition": "CREATED",
+      "bytes": 4718,
+      "sha256": "07866699769982c2a002422e41fd8cfabc01a3c8d66b014b3a3b24a6dab693a4"
+    },
+    {
+      "path": "docs/PHASE_STATUS.md",
+      "disposition": "CREATED",
+      "bytes": 2464,
+      "sha256": "0621e40139cfd7893d48c3cf0c326878be2e75205f8f9f0072f002e96682dea5"
+    },
+    {
+      "path": "docs/adr/README.md",
+      "disposition": "CREATED",
+      "bytes": 1276,
+      "sha256": "b125d6a3ea5743c5bdbb9b630588387c5917493755f87486b1f255332f3972cf"
+    },
+    {
+      "path": "docs/handoff/CURRENT_HANDOFF.md",
+      "disposition": "CREATED",
+      "bytes": 6542,
+      "sha256": "fc6cbd4e0ec74ef9b27fa61aa846b423c6f05e89fb9abea40a19516a4653b17a"
+    }
+  ],
+  "manifest_state": "POST_APPROVAL_PRE_COMMIT_CONTENT",
+  "execution": "NOT AUTHORIZED",
+  "reviewed_pre_approval_candidate": {
+    "manifest_path": "docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json",
+    "bytes": 8893,
+    "sha256": "25cd7c8da69ad5bccd5b5f0969c9c3346ac4dd085c23f3544977109dd8b00ec4",
+    "approval_id": "APPR-001"
+  },
+  "checkpoint": {
+    "authorized_by": "AUTH-002",
+    "commit_message": "docs: finalize P0 governance",
+    "remote": "https://github.com/yusufarst/PRANATA-UNY.git",
+    "publication_verification": "After this content snapshot; inspect live Git refs and session final report"
+  },
+  "approval_recording_files_changed": [
+    "AGENTS.md",
+    "README.md",
+    "docs/00-governance/AGENT_OPERATING_MODEL.md",
+    "docs/00-governance/APPROVAL_RECORDS.md",
+    "docs/00-governance/CHANGE_CONTROL.md",
+    "docs/00-governance/COST_POLICY.md",
+    "docs/00-governance/DECISION_INDEX.md",
+    "docs/00-governance/DECISION_LOG.md",
+    "docs/00-governance/ENGINEERING_PRINCIPLES.md",
+    "docs/00-governance/EVIDENCE_POLICY.md",
+    "docs/00-governance/GAP_REGISTER.md",
+    "docs/00-governance/GIT_WORKFLOW.md",
+    "docs/00-governance/PRODUCTION_DATA_SAFETY.md",
+    "docs/00-governance/PROJECT_CHARTER.md",
+    "docs/00-governance/SOURCE_INVENTORY.md",
+    "docs/00-governance/SOURCE_OF_TRUTH.md",
+    "docs/00-governance/TOOLCHAIN.md",
+    "docs/00-governance/evidence/ASSET_SOURCE_REVIEW.md",
+    "docs/00-governance/evidence/FRAMEWORK_ADOPTION.md",
+    "docs/00-governance/evidence/P0_QUALITY_GATE.md",
+    "docs/00-governance/evidence/PROCUREMENT_SOURCE_REVIEW.md",
+    "docs/00-governance/evidence/VISUAL_SOURCE_REVIEW.md",
+    "docs/CONTEXT_INDEX.md",
+    "docs/PHASE_STATUS.md",
+    "docs/adr/README.md",
+    "docs/handoff/CURRENT_HANDOFF.md",
+    "docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json"
+  ]
+}
