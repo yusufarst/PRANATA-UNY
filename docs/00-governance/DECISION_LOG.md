@@ -1,6 +1,6 @@
 # Decision log
 
-Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (P1 amendment; approved P0 history retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Provenance and status
 
@@ -128,4 +128,30 @@ The U-001 OD-01–OD-20, GOV-01–GOV-06 and FD-01 sections above retain their o
 
 Recorded 2026-10-04 (Asia/Jakarta), under [AUTH-003](APPROVAL_RECORDS.md#auth-003): the approved P0 checkpoint `f6d889100306a63a5bd391da4310346fc427d4d8` (`docs: finalize P0 governance`) is published; local HEAD, origin/main and the live remote ref matched during inspection. Remote verification PASS; [AUTH-002](APPROVAL_RECORDS.md#auth-002) is HISTORICAL / COMPLETED. The correction synchronizes current operational wording only, preserving the approval identity, historical review evidence and every OD/GOV/FD section and OPEN gap. It changes no business/product/domain or approved-governance substance and creates no new phase approval.
 
-Current active phase authorization: NONE. Project state PARTIALLY_PLANNED; P0 DONE — approved and published; P1–P11 TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. AUTH-003 permits one documentation correction commit/push/verification and expires upon completion. Exact next safe action: Owner separately authorizes P1 — Product Definition, Scope & Acceptance.
+Historical closure terminal state: no active phase authorization; P0 DONE and P1–P11 TODO / NOT AUTHORIZED. AUTH-003 was exhausted by the published closure at `3e7d6a21287410ff977db9db996154043e1c8926`. The current P1 authorization is separately recorded below.
+
+## P1 authorization and decision provenance
+
+Received 2026-10-04 (Asia/Jakarta), [U-002](SOURCE_INVENTORY.md#u-002-p1-owner-request) explicitly authorizes **P1 planning only** under [AUTH-004](APPROVAL_RECORDS.md#auth-004). OD-01–OD-20 are reaffirmed with their original qualifications; their historical sections above are unchanged. The following new/extended directions are **OWNER_APPROVED_DECISION** from U-002; at issuance, generated P1 scope, metrics and acceptance were **VERIFYING proposals**. That preparation authorization created no P1 phase approval, later-phase authority or gap resolution. The separate explicit approval below preserves their qualifications.
+
+## OD-21
+
+Owner designates `reference-inputs/PRANATA_PRIMARY_UI_UX_MOTION_REFERENCE.mp4` as the **PRIMARY VISUAL / INTERACTION / MOTION REFERENCE**. Adopt and translate its overall visual sophistication, clean modern shell, modular cards, refined spacing, restrained hierarchy and smooth professional interaction/motion language into PRANATA's UNY context, four workspaces, Indonesian users, accessibility, responsive/mobile operation, large datasets and productive work. Literal cloning is not required. Actual bounded observations must remain distinct from Owner direction and future P7 decisions. P1 establishes experience/acceptance boundaries only; final IA, routes, tokens, components, responsive contracts, motion timings/easing and design system remain P7.
+
+## OD-22
+
+Product planning targets approximately **200 users and 1,000,000 asset rows**. This extends OD-16; 200 is a user-population planning envelope, **not proven simultaneous concurrency**. P1 defines measurable proposed interaction/search/import/reporting/background-feedback expectations; P4/P6/P8/P9 must validate representative workload and capacity under GAP-016 before implementation/release commitments. No schema/index/query/locking strategy is approved here.
+
+## OD-23
+
+U-002 requires evidence-based product evaluation of asset lifecycle/accounting/reporting, a **separate Persediaan transaction-ledger capability**, KDP, procurement intake/RUP/packages/method-related work/documents/contract/execution/BAST/SPJ/payment tracking, package-linked activities/events and Vendor Portal participation. Existing/new providers should reuse company/PIC/qualification evidence and understand pending actions, deadlines and status. Reaffirm **DATA ONCE, REUSE MANY TIMES** (OD-03/08). Eligible handover data reused in a classified downstream Asset/Inventory/KDP draft is a **product hypothesis**, with a responsible operator completing remaining information; it does not finalize eligibility, accounting classification, event trigger or official approval sequence. Proposed V1 prioritization belongs to [V1_SCOPE](../01-product/V1_SCOPE.md) and requires Owner approval; evidence mention alone does not mandate every historical menu/document variant.
+
+## P1 approval lifecycle record
+
+Recorded 2026-10-05 (Asia/Jakarta): [APPR-002](APPROVAL_RECORDS.md#appr-002) explicitly approves the exact reviewed **P1 — Product Definition, Scope & Acceptance** candidate. Historical pre-approval manifest: `docs/00-governance/evidence/P1_ARTIFACT_MANIFEST.json`, **12,747 bytes**, SHA-256 **`50425ec1d7f364a601a1083eee68af523b70135a63af155df6ed86461c8b8f91`**. Initial independent review READY_FOR_OWNER_APPROVAL (0 blockers / 0 major / 1 minor P1-PROD-01 / 0 observations); bounded correction and independent delta review READY_FOR_OWNER_APPROVAL, P1-PROD-01 RESOLVED, final counts all zero, as reported by the Owner.
+
+[AUTH-005](APPROVAL_RECORDS.md#auth-005) supplies only approval recording, lifecycle/evidence/manifest synchronization, bounded integrity checks, one normal `docs: finalize P1 product definition` commit, normal push/remote verification and stop. AUTH-004 preparation/correction is historical/completed; its VERIFYING/no-commit/push restriction is superseded only for this checkpoint. The authorization expires at verified publication; no continuing Git/phase authority.
+
+OD-01–OD-23 and historical GOV/FD decision sections retain their exact wording and qualifications. All 20 CAP, 27 AC (including corrected AC-09/AC-10), 4 proposed NFR targets, product hypotheses, FUTURE/deferred boundaries and primary UI/UX/motion direction are preserved. No formal domain/procurement/accounting/permission/workflow/schema/design decision is added; GAP-001–GAP-020 remain OPEN and unchanged.
+
+P0 DONE; P1 DONE — APPROVED; P2–P11 TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action after checkpoint: **Owner separately authorizes P2 — Domain Model & Business Rules**.

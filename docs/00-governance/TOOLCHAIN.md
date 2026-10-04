@@ -1,6 +1,6 @@
 # Toolchain
 
-Status: APPROVED | Updated: 2026-10-04 | Owner: Planning Agent | Phase: P0
+Status: APPROVED (P1 inspection amendment; P0 tool policy retained) | Updated: 2026-10-05 | Custodian: Planning Agent
 
 This registry owns tool capability policy and honest availability (AICWDF §5–§7, §6A). A named tool is a preference; verified capability is the requirement. No application dependency was installed or application environment created in P0.
 
@@ -18,7 +18,7 @@ Codex/ChatGPT is the Planning Agent. Claude Code is the future Execution Agent, 
 | Codebase impact analysis | Graphify; equivalent targeted analysis if unavailable | Graphify executable detected, but version probe failed (`uv trampoline failed to canonicalize script path`). No functioning graph capability verified; no application code exists. `rg` and targeted documentation review used for P0 | Repair or safely provide an equivalent when authorized significant code changes require it; verify capability and graph freshness before/after material changes |
 | Browser E2E | Playwright; existing equivalent only if it satisfies the gate | No Playwright command on PATH; project package/browser/runtime availability unverified. Browser automation tools exposed by the client do not prove a project E2E suite exists. No browser journey tested | P8 defines journeys; authorized UI Tasks verify runnable automation, actual interactions, console/network evidence, and deterministic results |
 | UI components | shadcn/ui and Tailwind CSS | Baseline only; no packages installed | Check compatible versions and reuse project components in authorized UI execution |
-| Visual references | DesainPakaiAI or another relevant approved/selected reference | No project design reference/system selected or produced in P0 | P7 records chosen reference, extracted principles, tokens, responsive behavior, and component mapping |
+| Visual references | DesainPakaiAI or another relevant approved/selected reference | P0 had no selected design system. In P1 Owner selects primary SRC-047/VIS-04 (OD-21), directly inspected locally; detailed P7 design still absent | P7 translates chosen reference into approved design/responsive/motion/accessibility contracts |
 | Static/automated checks | Project lint, typecheck, unit/feature/integration/authorization, route, E2E, build, security checks as applicable | No application, manifests, suite, or CI; application checks are N/A | P8 defines the strategy; P11 binds applicable checks/evidence to each Task |
 | Safe source inspection | Local read-only file tools and existing bundled document runtimes | Source inspection tools are reused; a supplied app dependency bundle is available separately from system PATH | Choose only necessary format support, sanitize results, and distinguish extraction/visual review/unsupported content |
 
@@ -30,7 +30,7 @@ Metadata/version probes only; these are machine capabilities, not installed PRAN
 
 | Tool | Observation | Verification limit |
 | --- | --- | --- |
-| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002 initial P0 checkpoint completed; AUTH-003 permits only documentation closure commit/push/verification; no phase or execution authority |
+| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002–004 historical/completed; AUTH-005 permits one approved P1 checkpoint through verified publication only; read-only inspection verified baseline |
 | ripgrep (`rg`) | Command available and used | Targeted search works; no graph claimed |
 | Node.js | `v24.18.0`; version probe passed | No application compatibility/build verification |
 | npm | `11.16.0`; version probe passed | No package installation performed |
@@ -64,3 +64,9 @@ Heavy/specialized MCP servers default to **OFF for a project session**, activate
 | Cloud/infrastructure, Figma, and other specialized MCP | Client tools may be exposed; no project installation made | OFF, on demand | Explicit authorized work requires the capability | That work is complete | Inspect actual configured scope / unknown |
 
 If the client cannot temporarily deactivate exposure, document the limitation and prefer scoped profiles or the underlying native tool when practical. Do not sacrifice necessary verification to reduce context. No MCP configuration was changed in P0. Each future Task must state required servers, servers to leave OFF, native alternatives, and cleanup.
+
+## P1 source-inspection session amendment
+
+Historical AUTH-004 covered P1 planning only; APPR-002 approves that reviewed result and AUTH-005 covers approval/checkpoint only. Neither authorizes application setup or P2. Existing PowerShell/Node/Git, bundled Python/PIL and existing local VLC decoded primary video locally. PATH absence of FFmpeg/Python in P0 did not prove absence of another decoder. VLC software decoding produced representative and temporal frames; scratch/cache cleaned, configuration not saved, no new installation/application dependency. Inventory/experience documents record exact metadata and limits. Documentation audit uses Node file hashes/Git/link/ID checks; application/current-library API verification, graph generation and browser E2E remain N/A because no app/version-sensitive implementation exists.
+
+DesainPakeAI skill was read for reference analysis. Its authenticated guide retrieval failed **INVALID_CREDENTIAL_FILE**; no guide content or successful authentication is claimed. Local Owner-selected reference analysis continued without uploading raw media. No MCP reconfiguration, tool account change, paid exception or recurring production dependency was introduced. P1 quality evidence owns resulting checks, rather than reclassifying P0 probes as current runtime proof.

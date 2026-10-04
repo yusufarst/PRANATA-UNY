@@ -1,10 +1,12 @@
 # Framework adoption evidence
 
-Status: APPROVED | Updated: 2026-10-04 | Owner: Planning Agent | Phase: P0
+Status: APPROVED (P1 coverage amendment; approved P0 mapping retained) | Updated: 2026-10-05 | Custodian: Planning Agent
 
 This record owns the AICWDF coverage map, explicit project exceptions, and structural-reference evidence. It is not an independent product specification or an Owner approval. The operating hierarchy is [SOURCE_OF_TRUTH](../SOURCE_OF_TRUTH.md); current authorization/status is [PHASE_STATUS](../../PHASE_STATUS.md).
 
-## Framework source and actual project state
+## Historical P0 framework source and project-state snapshot
+
+The P0 table/map/adaptation statements below describe their approved historical coverage, including the former absence of P1 authorization. Current state is P0 DONE / P1 DONE under APPR-002; AUTH-005 approval/checkpoint only through verified publication, then exhausted. See the P1 amendment at the end and PHASE_STATUS. Historical deferral wording confers no current authority.
 
 | Item | Evidence |
 | --- | --- |
@@ -90,4 +92,20 @@ The GitHub connector performed read-only inspection of [yusufarst/MULTIPLECORP](
 
 No product requirements, business rules, domain model, finance semantics, permission/workflow model, security decisions, delegated authority, approval IDs, operational providers, or runtime-success claims are copied from that reference. PRANATA direction comes from its own Owner decisions and sanitized source evidence. P0–P11 folders are adapted to this project; later specification/Task discipline is reserved rather than populated.
 
-This adoption evidence must be reviewed with the P0 quality gate. Its map records coverage and deferrals; it does not move P0 to `DONE` or authorize P1.
+The historical adoption evidence belongs to P0 quality/approval history; its map alone did not approve P0 or authorize P1. Subsequent authority is explicitly recorded in APPROVAL_RECORDS.
+
+## P1 framework coverage amendment
+
+[AUTH-004](../APPROVAL_RECORDS.md#auth-004) supplies separate P1 planning authority; [P1_QUALITY_GATE](P1_QUALITY_GATE.md) owns the P1 self-review and [CONTEXT_INDEX](../../CONTEXT_INDEX.md) routes to actual product owners. Master source bytes and all P0 operating exceptions remain unchanged.
+
+| Framework concern | P1 candidate coverage / limit |
+|---|---|
+| §12 problem, goals/non-goals, users/roles, primary journeys | PRODUCT_OVERVIEW source-qualified problems/outcomes/stakeholders/candidate roles/integrated journey map; no official workflow or permission finalization |
+| §12 scope, functional requirements, release boundary | V1_SCOPE CAP-01–20, minimum MUST, SHOULD/OPTIONAL, FUTURE/OUT and later validation/release obligations; reviewed product proposal approved APPR-002 with existing validation obligations |
+| §12 nonfunctional requirements, acceptance, success | ACCEPTANCE_CRITERIA AC-01–27/NFR-P01–04; measured product target proposals and explicit missing workload/baseline obligations |
+| §4A/4B/4C and §12 auth/localization/cost | Local Laravel-native account boundary; id-ID/en/switch; near-zero extra recurring cost and institutional-integration independence, with P5/P7/P9 details deferred |
+| §5.5/§18 experience reference | Owner-selected SRC-047/VIS-04 directly inspected; PRODUCT_EXPERIENCE_DIRECTION separates Owner preference/source observations/P7 decisions; no design system/tokens/screens fixed |
+| §2/3/8/36 evidence/durable authority/handoff | U-002/AUTH-004, preserved OD-01–20 plus qualified OD-21–23, reference coverage, unchanged gaps, current state/index/handoff and separate P1 manifest |
+| §13–22 later-phase gates | P2–P11 untouched reservations; formal rules/workflows/schema/security/performance mechanics/final design/test/infra/release/Tasks not authored; execution/freeze prohibited |
+
+P1 is DONE under explicit [APPR-002](../APPROVAL_RECORDS.md#appr-002); P0 remains DONE under APPR-001. Self-review did not approve P1. [AUTH-005](../APPROVAL_RECORDS.md#auth-005) permits only approval/checkpoint through verified publication, then expires; no later-phase authority. Exact next safe action after checkpoint: Owner separately authorizes P2 — Domain Model & Business Rules.

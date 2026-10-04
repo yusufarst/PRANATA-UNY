@@ -1,13 +1,13 @@
 # Agent operating model
 
-Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (P1 operational amendment; P0 operating rules retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Roles
 
 | Role | Responsibility | Boundary |
 |---|---|---|
 | Owner | Final decisions, phase approval, material scope/architecture/cost approval | Explicit approval is never inferred from silence |
-| Codex / ChatGPT Planning Agent | Authorized P0–P11 documentation, evidence, decisions, gaps and executor clarity | Active phase authorization NONE; AUTH-003 documentation closure only; no implementation |
+| Codex / ChatGPT Planning Agent | Authorized phase documentation, evidence, decisions, gaps and executor clarity | AUTH-005: P1 approval/checkpoint only, exhausted after verified publication; no implementation or P2–P11 work |
 | Claude Code future Execution Agent | Implement and verify an approved READY Task, update progress/evidence | No planning redesign or hidden-chat dependency |
 | Review Agent | Check authority, scope, tests/evidence, drift and false completion | Findings are evidence; cannot grant Owner approval |
 | Release Agent | Verify approved release path, staging/UAT/regression/rollback declarations | No release authorization exists yet |
@@ -17,7 +17,7 @@ Provider replacement does not alter canonical project truth. Tool adapters point
 
 ## Phase authorization
 
-Each phase requires its own explicit authorization. Read actual repository state, current handoff, phase status, decision index and approval records before work. Historical AUTH-001 authorized P0 preparation/review. [APPR-001](APPROVAL_RECORDS.md#appr-001) approves P0, now published; [AUTH-002](APPROVAL_RECORDS.md#auth-002) is HISTORICAL / COMPLETED. Current active phase authorization is NONE; [AUTH-003](APPROVAL_RECORDS.md#auth-003) covers documentation closure only. P1 is not authorized. P0 prepares governance, evidence and gaps; source inspection does not start P1 product or P2/P3 domain/workflow design.
+Each phase requires its own explicit authorization. Read actual repository state, current handoff, phase status, decision index and approval records before work. [APPR-001](APPROVAL_RECORDS.md#appr-001) approves published P0; AUTH-001–003 are historical sessions and AUTH-002/003 checkpoints are completed. [AUTH-004](APPROVAL_RECORDS.md#auth-004) prepared P1 WHAT/WHY/product acceptance and is historical/completed. [APPR-002](APPROVAL_RECORDS.md#appr-002) explicitly approves the exact reviewed P1 candidate; P1 is DONE. [AUTH-005](APPROVAL_RECORDS.md#auth-005) authorizes only approval/checkpoint until verified publication, then expires. P2–P11 are not authorized. Source inspection and a product-level lifecycle do not finalize domain/accounting/workflows/security/design.
 
 Finish an authorized phase's artifacts → self-review against framework and Owner direction → record evidence/known limitations → VERIFYING → Owner approves exact revision or requests corrections. Owner approval moves the phase to DONE; the next phase still needs explicit authorization. A quality PASS, created folder, completed conversation or commit never constitutes phase approval.
 
@@ -33,8 +33,8 @@ Task statuses: TODO, READY, IN_PROGRESS, BLOCKED, VERIFYING, DONE, SUPERSEDED. R
 
 ## Review and escalation
 
-Review decisions against their classification and exact source. Challenge assumptions, confidentiality leakage, contradictory summaries and phase creep. Distinguish a factual documentation correction from an Owner-reserved business or architecture change. Record review findings and their resolution before presenting P0. Business/legal/accounting conflicts block dependent later specifications rather than be silently solved by agents.
+Review decisions against their classification and exact source. Challenge assumptions, confidentiality leakage, contradictory summaries and phase creep. Distinguish a factual documentation correction from an Owner-reserved business or architecture change. Record review findings and their resolution before presenting the authorized phase. Business/legal/accounting conflicts block dependent later specifications rather than be silently solved by agents.
 
 ## Session end obligation
 
-Update handoff with current role/authorization/phase, absent or active Task, actions completed, changed files, evidence, decisions/gaps, tools checked/installed, cost/DB impact, tests applicable or N/A, and exact safe next action. Synchronize phase status and context index. Verify raw inputs ignored, secret handling and actual Git changes. Current P0: approved, published and DONE; AUTH-002 completed; no active phase authorization, schema/data change or READY Task. Stop after the bounded AUTH-003 documentation closure; separate Owner P1 authorization is the next gate.
+Update handoff with role/authorization/phase, absent or active Task, completed actions, changed files, evidence, decisions/gaps, tools, cost/DB impact, applicable checks and exact safe next action. Synchronize phase status/context. Current P0: approved/published/DONE; P1: DONE under APPR-002; AUTH-005 approval/checkpoint only until verified publication, then exhausted. No schema/data change or READY Task. Stop after the approved P1 normal commit/push/verification. Exact next gate: Owner separately authorizes P2 — Domain Model & Business Rules.

@@ -1,8 +1,8 @@
 # Context index
 
-Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (P1 amendment; approved P0 history retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
-Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Project state: **PARTIALLY_PLANNED**. P0 is **DONE — approved and published** under [APPR-001](00-governance/APPROVAL_RECORDS.md#appr-001), checkpoint `f6d889100306a63a5bd391da4310346fc427d4d8`, remote verification PASS. [AUTH-002](00-governance/APPROVAL_RECORDS.md#auth-002) is **HISTORICAL / COMPLETED**; current active phase authorization: **NONE**. [AUTH-003](00-governance/APPROVAL_RECORDS.md#auth-003) records documentation closure only. P1–P11 remain TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action: Owner separately authorizes P1 — Product Definition, Scope & Acceptance.
+Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Project state: **PARTIALLY_PLANNED**. P0 is **DONE — approved and published** under [APPR-001](00-governance/APPROVAL_RECORDS.md#appr-001); closure baseline `3e7d6a21287410ff977db9db996154043e1c8926` verified remotely. AUTH-002–AUTH-004 are **HISTORICAL / COMPLETED**. P1 **DONE — APPROVED** under [APPR-002](00-governance/APPROVAL_RECORDS.md#appr-002). Current authorization **[AUTH-005](00-governance/APPROVAL_RECORDS.md#auth-005), approval/checkpoint only until publication and verification complete**, exhausted afterward. P2–P11 TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action after checkpoint: Owner separately authorizes P2 — Domain Model & Business Rules. No P2 authority.
 
 | Need | Read |
 |---|---|
@@ -15,7 +15,7 @@ Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURR
 | Safe source inventory / classification / handling | [SOURCE_INVENTORY](00-governance/SOURCE_INVENTORY.md) / [EVIDENCE_POLICY](00-governance/EVIDENCE_POLICY.md) |
 | Asset, inventory, finance, HTML observations | [ASSET_SOURCE_REVIEW](00-governance/evidence/ASSET_SOURCE_REVIEW.md) |
 | Procurement and SOP observations | [PROCUREMENT_SOURCE_REVIEW](00-governance/evidence/PROCUREMENT_SOURCE_REVIEW.md) |
-| Local screenshots and uninspected video | [VISUAL_SOURCE_REVIEW](00-governance/evidence/VISUAL_SOURCE_REVIEW.md) |
+| Historical screenshots/login clip and new primary UI/motion video | [VISUAL_SOURCE_REVIEW](00-governance/evidence/VISUAL_SOURCE_REVIEW.md) / [PRODUCT_EXPERIENCE_DIRECTION](01-product/PRODUCT_EXPERIENCE_DIRECTION.md) |
 | Missing authority or conflicting evidence | [GAP_REGISTER](00-governance/GAP_REGISTER.md) |
 | Engineering / localization / interaction constraints | [ENGINEERING_PRINCIPLES](00-governance/ENGINEERING_PRINCIPLES.md) |
 | Changes and architecture decisions | [CHANGE_CONTROL](00-governance/CHANGE_CONTROL.md) / [ADR policy](adr/README.md) |
@@ -23,16 +23,22 @@ Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURR
 | Recurring costs / paid exceptions | [COST_POLICY](00-governance/COST_POLICY.md) |
 | Sensitive sources / production safety | [PRODUCTION_DATA_SAFETY](00-governance/PRODUCTION_DATA_SAFETY.md) |
 | Git / branch and environment policy | [GIT_WORKFLOW](00-governance/GIT_WORKFLOW.md) |
-| P0 review / post-approval integrity evidence and current manifest | [P0_QUALITY_GATE](00-governance/evidence/P0_QUALITY_GATE.md) / [artifact manifest](00-governance/evidence/P0_ARTIFACT_MANIFEST.json) |
+| Historical published P0 review / post-approval evidence and snapshot manifest | [P0_QUALITY_GATE](00-governance/evidence/P0_QUALITY_GATE.md) / [artifact manifest](00-governance/evidence/P0_ARTIFACT_MANIFEST.json) |
+| P1 identity, problems, outcomes, stakeholders and primary product journeys | [PRODUCT_OVERVIEW](01-product/PRODUCT_OVERVIEW.md) |
+| Proposed V1 capability/priorities, FUTURE/out of scope and release boundary | [V1_SCOPE](01-product/V1_SCOPE.md) |
+| Stable product acceptance and proposed nonfunctional targets | [ACCEPTANCE_CRITERIA](01-product/ACCEPTANCE_CRITERIA.md) |
+| Source-to-capability coverage, authority limits and later gap obligations | [REFERENCE_COVERAGE](01-product/REFERENCE_COVERAGE.md) |
+| P1 experience direction and bounded direct video observations | [PRODUCT_EXPERIENCE_DIRECTION](01-product/PRODUCT_EXPERIENCE_DIRECTION.md) |
+| P1 preparation/review/approval integrity and current post-approval manifest | [P1_QUALITY_GATE](00-governance/evidence/P1_QUALITY_GATE.md) / [P1_ARTIFACT_MANIFEST](00-governance/evidence/P1_ARTIFACT_MANIFEST.json) |
 | Current operational state / exact next action | [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) |
 
 ## Reserved future document locations
 
-These folders contain only `.gitkeep` markers to preserve structure. They are **reserved**, not planned specifications or execution authorization. Proposed artifact names describe framework coverage; files do not exist yet.
+P1 now contains the five APPROVED product documents linked above, prepared under historical AUTH-004 and approved under APPR-002 with their existing qualifications and later validation obligations. P2–P11 folders still contain only `.gitkeep` markers: **reserved**, not planned specifications or execution authorization. Future names describe coverage, not existing files.
 
 | Phase | Reserved path | Future coverage when separately authorized |
 |---|---|---|
-| P1 | `docs/01-product/` | Product scope, goals/non-goals, users, functional/nonfunctional requirements, acceptance and release boundary |
+| P1 | `docs/01-product/` | APPROVED product definition/scope/acceptance/reference/experience; APPR-002, P1 DONE |
 | P2 | `docs/02-domain/` | Glossary, entities, invariants, responsibility, lifecycle/retention and business rules |
 | P3 | `docs/03-workflows/` | Critical workflows, route and interaction contracts |
 | P4 | `docs/04-architecture/` | Application/database architecture, modules and justified integration boundaries |

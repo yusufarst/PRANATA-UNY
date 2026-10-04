@@ -1,6 +1,6 @@
 # PRANATA UNY agent entry point
 
-Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (P1 approved; P0 rules retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 The repository is the durable Source of Truth for every Planning, Execution, Review, Release and Maintenance Agent. Preserve approved decisions and existing working-tree changes. Chat is contextual; record material decisions before relying on them.
 
@@ -11,9 +11,11 @@ The repository is the durable Source of Truth for every Planning, Execution, Rev
 3. [SOURCE_OF_TRUTH](docs/00-governance/SOURCE_OF_TRUTH.md): authority, document lifecycle and canonical ownership.
 4. The active Owner authorization in [APPROVAL_RECORDS](docs/00-governance/APPROVAL_RECORDS.md), then only relevant decisions and documents through [CONTEXT_INDEX](docs/CONTEXT_INDEX.md).
 
-Check the actual branch, HEAD and working tree before acting. **P0 is DONE — approved under [APPR-001](docs/00-governance/APPROVAL_RECORDS.md#appr-001) and published. [AUTH-002](docs/00-governance/APPROVAL_RECORDS.md#auth-002) is HISTORICAL / COMPLETED; current active phase authorization: NONE. P1 must not start without separate explicit Owner authorization.** [AUTH-003](docs/00-governance/APPROVAL_RECORDS.md#auth-003) closes documentation state only and expires after its publication/verification. No application implementation or execution Tasks; see handoff for the verified checkpoint and exact next safe action.
+Check the actual branch, HEAD and working tree before acting. **P0 is DONE — approved under [APPR-001](docs/00-governance/APPROVAL_RECORDS.md#appr-001) and published. AUTH-002–AUTH-004 are HISTORICAL / COMPLETED. P1 is DONE — APPROVED under [APPR-002](docs/00-governance/APPROVAL_RECORDS.md#appr-002). Current authorization: [AUTH-005](docs/00-governance/APPROVAL_RECORDS.md#auth-005), approval/checkpoint only until publication and verification complete; it is then exhausted. P2–P11 remain TODO / NOT AUTHORIZED.** No application implementation, execution Tasks or planning freeze. AUTH-005 permits only the approved P1 normal commit/push/verification; no continuing Git authority after completion. Read `docs/01-product/` through the context index for the approved product definition with unchanged later validation obligations; see handoff for the exact safe next action: separate Owner authorization for P2.
 
 ## Operating boundaries
+
+Current planning gates: Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**.
 
 - Work is phase and Task gated. Codex/ChatGPT owns planning; future Claude Code executes only READY Tasks after approved P0–P11, planning freeze and an approved Task baseline. See [AGENT_OPERATING_MODEL](docs/00-governance/AGENT_OPERATING_MODEL.md).
 - Future executors read this file, the P11 execution context, handoff, Task plan, active Task and its exact references. Those P11 artifacts do not exist yet; their absence forbids execution. Use minimal targeted context.

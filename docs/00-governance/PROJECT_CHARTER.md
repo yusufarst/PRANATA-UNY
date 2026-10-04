@@ -1,6 +1,6 @@
 # Project charter
 
-Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (P1 operational amendment; P0 charter retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Identity and purpose
 
@@ -22,12 +22,12 @@ Master operating framework: AICWDF v4.3, retained unchanged under [sources](sour
 
 ## Current work boundary
 
-Completed preparation under AUTH-001: P0 governance foundation, decision preservation, safe local-source inspection/classification, unresolved gaps, framework mapping, quality gate and handoff. [APPR-001](APPROVAL_RECORDS.md#appr-001) approves the exact reviewed candidate; P0 is published and [AUTH-002](APPROVAL_RECORDS.md#auth-002) is HISTORICAL / COMPLETED. Current active phase authorization is NONE; [AUTH-003](APPROVAL_RECORDS.md#auth-003) covers post-publication documentation closure only.
+Completed preparation under AUTH-001: P0 governance, decisions, safe evidence/gaps/framework/quality/handoff. [APPR-001](APPROVAL_RECORDS.md#appr-001) approves its exact reviewed candidate; published P0 and AUTH-002/003 checkpoints are complete. Historical [AUTH-004](APPROVAL_RECORDS.md#auth-004) prepared P1 product definition/scope/acceptance/reference/experience; [APPR-002](APPROVAL_RECORDS.md#appr-002) approves the exact reviewed candidate, P1 DONE. [AUTH-005](APPROVAL_RECORDS.md#auth-005) permits approval/checkpoint only until verified publication, then expires. [PRODUCT_OVERVIEW](../01-product/PRODUCT_OVERVIEW.md) now owns product identity/problem/outcomes/stakeholders; this charter retains P0 foundation rather than duplicating new product truth.
 
-Not authorized: application code, Laravel scaffolding, dependencies, schemas/migrations, authentication/UI implementation, P1–P11 specifications, execution Tasks, planning freeze or remote configuration changes. Commit/push are limited to the single AUTH-003 documentation correction after passing integrity checks; AUTH-002 grants no unfinished checkpoint action. Reserved folders contain only `.gitkeep` markers, not future specifications.
+Not authorized: P2–P11 specifications, application code/scaffold/packages, schema/migrations/auth/UI implementation, execution Tasks, planning freeze, production changes or remote actions beyond the one approved normal P1 checkpoint. P1 documents are APPROVED with existing hypotheses/proposals/validation obligations preserved; later folders remain `.gitkeep` reservations. No exhausted checkpoint authorization grants a new Git action.
 
 Preferred stack is a P0 baseline only: Laravel, Inertia, React, TypeScript, shadcn/ui, Tailwind CSS, PostgreSQL, Nginx, Modular Monolith. Redis/Valkey needs justification. Exact versions, module/schema boundaries, deployment provider and environment provisioning remain for authorized later planning.
 
 ## P0 exit
 
-A zero-context agent can identify authority, actual project/phase state, absent Task baseline, safe change boundary, forbidden actions and next reading. P0 self-review evidence is recorded in [P0_QUALITY_GATE](evidence/P0_QUALITY_GATE.md). P0 is DONE through explicit APPR-001 approval and its published checkpoint is verified. Exact next safe action: Owner separately authorizes P1 — Product Definition, Scope & Acceptance; no P1 work is authorized now.
+A zero-context agent can identify authority, project/phase state, absent Task baseline, safe boundary and next reading. P0 self-review/history remains in [P0_QUALITY_GATE](evidence/P0_QUALITY_GATE.md); P0 is DONE under APPR-001. P1 review evidence is separate in [P1_QUALITY_GATE](evidence/P1_QUALITY_GATE.md). Exact next safe action after checkpoint: Owner separately authorizes P2 — Domain Model & Business Rules.

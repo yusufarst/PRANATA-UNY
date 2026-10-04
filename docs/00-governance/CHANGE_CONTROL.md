@@ -1,12 +1,12 @@
 # Change control
 
-Status: APPROVED | Updated: 2026-10-04 | Owner: Planning Agent | Phase: P0
+Status: APPROVED (P1 state amendment; P0 change-control rules retained) | Updated: 2026-10-05 | Custodian: Planning Agent
 
 This document owns how changes are classified, reviewed, and recorded. [SOURCE_OF_TRUTH](SOURCE_OF_TRUTH.md) owns authority precedence and document lifecycle; [APPROVAL_RECORDS](APPROVAL_RECORDS.md) owns approval evidence. The Owner retains final decision authority.
 
 ## Current authorization and decision boundaries
 
-[AUTH-002](APPROVAL_RECORDS.md#auth-002) is HISTORICAL / COMPLETED: [APPR-001](APPROVAL_RECORDS.md#appr-001) recording and initial checkpoint publication/verification have finished. Current active phase authorization is NONE. [AUTH-003](APPROVAL_RECORDS.md#auth-003) authorizes only bounded post-publication documentation synchronization and its normal correction commit/push/verification. Prior AUTH-001 preparation/correction permissions are historical; no later-phase planning is authorized. Preserve OD-01–OD-20 in [DECISION_LOG](DECISION_LOG.md); an inference, legacy behavior, source template, or framework default cannot silently replace explicit Owner direction.
+[APPR-001](APPROVAL_RECORDS.md#appr-001) approves published P0; AUTH-002/003 checkpoints are HISTORICAL / COMPLETED. Historical [AUTH-004](APPROVAL_RECORDS.md#auth-004) prepared P1 with no commit/push. [APPR-002](APPROVAL_RECORDS.md#appr-002) approves the exact reviewed P1 product/governance amendments; P1 is DONE. [AUTH-005](APPROVAL_RECORDS.md#auth-005) authorizes only administrative approval/checkpoint through verified publication, then expires; no P2–P11 authority exists. Preserve OD-01–OD-20 wording and new qualified OD-21–OD-23 in [DECISION_LOG](DECISION_LOG.md); inference/legacy/templates/framework defaults cannot replace explicit direction.
 
 Material scope, business/workflow, accounting meaning, user responsibility, authorization/visibility, architecture/stack, design direction, infrastructure, recurring-cost, or production-risk changes require explicit Owner review and decision. A technical-sounding change that alters business meaning remains material. Record uncertainty instead of treating an unvalidated proposal as truth.
 
@@ -16,7 +16,7 @@ No approval for P0 drafting, P0 completion, or a document change implies authori
 
 1. Identify the canonical owning document, current decision, supporting evidence, source classification, and any conflict. Consult [DECISION_INDEX](DECISION_INDEX.md), existing ADRs, and [GAP_REGISTER](GAP_REGISTER.md).
 2. Determine whether the change fits current authorized documentation work or needs a material Owner decision. Analyze relevant scope, business, privacy/security, data/migration, cost, dependency, regression, and recovery effects; use `N/A` with a reason where appropriate.
-3. Apply routine P0 documentation improvements and record their evidence. For a material proposal, prepare a concrete recommendation, useful alternatives, tradeoffs, affected documents/phases, and consequences. Keep dependent work pending while continuing independent authorized work.
+3. Apply routine documentation improvements within the authorized phase and record their evidence. For a material proposal, prepare a concrete recommendation, useful alternatives, tradeoffs, affected documents/phases, and consequences. Keep dependent work pending while continuing independent authorized work.
 4. After a decision, record exact authority, date, outcome, conditions, and affected revision. Update the owning documents, decision/index/gap links, applicable ADR, and [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md) together. Remove persistent contradictions without erasing historical rationale.
 
 The phase authorization never expands automatically because another useful activity is adjacent. An unsafe or contradictory approved design should produce a concern and pause affected execution until resolved; do not implement a known unsafe fallback. Unrelated authorized work may continue.
@@ -33,4 +33,4 @@ Planning freeze is not reached. After an approved P0–P11 planning baseline and
 
 ## Git boundary
 
-AUTH-002 permitted the completed initial commit `docs: finalize P0 governance`, normal push and remote verification. AUTH-003 permits only the new correction commit `docs: close P0 publication handoff`, normal push to unchanged `origin/main` and verification after passing bounded integrity checks. Do not amend the published P0 checkpoint. Remote reconfiguration, force push and adding `reference-inputs/` or raw sources remain forbidden. [GIT_WORKFLOW](GIT_WORKFLOW.md) owns checkpoint conditions and future conventions; P0 approval grants no later Git or execution authority.
+AUTH-002 initial publication and AUTH-003 `docs: close P0 publication handoff` are completed historical actions. AUTH-004 no-commit/push preparation restrictions are historical and superseded only by AUTH-005 for one approved P1 normal checkpoint. Require post-approval integrity and staged-byte checks before commit/push, then verify remote publication and stop; no continuing authority afterward. Do not amend published P0, reconfigure remote, force push or add ignored raw sources. [GIT_WORKFLOW](GIT_WORKFLOW.md) owns Git conditions; P0 approval grants no later Git/execution authority.

@@ -1,16 +1,17 @@
 # Safe source inventory
 
-Status: APPROVED | Inspected: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (P1 provenance amendment; P0 records retained) | Inspected: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent | Approved: 2026-10-05 (APPR-002)
 
 ## Authority and coverage
 
-This inventory records **46 local original files**: 24 PDF, 6 DOCX, 10 XLSX, 2 CSV, 2 PNG, 1 HTML and 1 MP4. All remain under ignored `reference-inputs/`; no raw source is copied into tracked paths. Safe filenames are locators, not record content. Each row distinguishes what was inspected from what remains unvalidated. Classifications follow [EVIDENCE_POLICY](EVIDENCE_POLICY.md).
+This inventory records **47 local original files**: 24 PDF, 6 DOCX, 10 XLSX, 2 CSV, 2 PNG, 1 HTML and 2 MP4. The original P0 set SRC-001–SRC-046 is retained; P1 adds the primary video SRC-047/VIS-04 under AUTH-004. All remain ignored under `reference-inputs/`; no raw source is copied into tracked paths. Filenames are locators, not record content. Classifications follow [EVIDENCE_POLICY](EVIDENCE_POLICY.md).
 
-45 files received content inspection at the limits recorded below (often headers, extracted text or static code only); the MP4 received metadata inspection only and its content remains NOT INSPECTED. Nothing here claims a full financial/formula audit, current official UNY policy, approved workflow, migration readiness or runtime correctness. Detailed page/table/sheet/function locators are in the linked evidence reviews. Flow Test was inspected by both source reviewers and the supplied screenshot was visually checked; it is counted once as an original workbook.
+In P0, 45 historical files received bounded content inspection and SRC-033/VIS-03 received metadata only; that old video's content remains NOT INSPECTED. In P1, SRC-047/VIS-04 received direct decoded-frame and temporal inspection: now **46 files have bounded content inspection and one old clip remains metadata only**. No full formula/financial audit, current official UNY policy, workflow approval, migration/runtime correctness or new audit of all historical records is claimed. Locators/limits are in linked evidence; Flow Test remains counted once.
 
 | Non-local label | Category / provenance | What it informs | Classification / caveat | Validation |
 |---|---|---|---|---|
 | U-001 | Owner-supplied P0 request, received 2026-10-04; verified original attachment locator and SHA-256 in [U-001 provenance](#u-001-original-owner-request) | OD-01–OD-20, framework adoption and P0/session mandates | OWNER_APPROVED_DECISION; sanitized durable direction in DECISION_LOG, not approval of generated artifacts | Only explicit superseding Owner decision changes direction; P0 approved separately by [APPR-001](APPROVAL_RECORDS.md#appr-001), not by U-001 |
+| U-002 | Explicit Owner P1 request; verified original bytes/digest in [U-002 provenance](#u-002-p1-owner-request) | AUTH-004, reaffirmed prior direction, OD-21–OD-23, P1 product evaluation/experience mandate | OWNER_APPROVED_DECISION for explicit qualified direction; not approval of generated P1 scope/metrics/artifacts | Historical preparation required independent review/Owner approval; now recorded separately in APPR-002 without promoting source authority |
 | FW-001 | Unchanged repository AICWDF v4.3 English source | Master operating framework | AUTHORITATIVE_SOURCE for operating rules through Owner adoption; not UNY accounting/procurement authority | Preserved hash and full section map in FRAMEWORK_ADOPTION |
 | STRUCT-001 | GitHub yusufarst/MULTIPLECORP, pinned main a526daf47444d12b4ae5c51e1ae14c9dfe3f4978 | Entry point, adapter, governance/evidence/phase/context/handoff structures | INFERENCE for reusable structural patterns; never PRANATA domain/security/financial truth | Exact inspected paths and excluded content in FRAMEWORK_ADOPTION |
 
@@ -27,7 +28,15 @@ Local historical sources below are provisional evidence; **none is certified by 
 - Handling: original left untouched at its existing external locator; no copy, move, raw excerpt or sensitive record was added to repository artifacts. [DECISION_LOG](DECISION_LOG.md) preserves the sanitized direction and [APPROVAL_RECORDS](APPROVAL_RECORDS.md#auth-001) preserves the authorization.
 - Future verification: resolve the locator on the Owner's machine and compare the file-byte SHA-256 before treating a file as this exact source. The attachment ID and digest remain durable identifiers if its local path changes. Availability on another machine is not guaranteed; if absent or the digest differs, record that limitation and obtain the original from the Owner. Do not hash a reconstructed request or a summary as U-001.
 
-## Local originals
+## U-002 P1 Owner request
+
+- Received/inspected: 2026-10-04 (Asia/Jakarta); explicit **P1 planning only** authorization, [AUTH-004](APPROVAL_RECORDS.md#auth-004).
+- External original: Codex attachment `86e403a0-35e9-423a-aaff-de01a837f31f`, `Pasted text.txt`; safe locator `%USERPROFILE%\.codex\attachments\86e403a0-35e9-423a-aaff-de01a837f31f\Pasted text.txt`.
+- Original byte size: **28,874 bytes**; SHA-256 **`a819a1f1f92eb04063b116eeca72481053acccfe4a9ae2dfa5d8a1df2451852c`**.
+- Full request read in memory; identity, baseline and scope verified. Classification **OWNER_APPROVED_DECISION** for explicit direction, **not approval of generated P1 artifacts**. Durable authorization is in APPROVAL_RECORDS; new/extended direction in DECISION_LOG; product proposals in `docs/01-product/`.
+- Original untouched, external and unpublished. Another machine may not have the attachment; compare original bytes/digest if available rather than hashing a reconstruction. Prior U-001 and 46 historical source records below remain distinct.
+
+## Historical local originals — P0 inventory
 
 | Safe label / review locator | Safe original filename | Source category | What it may inform | Classification | Inspection / conflicts / caveats / validation required | Evidence |
 |---|---|---|---|---|---|---|
@@ -77,6 +86,19 @@ Local historical sources below are provisional evidence; **none is certified by 
 | SRC-044 / ASSET-11 | `Susunan Menu Aplikasi SIMASET.pdf` | Legacy menu reference | Correction/development/reclassification/KDP/report categories | OBSERVED_CURRENT_PROCESS | Bounded content inspection; Complete extracted text pp1-2; no visual/runtime review; menu is not accounting policy | [Asset review](evidence/ASSET_SOURCE_REVIEW.md) |
 | SRC-045 / Procurement review | `Undangan Pengadaan Langsung.pdf` | Historical invitation/workshop artifact | Observed tender/direct-procurement coordination and evidence needs | OBSERVED_CURRENT_PROCESS | Extracted text/structure inspection; Extracted text only; event evidence is not official approval path; names/provider/financial values omitted | [Procurement review](evidence/PROCUREMENT_SOURCE_REVIEW.md) |
 | SRC-046 / ASSET-10 | `User SIMASET.xlsx` | Sensitive historical admin/reference workbook | Credential anti-pattern and capitalization-policy provenance | OBSERVED_CURRENT_PROCESS | Bounded content inspection; Credential values withheld; plaintext pattern confirmed; reference headers/categories only; authority/effective date/comparators require validation | [Asset review](evidence/ASSET_SOURCE_REVIEW.md) |
+
+## P1 primary visual / interaction / motion original
+
+| Safe label / filename | Category / authority | Inspection and limits | Product use / evidence |
+|---|---|---|---|
+| SRC-047 / VIS-04 / `PRANATA_PRIMARY_UI_UX_MOTION_REFERENCE.mp4` | Owner-designated primary design reference (U-002/OD-21); visual source observation, not UNY procedure/accounting or final P7 design authority | Local metadata/hash, decoded representative frames and targeted temporal sequences; desktop demo only, not live UI/mobile/accessibility/performance validation | CAP-20 and presentation context for CAP-02/03/18; [PRODUCT_EXPERIENCE_DIRECTION](../01-product/PRODUCT_EXPERIENCE_DIRECTION.md) owns bounded observations and P7 acceptance/handoff |
+
+- Locator: `reference-inputs/PRANATA_PRIMARY_UI_UX_MOTION_REFERENCE.mp4`, local/ignored, untouched and unpublished.
+- Original bytes **18,799,610**; SHA-256 **`9a67e4c5dd4125425a8995162ba08ccb42473633d25545fbd42a1c124b72005c`**, matched before/after decoding.
+- Read-only MP4 atom/sample metadata: movie duration **47.484 s**, H.264/avc1 video **2400×1800**, **60 fps**, **2,849 samples**, video-track duration **47.483333 s**; no audio track found.
+- Existing bundled Python/PIL and VLC software decoder used locally: **48** frames over approximately 0–47 s at ~1 Hz; **132** temporal frames over approximately 12–16, 21–24, 39–41 and 44–47 s at ~10 Hz. Contact sheets viewed. Sample timestamps approximate, not calibrated animation duration/easing measurements.
+- Observed shell/sidebar/search, modular cards/dashboard/action list, command-search modal, record detail, inbox/context-action pane, calendar/event panel and content reveal/feedback. Presentation camera pan/zoom is distinguished from UI transitions. No record names/values/transcript/frames retained in tracked artifacts.
+- No external raw upload or tool installation; generated scratch/cache safely cleaned after inspection. Old SRC-033/VIS-03 remains separate and uninspected. Future P7 must revalidate necessary details and adapt to UNY, accessibility, responsive/mobile/large lists; P1 does not freeze tokens/routes/screens.
 
 ## Findings requiring later validation
 

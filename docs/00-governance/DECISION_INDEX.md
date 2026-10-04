@@ -1,8 +1,8 @@
 # Decision index
 
-Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (P1 amendment; approved P0 history retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
-This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and provenance. All OD records derive from U-001 on 2026-10-04 and remain active OWNER_APPROVED_DECISION with their candidate/preferred/unresolved qualifications. No phase approval is implied.
+This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and provenance. OD-01–OD-20 derive from U-001; OD-21–OD-23 derive from U-002 on 2026-10-04. They remain OWNER_APPROVED_DECISION with candidate/preferred/unresolved qualifications. Direction alone implies no generated-artifact approval; separate explicit P1 approval is APPR-002.
 
 | ID | Subject | Canonical record |
 |---|---|---|
@@ -26,6 +26,9 @@ This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and pro
 | OD-18 | Near-zero additional recurring cost | [OD-18](DECISION_LOG.md#od-18) |
 | OD-19 | Action ownership/status/next-step UX | [OD-19](DECISION_LOG.md#od-19) |
 | OD-20 | Workspace selection does not grant permission | [OD-20](DECISION_LOG.md#od-20) |
+| OD-21 | Primary visual/interaction/motion reference and P7 boundary | [OD-21](DECISION_LOG.md#od-21) |
+| OD-22 | Approximately 200 users / one million asset rows | [OD-22](DECISION_LOG.md#od-22) |
+| OD-23 | Integrated product evaluation, provider reuse, data-once/downstream hypothesis | [OD-23](DECISION_LOG.md#od-23) |
 | GOV-01 | Framework / authority / agents | DECISION_LOG.md, GOV-01 section |
 | GOV-02 | P0-only scope and final state | DECISION_LOG.md, GOV-02 section |
 | GOV-03 | Source/Git/privacy restrictions | DECISION_LOG.md, GOV-03 section |
@@ -34,4 +37,4 @@ This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and pro
 | GOV-06 | Quality gate / handoff / stop | DECISION_LOG.md, GOV-06 section |
 | FD-01 | Inherited framework operating defaults | DECISION_LOG.md, FD-01 section |
 
-Original preparation: [AUTH-001](APPROVAL_RECORDS.md#auth-001). Historical completed approval/checkpoint authorization: [AUTH-002](APPROVAL_RECORDS.md#auth-002). Current active phase authorization: **NONE**; [AUTH-003](APPROVAL_RECORDS.md#auth-003) is documentation closure only. Phase approval: **P0 APPROVED [APPR-001](APPROVAL_RECORDS.md#appr-001)** and published; P1–P11 not approved or authorized. Administrative lifecycle history: [DECISION_LOG](DECISION_LOG.md#p0-approval-lifecycle-record). Accepted ADRs: **NONE** ([ADR policy](../adr/README.md)). Gap resolutions: **NONE** ([GAP_REGISTER](GAP_REGISTER.md)). Future decision IDs must remain stable; record supersedes/superseded-by links instead of overwriting history.
+Original preparation: [AUTH-001](APPROVAL_RECORDS.md#auth-001). AUTH-002 and AUTH-003 are completed historical checkpoints. AUTH-004 preparation is historical/completed. Current authorization: **[AUTH-005](APPROVAL_RECORDS.md#auth-005), P1 approval/checkpoint only until verified publication**, exhausted afterward. Phase approvals: **P0 APPROVED [APPR-001](APPROVAL_RECORDS.md#appr-001)** and published; **P1 APPROVED [APPR-002](APPROVAL_RECORDS.md#appr-002)** / DONE; P2–P11 not authorized. Accepted ADRs: **NONE** ([ADR policy](../adr/README.md)). Gap resolutions: **NONE** ([GAP_REGISTER](GAP_REGISTER.md)). Future decision IDs remain stable; preserve supersession history. [P1 lifecycle record](DECISION_LOG.md#p1-approval-lifecycle-record) preserves administrative supersession without changing OD-01–OD-23. Exact next action after checkpoint: Owner separately authorizes P2 — Domain Model & Business Rules.

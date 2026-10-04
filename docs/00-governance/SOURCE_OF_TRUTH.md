@@ -1,6 +1,6 @@
 # Repository Source of Truth
 
-Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (P1 ownership/state amendment; P0 authority rules retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Authority hierarchy
 
@@ -13,7 +13,7 @@ Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agen
 7. [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md), which summarizes and routes but cannot supersede authority.
 8. Chat/session context, transient agent memory and generated output.
 
-An unapproved draft cannot supersede an approved decision. New explicit Owner instructions are recorded before becoming durable truth; they apply immediately within their stated scope. Owner adoption of the framework is recorded; [APPR-001](APPROVAL_RECORDS.md#appr-001) approves the exact reviewed P0 candidate. [AUTH-002](APPROVAL_RECORDS.md#auth-002) is the completed historical approval/checkpoint authorization; [AUTH-003](APPROVAL_RECORDS.md#auth-003) permits only post-publication operational-state synchronization. Current active phase authorization is NONE. Formal external policy and law are evidence of binding constraints when verified; a conflict with Owner direction requires domain/Owner validation, not silent circumvention.
+An unapproved draft cannot supersede an approved decision. New explicit Owner instructions are recorded before becoming durable truth; they apply immediately within their stated scope. Owner adoption of the framework is recorded; [APPR-001](APPROVAL_RECORDS.md#appr-001) approves the exact reviewed P0 candidate. AUTH-002/003 are completed historical checkpoints. Historical AUTH-004 prepared P1; [APPR-002](APPROVAL_RECORDS.md#appr-002) explicitly approves the exact reviewed P1 candidate, P1 DONE. Current [AUTH-005](APPROVAL_RECORDS.md#auth-005) is approval/checkpoint only through verified publication, then exhausted; P2–P11 remain not authorized. Formal external policy and law are evidence of binding constraints when verified; a conflict with Owner direction requires domain/Owner validation, not silent circumvention.
 
 ## Conflict protocol
 
@@ -40,7 +40,13 @@ Identify exact contradictory passages and provenance. Check scope, dates, author
 | Branch/environment and Git safety | GIT_WORKFLOW.md |
 | Current operational continuation | ../handoff/CURRENT_HANDOFF.md |
 | Framework mapping / P0 verification | evidence/FRAMEWORK_ADOPTION.md / evidence/P0_QUALITY_GATE.md |
-| Future phase specifications | Reserved numbered phase folders; no specifications exist |
+| Product identity / problems / outcomes / stakeholders / journeys | ../01-product/PRODUCT_OVERVIEW.md (P1 APPROVED / APPR-002) |
+| V1 capabilities / priorities / future boundary | ../01-product/V1_SCOPE.md (P1 APPROVED / APPR-002) |
+| Product acceptance / proposed performance and usability targets | ../01-product/ACCEPTANCE_CRITERIA.md (P1 APPROVED / APPR-002) |
+| Product source-to-scope evidence coverage | ../01-product/REFERENCE_COVERAGE.md (P1 APPROVED / APPR-002); inventory owns original provenance |
+| Product experience direction / primary video observations | ../01-product/PRODUCT_EXPERIENCE_DIRECTION.md (P1 APPROVED / APPR-002); P7 detailed design remains absent |
+| P1 review evidence / candidate identity | evidence/P1_QUALITY_GATE.md / evidence/P1_ARTIFACT_MANIFEST.json |
+| Later phase specifications | Reserved P2–P11 folders; no specifications/Tasks exist |
 
 Indexes, README and handoff link to owning records. Correct a source record first, then its summaries. Do not create multiple authoritative copies of the same rule.
 
@@ -55,7 +61,7 @@ These are metadata-format exceptions only. Canonical ownership and the authority
 
 Draft states are DRAFT → VERIFYING → APPROVED; SUPERSEDED/ARCHIVED preserve history. Phase statuses use TODO → IN_PROGRESS → VERIFYING → DONE, with BLOCKED when a real unresolved prerequisite prevents that phase's authorized work. Task statuses follow AICWDF when P11 exists. Document APPROVED and phase DONE require explicit Owner approval; VERIFYING never means approved.
 
-The unchanged master source has its upstream baseline status; this does not approve PRANATA phase artifacts. OD records carry OWNER_APPROVED_DECISION classification from the supplied Owner direction, independently of their documenting container lifecycle. Approval records bind exact revision content using a file manifest/hashes or commit. The initial review had no commit; APPR-001 permanently binds the reviewed pre-approval manifest identity, while the current post-approval manifest and AUTH-002 checkpoint identify subsequent administrative repository content. Editing approved material creates an amendment with impact and approval linkage, not a silent rewrite.
+The unchanged master source has its upstream baseline status; this does not approve PRANATA phase artifacts. OD records carry OWNER_APPROVED_DECISION classification from the supplied Owner direction, independently of their documenting container lifecycle. Approval records bind exact revision content using a file manifest/hashes or commit. APPR-001 permanently binds its reviewed pre-approval manifest; the unchanged P0 post-approval manifest is a **historical snapshot of the published P0 closure**, not a digest claim for P1-amended files. APPR-002 permanently binds the reviewed P1 pre-approval manifest identity. The separate current P1 manifest identifies post-approval administrative checkpoint content and excludes itself; its digest is reported separately and does not replace either historical approval identity. Editing approved material creates a VERIFYING amendment with impact and authorization linkage; prior approved history at the baseline remains preserved. AUTH-004 granted preparation only; APPR-002 supplies explicit approval of the exact reviewed P1 amendments, preserving substantive P0 rules. AUTH-005 supplies the bounded administrative publication action only.
 
 ## Durable session discipline
 
