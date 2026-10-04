@@ -22,12 +22,12 @@ Master operating framework: AICWDF v4.3, retained unchanged under [sources](sour
 
 ## Current work boundary
 
-Completed preparation under AUTH-001: P0 governance foundation, decision preservation, safe local-source inspection/classification, unresolved gaps, framework mapping, quality gate and handoff. [APPR-001](APPROVAL_RECORDS.md#appr-001) approves the exact reviewed candidate; current [AUTH-002](APPROVAL_RECORDS.md#auth-002) permits approval/lifecycle recording and the initial checkpoint only.
+Completed preparation under AUTH-001: P0 governance foundation, decision preservation, safe local-source inspection/classification, unresolved gaps, framework mapping, quality gate and handoff. [APPR-001](APPROVAL_RECORDS.md#appr-001) approves the exact reviewed candidate; P0 is published and [AUTH-002](APPROVAL_RECORDS.md#auth-002) is HISTORICAL / COMPLETED. Current active phase authorization is NONE; [AUTH-003](APPROVAL_RECORDS.md#auth-003) covers post-publication documentation closure only.
 
-Not authorized: application code, Laravel scaffolding, dependencies, schemas/migrations, authentication/UI implementation, P1–P11 specifications, execution Tasks, planning freeze or remote configuration changes. Commit/push are limited to the single AUTH-002 P0 checkpoint after passing integrity checks. Reserved folders contain only `.gitkeep` markers, not future specifications.
+Not authorized: application code, Laravel scaffolding, dependencies, schemas/migrations, authentication/UI implementation, P1–P11 specifications, execution Tasks, planning freeze or remote configuration changes. Commit/push are limited to the single AUTH-003 documentation correction after passing integrity checks; AUTH-002 grants no unfinished checkpoint action. Reserved folders contain only `.gitkeep` markers, not future specifications.
 
 Preferred stack is a P0 baseline only: Laravel, Inertia, React, TypeScript, shadcn/ui, Tailwind CSS, PostgreSQL, Nginx, Modular Monolith. Redis/Valkey needs justification. Exact versions, module/schema boundaries, deployment provider and environment provisioning remain for authorized later planning.
 
 ## P0 exit
 
-A zero-context agent can identify authority, actual project/phase state, absent Task baseline, safe change boundary, forbidden actions and next reading. P0 self-review evidence is recorded in [P0_QUALITY_GATE](evidence/P0_QUALITY_GATE.md). P0 is DONE through explicit APPR-001 approval. After AUTH-002 checkpoint verification, the exact next safe action is separate Owner authorization for P1 — Product Definition, Scope & Acceptance; no P1 work is authorized now.
+A zero-context agent can identify authority, actual project/phase state, absent Task baseline, safe change boundary, forbidden actions and next reading. P0 self-review evidence is recorded in [P0_QUALITY_GATE](evidence/P0_QUALITY_GATE.md). P0 is DONE through explicit APPR-001 approval and its published checkpoint is verified. Exact next safe action: Owner separately authorizes P1 — Product Definition, Scope & Acceptance; no P1 work is authorized now.

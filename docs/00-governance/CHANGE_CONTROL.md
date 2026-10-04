@@ -6,7 +6,7 @@ This document owns how changes are classified, reviewed, and recorded. [SOURCE_O
 
 ## Current authorization and decision boundaries
 
-Current [AUTH-002](APPROVAL_RECORDS.md#auth-002) authorizes only recording [APPR-001](APPROVAL_RECORDS.md#appr-001), administrative lifecycle consistency, bounded integrity checks and the initial P0 checkpoint. Prior AUTH-001 preparation/correction permissions are historical; no later-phase planning is authorized. Preserve OD-01–OD-20 in [DECISION_LOG](DECISION_LOG.md); an inference, legacy behavior, source template, or framework default cannot silently replace explicit Owner direction.
+[AUTH-002](APPROVAL_RECORDS.md#auth-002) is HISTORICAL / COMPLETED: [APPR-001](APPROVAL_RECORDS.md#appr-001) recording and initial checkpoint publication/verification have finished. Current active phase authorization is NONE. [AUTH-003](APPROVAL_RECORDS.md#auth-003) authorizes only bounded post-publication documentation synchronization and its normal correction commit/push/verification. Prior AUTH-001 preparation/correction permissions are historical; no later-phase planning is authorized. Preserve OD-01–OD-20 in [DECISION_LOG](DECISION_LOG.md); an inference, legacy behavior, source template, or framework default cannot silently replace explicit Owner direction.
 
 Material scope, business/workflow, accounting meaning, user responsibility, authorization/visibility, architecture/stack, design direction, infrastructure, recurring-cost, or production-risk changes require explicit Owner review and decision. A technical-sounding change that alters business meaning remains material. Record uncertainty instead of treating an unvalidated proposal as truth.
 
@@ -33,4 +33,4 @@ Planning freeze is not reached. After an approved P0–P11 planning baseline and
 
 ## Git boundary
 
-AUTH-002 expressly permits staging intended P0 artifacts, one initial commit `docs: finalize P0 governance`, normal push to unchanged `origin/main` and remote verification after passing integrity checks. Remote reconfiguration, force push and adding `reference-inputs/` or raw sources remain forbidden. [GIT_WORKFLOW](GIT_WORKFLOW.md) owns checkpoint conditions and future conventions; P0 approval grants no later Git or execution authority.
+AUTH-002 permitted the completed initial commit `docs: finalize P0 governance`, normal push and remote verification. AUTH-003 permits only the new correction commit `docs: close P0 publication handoff`, normal push to unchanged `origin/main` and verification after passing bounded integrity checks. Do not amend the published P0 checkpoint. Remote reconfiguration, force push and adding `reference-inputs/` or raw sources remain forbidden. [GIT_WORKFLOW](GIT_WORKFLOW.md) owns checkpoint conditions and future conventions; P0 approval grants no later Git or execution authority.

@@ -11,7 +11,7 @@ The repository is the durable Source of Truth for every Planning, Execution, Rev
 3. [SOURCE_OF_TRUTH](docs/00-governance/SOURCE_OF_TRUTH.md): authority, document lifecycle and canonical ownership.
 4. The active Owner authorization in [APPROVAL_RECORDS](docs/00-governance/APPROVAL_RECORDS.md), then only relevant decisions and documents through [CONTEXT_INDEX](docs/CONTEXT_INDEX.md).
 
-Check the actual branch, HEAD and working tree before acting. **P0 is DONE under [APPR-001](docs/00-governance/APPROVAL_RECORDS.md#appr-001). Current authorization: P0 approval recording and one initial checkpoint only under [AUTH-002](docs/00-governance/APPROVAL_RECORDS.md#auth-002). P1 is not authorized.** No application implementation or execution Tasks; stop after checkpoint publication and verification. Later work requires separate explicit Owner authorization.
+Check the actual branch, HEAD and working tree before acting. **P0 is DONE — approved under [APPR-001](docs/00-governance/APPROVAL_RECORDS.md#appr-001) and published. [AUTH-002](docs/00-governance/APPROVAL_RECORDS.md#auth-002) is HISTORICAL / COMPLETED; current active phase authorization: NONE. P1 must not start without separate explicit Owner authorization.** [AUTH-003](docs/00-governance/APPROVAL_RECORDS.md#auth-003) closes documentation state only and expires after its publication/verification. No application implementation or execution Tasks; see handoff for the verified checkpoint and exact next safe action.
 
 ## Operating boundaries
 

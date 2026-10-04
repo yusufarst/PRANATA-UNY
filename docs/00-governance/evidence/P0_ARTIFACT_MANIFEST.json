@@ -3,7 +3,7 @@
   "date": "2026-10-04",
   "timezone": "Asia/Jakarta",
   "role": "PLANNING AGENT",
-  "authorization": "P0 APPROVAL RECORDING + INITIAL CHECKPOINT ONLY / AUTH-002",
+  "authorization": "DOCUMENTATION-STATE-CLOSURE ONLY / AUTH-003; ACTIVE PHASE AUTHORIZATION NONE",
   "phase_status": "DONE",
   "owner_phase_approval": "APPROVED / APPR-001",
   "planning_freeze": "NOT REACHED",
@@ -24,8 +24,8 @@
     {
       "path": "AGENTS.md",
       "disposition": "CREATED",
-      "bytes": 4071,
-      "sha256": "46835372a7f8ef38506d3a64d4ff2cc8bf30de34c225f9bfe8ebfd63e148f55d"
+      "bytes": 4223,
+      "sha256": "22bd4ab8f4f73fc8fd64a1a3f39c0505b2586bef4732de98cf2eb8c3ec025a58"
     },
     {
       "path": "CLAUDE.md",
@@ -36,26 +36,26 @@
     {
       "path": "README.md",
       "disposition": "CREATED",
-      "bytes": 1531,
-      "sha256": "e01c5d94e56a80f914fe3043190fa2fdc4680134018ae1bb440056bfcdb5e7ff"
+      "bytes": 1780,
+      "sha256": "e1c4468b0193c044dd31393e16d37a116e9fab6fb76574e39a741ce167b7af94"
     },
     {
       "path": "docs/00-governance/AGENT_OPERATING_MODEL.md",
       "disposition": "CREATED",
-      "bytes": 4960,
-      "sha256": "09c2c323ff30529fabea7f03a13b50d37d72afaa71d5426b598e60e22e793a87"
+      "bytes": 5094,
+      "sha256": "9252ec789e8f5c9e8aa7226c578e875ad0d197756bd0208e4ab7f3387db72a01"
     },
     {
       "path": "docs/00-governance/APPROVAL_RECORDS.md",
       "disposition": "CREATED",
-      "bytes": 7645,
-      "sha256": "11e151f625e20e29dece78a66ba6f8761184c89cda0187df5a13e57ad2d354de"
+      "bytes": 10423,
+      "sha256": "ef84a720609aed78aa31dca99bb48d4162a463ecec9fdb53cc366f04e7a52097"
     },
     {
       "path": "docs/00-governance/CHANGE_CONTROL.md",
       "disposition": "CREATED",
-      "bytes": 4759,
-      "sha256": "352cc20831e5db042f1594050e53610af7ee150ddee3ec9f59899a207b80e5a7"
+      "bytes": 5075,
+      "sha256": "fbd6220e974ce1e3637c8f0638c6246c7ebdb31d59dc40ac5691305a772a67d3"
     },
     {
       "path": "docs/00-governance/COST_POLICY.md",
@@ -66,14 +66,14 @@
     {
       "path": "docs/00-governance/DECISION_INDEX.md",
       "disposition": "CREATED",
-      "bytes": 3239,
-      "sha256": "5b8cd38b4fd731f38f127e8178c055bcf92ab7b13d2d25ee6037272017376d01"
+      "bytes": 3384,
+      "sha256": "6d7fe8f5c13cab2af563085bfd3d9aa9302da25960e7de34508a671b16f4fc09"
     },
     {
       "path": "docs/00-governance/DECISION_LOG.md",
       "disposition": "CREATED",
-      "bytes": 10854,
-      "sha256": "18c7adfcb7d77a1d41b638a9f779150492a4af0b0b3e26b062b720cdd324e81a"
+      "bytes": 12008,
+      "sha256": "8dddef7006c7a5e9f62225b0d6b3cdac4e15ca3a4be5766703017955e34a9823"
     },
     {
       "path": "docs/00-governance/ENGINEERING_PRINCIPLES.md",
@@ -96,8 +96,8 @@
     {
       "path": "docs/00-governance/GIT_WORKFLOW.md",
       "disposition": "CREATED",
-      "bytes": 3520,
-      "sha256": "99ace8504115c69500c10108a86c60a9b3852457a341a7c3c816c0671d70dd70"
+      "bytes": 4393,
+      "sha256": "f37ba0e013a499d9f95f24393d1de9fa6ef1906efbf7d59b65a14fb90b485efc"
     },
     {
       "path": "docs/00-governance/PRODUCTION_DATA_SAFETY.md",
@@ -108,8 +108,8 @@
     {
       "path": "docs/00-governance/PROJECT_CHARTER.md",
       "disposition": "CREATED",
-      "bytes": 4079,
-      "sha256": "e0bf7b54abdc4df58ea375fa3e664d0553de1ad978217789bb4d2a50f8918e16"
+      "bytes": 4235,
+      "sha256": "305038d7ce0de958c130cebb7406c8845bb515a4f80718f5231e480d4b68e1da"
     },
     {
       "path": "docs/00-governance/SOURCE_INVENTORY.md",
@@ -120,14 +120,14 @@
     {
       "path": "docs/00-governance/SOURCE_OF_TRUTH.md",
       "disposition": "CREATED",
-      "bytes": 6507,
-      "sha256": "e9232b9498de0e6165a1b698d3343415c7b69808f732c825d723e0411b515d5c"
+      "bytes": 6658,
+      "sha256": "828264a019b510dd01d05116040bd78b0221e6917c2c5eec0caa9ac7395079cd"
     },
     {
       "path": "docs/00-governance/TOOLCHAIN.md",
       "disposition": "CREATED",
-      "bytes": 9166,
-      "sha256": "c4e5d6d00190551d135d7eea1c15972eb6cf219435d91f67c0e999b14fa1cc43"
+      "bytes": 9197,
+      "sha256": "82e3d915c3b2fbd1d318adb3f53c8c45918a35299e33197ce4cfb4acfc1dbdcb"
     },
     {
       "path": "docs/00-governance/evidence/ASSET_SOURCE_REVIEW.md",
@@ -138,14 +138,14 @@
     {
       "path": "docs/00-governance/evidence/FRAMEWORK_ADOPTION.md",
       "disposition": "CREATED",
-      "bytes": 13326,
-      "sha256": "48057aa2f2e7591e39f8421553efafe91e43c541bf70d0dd78b8af7c55877d03"
+      "bytes": 13431,
+      "sha256": "5bb408e773e41eee49d3f148098e81695dcba2e8b94d8db8cfdf14b8e4ee7796"
     },
     {
       "path": "docs/00-governance/evidence/P0_QUALITY_GATE.md",
       "disposition": "CREATED",
-      "bytes": 19004,
-      "sha256": "d2441ab5a1fe88a0ed6e2eab7cc4d22e4e0c2bdcf70005668d330bbe6765e952"
+      "bytes": 23082,
+      "sha256": "d3110a7c05ec621a6687890c0a71b1c27defc218ceab3a4aba9de2615748a81d"
     },
     {
       "path": "docs/00-governance/evidence/PROCUREMENT_SOURCE_REVIEW.md",
@@ -234,14 +234,14 @@
     {
       "path": "docs/CONTEXT_INDEX.md",
       "disposition": "CREATED",
-      "bytes": 4718,
-      "sha256": "07866699769982c2a002422e41fd8cfabc01a3c8d66b014b3a3b24a6dab693a4"
+      "bytes": 5146,
+      "sha256": "b01d0649f8cbc31af766eec9c419c352d55d5292da5436a5dd34461a63703fa6"
     },
     {
       "path": "docs/PHASE_STATUS.md",
       "disposition": "CREATED",
-      "bytes": 2464,
-      "sha256": "0621e40139cfd7893d48c3cf0c326878be2e75205f8f9f0072f002e96682dea5"
+      "bytes": 2916,
+      "sha256": "b6be428d17e327c037d5ce25f242d140c35cabed048e96b5d004c112a640af0c"
     },
     {
       "path": "docs/adr/README.md",
@@ -252,11 +252,11 @@
     {
       "path": "docs/handoff/CURRENT_HANDOFF.md",
       "disposition": "CREATED",
-      "bytes": 6542,
-      "sha256": "fc6cbd4e0ec74ef9b27fa61aa846b423c6f05e89fb9abea40a19516a4653b17a"
+      "bytes": 8101,
+      "sha256": "b358eac3ceccd064db51f3962edfce8c99cda5dd857ee224fbd3281bf02153b3"
     }
   ],
-  "manifest_state": "POST_APPROVAL_PRE_COMMIT_CONTENT",
+  "manifest_state": "POST_APPROVAL_POST_PUBLICATION_STATE_CLOSURE_CONTENT",
   "execution": "NOT AUTHORIZED",
   "reviewed_pre_approval_candidate": {
     "manifest_path": "docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json",
@@ -268,7 +268,9 @@
     "authorized_by": "AUTH-002",
     "commit_message": "docs: finalize P0 governance",
     "remote": "https://github.com/yusufarst/PRANATA-UNY.git",
-    "publication_verification": "After this content snapshot; inspect live Git refs and session final report"
+    "publication_verification": "PASS / origin/main verified 2026-10-04 (Asia/Jakarta)",
+    "sha": "f6d889100306a63a5bd391da4310346fc427d4d8",
+    "authorization_state": "HISTORICAL / COMPLETED"
   },
   "approval_recording_files_changed": [
     "AGENTS.md",
@@ -298,5 +300,34 @@
     "docs/adr/README.md",
     "docs/handoff/CURRENT_HANDOFF.md",
     "docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json"
-  ]
+  ],
+  "historical_completed_authorization": "AUTH-002 / COMPLETED",
+  "p0_published_checkpoint": "f6d889100306a63a5bd391da4310346fc427d4d8",
+  "p0_checkpoint_remote_verification": "PASS",
+  "documentation_state_closure": {
+    "authorized_by": "AUTH-003",
+    "commit_message": "docs: close P0 publication handoff",
+    "active_phase_authorization": "NONE",
+    "modified_existing_files": [
+      "AGENTS.md",
+      "README.md",
+      "docs/00-governance/AGENT_OPERATING_MODEL.md",
+      "docs/00-governance/APPROVAL_RECORDS.md",
+      "docs/00-governance/CHANGE_CONTROL.md",
+      "docs/00-governance/DECISION_INDEX.md",
+      "docs/00-governance/DECISION_LOG.md",
+      "docs/00-governance/GIT_WORKFLOW.md",
+      "docs/00-governance/PROJECT_CHARTER.md",
+      "docs/00-governance/SOURCE_OF_TRUTH.md",
+      "docs/00-governance/TOOLCHAIN.md",
+      "docs/00-governance/evidence/FRAMEWORK_ADOPTION.md",
+      "docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json",
+      "docs/00-governance/evidence/P0_QUALITY_GATE.md",
+      "docs/CONTEXT_INDEX.md",
+      "docs/PHASE_STATUS.md",
+      "docs/handoff/CURRENT_HANDOFF.md"
+    ],
+    "disposition_note": "Existing disposition/count fields preserve initial P0 creation provenance; this closure adds/removes no files.",
+    "publication_verification": "Inspect live Git refs and session final report for the new correction SHA and verification; no advance claim."
+  }
 }

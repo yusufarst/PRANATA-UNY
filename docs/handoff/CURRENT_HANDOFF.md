@@ -6,25 +6,37 @@ Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Role: PLANNING AGENT
 
 Project: **PRANATA UNY**. Project state: **PARTIALLY_PLANNED**. Repository Source of Truth: `C:\Projects\PRANATA-UNY`.
 
-- Current phase: **P0 completed / P1 not authorized**.
+- Current phase: **P0 completed and published / P1 not authorized**.
 - Current Task: **N/A — Tasks do not exist before P11**.
-- P0: **DONE**, exact reviewed candidate approved by the Project Owner under [APPR-001](../00-governance/APPROVAL_RECORDS.md#appr-001).
-- P1: **TODO**; P2–P11: **TODO**, all not authorized.
+- P0: **DONE — approved and published**, exact reviewed candidate approved by the Project Owner under [APPR-001](../00-governance/APPROVAL_RECORDS.md#appr-001).
+- P1: **TODO / NOT AUTHORIZED**; P2–P11: **TODO / NOT AUTHORIZED**.
+- Current active phase authorization: **NONE**. Historical latest completed phase/checkpoint authorization: **AUTH-002 — HISTORICAL / COMPLETED**.
 - Planning Freeze: **NOT REACHED**.
 - Tasks: **NONE**. Task Baseline: **NOT READY**. Active/next READY Task: **NONE**.
-- Execution: **NOT AUTHORIZED**. No Task count/percentage exists before P11.
+- Execution: **NOT AUTHORIZED**. Application implementation: **NONE**. No Task count/percentage exists before P11.
 - Open P0 blockers: **0**. Open P0 non-blocking gaps: **20**, all GAP-001–GAP-020 remain OPEN and block their dependent later-phase rules.
-- Last completed action: **P0 Owner approval and checkpoint finalization** (approval/content lifecycle; Git publication and verification follow passing checks).
+- Last completed checkpoint action: **P0 Owner approval, initial commit, successful publication and remote verification under AUTH-002**.
 
-Current authorization: [AUTH-002](../00-governance/APPROVAL_RECORDS.md#auth-002), limited to approval recording, administrative consistency, bounded integrity validation, one initial commit `docs: finalize P0 governance`, normal push to unchanged origin/main and remote verification, then stop. AUTH-001 preparation and the prior correction instruction remain historical; no P1 authorization is included.
+[AUTH-002](../00-governance/APPROVAL_RECORDS.md#auth-002) is completed history; its checkpoint action is exhausted. [AUTH-003](../00-governance/APPROVAL_RECORDS.md#auth-003) records only this bounded post-publication documentation synchronization, one new correction commit/push/verification and stop. It grants no phase approval or business/product/domain/implementation authority and expires upon verified publication. AUTH-001 preparation and prior correction instructions remain historical; no P1 authorization exists.
+
+## Verified published Git baseline
+
+- Repository: **yusufarst/PRANATA-UNY**, unchanged origin `https://github.com/yusufarst/PRANATA-UNY.git`.
+- Branch: **main**.
+- Published P0 checkpoint: **`f6d889100306a63a5bd391da4310346fc427d4d8`**.
+- Commit message: **`docs: finalize P0 governance`**.
+- Remote verification: **PASS**. At closure-start inspection on 2026-10-04, local HEAD = origin/main = live remote `refs/heads/main` at that checkpoint; working tree clean.
+- The P0 commit/push/verification are complete. The new closure commit preserves this checkpoint in history; inspect live HEAD/refs and the final report for its resulting SHA, which cannot be embedded in its own content.
 
 ## Approved candidate and checkpoint content
 
 The durable reviewed **PRE-APPROVAL** identity is `docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json`, **8,893 bytes**, SHA-256 **`25cd7c8da69ad5bccd5b5f0969c9c3346ac4dd085c23f3544977109dd8b00ec4`**. Initial and delta review verdicts were READY_FOR_OWNER_APPROVAL; both observations were corrected and delta findings/observations were zero, as reported by the Owner. APPR-001 preserves exact identity, approval source/time, scope, conditions and deferred gaps.
 
-The current [POST-APPROVAL manifest](../00-governance/evidence/P0_ARTIFACT_MANIFEST.json) identifies administrative repository content after approval recording and excludes itself. It does not replace the reviewed candidate identity. [P0_QUALITY_GATE](../00-governance/evidence/P0_QUALITY_GATE.md#p0-post-approval-integrity) records bounded checks and retained limitations. This handoff is the content for the authorized initial checkpoint; it makes no advance claim of a commit SHA, successful push or remote verification. After publication, inspect live HEAD/origin/main/status and the session final report for actual Git results.
+The current [POST-APPROVAL manifest](../00-governance/evidence/P0_ARTIFACT_MANIFEST.json) identifies repository content after bounded administrative closure and excludes itself. It does not replace the reviewed candidate identity. [P0_QUALITY_GATE](../00-governance/evidence/P0_QUALITY_GATE.md#p0-post-publication-state-closure-integrity) records the closure checks alongside preserved historical review/post-approval evidence and limitations.
 
-Approval changes are the project-authored Markdown lifecycle headers and required current authorization/status/provenance/index/quality/handoff passages, plus the manifest. OD-01–OD-20 and all historical GOV/FD sections are preserved. All 20 GAP rows remain unchanged/open; only the GAP container metadata and P0 approval reference change. No added/removed files, P1 specifications, application implementation, migration/schema/auth/UI, Task plan or execution Task exists. CLAUDE.md remains a thin byte-identical adapter; .gitignore and the master framework remain unchanged.
+Closure changes only stale current-state passages, AUTH-002 completion/AUTH-003 provenance, an appended administrative lifecycle note, quality evidence and the manifest. OD-01–OD-20 and all historical GOV/FD sections are preserved. GAP_REGISTER is byte-identical; all 20 gaps remain OPEN. No file is added/removed, and no P1 specification, application implementation, migration/schema/auth/UI, Task plan or execution Task exists. CLAUDE.md remains a thin byte-identical adapter; .gitignore, source inventory/reviews and the master framework remain unchanged.
+
+Changed files: AGENTS.md, README.md, docs/CONTEXT_INDEX.md, docs/PHASE_STATUS.md, this handoff; docs/00-governance/{APPROVAL_RECORDS,DECISION_LOG,DECISION_INDEX,SOURCE_OF_TRUTH,AGENT_OPERATING_MODEL,PROJECT_CHARTER,CHANGE_CONTROL,GIT_WORKFLOW,TOOLCHAIN}.md; docs/00-governance/evidence/{FRAMEWORK_ADOPTION.md,P0_QUALITY_GATE.md,P0_ARTIFACT_MANIFEST.json}. No Owner decision or gap resolution is introduced.
 
 ## Retained evidence and limitations
 
@@ -36,14 +48,14 @@ Canonical P0 governance, framework adaptation, safe inventory, evidence and rese
 
 ## Verification, tools and safety
 
-Post-approval bounded integrity validation is **PASS**, recorded in P0_QUALITY_GATE and independently checked: all OD/GOV/FD wording and GAP rows preserved, 46 raw files unchanged/ignored, 258 local links/65 anchors valid, 40-entry manifest/41-file coverage and phase/agent boundaries intact. Final evidence/handoff hash refresh and exact staged-byte checks are required before commit. Git baseline: main without HEAD, empty index, unchanged origin `https://github.com/yusufarst/PRANATA-UNY.git`; read-only remote inspection found no advertised refs. Git author/committer use the Owner's existing configuration. Stage exactly the 41 eligible P0 artifacts after checks; reference-inputs remain ignored and unstaged.
+Historical post-approval integrity PASS is preserved. Closure integrity checks compare against the published checkpoint: OD/GOV/FD sections and APPR-001 body preserved, GAP_REGISTER unchanged, 46 raw files unchanged/ignored, local Markdown targets/anchors valid, 40-entry manifest/41-file coverage and phase boundaries intact. [Closure quality evidence](../00-governance/evidence/P0_QUALITY_GATE.md#p0-post-publication-state-closure-integrity) owns the measured results. Before commit, refresh final evidence/handoff hashes and verify exact staged bytes for only the 17 modified documentation/manifest files. Git author/committer use the Owner's existing configuration. Reference inputs remain ignored, untracked and unstaged.
 
-Bundled Python and Git are used for content hashes/coverage, retained OD/GOV/FD and GAP comparisons, local Markdown targets/anchors, raw-input ignore/preservation, bounded sensitive-pattern checks and Git inspection. No package/tool installation, MCP reconfiguration, production action or raw-source alteration occurs. Remote verification is required after normal push; stop/report if it fails.
+Existing Node.js, PowerShell and Git are used for file-byte hashes/coverage, protected section/GAP comparisons, local Markdown targets/anchors, raw-input ignore/preservation, bounded high-confidence secret-pattern checks and Git inspection. No package/tool installation, MCP reconfiguration, production action or raw-source alteration occurs. Normal correction push requires verification of the new remote ref, retained P0 ancestry, published document/manifest bytes and clean tree; stop/report if it fails. Initial sandbox remote access failed; authorized read-only network escalation verified the published P0 ref successfully.
 
 Application lint/typecheck/unit/feature/integration/authorization/route/browser E2E/localization/responsive/build/performance checks: **N/A**, no application. Documentation checks do not claim runtime/security or production readiness. Production DB touched: **NO**. Schema/migration/import: **NONE**. Recurring production cost: **NONE**. Paid exceptions: **NONE**.
 
 ## Exact next safe action
 
-**Owner may separately authorize P1 — Product Definition, Scope & Acceptance.** No P1 work is authorized by this session. Stop after the P0 checkpoint publication and remote verification.
+**Owner separately authorizes P1 — Product Definition, Scope & Acceptance.** Current active phase authorization: **NONE**. No P1 work is authorized by this session. AUTH-002 is completed; stop after the bounded AUTH-003 documentation correction publication and verification.
 
 Do not start P1 without explicit Owner authorization, implement application code, scaffold/install application packages, create schema/auth/UI or execution Tasks/Task plan, declare planning freeze, authorize execution, alter production or raw reference inputs, or publish raw sources.

@@ -30,7 +30,7 @@ Metadata/version probes only; these are machine capabilities, not installed PRAN
 
 | Tool | Observation | Verification limit |
 | --- | --- | --- |
-| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002 authorizes only the initial P0 checkpoint after approval/integrity checks; no later execution authority |
+| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002 initial P0 checkpoint completed; AUTH-003 permits only documentation closure commit/push/verification; no phase or execution authority |
 | ripgrep (`rg`) | Command available and used | Targeted search works; no graph claimed |
 | Node.js | `v24.18.0`; version probe passed | No application compatibility/build verification |
 | npm | `11.16.0`; version probe passed | No package installation performed |

@@ -2,7 +2,7 @@
 
 Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent
 
-Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. P0 is DONE under [APPR-001](00-governance/APPROVAL_RECORDS.md#appr-001); only approval recording and the initial checkpoint are authorized by [AUTH-002](00-governance/APPROVAL_RECORDS.md#auth-002). P1 requires separate Owner authorization; no active Task or implementation exists.
+Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Project state: **PARTIALLY_PLANNED**. P0 is **DONE — approved and published** under [APPR-001](00-governance/APPROVAL_RECORDS.md#appr-001), checkpoint `f6d889100306a63a5bd391da4310346fc427d4d8`, remote verification PASS. [AUTH-002](00-governance/APPROVAL_RECORDS.md#auth-002) is **HISTORICAL / COMPLETED**; current active phase authorization: **NONE**. [AUTH-003](00-governance/APPROVAL_RECORDS.md#auth-003) records documentation closure only. P1–P11 remain TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action: Owner separately authorizes P1 — Product Definition, Scope & Acceptance.
 
 | Need | Read |
 |---|---|

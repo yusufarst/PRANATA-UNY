@@ -7,7 +7,7 @@ Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agen
 | Role | Responsibility | Boundary |
 |---|---|---|
 | Owner | Final decisions, phase approval, material scope/architecture/cost approval | Explicit approval is never inferred from silence |
-| Codex / ChatGPT Planning Agent | Authorized P0–P11 documentation, evidence, decisions, gaps and executor clarity | Current authorization is P0 only; no implementation |
+| Codex / ChatGPT Planning Agent | Authorized P0–P11 documentation, evidence, decisions, gaps and executor clarity | Active phase authorization NONE; AUTH-003 documentation closure only; no implementation |
 | Claude Code future Execution Agent | Implement and verify an approved READY Task, update progress/evidence | No planning redesign or hidden-chat dependency |
 | Review Agent | Check authority, scope, tests/evidence, drift and false completion | Findings are evidence; cannot grant Owner approval |
 | Release Agent | Verify approved release path, staging/UAT/regression/rollback declarations | No release authorization exists yet |
@@ -17,7 +17,7 @@ Provider replacement does not alter canonical project truth. Tool adapters point
 
 ## Phase authorization
 
-Each phase requires its own explicit authorization. Read actual repository state, current handoff, phase status, decision index and approval records before work. Historical AUTH-001 authorized P0 preparation/review. Current [APPR-001](APPROVAL_RECORDS.md#appr-001) approves P0; [AUTH-002](APPROVAL_RECORDS.md#auth-002) authorizes only approval recording and one initial checkpoint, then stop. P1 is not authorized. P0 prepares governance, evidence and gaps; source inspection does not start P1 product or P2/P3 domain/workflow design.
+Each phase requires its own explicit authorization. Read actual repository state, current handoff, phase status, decision index and approval records before work. Historical AUTH-001 authorized P0 preparation/review. [APPR-001](APPROVAL_RECORDS.md#appr-001) approves P0, now published; [AUTH-002](APPROVAL_RECORDS.md#auth-002) is HISTORICAL / COMPLETED. Current active phase authorization is NONE; [AUTH-003](APPROVAL_RECORDS.md#auth-003) covers documentation closure only. P1 is not authorized. P0 prepares governance, evidence and gaps; source inspection does not start P1 product or P2/P3 domain/workflow design.
 
 Finish an authorized phase's artifacts → self-review against framework and Owner direction → record evidence/known limitations → VERIFYING → Owner approves exact revision or requests corrections. Owner approval moves the phase to DONE; the next phase still needs explicit authorization. A quality PASS, created folder, completed conversation or commit never constitutes phase approval.
 
@@ -37,4 +37,4 @@ Review decisions against their classification and exact source. Challenge assump
 
 ## Session end obligation
 
-Update handoff with current role/authorization/phase, absent or active Task, actions completed, changed files, evidence, decisions/gaps, tools checked/installed, cost/DB impact, tests applicable or N/A, and exact safe next action. Synchronize phase status and context index. Verify raw inputs ignored, secret handling and actual Git changes. Current P0: approved/DONE; only AUTH-002 initial checkpoint publication/verification is permitted, with no schema/data change or READY Task. Stop after checkpoint; separate Owner P1 authorization is the next gate.
+Update handoff with current role/authorization/phase, absent or active Task, actions completed, changed files, evidence, decisions/gaps, tools checked/installed, cost/DB impact, tests applicable or N/A, and exact safe next action. Synchronize phase status and context index. Verify raw inputs ignored, secret handling and actual Git changes. Current P0: approved, published and DONE; AUTH-002 completed; no active phase authorization, schema/data change or READY Task. Stop after the bounded AUTH-003 documentation closure; separate Owner P1 authorization is the next gate.

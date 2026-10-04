@@ -2,7 +2,7 @@
 
 Status: APPROVED | Reviewed: 2026-10-04 (Asia/Jakarta) | Role: PLANNING AGENT
 
-**Current lifecycle: P0 DONE — Owner APPROVED under [APPR-001](../APPROVAL_RECORDS.md#appr-001).** Historical initial/correction self-review results below remain PASS; current post-approval integrity checks are recorded in the final section. This PASS does not establish official UNY business/accounting policy, completed future planning, application correctness, security implementation or production readiness.
+**Current lifecycle: P0 DONE — Owner APPROVED under [APPR-001](../APPROVAL_RECORDS.md#appr-001) and published.** Historical initial/correction/post-approval results below remain PASS; current post-publication closure integrity checks are recorded in the final section. This PASS does not establish official UNY business/accounting policy, completed future planning, application correctness, security implementation or production readiness.
 
 Historical preparation/correction scope: AUTH-001 P0 only, AICWDF v4.3 §11 and phase-appropriate operating requirements; this correction pass is limited by the Owner's 2026-10-04 OBS-01/OBS-02 instruction recorded in [APPROVAL_RECORDS](../APPROVAL_RECORDS.md). The reviewed pre-approval identity is preserved in APPR-001. Current post-approval content: [P0_ARTIFACT_MANIFEST](P0_ARTIFACT_MANIFEST.json). The manifest records exact SHA-256 hashes/sizes and created/pre-existing disposition; it excludes itself to avoid recursive hashing. Recompute it after edits before approving a specific revision.
 
@@ -77,7 +77,7 @@ Method: read-only Git commands above plus bundled local Python for file-byte has
 - PDFs/DOCX were inspected as text/structure, with three targeted procurement PDF page visuals; no complete visual/signature/authenticity or legal-currentness validation. HTML static behavior was not executed or benchmarked.
 - The login video received metadata inspection only (11.587 seconds); frames/audio are NOT INSPECTED. Supplied screenshots were visually inspected. No P7 design or final visual reference is approved.
 - Graphify CLI probe failed; GitHub CLI configuration access failed; current connector reads succeeded. Project application stack/E2E/runtime/CI/infrastructure is not installed or verified, by P0 scope.
-- At initial/correction review, AUTH-001 forbade commit/push and no checkpoint existed. AUTH-002 now permits the single initial P0 checkpoint after APPR-001 and passing integrity checks; no later-phase authority follows.
+- At initial/correction review, AUTH-001 forbade commit/push and no checkpoint existed. AUTH-002 subsequently permitted the single initial P0 checkpoint after APPR-001 and passing integrity checks; that publication/verification is now completed. No later-phase authority follows.
 
 ## Prior correction gate conclusion — historical
 
@@ -87,7 +87,7 @@ Exact next safe action: **Independent delta review, then Owner approval if no bl
 
 ## P0 post-approval integrity
 
-Current authority: [APPR-001](../APPROVAL_RECORDS.md#appr-001) / [AUTH-002](../APPROVAL_RECORDS.md#auth-002), recorded 2026-10-04 (Asia/Jakarta). Owner-reported initial and delta reviews were READY_FOR_OWNER_APPROVAL; delta blocking findings and observations were zero. Before edits the exact reviewed manifest matched **8,893 bytes** / SHA-256 **`25cd7c8da69ad5bccd5b5f0969c9c3346ac4dd085c23f3544977109dd8b00ec4`**, all 40 entries and the complete 41-file eligible set.
+Historical approval-recording authority: [APPR-001](../APPROVAL_RECORDS.md#appr-001) / [AUTH-002](../APPROVAL_RECORDS.md#auth-002), recorded 2026-10-04 (Asia/Jakarta). The following matrix/method/conclusion preserves the pre-publication validation record, not current Git state. Owner-reported initial and delta reviews were READY_FOR_OWNER_APPROVAL; delta blocking findings and observations were zero. Before edits the exact reviewed manifest matched **8,893 bytes** / SHA-256 **`25cd7c8da69ad5bccd5b5f0969c9c3346ac4dd085c23f3544977109dd8b00ec4`**, all 40 entries and the complete 41-file eligible set.
 
 The approval-recording delta changes administrative metadata/status/authorization references, approval provenance, current integrity evidence, manifest and handoff only. All OD/GOV/FD sections and GAP rows retain their original wording; APPROVED evidence/container metadata never resolves business/accounting uncertainty. CLAUDE.md, .gitignore and the master framework remain byte-identical. No new file is added and no reference input is changed.
 
@@ -110,3 +110,23 @@ The approval-recording delta changes administrative metadata/status/authorizatio
 Method: bundled Python file-byte hashes/baseline section-row comparisons, Git NUL-delimited coverage/ignore checks, bounded privacy scans, phase/structure checks and independent read-only Markdown/governance reviews. Staging uses per-command core.autocrlf=false to preserve exact approved/manifested file bytes without changing persistent Git configuration. Final staged-byte validation, normal push and published-ref/blob checks are required AUTH-002 operations; any material failure forbids commit/push or requires stopping/reporting remote failure as applicable.
 
 Exact next safe action after validated checkpoint publication: Owner may separately authorize **P1 — Product Definition, Scope & Acceptance**. P0 DONE; P1–P11 TODO; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED. Stop after P0 checkpoint.
+
+## P0 post-publication state closure integrity
+
+Role: PLANNING AGENT. Action: P0 POST-PUBLICATION STATE CLOSURE. Authority: [AUTH-003](../APPROVAL_RECORDS.md#auth-003), documentation-state-closure only. **Bounded content integrity: PASS — 2026-10-04 (Asia/Jakarta)**, compared against published checkpoint `f6d889100306a63a5bd391da4310346fc427d4d8`. No new phase approval or P1 authorization exists; prior evidence above remains historical and intact.
+
+| Closure integrity check | Actual result / evidence |
+|---|---|
+| Published starting state | PASS: main / local HEAD / origin/main / live remote main matched `f6d889100306a63a5bd391da4310346fc427d4d8`; message `docs: finalize P0 governance`; clean starting tree; unchanged origin and existing Owner author/committer identity |
+| Owner decisions / approvals / history | PASS: all 27 OD-01–OD-20, GOV-01–GOV-06 and FD-01 section bodies unchanged after line-ending/separator normalization; APPR-001 body unchanged; AUTH-001/correction records retained; AUTH-002 original scope preserved with completion annotation; exact reviewed 8,893-byte / `25cd7c8da69ad5bccd5b5f0969c9c3346ac4dd085c23f3544977109dd8b00ec4` identity preserved |
+| Gaps / immutable evidence | PASS: GAP_REGISTER byte-identical, all 20 entries OPEN; CLAUDE.md, .gitignore, framework, source inventory and source reviews byte-identical; no business/accounting gap resolved |
+| Reference-input safety | PASS: all 46 original file sizes/SHA-256 match the closure-start snapshot; all ignored; none tracked/staged; no raw file added or altered |
+| Phase / operational consistency | PASS: PARTIALLY_PLANNED; P0 DONE — approved/published; P1–P11 TODO / NOT AUTHORIZED; active phase authorization NONE; AUTH-002 COMPLETED; freeze NOT REACHED; Tasks NONE; baseline NOT READY; execution NOT AUTHORIZED; no application or Task artifacts; eleven reserved phase folders still contain only .gitkeep |
+| Documentation / manifest | PASS: 28 Markdown files, 274 local targets and 81 anchors resolve; 13 external links not revalidated. Forty unique manifest entries cover the complete 41-file tracked set, self excluded; sizes/SHA-256 refreshed; initial creation/disposition history retained. Seventeen existing documentation/manifest files modified; no added/removed file or eligible untracked file |
+| Privacy / impact | PASS: bounded high-confidence private-key/AWS/GitHub/JWT pattern scan across changed documents/manifest found zero hits; manual diff contains only sanitized authorization/state/evidence changes. Historical credential literal-scan evidence above is retained, not claimed rerun. DB/production/deployment touched NO; new packages/cost/paid exceptions NONE; application checks N/A |
+
+Method: existing Node.js file-byte hashes, Git NUL-delimited coverage/ignore checks and published-baseline section comparisons; PowerShell/Git inspection; local Markdown target/anchor and bounded secret-pattern checks. Temporary validation helpers remain outside the repository. No delegated review or application runtime verification is claimed for this closure.
+
+Pre-commit requirements: refresh final evidence/handoff hashes, verify exact staged blobs using per-command `core.autocrlf=false`, and review only the 17 authorized modified files. New normal commit/push outcomes follow these checks. After push verify the new live remote ref and blob/manifest content, original P0 ancestry, preserved APPR-001, no remote raw inputs and clean tree; the session final report records the resulting closure SHA and actual publication outcome, without embedding a future/self-referential success claim.
+
+Exact next safe action: Owner separately authorizes P1 — Product Definition, Scope & Acceptance. Current active phase authorization NONE; AUTH-002 HISTORICAL / COMPLETED; AUTH-003 expires after its one correction publication/verification. Stop.

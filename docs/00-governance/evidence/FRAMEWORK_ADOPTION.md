@@ -14,7 +14,7 @@ This record owns the AICWDF coverage map, explicit project exceptions, and struc
 | SHA-256 | `BB578ADABCD8EBDDCB97C278E6589B935137F26F851B7218DD86C141744B70FE` |
 | Inspection | Full framework read, in bounded ranges, on 2026-10-04 |
 | Project state | `PARTIALLY_PLANNED`; local framework and ignored historical references exist, no application exists |
-| Authorization | P0 approved under [APPR-001](../APPROVAL_RECORDS.md#appr-001); [AUTH-002](../APPROVAL_RECORDS.md#auth-002) initial checkpoint only; no application packages, P1+ work or Tasks |
+| Authorization | P0 approved under [APPR-001](../APPROVAL_RECORDS.md#appr-001) and published; [AUTH-002](../APPROVAL_RECORDS.md#auth-002) COMPLETED; active phase authorization NONE; [AUTH-003](../APPROVAL_RECORDS.md#auth-003) documentation closure only; no application packages, P1+ work or Tasks |
 | Delivery boundary | P0 `DONE`; P1–P11 `TODO`; planning freeze not reached; Tasks none; next phase requires separate authorization |
 
 The framework is the master operating baseline; PRANATA's explicit Owner direction has precedence. Reuse the existing framework source without rewriting it. Its repeated numbering in §34/§42 is retained as source text; cite named sections rather than inferring extra requirements from repeated item numbers. Example entities, services, providers, and deployment paths in the framework are not PRANATA decisions.

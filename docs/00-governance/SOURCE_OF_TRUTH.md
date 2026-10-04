@@ -13,7 +13,7 @@ Status: APPROVED | Updated: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agen
 7. [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md), which summarizes and routes but cannot supersede authority.
 8. Chat/session context, transient agent memory and generated output.
 
-An unapproved draft cannot supersede an approved decision. New explicit Owner instructions are recorded before becoming durable truth; they apply immediately within their stated scope. Owner adoption of the framework is recorded; [APPR-001](APPROVAL_RECORDS.md#appr-001) approves the exact reviewed P0 candidate and [AUTH-002](APPROVAL_RECORDS.md#auth-002) permits the administrative approval/checkpoint delta only. Formal external policy and law are evidence of binding constraints when verified; a conflict with Owner direction requires domain/Owner validation, not silent circumvention.
+An unapproved draft cannot supersede an approved decision. New explicit Owner instructions are recorded before becoming durable truth; they apply immediately within their stated scope. Owner adoption of the framework is recorded; [APPR-001](APPROVAL_RECORDS.md#appr-001) approves the exact reviewed P0 candidate. [AUTH-002](APPROVAL_RECORDS.md#auth-002) is the completed historical approval/checkpoint authorization; [AUTH-003](APPROVAL_RECORDS.md#auth-003) permits only post-publication operational-state synchronization. Current active phase authorization is NONE. Formal external policy and law are evidence of binding constraints when verified; a conflict with Owner direction requires domain/Owner validation, not silent circumvention.
 
 ## Conflict protocol
 
