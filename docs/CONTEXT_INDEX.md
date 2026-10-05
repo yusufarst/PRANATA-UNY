@@ -1,8 +1,8 @@
 # Context index
 
-Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
-Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Project state: **PARTIALLY_PLANNED**. P0/P1 **DONE — approved and published**, APPR-001/APPR-002; P2 **DONE — APPROVED**, [APPR-003](00-governance/APPROVAL_RECORDS.md#appr-003). Verified starting main HEAD `8881c047f24451b30754b19fe0d1cf96b9078f90`; checkpoint publication is verified from Git. AUTH-002–AUTH-006 are **HISTORICAL / COMPLETED**. [AUTH-007](00-governance/APPROVAL_RECORDS.md#auth-007) is checkpoint-only until verified publication, then automatically historical/completed with active phase authorization **NONE**. P3–P11 TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**. Stop after P2.
+Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Project state: **PARTIALLY_PLANNED**. P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **DONE — APPROVED** under APPR-004. AUTH-002–AUTH-008 **HISTORICAL / COMPLETED**. AUTH-009 authorizes only this P3 checkpoint until successful push/live verification; afterward it is automatically **HISTORICAL / COMPLETED**, current active phase authorization **NONE**. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. [APPR-004](00-governance/APPROVAL_RECORDS.md#appr-004) approves the corrected reviewed candidate; [AUTH-009](00-governance/APPROVAL_RECORDS.md#auth-009) is checkpoint only; starting main HEAD `9e7950db6f9d6c6ab900a6328778807e057fb812` matched the live remote before edits. Only the intended P3 checkpoint may be staged/committed/pushed after integrity PASS. Exact next safe action: **Complete only the APPR-004/AUTH-009 checkpoint and verify publication; then bootstrap PRANATA in Claude Code as EXECUTION AGENT — WAITING in a subsequent session. P4 needs separate Owner authorization; execution requires approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Stop after P3.**
 
 | Need | Read |
 |---|---|
@@ -35,17 +35,22 @@ Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURR
 | Domain responsibilities without permissions / lifecycle dispositions without transitions | [DOMAIN_RESPONSIBILITIES](02-domain/DOMAIN_RESPONSIBILITIES.md) / [DOMAIN_LIFECYCLES](02-domain/DOMAIN_LIFECYCLES.md) |
 | OD/CAP/AC/source/GAP traceability and grouped missing validation | [DOMAIN_TRACEABILITY](02-domain/DOMAIN_TRACEABILITY.md) / [DOMAIN_DECISION_REQUESTS](02-domain/DOMAIN_DECISION_REQUESTS.md) |
 | P2 review/approval integrity and current post-approval manifest | [P2_QUALITY_GATE](00-governance/evidence/P2_QUALITY_GATE.md) / [P2_ARTIFACT_MANIFEST](00-governance/evidence/P2_ARTIFACT_MANIFEST.json) |
+| P3 workflow index / business contracts | [WORKFLOW_CATALOG](03-workflows/WORKFLOW_CATALOG.md) / [WORKFLOW_CONTRACTS](03-workflows/WORKFLOW_CONTRACTS.md) |
+| P3 canonical states and transition wording | [STATE_TRANSITIONS](03-workflows/STATE_TRANSITIONS.md) |
+| P3 route intent / contextual returns / interactions | [ROUTE_CONTRACTS](03-workflows/ROUTE_CONTRACTS.md) / [INTERACTION_CONTRACTS](03-workflows/INTERACTION_CONTRACTS.md) |
+| P3 exception/revision patterns / traceability / decisions | [EXCEPTION_REVISION_PATTERNS](03-workflows/EXCEPTION_REVISION_PATTERNS.md) / [WORKFLOW_TRACEABILITY](03-workflows/WORKFLOW_TRACEABILITY.md) / [WORKFLOW_DECISION_REQUESTS](03-workflows/WORKFLOW_DECISION_REQUESTS.md) |
+| P3 preparation evidence / candidate identity | [P3_QUALITY_GATE](00-governance/evidence/P3_QUALITY_GATE.md) / [P3_ARTIFACT_MANIFEST](00-governance/evidence/P3_ARTIFACT_MANIFEST.json) |
 | Current operational state / exact next action | [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) |
 
 ## Reserved future document locations
 
-P1 contains the five APPROVED product documents, prepared under historical AUTH-004 and approved under APPR-002 with all qualifications retained. P2 contains seven APPROVED conceptual domain artifacts under APPR-003; EVIDENCE_SUPPORTED/PROPOSED/BLOCKED_BY_GAP qualifications and all 20 OPEN GAPs remain binding. AUTH-006 is completed preparation; AUTH-007 checkpoint authority expires automatically at verified publication. P3–P11 still contain only `.gitkeep` markers: **reserved**, not planned specifications or execution authorization. Future names describe coverage, not existing files. Approved P1 documents retain historical phase-state snapshots; current progress is owned by PHASE_STATUS.
+P1 contains five APPROVED product documents and P2 seven APPROVED domain artifacts with all authority/GAP qualifications. P3 contains APPROVED workflow/route/interaction contracts under APPR-004; approval does not grant execution readiness. P4–P11 contain only reserved `.gitkeep` markers. Approved P1/P2 phase snapshots are historical; PHASE_STATUS owns current progress.
 
 | Phase | Reserved path | Future coverage when separately authorized |
 |---|---|---|
 | P1 | `docs/01-product/` | APPROVED product definition/scope/acceptance/reference/experience; APPR-002, P1 DONE |
 | P2 | `docs/02-domain/` | APPROVED conceptual glossary/model/rules/responsibilities/lifecycles/traceability/decision requests; APPR-003, P2 DONE; qualifications retained |
-| P3 | `docs/03-workflows/` | Critical workflows, route and interaction contracts |
+| P3 | `docs/03-workflows/` | APPROVED workflow/transition/route/interaction contracts, exceptions, traceability and decision requests; APPR-004 |
 | P4 | `docs/04-architecture/` | Application/database architecture, modules and justified integration boundaries |
 | P5 | `docs/05-security/` | Auth/account/session/recovery, compact roles/assignments, backend policies, threats, audit and secrets |
 | P6 | `docs/06-api-performance/` | API/concurrency/idempotency/performance contracts and scale strategy |

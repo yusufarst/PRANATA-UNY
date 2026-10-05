@@ -1,12 +1,12 @@
 # Change control
 
-Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 This document owns how changes are classified, reviewed, and recorded. [SOURCE_OF_TRUTH](SOURCE_OF_TRUTH.md) owns authority precedence and document lifecycle; [APPROVAL_RECORDS](APPROVAL_RECORDS.md) owns approval evidence. The Owner retains final decision authority.
 
 ## Current authorization and decision boundaries
 
-[APPR-001](APPROVAL_RECORDS.md#appr-001) / [APPR-002](APPROVAL_RECORDS.md#appr-002) preserve approved/published P0/P1. [APPR-003](APPROVAL_RECORDS.md#appr-003) approves the exact reviewed P2 candidate; P2 DONE, qualifications retained. AUTH-002–AUTH-006 are HISTORICAL / COMPLETED. [AUTH-007](APPROVAL_RECORDS.md#auth-007) permits only the approval/checkpoint and expires automatically after successful publication/verification, with active phase authorization NONE. P3–P11 remain NOT AUTHORIZED. Preserve exact OD-01–OD-23 and byte-identical P1; inference/legacy/templates/framework defaults cannot replace explicit direction. Qualified PROPOSED/EVIDENCE_SUPPORTED/BLOCKED_BY_GAP rules retain their status and validation dependencies after P2 approval.
+[APPR-001](APPROVAL_RECORDS.md#appr-001) / [APPR-002](APPROVAL_RECORDS.md#appr-002) preserve approved/published P0/P1. [APPR-003](APPROVAL_RECORDS.md#appr-003) approves the exact reviewed P2 candidate; P2 DONE, qualifications retained. AUTH-002–AUTH-008 are HISTORICAL / COMPLETED. [APPR-004](APPROVAL_RECORDS.md#appr-004) approves the exact corrected P3 candidate; [AUTH-009](APPROVAL_RECORDS.md#auth-009) permits its single checkpoint only, automatically completed after verified publication; P4–P11 remain NOT AUTHORIZED. Preserve exact OD-01–OD-23 and byte-identical P1; inference/legacy/templates/framework defaults cannot replace explicit direction. Qualified PROPOSED/EVIDENCE_SUPPORTED/BLOCKED_BY_GAP rules retain their status and validation dependencies after P2 approval.
 
 Material scope, business/workflow, accounting meaning, user responsibility, authorization/visibility, architecture/stack, design direction, infrastructure, recurring-cost, or production-risk changes require explicit Owner review and decision. A technical-sounding change that alters business meaning remains material. Record uncertainty instead of treating an unvalidated proposal as truth.
 
@@ -33,4 +33,4 @@ Planning freeze is not reached. After an approved P0–P11 planning baseline and
 
 ## Git boundary
 
-AUTH-002–AUTH-006 actions are completed history. AUTH-007 permits only intended P2/approval lifecycle staging, one normal `docs: finalize P2 domain model` commit and normal push/remote verification after all material checks PASS. It becomes HISTORICAL / COMPLETED automatically after verified publication, without a separate closure commit or continuing phase/Git authority. Do not amend published history, reconfigure remote/identity, force push or add ignored sources. [GIT_WORKFLOW](GIT_WORKFLOW.md) owns conditions; P3 and execution remain NOT AUTHORIZED.
+AUTH-002–AUTH-008 are completed history. AUTH-009 allows only the intended approved P3 checkpoint: bounded administrative edits, integrity PASS, explicit staging, one normal commit, normal push and live verification; then automatically completed, current active phase authorization NONE. Preserve exact approved P1/P2, OD bodies, historical approvals and ignored sources; no remote/identity/topology change. [GIT_WORKFLOW](GIT_WORKFLOW.md) owns Git conditions. Execution and P4–P11 remain NOT AUTHORIZED.

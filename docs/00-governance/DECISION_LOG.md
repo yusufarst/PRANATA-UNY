@@ -1,6 +1,6 @@
 # Decision log
 
-Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Provenance and status
 
@@ -173,3 +173,21 @@ Recorded 2026-10-05 (Asia/Jakarta): [APPR-003](APPROVAL_RECORDS.md#appr-003) exp
 The 77 concepts, 9 areas, 29 BR, 18 INV, 6 responsibility dimensions, 16 responsibility types and all traceability retain reviewed substance. All OD-01–OD-23 and P1 CAP/AC/NFR are preserved. EVIDENCE_SUPPORTED/PROPOSED/BLOCKED_BY_GAP retain their qualifications; no institutional procedure, formula, threshold, responsibility or official signoff is invented. GAP-001–GAP-020 remain OPEN, resolved NONE/new NONE; A 0 / B 14 / C 4 / D 2 unchanged. No scope/stack/architecture/security/accounting procedure change, accepted ADR or cost exception.
 
 P0/P1 DONE; P2 **DONE — APPROVED**; P3–P11 **TODO / NOT AUTHORIZED**; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**. P3 is not authorized by this approval/checkpoint; stop after P2.
+
+## P3 authorization lifecycle record
+
+Historical preparation snapshot, completed by APPR-004/AUTH-009 below.
+
+Recorded 2026-10-05 (Asia/Jakarta): [AUTH-008](APPROVAL_RECORDS.md#auth-008) supplies explicit P3 planning-only authority. Main, HEAD, origin/main and live remote main match published P2 checkpoint `9e7950db6f9d6c6ab900a6328778807e057fb812`, parent `8881c047f24451b30754b19fe0d1cf96b9078f90`; initial worktree/index clean. AUTH-007 is exhausted/historical under its verified-publication completion rule. This is an administrative authorization record, not a new OD or official procedure. All OD-01–OD-23 section bodies and historical APPR identities remain preserved; all approved P1/P2 artifacts and GAP_REGISTER are byte-identical.
+
+P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **VERIFYING** under AUTH-008 planning only. AUTH-002–AUTH-007 **HISTORICAL / COMPLETED**; AUTH-007 has no continuing Git authority. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. Workflow/state/route/interaction proposals remain source-qualified and blocked where authority is unavailable. No schema/permission/API/design implementation, Tasks, phase freeze or production actions; no staging/commit/push. Next: **Independent P3 review against the exact candidate manifest; then Owner approval if READY_FOR_OWNER_APPROVAL, or bounded P3 corrections and delta review. P4 remains NOT AUTHORIZED. Stop after P3.**
+
+## P3 approval lifecycle record
+
+Recorded 2026-10-05 (Asia/Jakarta): [APPR-004](APPROVAL_RECORDS.md#appr-004) explicitly approves only the exact corrected, independently delta-reviewed **P3 — Workflows, Routes & Interactions** candidate. Permanent PRE-APPROVAL manifest identity: **19,555 bytes / SHA-256 `056bb00c9622c02788e3028d7dfa1de564ee8e75c651aaa0b966805cefdc060e`**, all 66 entries/67 eligible files independently verified before approval edits. Initial pre-correction review identity **18,379 bytes / `2f5498228831bcce6a9cac9943ff38d64fa956d8c79a44966c4c5a424b8acf2b`** remains historical. Owner-reported initial READY_FOR_OWNER_APPROVAL, 0/0/3/0; P3-REV-01/02/03 RESOLVED; independent delta READY_FOR_OWNER_APPROVAL, final 0/0/0/0.
+
+[AUTH-009](APPROVAL_RECORDS.md#auth-009) records Owner instruction 26,169 bytes / `566afe669cc678839165423691439be94bf070d4adaf075d6c901ad1c9285f48`, bounded approval/status/evidence/manifest synchronization, integrity checks, one normal `docs: finalize P3 workflows` commit, normal push/live verification and stop. AUTH-008 preparation completed. AUTH-009 is automatically HISTORICAL / COMPLETED only after successful push/live verification, current active phase authorization NONE; no separate closure commit. This is lifecycle administration, not a new OD/ADR or institutional/accounting decision.
+
+Approved P1/P2 bytes, OD-01–OD-23, CAP 20 / AC 27 / DC 77 / BR 29 / INV 18, APPR-001/002/003, qualified P3 meaning and corrected locators remain intact. Counts 28 WF / 27 stateful / 142 states / 148 TR / 31 RT / 21 IX / 10 EP; all GAP-001–GAP-020 OPEN, resolved NONE/new NONE, A 0 / B 15 / C 3 / D 2.
+
+P0/P1/P2 DONE and published; P3 **DONE — APPROVED**; P4–P11 TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. After verified checkpoint, subsequent Claude bootstrap may be **EXECUTION AGENT — WAITING** only. No onboarding now; P4 separately Owner-authorized; implementation requires approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Stop after P3.

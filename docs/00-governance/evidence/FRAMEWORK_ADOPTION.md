@@ -1,12 +1,12 @@
 # Framework adoption evidence
 
-Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 This record owns the AICWDF coverage map, explicit project exceptions, and structural-reference evidence. It is not an independent product specification or an Owner approval. The operating hierarchy is [SOURCE_OF_TRUTH](../SOURCE_OF_TRUTH.md); current authorization/status is [PHASE_STATUS](../../PHASE_STATUS.md).
 
 ## Historical P0 framework source and project-state snapshot
 
-The P0/P1 table/map/adaptation statements below describe approved historical coverage. Current state: P0/P1 DONE and published; P2 DONE — APPROVED APPR-003, qualifications retained; AUTH-002–AUTH-006 completed. AUTH-007 permits only the P2 checkpoint and automatically completes after verified publication; active phase authorization afterward NONE. P3–P11 remain not authorized. See P2 approval/checkpoint evidence below and PHASE_STATUS. Historical deferral wording confers no current authority.
+The P0/P1 table/map/adaptation statements below describe approved historical coverage. Current state: P0/P1/P2 DONE — APPROVED AND PUBLISHED; P3 DONE — APPROVED under APPR-004; AUTH-002–AUTH-008 completed. AUTH-009 permits only the P3 checkpoint until verified publication, then automatically completed with current active phase authorization NONE. P4–P11 remain not authorized. See current P3 amendment below and PHASE_STATUS; older deferral wording is historical.
 
 | Item | Evidence |
 | --- | --- |
@@ -130,3 +130,20 @@ P3–P11 remain TODO / NOT AUTHORIZED; freeze NOT REACHED, Tasks NONE, baseline 
 [APPR-003](../APPROVAL_RECORDS.md#appr-003) approves the exact reviewed P2 candidate: pre-approval manifest **14,976 bytes / `d1f40247e83f8e5ddf419ab4dcc0eeca3e9bf64c3fafe7fff32739636f4450f3`**; Owner-reported independent verdict READY_FOR_OWNER_APPROVAL, final findings all zero. P2 **DONE — APPROVED**, with the §13 owning artifacts, 77 concepts/9 areas/29 BR/18 INV/6 responsibility dimensions/16 types and existing qualifications preserved. Exact transitions remain explicitly deferred to P3; no formal policy/GAP resolution or execution readiness is implied.
 
 AUTH-006 historical/completed. [AUTH-007](../APPROVAL_RECORDS.md#auth-007) permits only lifecycle/evidence/manifest synchronization and one normal checkpoint/push/verification; automatically historical/completed afterward, no closure commit or continuing phase authority. P0/P1 evidence remains unchanged history. P3–P11 TODO / NOT AUTHORIZED; freeze NOT REACHED; Tasks NONE; baseline NOT READY; execution NOT AUTHORIZED; application NONE. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**.
+
+## P3 framework coverage amendment — AUTH-008
+
+| Requirement | Current owning candidate / adaptation |
+|---|---|
+| §14.1 actor, entry, preconditions, happy/alternative/failure paths, authorization, state, audit, recovery and end state | WORKFLOW_CONTRACTS and STATE_TRANSITIONS under `docs/03-workflows/`; exact official actors/order only when validated, otherwise named blocked gates |
+| §14.2 route/action matrix and no structurally orphaned action | ROUTE_CONTRACTS links intent/context/result/return/prerequisite to WF and IX; Owner boundary defers HTTP method/handler/permission implementation to P4/P5/P6 |
+| §14.3 success/validation/error/back-cancel and working/disabled/hidden intent | INTERACTION_CONTRACTS and EXCEPTION_REVISION_PATTERNS; documentation coverage only, runtime zero-dead proof owed to P7/P8 implementation |
+| §13 earlier exact-transition deferral | STATE_TRANSITIONS now owns P3 wording within AUTH-008; P2 lifecycle semantics unchanged, retention/delete/anonymization authority remains P5/P9/P10 |
+| §18.4–6 contextual returns, state preservation; §18.9 interaction feedback | ROUTE_CONTRACTS and INTERACTION_CONTRACTS preserve operational context; P7 presentation/accessible components/motion and P8 browser verification remain deferred |
+| §2/3 authority; §4A/4B/4C local auth/bilingual/cost; §8/36 evidence/handoff | APPROVAL_RECORDS AUTH-008, preserved P1/P2/OD/GAP authority, WORKFLOW_TRACEABILITY and P3 quality/manifest/current handoff |
+
+P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **DONE — APPROVED** under APPR-004. AUTH-002–AUTH-008 **HISTORICAL / COMPLETED**. AUTH-009 authorizes only this P3 checkpoint until successful push/live verification; afterward it is automatically **HISTORICAL / COMPLETED**, current active phase authorization **NONE**. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. Master framework bytes unchanged. No current UNY policy/legal assertion, new OD/ADR/GAP resolution or later-phase implementation; only bounded AUTH-009 checkpoint Git actions after integrity PASS. Exact next safe action: **Complete only the APPR-004/AUTH-009 checkpoint and verify publication; then bootstrap PRANATA in Claude Code as EXECUTION AGENT — WAITING in a subsequent session. P4 needs separate Owner authorization; execution requires approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Stop after P3.**
+
+## P3 approval lifecycle amendment
+
+APPR-004 approves the corrected/delta-reviewed P3 candidate at **19,555 bytes / `056bb00c9622c02788e3028d7dfa1de564ee8e75c651aaa0b966805cefdc060e`**; initial review identity 18,379 bytes / `2f5498228831bcce6a9cac9943ff38d64fa956d8c79a44966c4c5a424b8acf2b` remains historical. Owner-reported REV-01/02/03 RESOLVED; delta READY_FOR_OWNER_APPROVAL, final 0/0/0/0. The current §13/14 mapping is approved with all procedure/domain qualifications; master framework bytes unchanged. Current post-approval manifest differs from permanent approval identity. AUTH-009 checkpoint only; no P4/freeze/Tasks/execution authority.

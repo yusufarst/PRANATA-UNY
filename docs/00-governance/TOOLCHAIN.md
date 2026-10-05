@@ -1,6 +1,6 @@
 # Toolchain
 
-Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 This registry owns tool capability policy and honest availability (AICWDF §5–§7, §6A). A named tool is a preference; verified capability is the requirement. No application dependency was installed or application environment created in P0.
 
@@ -30,7 +30,7 @@ Metadata/version probes only; these are machine capabilities, not installed PRAN
 
 | Tool | Observation | Verification limit |
 | --- | --- | --- |
-| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002–006 historical/completed; AUTH-007 bounded P2 checkpoint until verified publication, then automatically completed; baseline verified read-only |
+| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002–008 historical/completed; AUTH-009 single approved P3 checkpoint only until verified publication, then completed; live baseline verified read-only |
 | ripgrep (`rg`) | Command available and used | Targeted search works; no graph claimed |
 | Node.js | `v24.18.0`; version probe passed | No application compatibility/build verification |
 | npm | `11.16.0`; version probe passed | No package installation performed |
@@ -77,6 +77,14 @@ P2 uses existing PowerShell, Node.js `v24.18.0` and Git for bounded documentatio
 
 Existing SOURCE_INVENTORY, ASSET_SOURCE_REVIEW, PROCUREMENT_SOURCE_REVIEW and approved P1 coverage support conceptual modeling. No raw-content reinspection/recalculation/media decoding/upload, current-law verification, new source-authority validation, runtime/version-sensitive application claim, MCP configuration, production DB access or recurring cost occurred. Application tests/browser E2E/security/performance/build/migration remain N/A because no application exists. Internal peer review is preparation evidence, not the required independent exact-manifest review or Owner approval; [P2_QUALITY_GATE](evidence/P2_QUALITY_GATE.md) owns results.
 
-## P2 approval/checkpoint verification — AUTH-007
+## Historical P2 approval/checkpoint verification — AUTH-007
 
 Existing PowerShell/Node/Git only. Exact pre-approval manifest and all entries independently verified before edits; temporary audit/snapshot helpers outside the repository support file-byte preservation, links/anchors/IDs/counts, raw fingerprints/ignore checks and staged/committed blob equality. APPR-003 preserves the reviewed identity; the refreshed P2 manifest identifies post-approval bytes. AUTH-007 permits one normal Owner-identity checkpoint/push/live remote verification and automatically completes afterward. No installation, paid service, MCP reconfiguration, raw-content reinspection/upload, current-policy validation or production access; application checks remain N/A — no application. [P2_QUALITY_GATE](evidence/P2_QUALITY_GATE.md#p2-post-approval-integrity--2026-10-05) owns results; P3 remains NOT AUTHORIZED.
+
+## Historical P3 preparation verification — AUTH-008
+
+Existing PowerShell/Node/Git only. Read-only live remote verification passed after restricted-network retry. Temporary helpers outside the repository compare all tracked baseline bytes and 47 ignored raw fingerprints, inspect IDs/coverage/local links/anchors and generate/verify the manifest. No installation, MCP reconfiguration, paid service, raw-content reinspection/upload, production access or version-sensitive application work. Runtime/browser E2E/accessibility/performance/security checks N/A because there is no application. [P3_QUALITY_GATE](evidence/P3_QUALITY_GATE.md) owns actual checks; P4–P11 stay not authorized.
+
+## P3 approval checkpoint verification — AUTH-009
+
+Existing PowerShell/Node/Git only; exact corrected manifest/entries independently matched before approval edits. Temporary helpers/snapshots outside repository support protected-byte/ID/link/locator/raw-fingerprint checks and staged/committed blob equality. APPR-004 binds corrected pre-approval identity; current P3 manifest identifies post-approval bytes. AUTH-009 permits one normal Owner-identity checkpoint/push/live verification then automatically completes. No dependency installation, paid service, MCP reconfiguration, production access or raw-content upload. Runtime/E2E/security/performance and official procedure/accounting-result validation remain N/A/not claimed. [P3_QUALITY_GATE](evidence/P3_QUALITY_GATE.md#p3-post-approval-integrity--2026-10-05) owns evidence.

@@ -1,6 +1,6 @@
 # Safe source inventory
 
-Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Authority and coverage
 
@@ -13,6 +13,7 @@ In P0, 45 historical files received bounded content inspection and SRC-033/VIS-0
 | U-001 | Owner-supplied P0 request, received 2026-10-04; verified original attachment locator and SHA-256 in [U-001 provenance](#u-001-original-owner-request) | OD-01–OD-20, framework adoption and P0/session mandates | OWNER_APPROVED_DECISION; sanitized durable direction in DECISION_LOG, not approval of generated artifacts | Only explicit superseding Owner decision changes direction; P0 approved separately by [APPR-001](APPROVAL_RECORDS.md#appr-001), not by U-001 |
 | U-002 | Explicit Owner P1 request; verified original bytes/digest in [U-002 provenance](#u-002-p1-owner-request) | AUTH-004, reaffirmed prior direction, OD-21–OD-23, P1 product evaluation/experience mandate | OWNER_APPROVED_DECISION for explicit qualified direction; not approval of generated P1 scope/metrics/artifacts | Historical preparation required independent review/Owner approval; now recorded separately in APPR-002 without promoting source authority |
 | U-003 | Explicit Owner P2 request; original fingerprint in [U-003 provenance](#u-003-p2-owner-request) | AUTH-006, domain semantics/rule authority/safety and phase boundaries | OWNER_APPROVED_DECISION for explicit direction; generated conceptual candidates were VERIFYING during preparation | Exact candidate subsequently approved APPR-003; AUTH-007 source/provenance in APPROVAL_RECORDS, qualifications retained |
+| U-004 | Explicit Owner P3 request and same-scope resume/finalization instruction; original fingerprints in [AUTH-008](APPROVAL_RECORDS.md#auth-008) | P3 workflow/route/interaction planning, authority classifications, safety and review candidate | OWNER_APPROVED_DECISION for explicit direction only; generated P3 artifacts were VERIFYING during preparation | Preparation historical/completed; corrected candidate subsequently approved APPR-004 under AUTH-009, does not authorize P4 or resolve GAPs; original external/unchanged/unpublished |
 | FW-001 | Unchanged repository AICWDF v4.3 English source | Master operating framework | AUTHORITATIVE_SOURCE for operating rules through Owner adoption; not UNY accounting/procurement authority | Preserved hash and full section map in FRAMEWORK_ADOPTION |
 | STRUCT-001 | GitHub yusufarst/MULTIPLECORP, pinned main a526daf47444d12b4ae5c51e1ae14c9dfe3f4978 | Entry point, adapter, governance/evidence/phase/context/handoff structures | INFERENCE for reusable structural patterns; never PRANATA domain/security/financial truth | Exact inspected paths and excluded content in FRAMEWORK_ADOPTION |
 
@@ -125,3 +126,7 @@ The historical credential workbook contains plaintext credential data; V1 must n
 - Screenshots: visual content inspected; no live system behavior or approved future UX inferred.
 
 Later agents must use approved repository semantics rather than require access to sensitive raw files. Additional source review, domain validation and specification work requires its phase authorization; optional video review does not block P0 governance completion.
+
+## P3 approval/checkpoint instruction provenance
+
+The explicit Owner approval/checkpoint instruction, external attachment `b7ebd71b-8ee3-460c-94aa-17a7c70b22b2`, **26,169 bytes / SHA-256 `566afe669cc678839165423691439be94bf070d4adaf075d6c901ad1c9285f48`**, is recorded in [AUTH-009](APPROVAL_RECORDS.md#auth-009) and [APPR-004](APPROVAL_RECORDS.md#appr-004). This is separate from the 47 raw originals; original remains external/unchanged/unpublished. Initial/corrected independent reviews are Owner-reported; approval binds only corrected pre-approval manifest 19,555 bytes / `056bb00c9622c02788e3028d7dfa1de564ee8e75c651aaa0b966805cefdc060e`. No raw source content was reinspected or published; source qualifications and all OPEN GAPs remain unchanged.

@@ -1,13 +1,13 @@
 # Agent operating model
 
-Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Roles
 
 | Role | Responsibility | Boundary |
 |---|---|---|
 | Owner | Final decisions, phase approval, material scope/architecture/cost approval | Explicit approval is never inferred from silence |
-| Codex / ChatGPT Planning Agent | Authorized phase documentation, evidence, decisions, gaps and executor clarity | P2 approved APPR-003; AUTH-007 approval/checkpoint only until verified publication, then automatically completed; no P3–P11 or implementation authority |
+| Codex / ChatGPT Planning Agent | Authorized phase documentation, evidence, decisions, gaps and executor clarity | APPR-004 P3 approved; AUTH-009 single checkpoint only until verified publication, then completed; no P4–P11 or implementation authority |
 | Claude Code future Execution Agent | Implement and verify an approved READY Task, update progress/evidence | No planning redesign or hidden-chat dependency |
 | Review Agent | Check authority, scope, tests/evidence, drift and false completion | Findings are evidence; cannot grant Owner approval |
 | Release Agent | Verify approved release path, staging/UAT/regression/rollback declarations | No release authorization exists yet |
@@ -17,9 +17,9 @@ Provider replacement does not alter canonical project truth. Tool adapters point
 
 ## Phase authorization
 
-Each phase requires its own explicit authorization. Read actual repository state, current handoff, phase status, decision index and approval records before work. P0/P1 are approved and published under APPR-001/APPR-002; P2 is DONE — APPROVED under [APPR-003](APPROVAL_RECORDS.md#appr-003). AUTH-002–AUTH-006 are historical/completed. [AUTH-007](APPROVAL_RECORDS.md#auth-007) is the single P2 approval/checkpoint authorization; successful publication/verification exhausts it automatically, with current active phase authorization NONE. P3–P11 remain not authorized. P2 approval retains EVIDENCE_SUPPORTED/PROPOSED/BLOCKED_BY_GAP qualifications and cannot establish missing institutional/accounting authority, exact workflows or final permissions.
+P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **DONE — APPROVED** under APPR-004. AUTH-002–AUTH-008 **HISTORICAL / COMPLETED**. AUTH-009 authorizes only this P3 checkpoint until successful push/live verification; afterward it is automatically **HISTORICAL / COMPLETED**, current active phase authorization **NONE**. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. [AUTH-009](APPROVAL_RECORDS.md#auth-009) authorizes only the approved P3 checkpoint. P2 qualifications remain binding. Each later phase needs separate explicit authorization.
 
-Finish an authorized phase's artifacts → self-review against framework and Owner direction → record evidence/known limitations → VERIFYING → Owner approves exact revision or requests corrections. Owner approval moves the phase to DONE; the next phase still needs explicit authorization. A quality PASS, created folder, completed conversation or commit never constitutes phase approval.
+Finish authorized artifacts → self-review/evidence → VERIFYING → independent review → Owner approves the exact candidate or requests corrections. Owner approval moves a phase to DONE; agent PASS, folders, conversation or commit do not grant approval.
 
 ## Future execution boundary
 
@@ -37,4 +37,8 @@ Review decisions against their classification and exact source. Challenge assump
 
 ## Session end obligation
 
-Update handoff with role/authorization/phase, absent or active Task, completed actions, changed files, evidence, decisions/gaps, tools, cost/DB impact, applicable checks and exact safe next action. Synchronize phase status/context. P0/P1 approved/published/DONE; P2 DONE — APPROVED under APPR-003; P3–P11 NOT AUTHORIZED. AUTH-007 permits only the checkpoint and automatically becomes HISTORICAL / COMPLETED after verified publication; no closure commit is needed solely to mark completion. No schema/data change or READY Task. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**. Stop after P2.
+Update handoff, changed files, evidence/decisions/gaps, tool/cost/DB impact, checks and next action together. P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **DONE — APPROVED** under APPR-004. AUTH-002–AUTH-008 **HISTORICAL / COMPLETED**. AUTH-009 authorizes only this P3 checkpoint until successful push/live verification; afterward it is automatically **HISTORICAL / COMPLETED**, current active phase authorization **NONE**. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. Only intended P3 approval/checkpoint Git actions under AUTH-009 after integrity PASS. Next: **Complete only the APPR-004/AUTH-009 checkpoint and verify publication; then bootstrap PRANATA in Claude Code as EXECUTION AGENT — WAITING in a subsequent session. P4 needs separate Owner authorization; execution requires approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Stop after P3.**
+
+## Subsequent execution-agent onboarding
+
+After verified P3 publication, a subsequent session may bootstrap Claude Code as **EXECUTION AGENT — WAITING**: read repository, AGENTS.md, CLAUDE.md, CURRENT_HANDOFF and approved P0–P3, understand unfinished P4–P11, and report waiting. No onboarding is performed in this checkpoint session. Do not scaffold/install dependencies/create schema/migrations/auth/UI/Tasks, infer unfinished planning, close GAPs or alter planning truth. Execution remains blocked until P4–P11 are complete/approved, Planning Freeze is reached and a P11 Task is explicitly READY.

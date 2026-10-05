@@ -1,0 +1,602 @@
+{
+  "project": "PRANATA UNY",
+  "date": "2026-10-05",
+  "timezone": "Asia/Jakarta",
+  "role": "PLANNING AGENT",
+  "authorization": "AUTH-009 / P3 APPROVAL + CHECKPOINT ONLY",
+  "phase_status": "DONE — APPROVED",
+  "phase_states": {
+    "P0": "DONE",
+    "P1": "DONE",
+    "P2": "DONE",
+    "P3": "DONE",
+    "P4": "TODO / NOT AUTHORIZED",
+    "P5": "TODO / NOT AUTHORIZED",
+    "P6": "TODO / NOT AUTHORIZED",
+    "P7": "TODO / NOT AUTHORIZED",
+    "P8": "TODO / NOT AUTHORIZED",
+    "P9": "TODO / NOT AUTHORIZED",
+    "P10": "TODO / NOT AUTHORIZED",
+    "P11": "TODO / NOT AUTHORIZED"
+  },
+  "owner_phase_approval": "APPR-004 APPROVED / exact corrected reviewed candidate only",
+  "manifest_state": "POST_APPROVAL_CHECKPOINT",
+  "planning_freeze": "NOT REACHED",
+  "tasks": "NONE",
+  "task_baseline": "NOT READY",
+  "execution": "NOT AUTHORIZED",
+  "application_implementation": "NONE",
+  "manifest_path": "docs/00-governance/evidence/P3_ARTIFACT_MANIFEST.json",
+  "manifest_excludes_itself": true,
+  "owner_request_fingerprints": [
+    {
+      "attachment": "9618412f-97fe-4956-b7c6-e6e5e554483c",
+      "bytes": 50429,
+      "sha256": "8067231eb12526b67cb31c77a8a97e61272613f2dda238cd932ed426f4eecd63"
+    },
+    {
+      "attachment": "af25bbba-ee83-4397-a649-c17cd057b673",
+      "bytes": 20757,
+      "sha256": "dbdd2872d39512d168435da1e3641c52cba03761ad4b656f3d3844cf50e5e754",
+      "scope": "SAME AUTH-008 RESUME / FINALIZATION ONLY"
+    },
+    {
+      "attachment": "e7effd06-1b9c-4ccf-8f90-2643ce979cd8",
+      "bytes": 16506,
+      "sha256": "177691970430190902dd9f52156a0afe3a8f5919ef2e358ea5ee51c79d8a6b08",
+      "scope": "SAME AUTH-008 / P3-REV-01 / P3-REV-02 / P3-REV-03 ONLY"
+    },
+    {
+      "attachment": "b7ebd71b-8ee3-460c-94aa-17a7c70b22b2",
+      "bytes": 26169,
+      "sha256": "566afe669cc678839165423691439be94bf070d4adaf075d6c901ad1c9285f48",
+      "scope": "AUTH-009 / APPR-004 / P3 APPROVAL + CHECKPOINT ONLY"
+    }
+  ],
+  "baseline": {
+    "branch": "main",
+    "head": "9e7950db6f9d6c6ab900a6328778807e057fb812",
+    "commit_message": "docs: finalize P2 domain model",
+    "parent": "8881c047f24451b30754b19fe0d1cf96b9078f90",
+    "origin": "https://github.com/yusufarst/PRANATA-UNY.git",
+    "live_remote_verification": "PASS / read-only 2026-10-05 Asia/Jakarta; restricted-network retry",
+    "initial_working_tree": "CLEAN at AUTH-008 preparation; corrected candidate preserved before AUTH-009 approval",
+    "initial_staging": "EMPTY",
+    "historical_completed_authorizations": [
+      "AUTH-002",
+      "AUTH-003",
+      "AUTH-004",
+      "AUTH-005",
+      "AUTH-006",
+      "AUTH-007",
+      "AUTH-008"
+    ]
+  },
+  "git_actions": {
+    "staging": "AUTHORIZED intended files only after bounded integrity PASS; verify exact index blobs",
+    "commit": "AUTHORIZED one normal docs: finalize P3 workflows; existing configured Owner identity only",
+    "push": "AUTHORIZED normal git push origin main; live publication verification required",
+    "publication_evidence": "Actual commit SHA/push/live verification/clean tree are Git-session evidence, not claimed in advance"
+  },
+  "candidate_file_count_including_manifest": 67,
+  "new_files_including_manifest": 10,
+  "modified_pre_existing_files": [
+    "AGENTS.md",
+    "README.md",
+    "docs/00-governance/AGENT_OPERATING_MODEL.md",
+    "docs/00-governance/APPROVAL_RECORDS.md",
+    "docs/00-governance/CHANGE_CONTROL.md",
+    "docs/00-governance/DECISION_INDEX.md",
+    "docs/00-governance/DECISION_LOG.md",
+    "docs/00-governance/GIT_WORKFLOW.md",
+    "docs/00-governance/PROJECT_CHARTER.md",
+    "docs/00-governance/SOURCE_INVENTORY.md",
+    "docs/00-governance/SOURCE_OF_TRUTH.md",
+    "docs/00-governance/TOOLCHAIN.md",
+    "docs/00-governance/evidence/FRAMEWORK_ADOPTION.md",
+    "docs/CONTEXT_INDEX.md",
+    "docs/PHASE_STATUS.md",
+    "docs/handoff/CURRENT_HANDOFF.md"
+  ],
+  "preserved_pre_existing_files": 41,
+  "reference_safety": {
+    "original_files": 47,
+    "all_ignored": true,
+    "byte_identical": true,
+    "tracked_or_staged": false,
+    "raw_content_reinspection": false,
+    "external_upload": false,
+    "production_access": false
+  },
+  "coverage_counts": {
+    "workflows": 28,
+    "stateful": 27,
+    "transitions": 148,
+    "routes": 31,
+    "interactions": 21,
+    "patterns": 10
+  },
+  "state_definition_count": 142,
+  "traceability_counts": {
+    "OD": 23,
+    "CAP": 20,
+    "AC": 27,
+    "BR": 29,
+    "INV": 18,
+    "GAP": 20,
+    "DC": 77
+  },
+  "canonical_preserved": {
+    "DC": 77,
+    "BR": 29,
+    "INV": 18,
+    "OD": 23,
+    "CAP": 20,
+    "AC": 27,
+    "domain_areas": 9,
+    "responsibility_dimensions": 6,
+    "responsibility_types": 16,
+    "proposed_NFR": 4
+  },
+  "gaps": {
+    "reviewed": 20,
+    "resolved": 0,
+    "partially_clarified": 15,
+    "primarily_outside_p3": 3,
+    "fully_blocked": 2,
+    "still_open": 20,
+    "new": 0
+  },
+  "quality_evidence": "docs/00-governance/evidence/P3_QUALITY_GATE.md",
+  "preparation_quality": "PASS / documentation only; not independent acceptance",
+  "temporary_helper_safety": "PASS / outside repository, excluded and not durable prerequisites",
+  "independent_review": {
+    "verdict": "READY_FOR_OWNER_APPROVAL",
+    "provenance": "OWNER-REPORTED / reviewed pre-correction candidate only",
+    "reviewed_manifest": {
+      "path": "docs/00-governance/evidence/P3_ARTIFACT_MANIFEST.json",
+      "bytes": 18379,
+      "sha256": "2f5498228831bcce6a9cac9943ff38d64fa956d8c79a44966c4c5a424b8acf2b",
+      "candidate_files": 67,
+      "manifest_entries": 66,
+      "created": 10,
+      "amended": 16,
+      "preserved": 41
+    },
+    "original_findings": {
+      "blocker": 0,
+      "major": 0,
+      "minor": 3,
+      "observation": 0
+    },
+    "corrections": {
+      "P3-REV-01": "RESOLVED",
+      "P3-REV-02": "RESOLVED",
+      "P3-REV-03": "RESOLVED"
+    },
+    "independent_delta_review": {
+      "verdict": "READY_FOR_OWNER_APPROVAL",
+      "provenance": "OWNER-REPORTED / exact corrected candidate",
+      "final_findings": {
+        "blocker": 0,
+        "major": 0,
+        "minor": 0,
+        "observation": 0
+      }
+    },
+    "owner_approval": "APPR-004 APPROVED"
+  },
+  "safe_next_action": "After verified checkpoint: subsequent Claude Code bootstrap EXECUTION AGENT — WAITING only; no onboarding in this session; P4 separately Owner-authorized; application execution requires approved P4–P11, Planning Freeze and explicitly READY P11 Task; stop after P3",
+  "files": [
+    {
+      "path": ".gitignore",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 362,
+      "sha256": "93f182f0548487276fe26c189d5f0c96561a1e30a3e46537b7ac47c8265e8807"
+    },
+    {
+      "path": "AGENTS.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 5731,
+      "sha256": "5f57ce575863028645b82931c8a12e41882612b6f3dce423310f352dca509160"
+    },
+    {
+      "path": "CLAUDE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 290,
+      "sha256": "becddce2d73c5c72d21914a6e9cdf3ce3ff9db25fa0974e094586f99fb9c26bb"
+    },
+    {
+      "path": "README.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 2897,
+      "sha256": "b9a88e9f0936f7fbf2669426b44baab0a1f2ec0f8fa6945badc13990a83b646b"
+    },
+    {
+      "path": "docs/00-governance/AGENT_OPERATING_MODEL.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 6242,
+      "sha256": "9475dc04d7d76ec0902c8e6f016dc13d6df2790ff4422e7b44b4fa1e2bd4889a"
+    },
+    {
+      "path": "docs/00-governance/APPROVAL_RECORDS.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 48526,
+      "sha256": "eaee73bcd023b359bed0701a388e7936e01cb8dbbaba0e4022f6c603013cbfaf"
+    },
+    {
+      "path": "docs/00-governance/CHANGE_CONTROL.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 5189,
+      "sha256": "d25607d2d8e61ad11f88673e257f1bf9778e40778936bc1018274332d6e316bb"
+    },
+    {
+      "path": "docs/00-governance/COST_POLICY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 2831,
+      "sha256": "d435b42602efbac806bc47cb181232ca5bcb1009eb45bcd793c38e7a761ddb96"
+    },
+    {
+      "path": "docs/00-governance/DECISION_INDEX.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 4651,
+      "sha256": "737d5b6f415a83be3235d1bceab496c43267baeb057f79c16009112110d564c6"
+    },
+    {
+      "path": "docs/00-governance/DECISION_LOG.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 24176,
+      "sha256": "84c8831edfeef20596fa573089eee0baac372ac42e9bc82c996390a63ef17b7b"
+    },
+    {
+      "path": "docs/00-governance/ENGINEERING_PRINCIPLES.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 5367,
+      "sha256": "7c53aa1b26811d63ce3bfa732f95cc96b9d03f240fea1f1af6c0b3cacf733476"
+    },
+    {
+      "path": "docs/00-governance/EVIDENCE_POLICY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 4027,
+      "sha256": "d4cc1ab78a8918e35ed98c4c5b2f93d155af53d56d6375ea1675be4b117e55c2"
+    },
+    {
+      "path": "docs/00-governance/GAP_REGISTER.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 11596,
+      "sha256": "65e8feb239daa3bde620c54814d59ecfb63869e7e8d3eb037e4369dc461c5fd8"
+    },
+    {
+      "path": "docs/00-governance/GIT_WORKFLOW.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 11662,
+      "sha256": "b868da47f4666bab365a94eb4edfec80a47a458a82b2a6f053b18a5795ce5922"
+    },
+    {
+      "path": "docs/00-governance/PRODUCTION_DATA_SAFETY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 3394,
+      "sha256": "75e72e8043b52c0910d1f0651e41e37edc76faadecf0b6a9967d9455f4f6a966"
+    },
+    {
+      "path": "docs/00-governance/PROJECT_CHARTER.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 4373,
+      "sha256": "99be73756ff65804c03a922bb743d7b8fe2d87fe4913e217564316426ac10e60"
+    },
+    {
+      "path": "docs/00-governance/SOURCE_INVENTORY.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 32945,
+      "sha256": "908ff72fb21b8810ba135e73f5238d5a1e14c324c6a8773864601c1ddf80b983"
+    },
+    {
+      "path": "docs/00-governance/SOURCE_OF_TRUTH.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 13012,
+      "sha256": "d4217e0eea9a350315bb0100f15b7627ab416c30454d33e51beae93114f3de30"
+    },
+    {
+      "path": "docs/00-governance/TOOLCHAIN.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 14205,
+      "sha256": "364ca15ed8716f836fd7e42722bf60e4382ec262ef8af1884706df3955934151"
+    },
+    {
+      "path": "docs/00-governance/evidence/ASSET_SOURCE_REVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 20781,
+      "sha256": "4c02803796783fb92310397fcc38fac8a5f1f531a380a29d7924bea64ad45c4d"
+    },
+    {
+      "path": "docs/00-governance/evidence/FRAMEWORK_ADOPTION.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 23387,
+      "sha256": "4b00227743a365334b5b388aab07da67021e7805462741e374ddba43df85d88e"
+    },
+    {
+      "path": "docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 12285,
+      "sha256": "eefa3dfdfd9630d1f39873d9e72d540f86f893329a276c2308c519eb5317dcf2"
+    },
+    {
+      "path": "docs/00-governance/evidence/P0_QUALITY_GATE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 23082,
+      "sha256": "d3110a7c05ec621a6687890c0a71b1c27defc218ceab3a4aba9de2615748a81d"
+    },
+    {
+      "path": "docs/00-governance/evidence/P1_ARTIFACT_MANIFEST.json",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 14055,
+      "sha256": "89dba7100409d900dc32a7b4e5d792293f03731c51ff28c5c2320f0663d540ba"
+    },
+    {
+      "path": "docs/00-governance/evidence/P1_QUALITY_GATE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 24133,
+      "sha256": "b86964ea7812891fbbdf0055fbb0894b11694febace3e0205db88c4af305214a"
+    },
+    {
+      "path": "docs/00-governance/evidence/P2_ARTIFACT_MANIFEST.json",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 16547,
+      "sha256": "ad3dc9303446a5ed36f8b55591d4dda60612d668d67442cd602e8888c7f53b25"
+    },
+    {
+      "path": "docs/00-governance/evidence/P2_QUALITY_GATE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 21687,
+      "sha256": "9cb415246fa18690a7034e28ce9142e3aaa158d88606bc75503e1c5a361693ef"
+    },
+    {
+      "path": "docs/00-governance/evidence/P3_QUALITY_GATE.md",
+      "disposition": "CREATED_P3",
+      "bytes": 29310,
+      "sha256": "37510aa13abe9fda4349a72c469d5c9e8b7375e6a0dcee8cc6e0971f4424aba2"
+    },
+    {
+      "path": "docs/00-governance/evidence/PROCUREMENT_SOURCE_REVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 25378,
+      "sha256": "ebff32a3b87e7e1ca8bdcd37ac1d0f1259806ecfd91756283ea1c2469daa6819"
+    },
+    {
+      "path": "docs/00-governance/evidence/VISUAL_SOURCE_REVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 3245,
+      "sha256": "2f4703162473710ebffa29bb1624a46e9d135774c238775e65b6ad1945c292bb"
+    },
+    {
+      "path": "docs/00-governance/sources/AI_First_Complex_WebApp_Task_Framework_v4.3_EN.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 76025,
+      "sha256": "bb578adabcd8ebddcb97c278e6589b935137f26f851b7218dd86c141744b70fe"
+    },
+    {
+      "path": "docs/01-product/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/01-product/ACCEPTANCE_CRITERIA.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 16679,
+      "sha256": "98173403496997ba034eb2d4d5ae655ccb911218aa93d94677ec1e8d31c7754a"
+    },
+    {
+      "path": "docs/01-product/PRODUCT_EXPERIENCE_DIRECTION.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 17036,
+      "sha256": "3bca90581dd459c583912ecd6c7dcc492608bb67eb62456fcd832f3c3917b64e"
+    },
+    {
+      "path": "docs/01-product/PRODUCT_OVERVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 20481,
+      "sha256": "bfdcfb6fa8080ee2c2d0ce27f7c0d7b9f82c22bfa28780daab667ab7eea40b47"
+    },
+    {
+      "path": "docs/01-product/REFERENCE_COVERAGE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 30581,
+      "sha256": "50616bd135408a7b9f23a4d77e9a5d9df267f41218bd3c8fb3e074b5df89f976"
+    },
+    {
+      "path": "docs/01-product/V1_SCOPE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 24635,
+      "sha256": "adf633cc81f00bf105edccf412e3234f8152b4a501f9582ce2741a5c887a1a1d"
+    },
+    {
+      "path": "docs/02-domain/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/02-domain/BUSINESS_RULES.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 61994,
+      "sha256": "9ee459633dd35127d664dbeeb484b618e1569561c4fbf3161600da034ed2eece"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_DECISION_REQUESTS.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 9431,
+      "sha256": "5c6913391256c9a667cb0d5e6b50e9b83fcb489988b452aa99cc175723172cde"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_GLOSSARY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 35985,
+      "sha256": "3c54d2413455eb1e01819d1733b8005eac4b479e694cf397e591c971888ee787"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_LIFECYCLES.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 15845,
+      "sha256": "92fb6cccdfa8ad820b5e1eeeb11e29f8b8c7697825c474f579296292b3f53264"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_MODEL.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 43983,
+      "sha256": "f81369d6d862084381d6b58e384b8f13777c20472316913b0898bb602876d6c2"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_RESPONSIBILITIES.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 9842,
+      "sha256": "bb338e97504e0bba47d77604ecc8ae19bf0fd42b4d4d1e046394e9500ed50e4f"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_TRACEABILITY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 22063,
+      "sha256": "3d8ab78076bd0da386d0a3df1f56ee53ea7db41922446f9b15ee284e7960bcfc"
+    },
+    {
+      "path": "docs/03-workflows/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/03-workflows/EXCEPTION_REVISION_PATTERNS.md",
+      "disposition": "CREATED_P3",
+      "bytes": 21514,
+      "sha256": "786ca01e883df0c5a5d0f862eafe70732c94da3c1481efe0f0c0f19bc97695e0"
+    },
+    {
+      "path": "docs/03-workflows/INTERACTION_CONTRACTS.md",
+      "disposition": "CREATED_P3",
+      "bytes": 42006,
+      "sha256": "614e263a8101512c6b52f491cdfbc4b5b4a15111e5bbd984454c055bbaea52cd"
+    },
+    {
+      "path": "docs/03-workflows/ROUTE_CONTRACTS.md",
+      "disposition": "CREATED_P3",
+      "bytes": 38808,
+      "sha256": "ff9056fce273b02ecce97d2b86df897ee914131930424bc15dab3f0b81f145bb"
+    },
+    {
+      "path": "docs/03-workflows/STATE_TRANSITIONS.md",
+      "disposition": "CREATED_P3",
+      "bytes": 98060,
+      "sha256": "e9df69d8a62ea8f24a6a7092187f631e8055fcb775fb6223a06dcaadbe211ce7"
+    },
+    {
+      "path": "docs/03-workflows/WORKFLOW_CATALOG.md",
+      "disposition": "CREATED_P3",
+      "bytes": 15013,
+      "sha256": "72f5ee92d5dc7ad08daef32aa4b20ecc31b7f4223098978b9cd1668983aa5dc4"
+    },
+    {
+      "path": "docs/03-workflows/WORKFLOW_CONTRACTS.md",
+      "disposition": "CREATED_P3",
+      "bytes": 55702,
+      "sha256": "d8a896fcf18ca63ecc9d8ff180c39eb15803a7c6a1f63036ddf3763d89a55ab6"
+    },
+    {
+      "path": "docs/03-workflows/WORKFLOW_DECISION_REQUESTS.md",
+      "disposition": "CREATED_P3",
+      "bytes": 20639,
+      "sha256": "cecc7db2ed5fa00648f774d145740efb8e2644b6a7b67fd14eaa2f0d213e6e23"
+    },
+    {
+      "path": "docs/03-workflows/WORKFLOW_TRACEABILITY.md",
+      "disposition": "CREATED_P3",
+      "bytes": 42422,
+      "sha256": "6b40bbc6e3bfc5369cbbca98da8a094c4398b4d2c7346dd387012504fcd98585"
+    },
+    {
+      "path": "docs/04-architecture/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/05-security/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/06-api-performance/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/07-ux-design/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/08-testing/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/09-operations/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/10-release/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/11-tasks/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/CONTEXT_INDEX.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 8795,
+      "sha256": "d4ec20d8ed45d2ebb0a9ae3a6c71309aae6d6a44158466e1305dddefa0d01cb4"
+    },
+    {
+      "path": "docs/PHASE_STATUS.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 5356,
+      "sha256": "00752444999fd24863a1e3073df7403554ecdc7aaa5c22d248cf5b62e3e87b9a"
+    },
+    {
+      "path": "docs/adr/README.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 1276,
+      "sha256": "b125d6a3ea5743c5bdbb9b630588387c5917493755f87486b1f255332f3972cf"
+    },
+    {
+      "path": "docs/handoff/CURRENT_HANDOFF.md",
+      "disposition": "AMENDED_P3",
+      "bytes": 11105,
+      "sha256": "a50a58ccf8e46c2cdc7eee6dae12f98c0b15175939d15d544c6921d502ed6f5f"
+    }
+  ],
+  "authorization_completion_rule": "Until successful normal push/live remote verification; then automatically HISTORICAL / COMPLETED, current active phase authorization NONE; no closure commit",
+  "reviewed_preapproval_manifest": {
+    "path": "docs/00-governance/evidence/P3_ARTIFACT_MANIFEST.json",
+    "bytes": 19555,
+    "sha256": "056bb00c9622c02788e3028d7dfa1de564ee8e75c651aaa0b966805cefdc060e",
+    "candidate_file_count_including_manifest": 67,
+    "entry_count_excluding_manifest": 66,
+    "new_files_including_manifest": 10,
+    "amended_pre_existing_files": 16,
+    "preserved_pre_existing_files": 41,
+    "identity_verified_before_repository_edits": true,
+    "approval": "APPR-004"
+  },
+  "postapproval_quality": "PASS / bounded documentation integrity only; no runtime or institutional-policy validation"
+}

@@ -1,6 +1,6 @@
 # Project charter
 
-Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Identity and purpose
 
@@ -22,12 +22,10 @@ Master operating framework: AICWDF v4.3, retained unchanged under [sources](sour
 
 ## Current work boundary
 
-P0/P1 are approved and published under APPR-001/APPR-002; P2 is DONE — APPROVED under [APPR-003](APPROVAL_RECORDS.md#appr-003), with reviewed qualifications retained. AUTH-002–AUTH-006 are historical/completed. [AUTH-007](APPROVAL_RECORDS.md#auth-007) permits only the P2 approval/checkpoint, automatically completed after successful publication/verification with active phase authorization NONE. [PRODUCT_OVERVIEW](../01-product/PRODUCT_OVERVIEW.md) owns approved product truth; [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md) owns the approved conceptual P2 model. This charter retains the approved foundation.
+P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **DONE — APPROVED** under APPR-004. AUTH-002–AUTH-008 **HISTORICAL / COMPLETED**. AUTH-009 authorizes only this P3 checkpoint until successful push/live verification; afterward it is automatically **HISTORICAL / COMPLETED**, current active phase authorization **NONE**. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. [APPR-004](APPROVAL_RECORDS.md#appr-004) approves the corrected workflow/route/interaction candidate; [AUTH-009](APPROVAL_RECORDS.md#auth-009) is checkpoint only. Starting published main HEAD `9e7950db6f9d6c6ab900a6328778807e057fb812` live-verified. P1/P2 bytes and all 20 OPEN GAPs preserved; only the intended AUTH-009 checkpoint Git actions after integrity PASS.
 
-Not authorized: P3–P11 specifications, application code/scaffold/packages, schema/migrations/auth/UI implementation, execution Tasks, planning freeze or production changes. AUTH-007 permits only the bounded P2 staging/commit/push/verification and then expires automatically. P1 remains byte-preserved APPROVED; P2 APPROVED retains all EVIDENCE_SUPPORTED/PROPOSED/BLOCKED_BY_GAP qualifications and 20 OPEN GAPs. P3–P11 folders remain reservations; no exhausted checkpoint grants a new Git action.
-
-Preferred stack is a P0 baseline only: Laravel, Inertia, React, TypeScript, shadcn/ui, Tailwind CSS, PostgreSQL, Nginx, Modular Monolith. Redis/Valkey needs justification. Exact versions, module/schema boundaries, deployment provider and environment provisioning remain for authorized later planning.
+Preferred stack remains the approved P0 baseline; exact versions/schema/modules/deployment stay later phases. [PRODUCT_OVERVIEW](../01-product/PRODUCT_OVERVIEW.md) owns approved product truth, [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md) conceptual domain, [WORKFLOW_CATALOG](../03-workflows/WORKFLOW_CATALOG.md) indexes APPROVED P3.
 
 ## P0 exit
 
-A zero-context agent can identify authority, project/phase state, absent Task baseline, safe boundary and next reading. Historical P0/P1 evidence remains intact; [P2_QUALITY_GATE](evidence/P2_QUALITY_GATE.md) owns preparation, reported independent review, approval and bounded checkpoint integrity evidence. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**. Stop after P2; no P3 authority.
+The approved P0 exit remains fulfilled: a new agent can locate authority/state/boundary and required context. P0/P1/P2 evidence remains historical; [P3_QUALITY_GATE](evidence/P3_QUALITY_GATE.md) owns current P3 preparation checks. Exact next safe action: **Complete only the APPR-004/AUTH-009 checkpoint and verify publication; then bootstrap PRANATA in Claude Code as EXECUTION AGENT — WAITING in a subsequent session. P4 needs separate Owner authorization; execution requires approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Stop after P3.**
