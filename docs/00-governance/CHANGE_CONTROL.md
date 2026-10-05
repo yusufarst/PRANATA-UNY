@@ -1,12 +1,12 @@
 # Change control
 
-Status: APPROVED (P1 state amendment; P0 change-control rules retained) | Updated: 2026-10-05 | Custodian: Planning Agent
+Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 This document owns how changes are classified, reviewed, and recorded. [SOURCE_OF_TRUTH](SOURCE_OF_TRUTH.md) owns authority precedence and document lifecycle; [APPROVAL_RECORDS](APPROVAL_RECORDS.md) owns approval evidence. The Owner retains final decision authority.
 
 ## Current authorization and decision boundaries
 
-[APPR-001](APPROVAL_RECORDS.md#appr-001) approves published P0; AUTH-002/003 checkpoints are HISTORICAL / COMPLETED. Historical [AUTH-004](APPROVAL_RECORDS.md#auth-004) prepared P1 with no commit/push. [APPR-002](APPROVAL_RECORDS.md#appr-002) approves the exact reviewed P1 product/governance amendments; P1 is DONE. [AUTH-005](APPROVAL_RECORDS.md#auth-005) authorizes only administrative approval/checkpoint through verified publication, then expires; no P2–P11 authority exists. Preserve OD-01–OD-20 wording and new qualified OD-21–OD-23 in [DECISION_LOG](DECISION_LOG.md); inference/legacy/templates/framework defaults cannot replace explicit direction.
+[APPR-001](APPROVAL_RECORDS.md#appr-001) / [APPR-002](APPROVAL_RECORDS.md#appr-002) preserve approved/published P0/P1. [APPR-003](APPROVAL_RECORDS.md#appr-003) approves the exact reviewed P2 candidate; P2 DONE, qualifications retained. AUTH-002–AUTH-006 are HISTORICAL / COMPLETED. [AUTH-007](APPROVAL_RECORDS.md#auth-007) permits only the approval/checkpoint and expires automatically after successful publication/verification, with active phase authorization NONE. P3–P11 remain NOT AUTHORIZED. Preserve exact OD-01–OD-23 and byte-identical P1; inference/legacy/templates/framework defaults cannot replace explicit direction. Qualified PROPOSED/EVIDENCE_SUPPORTED/BLOCKED_BY_GAP rules retain their status and validation dependencies after P2 approval.
 
 Material scope, business/workflow, accounting meaning, user responsibility, authorization/visibility, architecture/stack, design direction, infrastructure, recurring-cost, or production-risk changes require explicit Owner review and decision. A technical-sounding change that alters business meaning remains material. Record uncertainty instead of treating an unvalidated proposal as truth.
 
@@ -33,4 +33,4 @@ Planning freeze is not reached. After an approved P0–P11 planning baseline and
 
 ## Git boundary
 
-AUTH-002 initial publication and AUTH-003 `docs: close P0 publication handoff` are completed historical actions. AUTH-004 no-commit/push preparation restrictions are historical and superseded only by AUTH-005 for one approved P1 normal checkpoint. Require post-approval integrity and staged-byte checks before commit/push, then verify remote publication and stop; no continuing authority afterward. Do not amend published P0, reconfigure remote, force push or add ignored raw sources. [GIT_WORKFLOW](GIT_WORKFLOW.md) owns Git conditions; P0 approval grants no later Git/execution authority.
+AUTH-002–AUTH-006 actions are completed history. AUTH-007 permits only intended P2/approval lifecycle staging, one normal `docs: finalize P2 domain model` commit and normal push/remote verification after all material checks PASS. It becomes HISTORICAL / COMPLETED automatically after verified publication, without a separate closure commit or continuing phase/Git authority. Do not amend published history, reconfigure remote/identity, force push or add ignored sources. [GIT_WORKFLOW](GIT_WORKFLOW.md) owns conditions; P3 and execution remain NOT AUTHORIZED.

@@ -1,6 +1,6 @@
 # Safe source inventory
 
-Status: APPROVED (P1 provenance amendment; P0 records retained) | Inspected: 2026-10-04 (Asia/Jakarta) | Custodian: Planning Agent | Approved: 2026-10-05 (APPR-002)
+Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Authority and coverage
 
@@ -12,6 +12,7 @@ In P0, 45 historical files received bounded content inspection and SRC-033/VIS-0
 |---|---|---|---|---|
 | U-001 | Owner-supplied P0 request, received 2026-10-04; verified original attachment locator and SHA-256 in [U-001 provenance](#u-001-original-owner-request) | OD-01–OD-20, framework adoption and P0/session mandates | OWNER_APPROVED_DECISION; sanitized durable direction in DECISION_LOG, not approval of generated artifacts | Only explicit superseding Owner decision changes direction; P0 approved separately by [APPR-001](APPROVAL_RECORDS.md#appr-001), not by U-001 |
 | U-002 | Explicit Owner P1 request; verified original bytes/digest in [U-002 provenance](#u-002-p1-owner-request) | AUTH-004, reaffirmed prior direction, OD-21–OD-23, P1 product evaluation/experience mandate | OWNER_APPROVED_DECISION for explicit qualified direction; not approval of generated P1 scope/metrics/artifacts | Historical preparation required independent review/Owner approval; now recorded separately in APPR-002 without promoting source authority |
+| U-003 | Explicit Owner P2 request; original fingerprint in [U-003 provenance](#u-003-p2-owner-request) | AUTH-006, domain semantics/rule authority/safety and phase boundaries | OWNER_APPROVED_DECISION for explicit direction; generated conceptual candidates were VERIFYING during preparation | Exact candidate subsequently approved APPR-003; AUTH-007 source/provenance in APPROVAL_RECORDS, qualifications retained |
 | FW-001 | Unchanged repository AICWDF v4.3 English source | Master operating framework | AUTHORITATIVE_SOURCE for operating rules through Owner adoption; not UNY accounting/procurement authority | Preserved hash and full section map in FRAMEWORK_ADOPTION |
 | STRUCT-001 | GitHub yusufarst/MULTIPLECORP, pinned main a526daf47444d12b4ae5c51e1ae14c9dfe3f4978 | Entry point, adapter, governance/evidence/phase/context/handoff structures | INFERENCE for reusable structural patterns; never PRANATA domain/security/financial truth | Exact inspected paths and excluded content in FRAMEWORK_ADOPTION |
 
@@ -35,6 +36,15 @@ Local historical sources below are provisional evidence; **none is certified by 
 - Original byte size: **28,874 bytes**; SHA-256 **`a819a1f1f92eb04063b116eeca72481053acccfe4a9ae2dfa5d8a1df2451852c`**.
 - Full request read in memory; identity, baseline and scope verified. Classification **OWNER_APPROVED_DECISION** for explicit direction, **not approval of generated P1 artifacts**. Durable authorization is in APPROVAL_RECORDS; new/extended direction in DECISION_LOG; product proposals in `docs/01-product/`.
 - Original untouched, external and unpublished. Another machine may not have the attachment; compare original bytes/digest if available rather than hashing a reconstruction. Prior U-001 and 46 historical source records below remain distinct.
+
+## U-003 P2 Owner request
+
+- Received/inspected: 2026-10-05 (Asia/Jakarta); explicit **P2 planning only**, [AUTH-006](APPROVAL_RECORDS.md#auth-006).
+- External original: Codex attachment `ecefbb2f-690c-4f7a-9f64-54a4bbe3faf4`, `Pasted text.txt`; safe locator `%USERPROFILE%\.codex\attachments\ecefbb2f-690c-4f7a-9f64-54a4bbe3faf4\Pasted text.txt`.
+- Original **47,078 bytes**, SHA-256 **`333d01491cf3c2ed44a5b3c85f391732626f7047796a9ff5b340377f4adbf8b4`**. Full request read in bounded ranges and fingerprinted read-only; original unchanged and unpublished.
+- Durable scope/exclusions in AUTH-006; the authorized rule catalog preserves instruction-section locators and distinguishes explicit Owner safety direction from proposed domain modeling. No additional OD identifier or institutional accounting/procurement authority is inferred.
+- Original attachment is separate from the **47** local raw sources. If available later, compare original bytes/digest; do not hash a reconstruction. AUTH-006 and domain references preserve safe semantics without requiring this attachment for a later reader.
+- P2 reuses existing source reviews/P1 coverage. No raw-content reinspection or formula recalculation is required for this candidate; fingerprint/ignore checks do not constitute policy validation.
 
 ## Historical local originals — P0 inventory
 

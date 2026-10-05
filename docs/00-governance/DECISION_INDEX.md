@@ -1,6 +1,6 @@
 # Decision index
 
-Status: APPROVED (P1 amendment; approved P0 history retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and provenance. OD-01–OD-20 derive from U-001; OD-21–OD-23 derive from U-002 on 2026-10-04. They remain OWNER_APPROVED_DECISION with candidate/preferred/unresolved qualifications. Direction alone implies no generated-artifact approval; separate explicit P1 approval is APPR-002.
 
@@ -37,4 +37,4 @@ This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and pro
 | GOV-06 | Quality gate / handoff / stop | DECISION_LOG.md, GOV-06 section |
 | FD-01 | Inherited framework operating defaults | DECISION_LOG.md, FD-01 section |
 
-Original preparation: [AUTH-001](APPROVAL_RECORDS.md#auth-001). AUTH-002 and AUTH-003 are completed historical checkpoints. AUTH-004 preparation is historical/completed. Current authorization: **[AUTH-005](APPROVAL_RECORDS.md#auth-005), P1 approval/checkpoint only until verified publication**, exhausted afterward. Phase approvals: **P0 APPROVED [APPR-001](APPROVAL_RECORDS.md#appr-001)** and published; **P1 APPROVED [APPR-002](APPROVAL_RECORDS.md#appr-002)** / DONE; P2–P11 not authorized. Accepted ADRs: **NONE** ([ADR policy](../adr/README.md)). Gap resolutions: **NONE** ([GAP_REGISTER](GAP_REGISTER.md)). Future decision IDs remain stable; preserve supersession history. [P1 lifecycle record](DECISION_LOG.md#p1-approval-lifecycle-record) preserves administrative supersession without changing OD-01–OD-23. Exact next action after checkpoint: Owner separately authorizes P2 — Domain Model & Business Rules.
+Original preparation: [AUTH-001](APPROVAL_RECORDS.md#auth-001). AUTH-002–AUTH-006 are historical/completed. P0/P1 approved/published under APPR-001/APPR-002; P2 DONE — APPROVED under [APPR-003](APPROVAL_RECORDS.md#appr-003). [AUTH-007](APPROVAL_RECORDS.md#auth-007) permits only the P2 checkpoint until verified publication, then automatically historical/completed with active phase authorization NONE. P3–P11 not authorized. Accepted ADRs: **NONE** ([ADR policy](../adr/README.md)). Gap resolutions: **NONE** ([GAP_REGISTER](GAP_REGISTER.md)). OD-01–OD-23 remain exact and qualified. [P2 approval lifecycle record](DECISION_LOG.md#p2-approval-lifecycle-record) owns administrative completion; [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) owns qualified BR/INV wording, not new OD decisions. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**; stop after P2.

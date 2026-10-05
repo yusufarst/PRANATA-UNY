@@ -1,0 +1,456 @@
+{
+  "project": "PRANATA UNY",
+  "date": "2026-10-05",
+  "timezone": "Asia/Jakarta",
+  "role": "PLANNING AGENT",
+  "authorization": "AUTH-007 / P2 OWNER APPROVAL + CHECKPOINT ONLY UNTIL VERIFIED PUBLICATION",
+  "phase_status": "DONE",
+  "owner_phase_approval": "APPR-003 / APPROVED",
+  "manifest_state": "POST_APPROVAL_CHECKPOINT",
+  "planning_freeze": "NOT REACHED",
+  "tasks": "NONE",
+  "task_baseline": "NOT READY",
+  "execution": "NOT AUTHORIZED",
+  "application_implementation": "NONE",
+  "manifest_path": "docs/00-governance/evidence/P2_ARTIFACT_MANIFEST.json",
+  "manifest_excludes_itself": true,
+  "baseline": {
+    "branch": "main",
+    "head": "8881c047f24451b30754b19fe0d1cf96b9078f90",
+    "commit_message": "docs: finalize P1 product definition",
+    "parent": "3e7d6a21287410ff977db9db996154043e1c8926",
+    "origin": "https://github.com/yusufarst/PRANATA-UNY.git",
+    "local_and_origin_main_match": true,
+    "live_remote_baseline_verification": "PASS / read-only 2026-10-05 Asia/Jakarta; restricted-network retry",
+    "initial_working_tree": "CLEAN",
+    "initial_staging": "EMPTY",
+    "p0_approval": "APPR-001",
+    "p1_approval": "APPR-002",
+    "historical_completed_authorizations": [
+      "AUTH-002",
+      "AUTH-003",
+      "AUTH-004",
+      "AUTH-005"
+    ]
+  },
+  "git_actions": {
+    "staging": "AUTH-007 intended P2/approval lifecycle paths only after material integrity PASS",
+    "commit": "ONE NORMAL COMMIT AUTHORIZED: docs: finalize P2 domain model",
+    "push": "NORMAL git push origin main AUTHORIZED",
+    "publication": "NOT CLAIMED IN ADVANCE; independently verify live remote after push",
+    "verification_evidence": "Resulting commit SHA, push/ref/content/clean-tree evidence in Git/session/final report; no self-reference"
+  },
+  "candidate_file_count_including_manifest": 57,
+  "new_files_including_manifest": 9,
+  "modified_pre_existing_files": [
+    "AGENTS.md",
+    "README.md",
+    "docs/00-governance/AGENT_OPERATING_MODEL.md",
+    "docs/00-governance/APPROVAL_RECORDS.md",
+    "docs/00-governance/CHANGE_CONTROL.md",
+    "docs/00-governance/DECISION_INDEX.md",
+    "docs/00-governance/DECISION_LOG.md",
+    "docs/00-governance/GIT_WORKFLOW.md",
+    "docs/00-governance/PROJECT_CHARTER.md",
+    "docs/00-governance/SOURCE_INVENTORY.md",
+    "docs/00-governance/SOURCE_OF_TRUTH.md",
+    "docs/00-governance/TOOLCHAIN.md",
+    "docs/00-governance/evidence/FRAMEWORK_ADOPTION.md",
+    "docs/CONTEXT_INDEX.md",
+    "docs/PHASE_STATUS.md",
+    "docs/handoff/CURRENT_HANDOFF.md"
+  ],
+  "reference_safety": {
+    "original_files": 47,
+    "all_ignored": true,
+    "tracked_or_staged_raw_files": 0,
+    "raw_fingerprints_unchanged": true,
+    "raw_content_reinspected": false,
+    "raw_files_excluded_from_manifest": true,
+    "external_upload": false,
+    "production_db_touched": false
+  },
+  "preservation": {
+    "owner_decisions_OD_01_to_OD_23": true,
+    "approved_product_files_byte_unchanged": true,
+    "existing_20_gaps": "OPEN / UNCHANGED",
+    "p0_p1_manifests": "UNCHANGED HISTORICAL SNAPSHOTS; NOT CURRENT GOVERNANCE HASH CLAIMS",
+    "domain_substance": "EXACT REVIEWED TABLES/RULE CATALOG; administrative status/approval/next-action changes only"
+  },
+  "domain_counts": {
+    "concepts": 77,
+    "areas": 9,
+    "rules": 29,
+    "invariants": 18,
+    "responsibility_dimensions": 6,
+    "responsibility_types": 16,
+    "traceCAP": 20,
+    "traceAC": 27,
+    "traceOD": 23,
+    "traceGAP": 20
+  },
+  "quality_evidence": "docs/00-governance/evidence/P2_QUALITY_GATE.md",
+  "independent_review": {
+    "verdict": "READY_FOR_OWNER_APPROVAL",
+    "provenance": "Owner-reported in AUTH-007 original instruction",
+    "blockers": 0,
+    "major": 0,
+    "minor": 0,
+    "observations": 0,
+    "review_modified_files": 0
+  },
+  "safe_next_action": "After verified checkpoint Owner separately authorizes P3 — Workflows, Routes & Interactions; P3 NOT AUTHORIZED; stop after P2",
+  "files": [
+    {
+      "path": ".gitignore",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 362,
+      "sha256": "93f182f0548487276fe26c189d5f0c96561a1e30a3e46537b7ac47c8265e8807"
+    },
+    {
+      "path": "AGENTS.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 5008,
+      "sha256": "f3c6aa22ab8ab5d1e0f6b861e785f483b5ce0d3c574484e18b985f2c163114a0"
+    },
+    {
+      "path": "CLAUDE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 290,
+      "sha256": "becddce2d73c5c72d21914a6e9cdf3ce3ff9db25fa0974e094586f99fb9c26bb"
+    },
+    {
+      "path": "README.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 2412,
+      "sha256": "a7d2c11311471a2369f82f1f5cc6554764b1dae37610402e4831da4ba9c8e51a"
+    },
+    {
+      "path": "docs/00-governance/AGENT_OPERATING_MODEL.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 5458,
+      "sha256": "9c44081000c82cdf4f8320c21ff75ddbcfdd911d6269a62e417b2650b5d054ce"
+    },
+    {
+      "path": "docs/00-governance/APPROVAL_RECORDS.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 33066,
+      "sha256": "a296568ac2be581c4e9696a409213cc577a8c094814beb8bce343d1aa615f2bf"
+    },
+    {
+      "path": "docs/00-governance/CHANGE_CONTROL.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 5227,
+      "sha256": "a5b61207ee2fb66740a135aaa07d3434de78d56ee93d3fbb401e910f4792b467"
+    },
+    {
+      "path": "docs/00-governance/COST_POLICY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 2831,
+      "sha256": "d435b42602efbac806bc47cb181232ca5bcb1009eb45bcd793c38e7a761ddb96"
+    },
+    {
+      "path": "docs/00-governance/DECISION_INDEX.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 4059,
+      "sha256": "e84c55f8a550e59af6da6038a63b673434e9c9f37b4315bdaa360ba92cfe6c11"
+    },
+    {
+      "path": "docs/00-governance/DECISION_LOG.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 20489,
+      "sha256": "d34434b903d807bbf5c5d0fcf8d81250ccac7de142d97bc4d191114626c6c24b"
+    },
+    {
+      "path": "docs/00-governance/ENGINEERING_PRINCIPLES.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 5367,
+      "sha256": "7c53aa1b26811d63ce3bfa732f95cc96b9d03f240fea1f1af6c0b3cacf733476"
+    },
+    {
+      "path": "docs/00-governance/EVIDENCE_POLICY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 4027,
+      "sha256": "d4cc1ab78a8918e35ed98c4c5b2f93d155af53d56d6375ea1675be4b117e55c2"
+    },
+    {
+      "path": "docs/00-governance/GAP_REGISTER.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 11596,
+      "sha256": "65e8feb239daa3bde620c54814d59ecfb63869e7e8d3eb037e4369dc461c5fd8"
+    },
+    {
+      "path": "docs/00-governance/GIT_WORKFLOW.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 8305,
+      "sha256": "148a036a9681f44c4f72de6dd956cce3d999e7f3d85bf4f972a59a5675fd2655"
+    },
+    {
+      "path": "docs/00-governance/PRODUCTION_DATA_SAFETY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 3394,
+      "sha256": "75e72e8043b52c0910d1f0651e41e37edc76faadecf0b6a9967d9455f4f6a966"
+    },
+    {
+      "path": "docs/00-governance/PROJECT_CHARTER.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 4462,
+      "sha256": "b830110f587ae73b9f95239621818096d0e73ab715e91d249f7903e1c6d4e548"
+    },
+    {
+      "path": "docs/00-governance/SOURCE_INVENTORY.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 31660,
+      "sha256": "9869f3afe1da2c7e71f2c1ec4b8045985c21e5ffa267f9b28b03176503f9dc13"
+    },
+    {
+      "path": "docs/00-governance/SOURCE_OF_TRUTH.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 9809,
+      "sha256": "c2942035e5e6e40a0e6986078144f072427fcbb163f85b4a5be353040d2436b9"
+    },
+    {
+      "path": "docs/00-governance/TOOLCHAIN.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 12684,
+      "sha256": "ead701b516b492c9d4d541ec620e18764f4ffd55524f896b7d0bdb1546849ffa"
+    },
+    {
+      "path": "docs/00-governance/evidence/ASSET_SOURCE_REVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 20781,
+      "sha256": "4c02803796783fb92310397fcc38fac8a5f1f531a380a29d7924bea64ad45c4d"
+    },
+    {
+      "path": "docs/00-governance/evidence/FRAMEWORK_ADOPTION.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 20221,
+      "sha256": "c06b293b8eb0ef067baa2f8f489adb7ab4b7caf87446afef4b73bc41ddb187f2"
+    },
+    {
+      "path": "docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 12285,
+      "sha256": "eefa3dfdfd9630d1f39873d9e72d540f86f893329a276c2308c519eb5317dcf2"
+    },
+    {
+      "path": "docs/00-governance/evidence/P0_QUALITY_GATE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 23082,
+      "sha256": "d3110a7c05ec621a6687890c0a71b1c27defc218ceab3a4aba9de2615748a81d"
+    },
+    {
+      "path": "docs/00-governance/evidence/P1_ARTIFACT_MANIFEST.json",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 14055,
+      "sha256": "89dba7100409d900dc32a7b4e5d792293f03731c51ff28c5c2320f0663d540ba"
+    },
+    {
+      "path": "docs/00-governance/evidence/P1_QUALITY_GATE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 24133,
+      "sha256": "b86964ea7812891fbbdf0055fbb0894b11694febace3e0205db88c4af305214a"
+    },
+    {
+      "path": "docs/00-governance/evidence/P2_QUALITY_GATE.md",
+      "disposition": "CREATED_P2",
+      "bytes": 21687,
+      "sha256": "9cb415246fa18690a7034e28ce9142e3aaa158d88606bc75503e1c5a361693ef"
+    },
+    {
+      "path": "docs/00-governance/evidence/PROCUREMENT_SOURCE_REVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 25378,
+      "sha256": "ebff32a3b87e7e1ca8bdcd37ac1d0f1259806ecfd91756283ea1c2469daa6819"
+    },
+    {
+      "path": "docs/00-governance/evidence/VISUAL_SOURCE_REVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 3245,
+      "sha256": "2f4703162473710ebffa29bb1624a46e9d135774c238775e65b6ad1945c292bb"
+    },
+    {
+      "path": "docs/00-governance/sources/AI_First_Complex_WebApp_Task_Framework_v4.3_EN.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 76025,
+      "sha256": "bb578adabcd8ebddcb97c278e6589b935137f26f851b7218dd86c141744b70fe"
+    },
+    {
+      "path": "docs/01-product/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/01-product/ACCEPTANCE_CRITERIA.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 16679,
+      "sha256": "98173403496997ba034eb2d4d5ae655ccb911218aa93d94677ec1e8d31c7754a"
+    },
+    {
+      "path": "docs/01-product/PRODUCT_EXPERIENCE_DIRECTION.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 17036,
+      "sha256": "3bca90581dd459c583912ecd6c7dcc492608bb67eb62456fcd832f3c3917b64e"
+    },
+    {
+      "path": "docs/01-product/PRODUCT_OVERVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 20481,
+      "sha256": "bfdcfb6fa8080ee2c2d0ce27f7c0d7b9f82c22bfa28780daab667ab7eea40b47"
+    },
+    {
+      "path": "docs/01-product/REFERENCE_COVERAGE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 30581,
+      "sha256": "50616bd135408a7b9f23a4d77e9a5d9df267f41218bd3c8fb3e074b5df89f976"
+    },
+    {
+      "path": "docs/01-product/V1_SCOPE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 24635,
+      "sha256": "adf633cc81f00bf105edccf412e3234f8152b4a501f9582ce2741a5c887a1a1d"
+    },
+    {
+      "path": "docs/02-domain/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/02-domain/BUSINESS_RULES.md",
+      "disposition": "CREATED_P2",
+      "bytes": 61994,
+      "sha256": "9ee459633dd35127d664dbeeb484b618e1569561c4fbf3161600da034ed2eece"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_DECISION_REQUESTS.md",
+      "disposition": "CREATED_P2",
+      "bytes": 9431,
+      "sha256": "5c6913391256c9a667cb0d5e6b50e9b83fcb489988b452aa99cc175723172cde"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_GLOSSARY.md",
+      "disposition": "CREATED_P2",
+      "bytes": 35985,
+      "sha256": "3c54d2413455eb1e01819d1733b8005eac4b479e694cf397e591c971888ee787"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_LIFECYCLES.md",
+      "disposition": "CREATED_P2",
+      "bytes": 15845,
+      "sha256": "92fb6cccdfa8ad820b5e1eeeb11e29f8b8c7697825c474f579296292b3f53264"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_MODEL.md",
+      "disposition": "CREATED_P2",
+      "bytes": 43983,
+      "sha256": "f81369d6d862084381d6b58e384b8f13777c20472316913b0898bb602876d6c2"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_RESPONSIBILITIES.md",
+      "disposition": "CREATED_P2",
+      "bytes": 9842,
+      "sha256": "bb338e97504e0bba47d77604ecc8ae19bf0fd42b4d4d1e046394e9500ed50e4f"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_TRACEABILITY.md",
+      "disposition": "CREATED_P2",
+      "bytes": 22063,
+      "sha256": "3d8ab78076bd0da386d0a3df1f56ee53ea7db41922446f9b15ee284e7960bcfc"
+    },
+    {
+      "path": "docs/03-workflows/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/04-architecture/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/05-security/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/06-api-performance/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/07-ux-design/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/08-testing/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/09-operations/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/10-release/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/11-tasks/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/CONTEXT_INDEX.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 7731,
+      "sha256": "b174cf3a72d0f035f381938b801e87027d4d0cd3268bdfc1ca3ebabacc259574"
+    },
+    {
+      "path": "docs/PHASE_STATUS.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 3924,
+      "sha256": "2856a051e457b8df49ffd278fe14a4ba0214d9a2e0dfa7a717655b20d31d3a93"
+    },
+    {
+      "path": "docs/adr/README.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 1276,
+      "sha256": "b125d6a3ea5743c5bdbb9b630588387c5917493755f87486b1f255332f3972cf"
+    },
+    {
+      "path": "docs/handoff/CURRENT_HANDOFF.md",
+      "disposition": "AMENDED_P2",
+      "bytes": 8418,
+      "sha256": "20e5ba992b1e1ae999997611be7e105771da25a8f1f1b1b8f333f4467088d74a"
+    }
+  ],
+  "reviewed_preapproval_manifest": {
+    "path": "docs/00-governance/evidence/P2_ARTIFACT_MANIFEST.json",
+    "bytes": 14976,
+    "sha256": "d1f40247e83f8e5ddf419ab4dcc0eeca3e9bf64c3fafe7fff32739636f4450f3",
+    "candidate_file_count_including_manifest": 57,
+    "entry_count_excluding_manifest": 56,
+    "new_files_including_manifest": 9,
+    "modified_files": 16,
+    "preserved_files": 32,
+    "verification": "PASS BEFORE ANY REPOSITORY EDITS; all entry hashes/sizes and Git eligibility matched"
+  },
+  "authorization_completion_rule": "AUTH-007 automatically HISTORICAL / COMPLETED after successful normal push and live remote verification; no continuing phase/Git authority; no separate closure commit",
+  "current_active_phase_authorization_after_verified_checkpoint": "NONE",
+  "historical_completed_preparation_authorization": "AUTH-006",
+  "later_phase_authorization": "P3-P11 TODO / NOT AUTHORIZED"
+}

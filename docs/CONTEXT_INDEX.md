@@ -1,8 +1,8 @@
 # Context index
 
-Status: APPROVED (P1 amendment; approved P0 history retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
-Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Project state: **PARTIALLY_PLANNED**. P0 is **DONE — approved and published** under [APPR-001](00-governance/APPROVAL_RECORDS.md#appr-001); closure baseline `3e7d6a21287410ff977db9db996154043e1c8926` verified remotely. AUTH-002–AUTH-004 are **HISTORICAL / COMPLETED**. P1 **DONE — APPROVED** under [APPR-002](00-governance/APPROVAL_RECORDS.md#appr-002). Current authorization **[AUTH-005](00-governance/APPROVAL_RECORDS.md#auth-005), approval/checkpoint only until publication and verification complete**, exhausted afterward. P2–P11 TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action after checkpoint: Owner separately authorizes P2 — Domain Model & Business Rules. No P2 authority.
+Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Project state: **PARTIALLY_PLANNED**. P0/P1 **DONE — approved and published**, APPR-001/APPR-002; P2 **DONE — APPROVED**, [APPR-003](00-governance/APPROVAL_RECORDS.md#appr-003). Verified starting main HEAD `8881c047f24451b30754b19fe0d1cf96b9078f90`; checkpoint publication is verified from Git. AUTH-002–AUTH-006 are **HISTORICAL / COMPLETED**. [AUTH-007](00-governance/APPROVAL_RECORDS.md#auth-007) is checkpoint-only until verified publication, then automatically historical/completed with active phase authorization **NONE**. P3–P11 TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**. Stop after P2.
 
 | Need | Read |
 |---|---|
@@ -30,16 +30,21 @@ Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURR
 | Source-to-capability coverage, authority limits and later gap obligations | [REFERENCE_COVERAGE](01-product/REFERENCE_COVERAGE.md) |
 | P1 experience direction and bounded direct video observations | [PRODUCT_EXPERIENCE_DIRECTION](01-product/PRODUCT_EXPERIENCE_DIRECTION.md) |
 | P1 preparation/review/approval integrity and current post-approval manifest | [P1_QUALITY_GATE](00-governance/evidence/P1_QUALITY_GATE.md) / [P1_ARTIFACT_MANIFEST](00-governance/evidence/P1_ARTIFACT_MANIFEST.json) |
+| P2 canonical terminology / conceptual concepts, relations, identity and truth classification | [DOMAIN_GLOSSARY](02-domain/DOMAIN_GLOSSARY.md) / [DOMAIN_MODEL](02-domain/DOMAIN_MODEL.md) |
+| Canonical domain-rule and invariant wording / status / authority | [BUSINESS_RULES](02-domain/BUSINESS_RULES.md) |
+| Domain responsibilities without permissions / lifecycle dispositions without transitions | [DOMAIN_RESPONSIBILITIES](02-domain/DOMAIN_RESPONSIBILITIES.md) / [DOMAIN_LIFECYCLES](02-domain/DOMAIN_LIFECYCLES.md) |
+| OD/CAP/AC/source/GAP traceability and grouped missing validation | [DOMAIN_TRACEABILITY](02-domain/DOMAIN_TRACEABILITY.md) / [DOMAIN_DECISION_REQUESTS](02-domain/DOMAIN_DECISION_REQUESTS.md) |
+| P2 review/approval integrity and current post-approval manifest | [P2_QUALITY_GATE](00-governance/evidence/P2_QUALITY_GATE.md) / [P2_ARTIFACT_MANIFEST](00-governance/evidence/P2_ARTIFACT_MANIFEST.json) |
 | Current operational state / exact next action | [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) |
 
 ## Reserved future document locations
 
-P1 now contains the five APPROVED product documents linked above, prepared under historical AUTH-004 and approved under APPR-002 with their existing qualifications and later validation obligations. P2–P11 folders still contain only `.gitkeep` markers: **reserved**, not planned specifications or execution authorization. Future names describe coverage, not existing files.
+P1 contains the five APPROVED product documents, prepared under historical AUTH-004 and approved under APPR-002 with all qualifications retained. P2 contains seven APPROVED conceptual domain artifacts under APPR-003; EVIDENCE_SUPPORTED/PROPOSED/BLOCKED_BY_GAP qualifications and all 20 OPEN GAPs remain binding. AUTH-006 is completed preparation; AUTH-007 checkpoint authority expires automatically at verified publication. P3–P11 still contain only `.gitkeep` markers: **reserved**, not planned specifications or execution authorization. Future names describe coverage, not existing files. Approved P1 documents retain historical phase-state snapshots; current progress is owned by PHASE_STATUS.
 
 | Phase | Reserved path | Future coverage when separately authorized |
 |---|---|---|
 | P1 | `docs/01-product/` | APPROVED product definition/scope/acceptance/reference/experience; APPR-002, P1 DONE |
-| P2 | `docs/02-domain/` | Glossary, entities, invariants, responsibility, lifecycle/retention and business rules |
+| P2 | `docs/02-domain/` | APPROVED conceptual glossary/model/rules/responsibilities/lifecycles/traceability/decision requests; APPR-003, P2 DONE; qualifications retained |
 | P3 | `docs/03-workflows/` | Critical workflows, route and interaction contracts |
 | P4 | `docs/04-architecture/` | Application/database architecture, modules and justified integration boundaries |
 | P5 | `docs/05-security/` | Auth/account/session/recovery, compact roles/assignments, backend policies, threats, audit and secrets |

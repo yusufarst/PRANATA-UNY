@@ -1,6 +1,6 @@
 # Authorization and approval records
 
-Status: APPROVED (P1 approval recorded; P0 history retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## AUTH-001
 
@@ -41,7 +41,7 @@ The Owner's prior correction instruction authorized only OBS-01 source-provenanc
 
 ## Phase approval register
 
-P0 approval: **APPR-001 APPROVED**. P1 approval: **APPR-002 APPROVED**. No P2–P11 phase approvals, planning-freeze approvals or execution-baseline approvals exist. Preserve approval identity and supersession history; requests for correction never imply a new approval.
+P0 approval: **APPR-001 APPROVED**. P1 approval: **APPR-002 APPROVED**. P2 approval: **APPR-003 APPROVED**, exact reviewed candidate only. No P3–P11 phase approvals, planning-freeze approvals or execution-baseline approvals exist. Preserve approval identity and supersession history; requests for correction never imply a new approval.
 
 ## APPR-001
 
@@ -85,6 +85,7 @@ Historical next action under AUTH-004 was independent P1 review, then Owner appr
 ## AUTH-005
 
 - Kind: **OWNER AUTHORIZATION — P1 OWNER APPROVAL + CHECKPOINT ONLY**.
+- Completion: **HISTORICAL / COMPLETED**. At the AUTH-006 starting inspection, main, local HEAD, origin/main and live remote main matched published P1 checkpoint **`8881c047f24451b30754b19fe0d1cf96b9078f90`**, `docs: finalize P1 product definition`; working tree and staging were clean. Its one-time Git authority is exhausted.
 - Recorded at: **2026-10-05T01:27:31+07:00** (Asia/Jakarta), from the Project Owner's explicit supplied instruction.
 - Source: external Codex attachment `49f67dea-3805-455c-8f69-8033b08d61c5`, `Pasted text.txt`, **17,109 bytes**, SHA-256 **`0ee8dc676c8457c9603cfb038711246f915b3c3282744bc0d791c8318a92d8bc`**. Safe local locator: `%USERPROFILE%\.codex\attachments\49f67dea-3805-455c-8f69-8033b08d61c5\Pasted text.txt`. Original fully read, fingerprinted read-only, external and untouched; durable authority below does not depend on future attachment availability.
 - Verified starting state: branch **main**; HEAD = origin/main = live remote main at **`3e7d6a21287410ff977db9db996154043e1c8926`**, `docs: close P0 publication handoff`; unchanged origin `https://github.com/yusufarst/PRANATA-UNY.git`; staging empty; existing reviewed P1 working-tree candidate preserved. Live read-only baseline verification **PASS** after restricted-network retry.
@@ -119,3 +120,55 @@ Historical next action under AUTH-004 was independent P1 review, then Owner appr
 - Execution: **NOT AUTHORIZED**. Application implementation: **NONE**.
 - Lifecycle/checkpoint implementation: [AUTH-005](#auth-005), [DECISION_LOG](DECISION_LOG.md#p1-approval-lifecycle-record), [PHASE_STATUS](../PHASE_STATUS.md) and [P1 post-approval integrity](evidence/P1_QUALITY_GATE.md#p1-post-approval-integrity--2026-10-05).
 - Current **POST-APPROVAL** manifest: [P1_ARTIFACT_MANIFEST](evidence/P1_ARTIFACT_MANIFEST.json), refreshed after administrative edits and excluding itself. Its own final bytes/digest are verified separately in the session final report; this newer identity does not replace the reviewed pre-approval identity above. Publication is verified from Git after normal push, not asserted in advance here.
+
+## AUTH-006
+
+- Kind: **OWNER AUTHORIZATION — P2 PLANNING ONLY**, not P2 approval.
+- Completion: **HISTORICAL / COMPLETED**. Exact reviewed preparation is approved by APPR-003; AUTH-007 supersedes only its VERIFYING/no-stage/commit/push restriction for the single P2 checkpoint. The following issuance scope, terminal state and next action are historical; no continuing planning/Git authority.
+- Recorded at: **2026-10-05T01:53:38+07:00** (Asia/Jakarta), from the Owner's explicit supplied P2 instruction.
+- Source: external Codex attachment `ecefbb2f-690c-4f7a-9f64-54a4bbe3faf4`, `Pasted text.txt`, **47,078 bytes**, SHA-256 **`333d01491cf3c2ed44a5b3c85f391732626f7047796a9ff5b340377f4adbf8b4`**. Safe local locator: `%USERPROFILE%\.codex\attachments\ecefbb2f-690c-4f7a-9f64-54a4bbe3faf4\Pasted text.txt`. Original inspected read-only and untouched outside Git; this durable scope does not depend on future attachment availability.
+- Verified starting baseline: **main**, clean working tree and empty staging; local HEAD = origin/main = live remote `refs/heads/main` at **`8881c047f24451b30754b19fe0d1cf96b9078f90`**, `docs: finalize P1 product definition`; parent `3e7d6a21287410ff977db9db996154043e1c8926`; unchanged origin `https://github.com/yusufarst/PRANATA-UNY.git`. Live read-only remote check PASS after restricted-network retry. `reference-inputs/` ignored and no tracked raw inputs. AUTH-005 is historical/completed with no continuing Git authority.
+- Authorized ONLY: P2 domain terminology, conceptual entities/relationships, ownership/responsibility, semantic lifecycle/history, invariants, business-rule catalog with authority/status/provenance and GAP dependencies, cross-domain handoff, traceability, bounded source inspection where necessary, decision requests, evidence/adversarial quality review/manifest and required governance/context/handoff amendments.
+- Preserve APPR-001/APPR-002, OD-01–OD-23 and approved P1 product meaning/20 CAP/27 AC/4 proposed NFR. Formal policy is not inferred from filenames, historical templates, spreadsheet formulas, raw values, menus or legacy behavior. No existing GAP is resolved without the required authoritative evidence.
+- Explicit exclusions: **P3–P11**, exact workflow sequences/state machines/route/page/interaction contracts, P4 schema/tables/keys/migrations/models/architecture, P5 final permission matrix/security enforcement, P6 implementation, P7 layouts/screens/design/motion, application implementation/dependencies, execution Tasks, planning freeze, deployment/production actions, raw-source modification/publication, **staging, commit and push**.
+- Framework adaptation: AICWDF §13 lifecycle/retention/audit is addressed conceptually. Exact transitions are explicitly deferred to separately authorized P3; detailed retention/security/storage/release mechanisms remain P4/P5/P9/P10. No lifecycle disposition grants permission to execute it.
+- Required terminal state: project **PARTIALLY_PLANNED**; P0/P1 **DONE — APPROVED AND PUBLISHED**; P2 **VERIFYING** until explicit Owner approval; P3–P11 **TODO / NOT AUTHORIZED**; Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**.
+- Candidate identity: [P2_ARTIFACT_MANIFEST](evidence/P2_ARTIFACT_MANIFEST.json), excluding itself, with separate final size/digest in session report; [P2_QUALITY_GATE](evidence/P2_QUALITY_GATE.md) records preparation checks. Agent PASS does not establish independent acceptance or Owner approval. **No APPR-003 is created.**
+- Exact next safe action: independent P2 review against the exact candidate manifest; then explicit Owner approval if READY_FOR_OWNER_APPROVAL, or bounded P2 corrections and delta review. **Stop after P2. P3 remains NOT AUTHORIZED.** No Git authority carries forward.
+
+## AUTH-007
+
+- Kind: **OWNER AUTHORIZATION — P2 OWNER APPROVAL + CHECKPOINT ONLY**, not P3 authorization.
+- Recorded at: **2026-10-05T12:20:50+07:00** (Asia/Jakarta), from the Project Owner's explicit supplied instruction.
+- Source: external Codex local attachment `83cf52a4-6875-45c6-aae2-e3626bb728fa`, `Pasted text.txt`, **23,285 bytes**, SHA-256 **`663d592484ff787d7aa4a39aac6ff901377d6859bf6accc0a1a504c0e45bca62`**. Safe local locator: `%USERPROFILE%\.codex\attachments\83cf52a4-6875-45c6-aae2-e3626bb728fa\Pasted text.txt`. Original read/fingerprinted read-only, external, untouched and unpublished; the durable instruction below does not require future attachment availability.
+- Verified starting baseline: branch **main**, local HEAD = origin/main = live remote main **`8881c047f24451b30754b19fe0d1cf96b9078f90`**, `docs: finalize P1 product definition`; parent `3e7d6a21287410ff977db9db996154043e1c8926`; unchanged origin `https://github.com/yusufarst/PRANATA-UNY.git`; index empty and reviewed P2 working-tree changes preserved. Read-only live baseline verification **PASS** after restricted-network retry.
+- Precondition independently verified **before repository edits**: [P2_ARTIFACT_MANIFEST](evidence/P2_ARTIFACT_MANIFEST.json) exactly **14,976 bytes**, SHA-256 **`d1f40247e83f8e5ddf419ab4dcc0eeca3e9bf64c3fafe7fff32739636f4450f3`**; all **56 entries** matched sizes/hashes, complete **57-file** Git-eligible candidate including manifest, **9 created / 16 modified / 32 preserved**. Manifest excludes itself.
+- Authorized ONLY: verify that exact reviewed identity; record APPR-003; transition P2 VERIFYING → DONE; mark AUTH-006 historical/completed; synchronize lifecycle/current-state documents; refresh P2 post-approval quality evidence/manifest; run bounded integrity checks; stage intended P2/approval lifecycle files only; create **one normal commit** `docs: finalize P2 domain model`; push normally with `git push origin main`; verify live remote publication; stop.
+- Conditions: all material integrity checks PASS before staging/commit; existing configured Owner author/committer identity only, no AI attribution; unchanged main/origin; no amend, force push, remote/identity change, unrelated staging or raw-source publication. A material failure blocks commit/push and is reported with a safe correction.
+- Supersession is limited: AUTH-006 preparation becomes historical/completed; its phase terminal-state and Git restrictions are superseded only for this approved checkpoint. APPR-001/APPR-002, OD-01–OD-23, byte-identical P1, qualified P2 substance and all OPEN GAPs remain intact.
+- Excluded: **P3–P11**, exact workflows/state machines/approval chains/routes/interactions, schema/tables/columns/keys/indexes/models/migrations/architecture, final permissions/security, queue/locking/idempotency/query implementation, screens/navigation/tokens/motion/layouts, test/release implementation, Tasks/Task IDs/counts/baseline, planning freeze, application/auth/UI/packages/scaffold, Claude Code execution, deployment/production changes and raw-source modification/publication.
+- Terminal state: **PARTIALLY_PLANNED**; P0/P1 DONE and published; P2 **DONE — APPROVED under APPR-003**; P3–P11 **TODO / NOT AUTHORIZED**; Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**; GAP-001–GAP-020 **OPEN**.
+- Completion rule: **AUTH-007 applies only until this checkpoint is normally pushed and remote verification passes; it then becomes HISTORICAL / COMPLETED automatically, with no continuing phase/Git authority and no separate closure commit. After verified publication, current active phase authorization is NONE.** The resulting commit SHA, push result and live verification belong to Git/session evidence and the final report, never a self-referential advance claim inside this commit.
+- Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**. P3 authorization is **NOT INCLUDED**; stop after P2.
+
+## APPR-003
+
+- Approval subject: **P2 — Domain Model & Business Rules**.
+- Approving authority: **Project Owner**.
+- Approval state: **APPROVED**.
+- Approved phase: **P2**.
+- Recorded at: **2026-10-05T12:20:50+07:00** (Asia/Jakarta); explicit Owner instruction identified in AUTH-007, never inferred agent approval.
+- Exact reviewed **PRE-APPROVAL** manifest path: `docs/00-governance/evidence/P2_ARTIFACT_MANIFEST.json`.
+- Reviewed manifest size: **14,976 bytes**.
+- Reviewed manifest SHA-256: **`d1f40247e83f8e5ddf419ab4dcc0eeca3e9bf64c3fafe7fff32739636f4450f3`**.
+- Identity evidence: the exact manifest bytes and every entry were independently matched before approval-recording edits; **57 candidate files / 56 manifest entries**, **9 created / 16 modified / 32 preserved**, excluding the manifest itself. This permanent historical approval identity is not replaced by the post-approval manifest.
+- Independent P2 review: **READY_FOR_OWNER_APPROVAL**, reported by the Owner in the AUTH-007 source instruction; review modified no files. Final findings: **BLOCKERS 0 / MAJOR 0 / MINOR 0 / OBSERVATIONS 0**. No separately stored external report or newly issued agent independent verdict is claimed.
+- Approved coverage: **77 domain concepts / 9 domain areas / 29 business rules / 18 invariants / 6 responsibility dimensions / 16 responsibility types**; **20 CAP / 27 AC / 23 OD** traceability preserved. Seven domain artifacts and the exact reviewed supporting governance/evidence amendments are approved with their existing qualifications.
+- Qualification: approval adopts the reviewed conceptual model and qualified rule catalog; **EVIDENCE_SUPPORTED, PROPOSED and BLOCKED_BY_GAP remain qualified**. It does not supply formal procurement/accounting authority, resolve blocked policy or grant implementation readiness. SPPBJ actor mappings, downstream definitiveness, raw P01/P02, physical-condition separation, depreciation/capitalization policy, distinct KDP, reconciliation evidence/signoff, document truth and historical ambiguity boundaries remain intact.
+- GAPs: all **GAP-001–GAP-020 remain OPEN**; resolved **NONE**, new **NONE**. Review classification **A 0 / B 14 / C 4 / D 2**. B: GAP-001–005, GAP-007–011, GAP-014, GAP-017–019; C: GAP-012/015/016/020; D: GAP-006/013. Approval does not resolve any GAP.
+- Owner/product integrity: OD-01–OD-23 and P1 CAP-01–CAP-20 / AC-01–AC-27 preserved; no V1 scope addition/MUST removal/borrowing re-entry, provider submission/revision weakening, downstream safety change, primary UI/UX direction change or local-auth boundary change.
+- **P3 authorization: NOT INCLUDED**. P4–P11 also **NOT AUTHORIZED**.
+- Planning Freeze: **NOT REACHED**. Tasks: **NONE**. Task Baseline: **NOT READY**.
+- Execution: **NOT AUTHORIZED**. Application implementation: **NONE**. Application/runtime testing: **N/A — no application**.
+- Lifecycle/checkpoint: [AUTH-007](#auth-007), [P2 approval lifecycle record](DECISION_LOG.md#p2-approval-lifecycle-record), [PHASE_STATUS](../PHASE_STATUS.md), [post-approval integrity](evidence/P2_QUALITY_GATE.md#p2-post-approval-integrity--2026-10-05).
+- Current **POST-APPROVAL** manifest: [P2_ARTIFACT_MANIFEST](evidence/P2_ARTIFACT_MANIFEST.json), refreshed after administrative edits and excluding itself. Its final size/SHA-256 is independently verified and reported in the session; it identifies current checkpoint bytes and never replaces the reviewed identity above. Publication/completion are determined only after normal push and live verification under AUTH-007's automatic completion rule.

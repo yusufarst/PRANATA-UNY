@@ -1,6 +1,6 @@
 # Decision log
 
-Status: APPROVED (P1 amendment; approved P0 history retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Provenance and status
 
@@ -155,3 +155,21 @@ Recorded 2026-10-05 (Asia/Jakarta): [APPR-002](APPROVAL_RECORDS.md#appr-002) exp
 OD-01–OD-23 and historical GOV/FD decision sections retain their exact wording and qualifications. All 20 CAP, 27 AC (including corrected AC-09/AC-10), 4 proposed NFR targets, product hypotheses, FUTURE/deferred boundaries and primary UI/UX/motion direction are preserved. No formal domain/procurement/accounting/permission/workflow/schema/design decision is added; GAP-001–GAP-020 remain OPEN and unchanged.
 
 P0 DONE; P1 DONE — APPROVED; P2–P11 TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action after checkpoint: **Owner separately authorizes P2 — Domain Model & Business Rules**.
+
+## P2 authorization lifecycle record
+
+Historical preparation snapshot, completed by APPR-003/AUTH-007 below. Recorded 2026-10-05 (Asia/Jakarta): [U-003](SOURCE_INVENTORY.md#u-003-p2-owner-request) / [AUTH-006](APPROVAL_RECORDS.md#auth-006) explicitly authorize **P2 planning only**. Starting clean main, local HEAD = origin/main = live remote main at `8881c047f24451b30754b19fe0d1cf96b9078f90`, published P1 checkpoint, parent `3e7d6a21287410ff977db9db996154043e1c8926`; AUTH-005 is exhausted/historical. Original P0/P1 approvals and OD-01–OD-23 section wording remain intact.
+
+P2 captures conceptual meaning, responsibility, lifecycle/history, qualified business rules and domain traceability. Its rules distinguish explicit Owner direction, evidence, proposals and blocked authoritative meanings. No institutional procedure/accounting rule is invented, no new OD or accepted ADR is created, and all GAP-001–GAP-020 remain OPEN. P1's five owning documents, 20 CAP, 27 AC and 4 proposed NFR remain byte-preserved.
+
+Owner's explicit P3 deferral bounds AICWDF §13: lifecycle meaning/dispositions/audit are conceptual in P2; exact transitions/workflows, implementation/schema and final permission enforcement remain later phases. P2 terminal **VERIFYING**; no APPR-003. P3–P11 TODO / NOT AUTHORIZED, freeze NOT REACHED, Tasks NONE, baseline NOT READY, execution NOT AUTHORIZED, application NONE. No staging/commit/push. Next safe action: independent P2 review against the exact candidate manifest, then Owner approval or bounded corrections/delta review. Stop after P2.
+
+## P2 approval lifecycle record
+
+Recorded 2026-10-05 (Asia/Jakarta): [APPR-003](APPROVAL_RECORDS.md#appr-003) explicitly approves only the exact reviewed **P2 — Domain Model & Business Rules** candidate. Reviewed pre-approval manifest: `docs/00-governance/evidence/P2_ARTIFACT_MANIFEST.json`, **14,976 bytes**, SHA-256 **`d1f40247e83f8e5ddf419ab4dcc0eeca3e9bf64c3fafe7fff32739636f4450f3`**; independently verified before edits, all 56 entries/57 eligible files intact. Owner-reported independent review **READY_FOR_OWNER_APPROVAL**; final **0 blockers / 0 major / 0 minor / 0 observations**; review changed no files.
+
+[AUTH-007](APPROVAL_RECORDS.md#auth-007) permits only approval recording, current-state/evidence/manifest synchronization, bounded integrity checks, one normal `docs: finalize P2 domain model` commit, normal push/live remote verification and stop. AUTH-006 is **HISTORICAL / COMPLETED**; its VERIFYING/no-stage/commit/push conditions are superseded only for this checkpoint. **AUTH-007 applies only until this checkpoint is normally pushed and remote verification passes; it then becomes HISTORICAL / COMPLETED automatically, with no continuing phase/Git authority and no separate closure commit. After verified publication, current active phase authorization is NONE.** No self-referential resulting SHA/publication assertion is recorded in advance.
+
+The 77 concepts, 9 areas, 29 BR, 18 INV, 6 responsibility dimensions, 16 responsibility types and all traceability retain reviewed substance. All OD-01–OD-23 and P1 CAP/AC/NFR are preserved. EVIDENCE_SUPPORTED/PROPOSED/BLOCKED_BY_GAP retain their qualifications; no institutional procedure, formula, threshold, responsibility or official signoff is invented. GAP-001–GAP-020 remain OPEN, resolved NONE/new NONE; A 0 / B 14 / C 4 / D 2 unchanged. No scope/stack/architecture/security/accounting procedure change, accepted ADR or cost exception.
+
+P0/P1 DONE; P2 **DONE — APPROVED**; P3–P11 **TODO / NOT AUTHORIZED**; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**. P3 is not authorized by this approval/checkpoint; stop after P2.

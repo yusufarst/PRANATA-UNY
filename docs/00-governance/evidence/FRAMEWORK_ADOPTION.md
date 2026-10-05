@@ -1,12 +1,12 @@
 # Framework adoption evidence
 
-Status: APPROVED (P1 coverage amendment; approved P0 mapping retained) | Updated: 2026-10-05 | Custodian: Planning Agent
+Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 This record owns the AICWDF coverage map, explicit project exceptions, and structural-reference evidence. It is not an independent product specification or an Owner approval. The operating hierarchy is [SOURCE_OF_TRUTH](../SOURCE_OF_TRUTH.md); current authorization/status is [PHASE_STATUS](../../PHASE_STATUS.md).
 
 ## Historical P0 framework source and project-state snapshot
 
-The P0 table/map/adaptation statements below describe their approved historical coverage, including the former absence of P1 authorization. Current state is P0 DONE / P1 DONE under APPR-002; AUTH-005 approval/checkpoint only through verified publication, then exhausted. See the P1 amendment at the end and PHASE_STATUS. Historical deferral wording confers no current authority.
+The P0/P1 table/map/adaptation statements below describe approved historical coverage. Current state: P0/P1 DONE and published; P2 DONE — APPROVED APPR-003, qualifications retained; AUTH-002–AUTH-006 completed. AUTH-007 permits only the P2 checkpoint and automatically completes after verified publication; active phase authorization afterward NONE. P3–P11 remain not authorized. See P2 approval/checkpoint evidence below and PHASE_STATUS. Historical deferral wording confers no current authority.
 
 | Item | Evidence |
 | --- | --- |
@@ -109,3 +109,24 @@ The historical adoption evidence belongs to P0 quality/approval history; its map
 | §13–22 later-phase gates | P2–P11 untouched reservations; formal rules/workflows/schema/security/performance mechanics/final design/test/infra/release/Tasks not authored; execution/freeze prohibited |
 
 P1 is DONE under explicit [APPR-002](../APPROVAL_RECORDS.md#appr-002); P0 remains DONE under APPR-001. Self-review did not approve P1. [AUTH-005](../APPROVAL_RECORDS.md#auth-005) permits only approval/checkpoint through verified publication, then expires; no later-phase authority. Exact next safe action after checkpoint: Owner separately authorizes P2 — Domain Model & Business Rules.
+
+## P2 coverage amendment — AUTH-006
+
+P0/P1 published baseline verified at `8881c047f24451b30754b19fe0d1cf96b9078f90`. [AUTH-006](../APPROVAL_RECORDS.md#auth-006) / [U-003](../SOURCE_INVENTORY.md#u-003-p2-owner-request) authorized P2 preparation only; artifacts were VERIFYING at that historical stage, subsequently approved APPR-003. Historical §13 DEFERRED rows above remain the P0 snapshot.
+
+| AICWDF §13 requirement | P2 owning artifact | Coverage / remaining boundary |
+|---|---|---|
+| Glossary, entities, ownership, relationships | [DOMAIN_GLOSSARY](../../02-domain/DOMAIN_GLOSSARY.md), [DOMAIN_MODEL](../../02-domain/DOMAIN_MODEL.md) | Conceptual meanings, relationships, record/history/derived/output/evidence classifications and uncertain business identity; no schema |
+| Invariants, validation and business authority | [BUSINESS_RULES](../../02-domain/BUSINESS_RULES.md), [DOMAIN_TRACEABILITY](../../02-domain/DOMAIN_TRACEABILITY.md) | Canonical status-qualified BR/INV with OD/CAP/AC/source/GAP dependencies; no accounting formula or official procedure inferred |
+| States, lifecycle and transitions | [DOMAIN_LIFECYCLES](../../02-domain/DOMAIN_LIFECYCLES.md) | Semantic final/draft/supersession/cancellation concepts only; **Owner override: exact transitions and workflow sequences deferred to P3**, not omitted or authorized now |
+| Creation/edit/archive/restore/delete/anonymize, retention | DOMAIN_LIFECYCLES and BUSINESS_RULES | Explicit conceptual disposition/uncertainty per major entity; retention durations and lawful anonymization/delete authority unresolved P5/P9/P10; no technical deletion strategy or permission grant |
+| Responsibility and audit requirements | [DOMAIN_RESPONSIBILITIES](../../02-domain/DOMAIN_RESPONSIBILITIES.md), BUSINESS_RULES | Role family, workspace, scope, assignment and formal/action responsibility distinct; actor/time/context/source/reason/history evidence; no P5 matrix/audit mechanism |
+| Execution agents must not invent lifecycle rules | [DOMAIN_DECISION_REQUESTS](../../02-domain/DOMAIN_DECISION_REQUESTS.md), [P2_QUALITY_GATE](P2_QUALITY_GATE.md) | All 20 GAPs assessed and remain OPEN, blocked rules do not become implementation-ready; independent review and Owner approval were the preparation gate, now recorded in APPR-003; authoritative GAP validation remains required |
+
+P3–P11 remain TODO / NOT AUTHORIZED; freeze NOT REACHED, Tasks NONE, baseline NOT READY, execution NOT AUTHORIZED, application NONE. Historical AUTH-006 permitted no staging/commit/push. AUTH-007 alone permits the approved P2 checkpoint; no raw-content reinspection/upload, library/version-sensitive implementation, installation or recurring cost is introduced.
+
+## P2 approval/checkpoint amendment — AUTH-007
+
+[APPR-003](../APPROVAL_RECORDS.md#appr-003) approves the exact reviewed P2 candidate: pre-approval manifest **14,976 bytes / `d1f40247e83f8e5ddf419ab4dcc0eeca3e9bf64c3fafe7fff32739636f4450f3`**; Owner-reported independent verdict READY_FOR_OWNER_APPROVAL, final findings all zero. P2 **DONE — APPROVED**, with the §13 owning artifacts, 77 concepts/9 areas/29 BR/18 INV/6 responsibility dimensions/16 types and existing qualifications preserved. Exact transitions remain explicitly deferred to P3; no formal policy/GAP resolution or execution readiness is implied.
+
+AUTH-006 historical/completed. [AUTH-007](../APPROVAL_RECORDS.md#auth-007) permits only lifecycle/evidence/manifest synchronization and one normal checkpoint/push/verification; automatically historical/completed afterward, no closure commit or continuing phase authority. P0/P1 evidence remains unchanged history. P3–P11 TODO / NOT AUTHORIZED; freeze NOT REACHED; Tasks NONE; baseline NOT READY; execution NOT AUTHORIZED; application NONE. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**.

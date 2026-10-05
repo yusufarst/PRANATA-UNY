@@ -1,6 +1,6 @@
 # PRANATA UNY agent entry point
 
-Status: APPROVED (P1 approved; P0 rules retained) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 The repository is the durable Source of Truth for every Planning, Execution, Review, Release and Maintenance Agent. Preserve approved decisions and existing working-tree changes. Chat is contextual; record material decisions before relying on them.
 
@@ -11,7 +11,7 @@ The repository is the durable Source of Truth for every Planning, Execution, Rev
 3. [SOURCE_OF_TRUTH](docs/00-governance/SOURCE_OF_TRUTH.md): authority, document lifecycle and canonical ownership.
 4. The active Owner authorization in [APPROVAL_RECORDS](docs/00-governance/APPROVAL_RECORDS.md), then only relevant decisions and documents through [CONTEXT_INDEX](docs/CONTEXT_INDEX.md).
 
-Check the actual branch, HEAD and working tree before acting. **P0 is DONE — approved under [APPR-001](docs/00-governance/APPROVAL_RECORDS.md#appr-001) and published. AUTH-002–AUTH-004 are HISTORICAL / COMPLETED. P1 is DONE — APPROVED under [APPR-002](docs/00-governance/APPROVAL_RECORDS.md#appr-002). Current authorization: [AUTH-005](docs/00-governance/APPROVAL_RECORDS.md#auth-005), approval/checkpoint only until publication and verification complete; it is then exhausted. P2–P11 remain TODO / NOT AUTHORIZED.** No application implementation, execution Tasks or planning freeze. AUTH-005 permits only the approved P1 normal commit/push/verification; no continuing Git authority after completion. Read `docs/01-product/` through the context index for the approved product definition with unchanged later validation obligations; see handoff for the exact safe next action: separate Owner authorization for P2.
+Check the actual branch, HEAD and working tree before acting. **P0/P1 are DONE — approved under [APPR-001](docs/00-governance/APPROVAL_RECORDS.md#appr-001) / [APPR-002](docs/00-governance/APPROVAL_RECORDS.md#appr-002) and published. P2 is DONE — APPROVED under [APPR-003](docs/00-governance/APPROVAL_RECORDS.md#appr-003). AUTH-002–AUTH-006 are HISTORICAL / COMPLETED. [AUTH-007](docs/00-governance/APPROVAL_RECORDS.md#auth-007) authorizes only the one P2 approval/checkpoint through successful publication/verification, then is automatically HISTORICAL / COMPLETED; current active phase authorization afterward is NONE. P3–P11 remain TODO / NOT AUTHORIZED.** Verified published starting HEAD: `8881c047f24451b30754b19fe0d1cf96b9078f90` on main; resulting checkpoint SHA/publication is verified from Git, not embedded into its own bytes. No application implementation, execution Tasks or planning freeze. Read approved `docs/01-product/` and `docs/02-domain/` through the context index; their qualifications and all OPEN gaps remain binding. Exact next safe action after verified checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**. Stop after P2.
 
 ## Operating boundaries
 

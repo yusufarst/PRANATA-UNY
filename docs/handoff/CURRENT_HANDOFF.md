@@ -1,57 +1,57 @@
 # Current handoff
 
-Status: APPROVED | Updated: 2026-10-05 (Asia/Jakarta) | Role: PLANNING AGENT
+Status: APPROVED | Updated: 2026-10-05 (Asia/Jakarta) | Role: PLANNING AGENT | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007)
 
 ## Current operational state
 
-Project: **PRANATA UNY**. Project state: **PARTIALLY_PLANNED**. Repository Source of Truth: `C:\Projects\PRANATA-UNY`.
+Project **PRANATA UNY**, **PARTIALLY_PLANNED**. Repository Source of Truth: `C:\Projects\PRANATA-UNY`.
 
-- P0 **DONE — approved and published**, [APPR-001](../00-governance/APPROVAL_RECORDS.md#appr-001).
-- P1 **DONE — APPROVED**, [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002). Last completed planning phase: **P1 — Product Definition, Scope & Acceptance**.
-- Current active authorization: **[AUTH-005](../00-governance/APPROVAL_RECORDS.md#auth-005), approval/checkpoint only until publication and remote verification complete**. It is then **HISTORICAL / COMPLETED**, with no continuing Git/phase authority. AUTH-002–AUTH-004 are historical/completed.
-- P2 **TODO / NOT AUTHORIZED**. P3–P11 **TODO / NOT AUTHORIZED**.
-- Planning Freeze **NOT REACHED**. Tasks **NONE**. Task Baseline **NOT READY**. Current/next READY Task **NONE**; no Task counts/percentages.
-- Execution **NOT AUTHORIZED**. Application implementation **NONE**.
-- GAP-001–GAP-020 **OPEN**, unchanged; new gaps **NONE**. They retain dependent later-phase validation/readiness/release blocks.
+- P0/P1 **DONE — APPROVED AND PUBLISHED**, APPR-001/APPR-002. P2 **DONE — APPROVED under APPR-003**. Last completed planning phase: **P2 — Domain Model & Business Rules**.
+- P3 **TODO / NOT AUTHORIZED**; P4–P11 **TODO / NOT AUTHORIZED**. P2 approval includes no P3 authority.
+- AUTH-002–AUTH-006 **HISTORICAL / COMPLETED**. Current checkpoint authorization **AUTH-007** only until successful normal publication/live verification; then automatically **HISTORICAL / COMPLETED**, no separate closure commit, no continuing Git/phase authority. **After verified checkpoint, current active phase authorization: NONE.**
+- Verified published starting baseline: **main**, local HEAD = origin/main = live remote main **`8881c047f24451b30754b19fe0d1cf96b9078f90`**, `docs: finalize P1 product definition`, parent `3e7d6a21287410ff977db9db996154043e1c8926`; unchanged origin. Reviewed P2 working tree preserved and index empty before approval edits; read-only live check PASS after restricted-network retry.
+- This handoff represents checkpoint content **before commit**. The resulting SHA, normal push, live verification and clean-tree result belong to Git/session/final-report evidence; publication is not asserted in advance inside its own commit. Apply AUTH-007's automatic completion rule once that verification passes.
+- Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; active/next READY Task **NONE**. No Task IDs/counts/percentages.
+- Execution **NOT AUTHORIZED**; application implementation **NONE**; production DB touched **NO**.
 
-## Approval and exact reviewed identity
+## Approval identity and integrity
 
-Owner's explicit approval/checkpoint instruction received 2026-10-05 (Asia/Jakarta), with original attachment identity and durable scope in AUTH-005. It approves **only the exact reviewed P1 candidate** and does not authorize P2.
+[APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) permanently binds the exact reviewed **PRE-APPROVAL** [P2 manifest path](../00-governance/evidence/P2_ARTIFACT_MANIFEST.json): **14,976 bytes**, SHA-256 **`d1f40247e83f8e5ddf419ab4dcc0eeca3e9bf64c3fafe7fff32739636f4450f3`**. Verified before any repository edits: all **56 entries / 57 eligible candidate files** match, **9 created / 16 modified / 32 preserved**; manifest excludes itself.
 
-Reviewed **PRE-APPROVAL** manifest: `docs/00-governance/evidence/P1_ARTIFACT_MANIFEST.json`, **12,747 bytes**, SHA-256 **`50425ec1d7f364a601a1083eee68af523b70135a63af155df6ed86461c8b8f91`**. Local bytes matched exactly before edits; all 47 entries matched the complete 48-file Git-eligible candidate. APPR-002 permanently preserves this identity. [Current POST-APPROVAL manifest](../00-governance/evidence/P1_ARTIFACT_MANIFEST.json) is refreshed after administrative approval edits, excludes itself and has a separately verified digest; it does not replace the historical reviewed identity.
+Owner-reported independent review **READY_FOR_OWNER_APPROVAL**, final **0 blockers / 0 major / 0 minor / 0 observations**, review modified no files. Its provenance is the AUTH-007 Owner instruction; no separate external report or newly invented independent verdict is claimed. [P2_QUALITY_GATE](../00-governance/evidence/P2_QUALITY_GATE.md#p2-post-approval-integrity--2026-10-05) owns post-approval bounded checks and limitations. The refreshed current **POST-APPROVAL** manifest identifies current checkpoint bytes; its separate final digest is reported in the session and never replaces APPR-003's historical reviewed identity. P0/P1 manifests remain untouched historical snapshots.
 
-Owner-reported initial independent review: **READY_FOR_OWNER_APPROVAL**, 0 blockers / 0 major / 1 minor **P1-PROD-01** / 0 observations. Bounded AC-09/AC-10 correction retained Vendor Portal submission/revision, reusable company data, evidence/history, relevant authorized central receipt/status and consistent provider/operator outcome. Owner-reported independent delta review: **READY_FOR_OWNER_APPROVAL**, **P1-PROD-01 RESOLVED**, final blockers/major/minor/observations **0/0/0/0**. Acceptance level, CAP-07, regression, decisions, gaps, phase boundary, source safety and manifest checks reported PASS. No separate external review report or agent-issued independent verdict is claimed. Preparation/correction history remains in [P1_QUALITY_GATE](../00-governance/evidence/P1_QUALITY_GATE.md).
+## Approved P2 canonical owners
 
-## Approved product meaning and unchanged boundaries
+| Artifact | Canonical content |
+|---|---|
+| [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md) | **77 DC** terms/meanings with authority qualifications |
+| [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md) | **9 areas**, conceptual relationships/identity/ownership and record/history/derived/output/evidence/source distinctions |
+| [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) | Sole canonical wording of **29 BR / 18 INV**, status/authority/provenance and dependencies |
+| [DOMAIN_RESPONSIBILITIES](../02-domain/DOMAIN_RESPONSIBILITIES.md) | **6 responsibility dimensions / 16 types**, qualified roles and assignments |
+| [DOMAIN_LIFECYCLES](../02-domain/DOMAIN_LIFECYCLES.md) | Lifecycle/disposition semantics across 77 concepts, proposals/blocks retained; no state machine |
+| [DOMAIN_TRACEABILITY](../02-domain/DOMAIN_TRACEABILITY.md) | **20 CAP / 27 AC / 23 OD / 20 GAP**, conflict and phase handoffs |
+| [DOMAIN_DECISION_REQUESTS](../02-domain/DOMAIN_DECISION_REQUESTS.md) | **6 DR** grouped authoritative validation requests, not Tasks |
 
-The five APPROVED owning product documents preserve the exact reviewed substantive content; only approval/lifecycle passages and metadata change:
+Approval preserves reviewed substance. Only administrative status/approval/next-action metadata is amended in domain artifacts. **EVIDENCE_SUPPORTED / PROPOSED / BLOCKED_BY_GAP retain their qualifications**; approval does not establish missing institutional policy or implementation readiness. OD-01–OD-23, five P1 owning documents/CAP/AC/NFR, primary UI/UX reference, local V1 auth and FUTURE/borrowing boundaries remain intact. P1 historical phase snapshots route to PHASE_STATUS for current progress.
 
-- [PRODUCT_OVERVIEW](../01-product/PRODUCT_OVERVIEW.md): product identity, source-qualified problems/outcomes/stakeholders, integrated journeys, proposed success measures and risks.
-- [V1_SCOPE](../01-product/V1_SCOPE.md): **20 CAP** areas, minimum proposals, SHOULD/OPTIONAL, FUTURE/OUT and rule-dependent release gates.
-- [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md): **27 AC**, including corrected AC-09/AC-10, and **4 proposed NFR** targets with later validation obligations.
-- [REFERENCE_COVERAGE](../01-product/REFERENCE_COVERAGE.md): SRC-001–SRC-047, Owner/framework/structural evidence, authority limits/conflicts/gaps.
-- [PRODUCT_EXPERIENCE_DIRECTION](../01-product/PRODUCT_EXPERIENCE_DIRECTION.md): primary UI/UX/motion reference, bounded observations and future P7 obligations.
+## Domain safety and GAPs
 
-One integrated Asset / Procurement / Vendor / Super Admin product and shared data ecosystem, generic Organization Units, data-once/reuse-many, local V1 auth, future UNY integrations and ~200 total users/~1m assets direction are preserved. All OD-01–OD-23 retain exact wording and qualifications. Prefilled downstream draft remains a product hypothesis; formal procurement/accounting rules, compact roles/permissions, eligibility/handoff/cutoff, authoritative document variants, historical trust/cutover and workload remain unresolved later-phase obligations. Borrowing remains excluded in the reviewed proposed V1 with GAP-020 OPEN. Approval does not convert those hypotheses/proposals into formal business rules, measured performance or implementation readiness.
+SPPBJ preparer/checker/issuer/signer mappings remain unresolved under GAP-004; no universal PPK/Pokja choice. BAST alone creates no definitive Asset/Persediaan/KDP; downstream classification/validation remains GAP-018. Raw P01/P02 remain traceable without silent normalization, GAP-005/006 OPEN. Depreciation age/life/book value including zero is not physical condition or disposal proof. No formula/daily proration/historical threshold/accounting correction is promoted to policy, GAP-007/009 OPEN. KDP remains distinct from definitive Asset. Reconciliation resolved status requires traceable explanation/evidence; final authority/signoff GAP-010 remains unresolved. Structured/generated/uploaded/final evidence stay distinct; historical ambiguity is not silently accepted as canonical truth.
 
-## Git checkpoint and completion rule
+All **GAP-001–GAP-020 remain OPEN**, register bytes preserved; resolved **NONE**, new **NONE**. Classification **A 0 / B 14 / C 4 / D 2**. B: GAP-001–005, GAP-007–011, GAP-014, GAP-017–019. C: GAP-012/015/016/020. D: GAP-006/013. Approval does not substitute for required custodian/domain authority. No later-phase specification/schema/permission matrix/route/exact workflow/screens/implementation/Task artifact is created.
 
-Verified pre-checkpoint state: **main**; HEAD = origin/main = live remote main at **`3e7d6a21287410ff977db9db996154043e1c8926`**, `docs: close P0 publication handoff`; unchanged origin `https://github.com/yusufarst/PRANATA-UNY.git`; existing reviewed P1 working tree, empty staging. Read-only live baseline check PASS after restricted-network retry. Original P0 checkpoint `f6d889100306a63a5bd391da4310346fc427d4d8` and closure history preserved.
+## Source, tools and checkpoint safety
 
-AUTH-005 requires bounded post-approval integrity PASS before staging only intended P1/approval/lifecycle paths, exact index/worktree/manifest byte comparison, **one normal commit** `docs: finalize P1 product definition`, normal `git push origin main` and remote verification. Use existing configured Owner author/committer only; no attribution metadata, amend, force push, remote/upstream/identity change or raw-source staging. The new checkpoint SHA, push outcome and clean-tree evidence are read from live Git/session final report after publication, avoiding self-referential future claims. This handoff's completion rule resolves current authority without requiring another closure commit: **once publication and remote integrity verification pass, AUTH-005 is exhausted and no phase authorization remains**.
+All **47 raw originals** remain local/unchanged/ignored/untracked, not Git eligible, staged or published. Primary UI/UX video remains local/ignored. Fingerprint/ignore comparisons are read-only; no raw-content reinspection, extraction, transformation, external upload, credentials/personal data/transaction dataset or historical document publication. Existing PowerShell/Node/Git only; temporary audit helpers outside the repository. No dependency installation, MCP reconfiguration, cost exception or production access.
 
-## Evidence, tools and source safety
+Application lint/typecheck/unit/feature/integration/auth/routes/browser E2E/localization/responsive/accessibility/build/performance/security/migration/UAT: **N/A — no application**. Documentation PASS does not validate accounting arithmetic, official procurement applicability, current policy or runtime capacity.
 
-[Post-approval integrity evidence](../00-governance/evidence/P1_QUALITY_GATE.md#p1-post-approval-integrity--2026-10-05) covers reviewed identity, preserved product/decision/gap text, source fingerprints/ignore safety, links/anchors/IDs, manifest coverage/hashes and bounded Git/phase checks. Application lint/typecheck/unit/feature/integration/auth/route/browser E2E/localization/responsive/accessibility/build/performance/security/migration: **N/A — no application**. Documentation approval is not runtime/UAT verification.
-
-All **47 raw originals** remain local, ignored, untracked and excluded from candidate/staging. SRC-047/VIS-04 `reference-inputs/PRANATA_PRIMARY_UI_UX_MOTION_REFERENCE.mp4` remains the **PRIMARY UI/UX + MOTION REFERENCE**. OWNER DIRECTION, SOURCE OBSERVATION and FUTURE P7 DESIGN DECISION remain distinct. No literal cloning, final tokens/timings/routes/responsive rules or P7 planning. Existing bounded local video-inspection history and limitations remain in the source/experience records; no media or raw historical data is uploaded. P0 quality/manifest, raw inputs, GAP_REGISTER, master framework, protected governance and historical source reviews remain unchanged.
-
-Approval session uses existing PowerShell/Node/Git and temporary local audit scripts outside the repository. No install/dependency, version-sensitive application API claim, MCP reconfiguration, production/schema/migration/import action, new recurring cost or paid exception. Production DB touched **NO**. Earlier DesainPakeAI guide retrieval failure remains historical; no new design work is performed.
+AUTH-007 permits explicit intended paths only, after material integrity PASS; per-command `core.autocrlf=false` preserves exact bytes without persistent config change. One normal Owner-identity commit **`docs: finalize P2 domain model`**, no attribution metadata/amend/force push/remote change; normal `git push origin main`. Verify index/commit bytes, live remote ref, P0/P1 ancestry, approval/phase/domain/GAP/source safety and clean worktree. Any material failure blocks commit/push and must be reported.
 
 ## Changed files
 
-P1 checkpoint preserves existing **7 created / 17 modified** candidate files: five `docs/01-product/*.md` and `docs/00-governance/evidence/{P1_QUALITY_GATE.md,P1_ARTIFACT_MANIFEST.json}` created; `AGENTS.md`, `README.md`, `docs/{CONTEXT_INDEX.md,PHASE_STATUS.md,handoff/CURRENT_HANDOFF.md}`, `docs/00-governance/{APPROVAL_RECORDS,DECISION_LOG,DECISION_INDEX,SOURCE_INVENTORY,SOURCE_OF_TRUTH,AGENT_OPERATING_MODEL,PROJECT_CHARTER,CHANGE_CONTROL,GIT_WORKFLOW,TOOLCHAIN}.md` and `docs/00-governance/evidence/{FRAMEWORK_ADOPTION,VISUAL_SOURCE_REVIEW}.md` modified. Approval session updates only administrative lifecycle/approval/evidence passages in those same **24 files**. Exact current bytes/hashes and dispositions are in the post-approval P1 manifest.
+P2 checkpoint relative to published P1: **9 created / 16 modified**; complete **57 files / 56 hashed entries**, manifest excludes itself. Approval-session changes affect those same **25 intended files**: seven domain artifacts, P2 quality gate/manifest, AGENTS.md, README.md, docs/CONTEXT_INDEX.md, docs/PHASE_STATUS.md, this handoff, governance AGENT_OPERATING_MODEL/APPROVAL_RECORDS/CHANGE_CONTROL/DECISION_INDEX/DECISION_LOG/GIT_WORKFLOW/PROJECT_CHARTER/SOURCE_INVENTORY/SOURCE_OF_TRUTH/TOOLCHAIN and FRAMEWORK_ADOPTION. Exact paths/dispositions/hashes are in the refreshed manifest; original source-history suffix, P1, GAP register and historical approvals/decisions/evidence remain preserved.
 
 ## Exact next safe action
 
-**After the approved P1 checkpoint is normally published and verified, Owner separately authorizes P2 — Domain Model & Business Rules.** P2 is NOT authorized by this session. Stop after checkpoint. No P2–P11 planning, domain/business rules/schema/migrations/scaffold/auth/UI, P7 design, Task plan/IDs/counts, freeze, execution/Claude Code authorization, deploy, production work or raw-source modification/publication.
+After verified P2 checkpoint: **Owner separately authorizes P3 — Workflows, Routes & Interactions**. P3 is **NOT AUTHORIZED** by APPR-003/AUTH-007. **Stop after P2**; no Tasks, planning freeze, application implementation, Claude Code execution, deployment or production work.

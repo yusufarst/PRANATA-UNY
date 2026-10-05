@@ -1,6 +1,6 @@
 # Toolchain
 
-Status: APPROVED (P1 inspection amendment; P0 tool policy retained) | Updated: 2026-10-05 | Custodian: Planning Agent
+Status: APPROVED (APPR-003; AUTH-007 approval/checkpoint lifecycle) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
 
 This registry owns tool capability policy and honest availability (AICWDF §5–§7, §6A). A named tool is a preference; verified capability is the requirement. No application dependency was installed or application environment created in P0.
 
@@ -30,7 +30,7 @@ Metadata/version probes only; these are machine capabilities, not installed PRAN
 
 | Tool | Observation | Verification limit |
 | --- | --- | --- |
-| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002–004 historical/completed; AUTH-005 permits one approved P1 checkpoint through verified publication only; read-only inspection verified baseline |
+| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002–006 historical/completed; AUTH-007 bounded P2 checkpoint until verified publication, then automatically completed; baseline verified read-only |
 | ripgrep (`rg`) | Command available and used | Targeted search works; no graph claimed |
 | Node.js | `v24.18.0`; version probe passed | No application compatibility/build verification |
 | npm | `11.16.0`; version probe passed | No package installation performed |
@@ -70,3 +70,13 @@ If the client cannot temporarily deactivate exposure, document the limitation an
 Historical AUTH-004 covered P1 planning only; APPR-002 approves that reviewed result and AUTH-005 covers approval/checkpoint only. Neither authorizes application setup or P2. Existing PowerShell/Node/Git, bundled Python/PIL and existing local VLC decoded primary video locally. PATH absence of FFmpeg/Python in P0 did not prove absence of another decoder. VLC software decoding produced representative and temporal frames; scratch/cache cleaned, configuration not saved, no new installation/application dependency. Inventory/experience documents record exact metadata and limits. Documentation audit uses Node file hashes/Git/link/ID checks; application/current-library API verification, graph generation and browser E2E remain N/A because no app/version-sensitive implementation exists.
 
 DesainPakeAI skill was read for reference analysis. Its authenticated guide retrieval failed **INVALID_CREDENTIAL_FILE**; no guide content or successful authentication is claimed. Local Owner-selected reference analysis continued without uploading raw media. No MCP reconfiguration, tool account change, paid exception or recurring production dependency was introduced. P1 quality evidence owns resulting checks, rather than reclassifying P0 probes as current runtime proof.
+
+## Historical P2 preparation verification — AUTH-006
+
+P2 uses existing PowerShell, Node.js `v24.18.0` and Git for bounded documentation edits, file-byte hashes, links/anchors/identifier checks, preservation/diff review and read-only published-baseline verification. Remote baseline check succeeded after restricted-network retry; no Git writes/publication, remote/identity change or dependency install. Temporary audit helpers are outside the repository and are not application/import code.
+
+Existing SOURCE_INVENTORY, ASSET_SOURCE_REVIEW, PROCUREMENT_SOURCE_REVIEW and approved P1 coverage support conceptual modeling. No raw-content reinspection/recalculation/media decoding/upload, current-law verification, new source-authority validation, runtime/version-sensitive application claim, MCP configuration, production DB access or recurring cost occurred. Application tests/browser E2E/security/performance/build/migration remain N/A because no application exists. Internal peer review is preparation evidence, not the required independent exact-manifest review or Owner approval; [P2_QUALITY_GATE](evidence/P2_QUALITY_GATE.md) owns results.
+
+## P2 approval/checkpoint verification — AUTH-007
+
+Existing PowerShell/Node/Git only. Exact pre-approval manifest and all entries independently verified before edits; temporary audit/snapshot helpers outside the repository support file-byte preservation, links/anchors/IDs/counts, raw fingerprints/ignore checks and staged/committed blob equality. APPR-003 preserves the reviewed identity; the refreshed P2 manifest identifies post-approval bytes. AUTH-007 permits one normal Owner-identity checkpoint/push/live remote verification and automatically completes afterward. No installation, paid service, MCP reconfiguration, raw-content reinspection/upload, current-policy validation or production access; application checks remain N/A — no application. [P2_QUALITY_GATE](evidence/P2_QUALITY_GATE.md#p2-post-approval-integrity--2026-10-05) owns results; P3 remains NOT AUTHORIZED.
