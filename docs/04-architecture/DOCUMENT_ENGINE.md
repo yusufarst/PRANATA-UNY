@@ -14,9 +14,11 @@ flowchart LR
   C -- ya --> D[Job antrean documents:<br/>isi DOCX]
   D --> E[Gotenberg: DOCX → PDF]
   E --> F[generated_documents<br/>DRAFT rev n]
-  F --> G[Finalisasi: nomor dikonfirmasi]
-  G --> H[ISSUED]
-  H --> I[Unggah bukti tanda tangan → SIGNED]
+  F --> G[FINAL: isi dibekukan,<br/>nomor dikonfirmasi]
+  G --> H[Catat penerbitan<br/>bila diwajibkan kebijakan]
+  G --> I[Unggah bukti tanda tangan<br/>bila diwajibkan kebijakan]
+  H --> J[Lengkap: semua tindakan<br/>wajib tercatat]
+  I --> J
   F -. koreksi data .-> B
 ```
 
@@ -24,11 +26,12 @@ flowchart LR
 |---|---|
 | Snapshot | Setiap jenis dokumen memiliki `DocumentDataProvider` di modul pemilik yang menghasilkan DTO bertipe → `data_snapshot` + `data_sha256`. Dokumen tidak membaca basis data setelah snapshot dibuat; regenerasi selalu memakai snapshot baru. |
 | Template | DOCX dengan placeholder `${nama}`, baris berulang (`cloneRow`) dan blok (`cloneBlock`) gaya PhpWord TemplateProcessor. Saat unggah, placeholder dipindai dan dicocokkan dengan `placeholder_schema` provider: placeholder wajib hilang atau tak dikenal → template ditolak. |
-| Banner status | Setiap template wajib memuat `${status_banner}` pada header. Nilainya `DRAF — BUKAN DOKUMEN RESMI` untuk DRAFT dan `SIMULASI — KEBIJAKAN BELUM DISAHKAN` bila `is_simulation`; kosong hanya untuk FINAL/ISSUED non-simulasi. |
+| Banner status | Setiap template wajib memuat `${status_banner}` pada header. Nilainya `DRAF — BUKAN DOKUMEN RESMI` untuk DRAFT dan `SIMULASI — KEBIJAKAN BELUM DISAHKAN` bila `is_simulation`; kosong hanya untuk dokumen FINAL non-simulasi. |
 | Konversi | Job antrean `documents` mengirim DOCX ke Gotenberg (route LibreOffice) dengan batas waktu; bila PDF gagal, DOCX tetap tersedia dan status konversi menunjukkan kegagalan yang dapat diulang (EP-010). |
 | Nomor | Saat finalisasi, layanan Numbering memberi saran nomor sesuai skema kebijakan; petugas berwenang mengonfirmasi atau mengisi manual; keunikan dijamin constraint (OD-29). Tanpa skema ACTIVE, finalisasi resmi tidak tersedia. |
-| Revisi | Koreksi menghasilkan revisi baru; revisi lama menjadi SUPERSEDED dan tetap dapat dibuka. Dokumen ISSUED/SIGNED tidak pernah ditimpa; pembatalan memerlukan alasan (VOIDED). Perlakuan nomor pada revisi mengikuti kebijakan (GAP-017). |
-| Tanda tangan | V1 mencatat bukti tanda tangan basah (pindaian) atau PDF bertanda tangan yang diunggah, beserta snapshot nama/jabatan penanda tangan dari penunjukan. Tanda tangan digital adalah ekstensi masa depan (`SignatureEvidence`). |
+| Revisi | Koreksi menghasilkan revisi baru; revisi lama menjadi SUPERSEDED dan tetap dapat dibuka. Dokumen FINAL — termasuk yang sudah diterbitkan atau ditandatangani — tidak pernah ditimpa; pembatalan memerlukan alasan (VOIDED). Perlakuan nomor pada revisi mengikuti kebijakan (GAP-017). |
+| Penerbitan dan tanda tangan | Tindakan terpisah atas dokumen FINAL. Wajib/tidaknya dan urutannya per jenis dokumen berasal dari kebijakan `procurement.documents`; tanpa urutan dari kebijakan, keduanya independen dan dapat dicatat dalam urutan apa pun (STATE_TRANSITIONS WF-028 TR-274 dan WF-011 TR-102–104 tidak menetapkan urutan). Status tampilan diturunkan dari tindakan yang tercatat. |
+| Bukti tanda tangan | V1 mencatat bukti tanda tangan basah (pindaian) atau PDF bertanda tangan yang diunggah, beserta snapshot nama/jabatan penanda tangan dari penunjukan. Tanda tangan digital adalah ekstensi masa depan (`SignatureEvidence`). |
 | Paket SPJ | `document_packs` menyusun daftar persyaratan dari kebijakan `procurement.documents`, menandai yang ada/kurang, dan dapat dirakit menjadi satu PDF gabungan (Gotenberg merge) beserta lembar indeks, atau ZIP. |
 
 ## 2. Format bahasa Indonesia

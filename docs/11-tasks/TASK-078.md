@@ -50,7 +50,7 @@ P10: rilis memerlukan bukti, bukan keyakinan.
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Persetujuan rilis dan go-live
 - Keputusan/prasyarat Owner: Keputusan rilis bertahap (opsional)
-- GAP terkait (GAP-011, GAP-012, GAP-016, GAP-023, GAP-024) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-011, GAP-012, GAP-016, GAP-023, GAP-024) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -244,6 +244,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan menyatakan V1 diterima tanpa bukti semua CAP
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

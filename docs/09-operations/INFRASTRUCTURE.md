@@ -34,7 +34,7 @@ Kinerja bind mount dari sistem berkas Windows diverifikasi saat menyiapkan lingk
 
 ## 3. CI
 
-GitHub Actions dengan runner GitHub (repositori publik — tanpa biaya menit). Desain workflow di [QUALITY_GATES](../08-testing/QUALITY_GATES.md). Rahasia CI hanya untuk uji. Cabang terlindungi: `main` (integrasi Task berbasis trunk) dengan status check wajib `ci-gate`, PR wajib dan larangan force push/penghapusan; tag rilis `v*` dilindungi dan produksi hanya dari tag ([RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang)). Pembuatan proteksi dilakukan Owner atau melalui Task berizin.
+GitHub Actions dengan runner GitHub (repositori publik — tanpa biaya menit). Desain workflow di [QUALITY_GATES](../08-testing/QUALITY_GATES.md). Rahasia CI hanya untuk uji. Cabang terlindungi: `main` (integrasi Task berbasis trunk) dengan status check wajib `ci-gate` dan larangan force push/penghapusan; aturan PR wajib hanya pada opsi merge B (D-08, [QUALITY_GATES §4](../08-testing/QUALITY_GATES.md#4-pipeline-ci-github-actions)); tag rilis `v*` dilindungi dan produksi hanya dari tag ([RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang)). Ruleset diterapkan Owner setelah `ci-gate` terbukti (TASK-005); eksekutor tidak mengubah ruleset.
 
 ## 4. Topologi staging dan produksi
 

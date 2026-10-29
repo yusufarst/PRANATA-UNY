@@ -27,7 +27,7 @@ Boleh dijalankan kapan saja; **tidak mengubah apa pun**.
 1. Verifikasi repositori, cabang, HEAD, working tree dan remote (`git status`, `git log -1`, `git ls-remote origin refs/heads/main`).
 2. Baca `git config user.name` dan `user.email` (tanpa mengubah) dan bandingkan dengan identitas Owner rujukan di [GIT_WORKFLOW](../00-governance/GIT_WORKFLOW.md).
 3. Baca AGENTS.md, EXECUTION_CONTEXT, CURRENT_HANDOFF, PHASE_STATUS dan catatan otorisasi terbaru.
-4. Laporkan dengan format AICWDF §38: peran `EXECUTION AGENT — WAITING`, Task aktif `—`, otorisasi yang ada/tidak ada, dan `SAFE TO IMPLEMENT: NO` selama prasyarat [EXECUTOR_OPERATING_MODEL §1](EXECUTOR_OPERATING_MODEL.md#1-prasyarat-aktivasi) belum lengkap.
+4. Laporkan dengan format AICWDF §38: peran `EXECUTION AGENT — WAITING`, Task aktif `—`, otorisasi yang ada/tidak ada, dan `SAFE TO IMPLEMENT: NO` selama prasyarat mode SUPERVISED di [EXECUTOR_OPERATING_MODEL §1](EXECUTOR_OPERATING_MODEL.md#1-prasyarat-aktivasi) belum lengkap; `YES` hanya untuk Task dalam ruang lingkup otorisasi dan pada mode yang prasyaratnya terpenuhi (mode otonom memerlukan prasyarat tambahan).
 5. Berhenti. Tidak memasang paket, membuat cabang, menjalankan Docker, membuat skema/migrasi/UI/Task, menutup GAP atau mengubah kebenaran perencanaan.
 
 ## 3. Prasyarat aktivasi
@@ -36,17 +36,19 @@ Boleh dijalankan kapan saja; **tidak mengubah apa pun**.
 - [ ] Kandidat perencanaan masuk ke `main` dengan metode yang diputuskan Owner; `main` remote diverifikasi.
 - [ ] Planning Freeze dan baseline Task tercatat; TASK_PLAN menyatakan TASK-001 READY.
 - [ ] Otorisasi eksekusi berdiri tercatat dengan ruang lingkupnya.
-- [ ] Keputusan metode merge dan proteksi `main` ([EXECUTOR_OPERATING_MODEL §8.2](EXECUTOR_OPERATING_MODEL.md#82-metode-merge-keputusan-owner)).
+- [ ] Keputusan metode merge D-08 ([EXECUTOR_OPERATING_MODEL §8.2](EXECUTOR_OPERATING_MODEL.md#82-metode-merge-keputusan-owner)), cakupan token eksekutor D-27 dan model gerbang GAP D-28.
 - [ ] Mesin Owner: Claude Code terbaru, Git, GitHub CLI terautentikasi akun Owner, Docker Desktop, Node, PowerShell; proyek lain tetap berjalan tanpa gangguan.
 
 ## 4. Urutan aktivasi
 
-1. **Verifikasi otoritas** — bootstrap bagian 2 dengan hasil `SAFE TO IMPLEMENT: YES` hanya untuk TASK-001.
-2. **TASK-001 dalam mode SUPERVISED** — Owner hadir; eksekutor membangun pengaman, runner/watcher dan penjaga atribusi, menguji kemampuan C-01–C-13, dan menulis laporan kemampuan. Setiap izin baru ditanyakan kepada Owner.
-3. **Proteksi repositori** — Owner menerapkan ruleset `main` dan perlindungan tag sesuai metode merge yang diputuskan (instruksi dari TASK-001/TASK-005).
-4. **Keputusan mode otonom** — Owner membaca laporan kemampuan dan, bila menerima, mencatat otorisasi mode otonom dengan ruang lingkup (disarankan bertahap: M0–M2 dahulu, lalu M3).
-5. **Mulai** — satu perintah: `scripts/executor/runner.ps1 -Start` (dibuat TASK-001); watcher terjadwal diaktifkan. Laporan pertama memuat footer EXECUTION PROGRESS.
-6. **Titik sentuh Owner** — hanya hal yang dicadangkan ([EXECUTOR_OPERATING_MODEL §12](EXECUTOR_OPERATING_MODEL.md#12-pelaporan-kemajuan-dan-eskalasi-owner)), UAT, dan keputusan rilis.
+1. **Verifikasi otoritas** — bootstrap bagian 2 dengan hasil `SAFE TO IMPLEMENT: YES` hanya untuk TASK-001 dalam mode SUPERVISED.
+2. **TASK-001 (SUPERVISED, mode bootstrap)** — Owner hadir; eksekutor membangun pengaman, runner/watcher dan penjaga atribusi, menguji kemampuan C-01–C-15, dan menulis laporan kemampuan. Setiap izin baru ditanyakan kepada Owner.
+3. **TASK-002–TASK-005 (SUPERVISED, mode bootstrap)** — tanpa `ci-gate` sampai TASK-005 membuat `ci.yml`; bukti verifikasi lokal dan metadata commit disaksikan Owner ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada)).
+4. **Proteksi repositori** — setelah `ci-gate` terbukti pada PR TASK-005, Owner menerapkan ruleset `main` dan perlindungan tag sesuai D-08; eksekutor hanya memverifikasinya dengan `gh api` baca.
+5. **Token runner** — Owner memasang token sesuai D-27 khusus untuk proses runner (C-15).
+6. **Keputusan mode otonom** — Owner membaca laporan kemampuan dan, bila menerima, mencatat otorisasi mode otonom dengan ruang lingkup (disarankan bertahap: TASK-006–TASK-023 dahulu, lalu M3).
+7. **Mulai** — satu perintah: `scripts/executor/runner.ps1 -Start` (dibuat TASK-001); watcher terjadwal diaktifkan. Laporan pertama memuat footer EXECUTION PROGRESS.
+8. **Titik sentuh Owner** — hal yang dicadangkan ([EXECUTOR_OPERATING_MODEL §12](EXECUTOR_OPERATING_MODEL.md#12-pelaporan-kemajuan-dan-eskalasi-owner)), merge yang menyentuh jalur pengaman, UAT, dan keputusan rilis.
 
 ## 5. Templat prompt
 

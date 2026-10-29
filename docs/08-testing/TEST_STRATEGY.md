@@ -54,7 +54,7 @@ Dokumen ini memiliki **lapisan uji, alat, data uji, isolasi basis data uji, uji 
 | E2E lokal/CI | `pranata_e2e_<run_id>` | Migrate + `ScenarioSeeder` sebelum suite; dihapus setelahnya; worker Playwright berbagi data hanya-baca dan membuat objek uji sendiri dengan nama unik untuk perubahan |
 | Performa | `pranata_perf` di staging/mesin uji | Tidak pernah produksi |
 
-Pengaman wajib: skrip uji menolak berjalan bila nama basis data tidak cocok `^pranata_(test|e2e|perf)` atau `APP_ENV=production`. Uji tidak pernah memakai basis data proyek lain di mesin yang sama (port, nama kontainer dan volume khusus `pranata`, [INFRASTRUCTURE](../09-operations/INFRASTRUCTURE.md)).
+Pengaman wajib: skrip uji menolak berjalan bila nama basis data tidak cocok `^pranata_(test|e2e|perf)(_[a-z0-9_]+)?$` atau `APP_ENV=production`; perintah destruktif di luar uji (misalnya reset `pranata_dev`) memakai pengaman [CONCURRENCY_AND_INTEGRITY §8](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#8-isolasi-basis-data-uji). Uji tidak pernah memakai basis data proyek lain di mesin yang sama (port, nama kontainer dan volume khusus `pranata`, [INFRASTRUCTURE](../09-operations/INFRASTRUCTURE.md)).
 
 ## 5. E2E browser
 
@@ -67,7 +67,7 @@ Pengaman wajib: skrip uji menolak berjalan bila nama basis data tidak cocok `^pr
 
 ## 6. Uji tidak stabil (flaky)
 
-Uji yang gagal tidak konsisten dicatat sebagai temuan; boleh di-*quarantine* paling lama 3 hari kerja dengan issue terbuka dan pemilik, tidak boleh disembunyikan dengan retry tanpa batas. Retry CI maksimal 1 kali untuk E2E dan hasil retry dilaporkan. Penyebab umum (waktu, urutan, data bersama) diperbaiki pada akar.
+Uji yang gagal tidak konsisten dicatat sebagai temuan dengan bukti ketidakstabilan (hasil berbeda pada SHA yang sama). *Quarantine* paling lama 3 hari kerja dengan issue terbuka dan pemilik hanya boleh bila: (a) uji tidak mencakup kriteria `TAC` Task aktif atau area yang diubah Task itu; (b) uji bukan uji invarian BR/INV, otorisasi (AUTHZ/SOD) atau keamanan (SEC); (c) peninjau independen (subagen segar) mengonfirmasi bukti ketidakstabilan. Quarantine uji kategori (b) memerlukan persetujuan Owner. Uji tidak boleh disembunyikan dengan retry tanpa batas. Retry CI maksimal 1 kali untuk E2E dan hasil retry dilaporkan. Penyebab umum (waktu, urutan, data bersama) diperbaiki pada akar.
 
 ## 7. Evidence per Task
 

@@ -685,6 +685,8 @@ Di luar WF-029: lifecycle pengguna/akun (WF-001, P5) dan desain izin (P5). Penar
 | TR-297 | PROPOSED_WORKFLOW | S6 → catat konfirmasi penerima (sesuai, atau selisih jumlah/barang/kondisi) atau penutupan tanpa konfirmasi menurut aturan ACTIVE → S7 | Penerima (pemilik akun); bila penerima tanpa akun, bentuk bukti menurut GAP-025/023 | Serah terima tercatat; jawaban penerima atau syarat penutupan ACTIVE | Konfirmasi tercatat terpisah dari serah terima; stok tidak berubah; selisih membuka telaah koreksi/rekonsiliasi WF-023/WF-025 | — (selesai scope) atau pemilik selisih; penjelasan; telaah selisih | Konfirmasi tidak mengedit serah terima; tidak ada tenggat yang ditetapkan di sini; EP-009 |
 | TR-298 | PROPOSED_WORKFLOW | S1–S4 → tarik permintaan sebelum serah terima atau hentikan beralasan → S8 | Pemohon/pihak keputusan sahih | Alasan; belum ada serah terima | Riwayat dipertahankan; stok tidak berubah | Pemohon; —; permintaan baru bila perlu | Setelah ada serah terima memakai TR-296; EP-007 |
 
+**Rantai keputusan multi-langkah (WF-030).** Bila versi kebijakan gudang menetapkan lebih dari satu langkah, TR-293 dicatat sekali per langkah sesuai urutan rantai; permintaan tetap S2 sampai langkah terakhir menyetujui (S4); penolakan pada langkah mana pun menuju S8; pengembalian (TR-294) memulai siklus keputusan baru tanpa menghapus keputusan lama; jumlah yang disetujui tidak boleh naik antarlangkah. Isi resmi rantai tetap menunggu GAP-025.
+
 <a id="wf-031"></a>
 
 ## WF-031 — Pengembalian barang gudang

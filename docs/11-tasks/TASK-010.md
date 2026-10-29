@@ -33,7 +33,7 @@ CAP-01/AC-01 dan ADR-0007.
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: SEC-D2 timeout idle dan SEC-D3 profil password (default diterapkan bila belum diputuskan, dapat dikonfigurasi)
-- GAP terkait (GAP-015) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-015) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -274,6 +274,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 - Jangan menambahkan login Google/SSO
 - Jangan menyimpan password sementara dalam bentuk dapat dibaca
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

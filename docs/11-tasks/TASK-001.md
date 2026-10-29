@@ -33,19 +33,19 @@ GOV-12 mewajibkan eksekusi otonom yang aman, terisolasi dan hanya memakai kemamp
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Owner hadir untuk mode terawasi dan menyetujui pengaturan izin serta `core.hooksPath` tingkat repositori
 - Keputusan/prasyarat Owner: Owner memilih apakah runner berjalan via Task Scheduler atau dimulai manual
-- Keputusan/prasyarat Owner: Owner telah memutuskan metode merge (EXECUTOR_OPERATING_MODEL §8.2)
+- Keputusan/prasyarat Owner: Owner telah memutuskan metode merge (EXECUTOR_OPERATING_MODEL §8.2) dan cakupan token eksekutor (D-27)
 
 ## IN SCOPE
 
 - `.claude/settings.json` proyek: aturan izin allow/deny yang membatasi ke direktori repositori PRANATA, perintah Git normal, artisan/composer/npm/docker compose proyek `pranata`
-- Hook PreToolUse (Bash dan PowerShell) yang menolak: `git push --force`, perubahan `git config user.*`, operasi Docker global (`system/volume/network prune`, restart global), akses path proyek lain (MULTIPLECORP, BantuKasir, ELLIGBLE), koneksi ke host basis data non-`pranata`, dan berkas `.env` produksi
+- Hook PreToolUse (Bash dan PowerShell) dan aturan deny izin untuk **seluruh** larangan EXECUTOR_OPERATING_MODEL §11: Git (`push --force`/`--force-with-lease`, penghapusan cabang remote, push langsung ke `main` di luar skrip merge, perubahan `git config` identitas atau global), Docker global dan kontainer/volume non-`pranata`, path dan `.env` proyek lain (MULTIPLECORP, BantuKasir, ELLIGBLE), host basis data non-`pranata`, penghentian proses berdasarkan nama, penulisan jalur pengaman pada mode otonom, dan operasi admin GitHub (`gh api` non-GET ke ruleset/proteksi/ref/secret, `gh pr merge --admin`, `gh repo edit`, `gh secret`, `gh auth`)
 - Hook Stop dengan pemeriksaan `stop_hook_active` yang mencegah berhenti diam-diam saat Task aktif belum mencatat checkpoint, dan tidak pernah membuat loop tanpa kemajuan
 - Berkas status `.pranata/executor/checkpoint.json`, `hold.json` (IMMEDIATE_SAFE_SHUTDOWN / SHUTDOWN_AFTER_CURRENT_TASK), `heartbeat` dan kunci tunggal watcher (diabaikan Git)
 - Skrip runner/watcher PowerShell berskop proyek yang menjalankan sesi headless Claude Code per langkah Task dengan allowlist alat, batas giliran dan pembacaan hasil; deteksi idle berbasis bukti (heartbeat, proses, commit, log) dengan ambang kandidat 45 menit
 - Uji kemampuan nyata dan pencatatan hasilnya: hook pada Windows (Git Bash/PowerShell), mode headless dengan prompt izin dinonaktifkan, perilaku setelah compaction, penjadwalan Windows Task Scheduler, pengaturan atribusi Git pada repositori uji sekali pakai (tidak boleh ada trailer AI), deteksi status review Codex melalui `gh`
 - Penjaga atribusi berlapis: pengaturan atribusi proyek dinonaktifkan, hook Git `commit-msg` di `.githooks/` (diaktifkan dengan `core.hooksPath` tingkat repositori setelah persetujuan Owner), templat PR tanpa footer atribusi, pemeriksaan metadata pasca-commit
-- Skrip `scripts/executor/merge-verified.ps1` (pemeriksaan EXECUTOR_OPERATING_MODEL §8.1 lalu merge dengan metode yang diputuskan Owner), `hold.ps1`, `release-hold.ps1`, `status.ps1`, `runner.ps1`, `watcher.ps1`
-- Uji kemampuan C-01–C-13 (EXECUTOR_OPERATING_MODEL §13) termasuk perilaku PR merged setelah fast-forward dan ruleset status check pada repositori uji sekali pakai, subagen peninjau dalam mode headless, dan deteksi batas pemakaian
+- Skrip `scripts/executor/merge-verified.ps1` (pemeriksaan EXECUTOR_OPERATING_MODEL §8.1 lalu merge dengan metode yang diputuskan Owner; mode bootstrap §8.4 hanya untuk TASK-001–TASK-004 dan hanya dalam sesi SUPERVISED), `hold.ps1`, `release-hold.ps1`, `status.ps1`, `runner.ps1`, `watcher.ps1`
+- Uji kemampuan C-01–C-15 (EXECUTOR_OPERATING_MODEL §13) termasuk perilaku PR merged setelah fast-forward dan ruleset status check pada repositori uji sekali pakai, subagen peninjau dalam mode headless, dan deteksi batas pemakaian
 - Laporan verifikasi kemampuan di `docs/11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md` (tanpa rahasia)
 
 ## OUT OF SCOPE
@@ -175,13 +175,13 @@ GOV-12 mewajibkan eksekusi otonom yang aman, terisolasi dan hanya memakai kemamp
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Semua perintah terlarang pada daftar uji ditolak oleh hook pada Windows, dengan bukti keluaran
+- TAC-01 Setiap kategori larangan EXECUTOR_OPERATING_MODEL §11 memiliki uji tolak yang lulus pada Windows, dengan bukti keluaran
 - TAC-02 Runner dapat memulai, menghentikan aman (hold) dan melanjutkan dari checkpoint tanpa kehilangan status Task
 - TAC-03 Watcher tunggal: instance kedua menolak berjalan; heartbeat dan idle terdeteksi dari bukti
 - TAC-04 Laporan kemampuan mencatat setiap kemampuan sebagai VERIFIED, FAILED atau NOT AVAILABLE beserta bukti; tidak ada kemampuan yang diklaim tanpa uji
 - TAC-05 Commit uji tidak memuat atribusi AI dan memakai identitas Owner; hook `commit-msg` menolak pesan uji yang memuat trailer atribusi
 - TAC-06 Skrip merge menolak merge bila salah satu pemeriksaan §8.1 gagal (uji negatif) dan hook menolak push langsung ke `main` di luar skrip
-- TAC-07 EXECUTOR_OPERATING_MODEL diperbarui bila hasil uji berbeda dari asumsi (melalui TASK PLAN CHANGE bila memengaruhi Task lain)
+- TAC-07 Status C-01–C-15 di EXECUTOR_OPERATING_MODEL §13 diperbarui sesuai bukti; perubahan aturan atau Task lain diajukan ke Planning Agent, tidak diubah sendiri
 
 ## TEST REQUIREMENTS
 
@@ -219,7 +219,7 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 - Semua ACCEPTANCE CRITERIA terbukti dengan bukti tercatat
 - Definition of Done [QUALITY_GATES §2](../08-testing/QUALITY_GATES.md#2-definition-of-done) untuk semua Task + §2.3 HIGH
-- PR ke `main` lulus `ci-gate` pada HEAD terakhir dan review sesuai REVIEW REQUIREMENT, di-merge, lalu `main` remote diverifikasi memuat merge tersebut ([EXECUTOR_OPERATING_MODEL §8](EXECUTOR_OPERATING_MODEL.md#8-merge-dan-rekonsiliasi-done))
+- PR ke `main` dengan bukti verifikasi lokal lengkap dan review sesuai REVIEW REQUIREMENT; merge mode bootstrap disaksikan Owner karena `ci-gate` belum ada ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada))
 - TASK_PLAN dan CURRENT_HANDOFF diperbarui; checklist dicentang hanya bila DONE
 
 ## COMPLETION EVIDENCE
@@ -244,8 +244,8 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan mengaktifkan mode otonom
-- Jangan memakai mode yang melewati semua izin tanpa hook deny yang terbukti bekerja
+- Jangan memakai mode yang melewati semua izin (bypass permissions) dalam kondisi apa pun; langkah headless memakai allowlist dan alat di luar allowlist ditolak
 - Jangan menyentuh direktori, kontainer atau basis data proyek lain
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

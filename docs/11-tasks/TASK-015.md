@@ -34,13 +34,14 @@ Kewenangan keputusan bisnis berasal dari penugasan, bukan role global (OD-28, IN
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-004, GAP-014) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-004, GAP-014) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
-- Tabel dan Action tambah/akhiri/cabut penugasan dengan rujukan SK
+- Tabel dan Action tambah/akhiri/cabut penugasan dengan rujukan SK (lampiran bukti `evidence_file_id` ditambahkan TASK-016)
 - Katalog peran penugasan ACCESS_CONTROL §5
-- Evaluator SoD (sistem + kebijakan `procurement.authority`/lainnya) dengan hasil tersimpan
+- Evaluator SoD: aturan sistem SOD-04–09 dan antarmuka aturan dari kebijakan (diisi Task modul; SOD-01–03 di TASK-028) dengan hasil tersimpan
+- Pemegang penugasan keputusan aktif diperlakukan istimewa: reset dibantu memerlukan admin kedua, TOTP wajib sebelum aksi keputusan bila SEC-D1 diputuskan, dan aksi keputusan diblokir setelah reset dibantu sampai pengguna mengganti password dan memverifikasi TOTP
 - Larangan SUPER_ADMIN memegang penugasan keputusan
 - Integrasi ke evaluator `can()` (kapabilitas bertanda "Penugasan")
 - Komponen UI panel penugasan pada objek + PG-504
@@ -83,7 +84,8 @@ Kewenangan keputusan bisnis berasal dari penugasan, bukan role global (OD-28, IN
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
-- AUTHZ-23, AUTHZ-34
+- AUTHZ-23, AUTHZ-24
+- SEC-21
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
@@ -194,19 +196,22 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 SUPER_ADMIN tidak dapat ditugaskan pada peran keputusan
 - TAC-03 Aksi berkapabilitas penugasan hanya untuk pemegang penugasan aktif
 - TAC-04 Saran dari penunjukan tampil sebagai saran, bukan penugasan otomatis
+- TAC-05 Evaluator menerapkan aturan SoD dari kebijakan uji tanpa kode khusus per aturan
+- TAC-06 Admin tidak dapat sendirian mereset password pemegang penugasan keputusan aktif (AUTHZ-24, SEC-21)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Feature: Penugasan/SoD/integrasi can()
-- Authorization: AUTHZ-23, AUTHZ-34
+- Authorization: AUTHZ-23, AUTHZ-24
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis
 - Production build: npm run build
+- Security: SEC-21
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
 
 ## TEST CHECKLIST
@@ -262,6 +267,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan membuat delegasi implisit
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

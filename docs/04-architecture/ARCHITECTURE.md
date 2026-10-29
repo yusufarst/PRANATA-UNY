@@ -164,6 +164,8 @@ Mesin transisi: setiap workflow P3 diimplementasikan sebagai peta transisi ekspl
 
 ### 8.1 OPEN GAP sebagai gerbang aktivasi
 
+Model ini adalah usulan perencanaan atas pernyataan GAP_REGISTER yang disetujui bahwa GAP menghalangi spesifikasi/Task yang bergantung; konfirmasinya, beserta daftar GAP yang wajib selesai sebelum go-live, menunggu keputusan Owner D-28 ([OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)).
+
 | Situasi | Lingkungan non-produksi (dev/CI/staging/UAT) | Produksi |
 |---|---|---|
 | Kebijakan ACTIVE | Normal | Normal |

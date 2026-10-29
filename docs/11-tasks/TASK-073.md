@@ -33,7 +33,7 @@ OD-16/22/32; NFR-P01–P04; GAP-016.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-016) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-016) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -81,7 +81,7 @@ OD-16/22/32; NFR-P01–P04; GAP-016.
 
 - Schema change: PROPOSED
 - Migration required: YES (indeks bila perlu)
-- Tables: `indeks tambahan`
+- Tables: indeks tambahan
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -160,7 +160,7 @@ OD-16/22/32; NFR-P01–P04; GAP-016.
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 PB-01–PB-11 diukur; setiap PB terpenuhi atau temuan dicatat dengan TASK PLAN CHANGE
+- TAC-01 PB-01–PB-11 diukur, termasuk PB-01 (daftar aset) dan PB-09 (run penyusutan) pada 1 juta aset; setiap PB terpenuhi atau temuan dicatat dan diajukan ke Planning Agent
 - TAC-02 Generator deterministik dan dapat diulang
 - TAC-03 Bukti EXPLAIN dan hasil k6 tersimpan
 
@@ -223,6 +223,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan melonggarkan anggaran diam-diam
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

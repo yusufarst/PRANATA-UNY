@@ -22,6 +22,7 @@ Paket adalah konteks bersama semua langkah pengadaan (CAP-05, BR-035).
 
 - TASK-025
 - TASK-024
+- TASK-026
 
 ## BLOCKS
 
@@ -33,7 +34,7 @@ Paket adalah konteks bersama semua langkah pengadaan (CAP-05, BR-035).
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-013, GAP-028) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-013, GAP-028) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -217,7 +218,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Typecheck: Larastan + tsc
 - Unit: Kalkulasi total desimal
 - Feature: WF-005 inti, komitmen, scope
-- Authorization: AUTHZ-01/02
+- Authorization: AUTHZ-01, AUTHZ-02
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Bagian J-03
 - Localization/language switch: Dua bahasa; kunci hilang = 0
@@ -277,6 +278,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan memblokir paket berdasarkan saldo keuangan yang tidak dimiliki PRANATA
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

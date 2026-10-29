@@ -68,7 +68,7 @@ Kolom "Kembali" adalah tujuan back kontekstual default; kontrak lengkap di RT te
 | PG-110 | Partisipasi & kiriman paket | `/procurement/packages/{p}/participants` | RT-008 / WF-008 | Undang / catat kiriman | Detail paket |
 | PG-111 | Evaluasi, klarifikasi, negosiasi | `/procurement/packages/{p}/assessment` | RT-009 / WF-009 | Catat hasil | Detail paket |
 | PG-112 | Hasil/penetapan pemenang | `/procurement/packages/{p}/result` | RT-010 / WF-010 | Usulkan/tetapkan | Detail paket |
-| PG-113 | SPPBJ | `/procurement/packages/{p}/sppbj` | RT-011 / WF-011 | Siapkan/periksa/terbitkan | Detail paket |
+| PG-113 | SPPBJ | `/procurement/packages/{p}/sppbj` | RT-011 / WF-011 | Catat kontribusi sesuai penugasan (siapkan, periksa, terbitkan, tanda tangan; urutan hanya bila kebijakan menetapkan) | Detail paket |
 | PG-114 | Kontrak (daftar/detail) | `/procurement/contracts`, `/{c}` | RT-012 / WF-012 | Siapkan/catat tanda tangan | Daftar/paket asal |
 | PG-115 | Adendum | `/procurement/contracts/{c}/amendments` | RT-036 / WF-033 | Usulkan/putuskan | Detail kontrak |
 | PG-116 | Pelaksanaan/progres | `/procurement/contracts/{c}/progress` | RT-013 / WF-013 | Catat progres | Detail kontrak |

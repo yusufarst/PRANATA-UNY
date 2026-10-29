@@ -43,7 +43,8 @@ Setiap PR Task harus diverifikasi otomatis dan cepat tanpa run ganda atau check 
 - PostgreSQL service versi sama dengan produksi; Pest paralel
 - composer audit, npm audit, gitleaks
 - Pemeriksa dokumen (tautan/anchor/ID dan konsistensi TASK_PLAN) dipindahkan dari skrip perencanaan ke `scripts/docs-check`
-- Dokumen instruksi proteksi `main` (PR wajib, `ci-gate` wajib, cabang mutakhir, tanpa force push/penghapusan) dan perlindungan tag `v*` untuk diterapkan Owner
+- Filter `ci-e2e` mencakup kode aplikasi, `config/`, `bootstrap/`, lockfile dependensi, `vite.config.*`, `playwright.config.*`, `tsconfig*.json` dan berkas workflow
+- Instruksi ruleset `main` sesuai keputusan D-08 (opsi A: status check `ci-gate` wajib, riwayat linear, tanpa force push/penghapusan, tanpa aturan PR wajib; opsi B: PR wajib + `ci-gate`) dan perlindungan tag `v*`; Owner menerapkannya setelah `ci-gate` terbukti pada PR uji
 
 ## OUT OF SCOPE
 
@@ -165,7 +166,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 PR yang hanya mengubah docs hanya menjalankan `docs-check` dan `ci-gate` lulus tanpa menunggu check lain
 - TAC-03 PR dengan job wajib yang gagal membuat `ci-gate` gagal (uji negatif)
 - TAC-04 Run kedua lebih cepat karena cache; run usang pada PR dibatalkan
-- TAC-05 Instruksi proteksi `main` dan tag tersedia untuk Owner
+- TAC-05 Ruleset diterapkan Owner dan push ke `main` atas commit yang belum lulus `ci-gate` ditolak (uji)
 
 ## TEST REQUIREMENTS
 
@@ -227,6 +228,6 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 
 - Jangan menyimpan rahasia di workflow
 - Jangan menonaktifkan pemeriksaan wajib
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

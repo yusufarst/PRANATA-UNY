@@ -80,8 +80,8 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 - [ ] [TASK-028](TASK-028.md) — Penugasan pejabat paket dan rencana langkah per metode
 - [ ] [TASK-029](TASK-029.md) — HPS
 - [ ] [TASK-030](TASK-030.md) — Penetapan metode (WF-032)
-- [ ] [TASK-031](TASK-031.md) — Kegiatan paket, jadwal dan undangan (WF-006)
-- [ ] [TASK-032](TASK-032.md) — Data penyedia inti: perusahaan, PIC, dokumen dan catatan DPT
+- [ ] [TASK-031](TASK-031.md) — Data penyedia inti: perusahaan, PIC, dokumen dan catatan DPT
+- [ ] [TASK-032](TASK-032.md) — Kegiatan paket, jadwal dan undangan (WF-006)
 - [ ] [TASK-033](TASK-033.md) — Partisipasi, pencatatan kiriman dan pembacaan teraudit (WF-008, IX-024)
 - [ ] [TASK-034](TASK-034.md) — Evaluasi, klarifikasi dan negosiasi (WF-009)
 - [ ] [TASK-035](TASK-035.md) — Hasil dan penetapan pemenang (WF-010)
@@ -140,7 +140,7 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-005](TASK-005.md) | Pipeline CI dan pemeriksa dokumentasi | TODO | STANDARD | M0 | TASK-004 | YES | NONE | NO |
 | [TASK-006](TASK-006.md) | Token desain, AppShell dan lokalisasi id/en | TODO | STANDARD | M0 | TASK-004 | YES | NONE | YES |
 | [TASK-007](TASK-007.md) | Harness E2E Playwright, axe dan seeder skenario | TODO | STANDARD | M0 | TASK-005, TASK-006 | NO | NONE | YES |
-| [TASK-008](TASK-008.md) | Peran basis data, tabel append-only dan jejak audit | TODO | HIGH | M1 | TASK-004 | NO | PROPOSED | NO |
+| [TASK-008](TASK-008.md) | Peran basis data, tabel append-only dan jejak audit | TODO | HIGH | M1 | TASK-004, TASK-007 | NO | PROPOSED | NO |
 | [TASK-009](TASK-009.md) | Kontrak perintah: idempotensi, versi optimistis, model galat dan request id | TODO | HIGH | M1 | TASK-008 | NO | PROPOSED | YES |
 | [TASK-010](TASK-010.md) | Autentikasi lokal dan sesi | TODO | HIGH | M1 | TASK-006, TASK-008 | NO | PROPOSED | YES |
 | [TASK-011](TASK-011.md) | Administrasi pengguna, aktivasi dan pemulihan dibantu admin | TODO | HIGH | M1 | TASK-010, TASK-009 | NO | PROPOSED | YES |
@@ -159,14 +159,14 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-024](TASK-024.md) | Paket kebijakan pengadaan DRAFT dan kasus uji regulasi | TODO | HIGH | M3 | TASK-018, TASK-017 | NO | NONE | NO |
 | [TASK-025](TASK-025.md) | Usulan kebutuhan unit (WF-003) | TODO | STANDARD | M3 | TASK-019, TASK-017 | NO | PROPOSED | YES |
 | [TASK-026](TASK-026.md) | Referensi RUP dan referensi kanal eksternal (WF-004) | TODO | STANDARD | M3 | TASK-025, TASK-016 | YES | PROPOSED | YES |
-| [TASK-027](TASK-027.md) | Paket, item, referensi anggaran dan komitmen (WF-005 inti) | TODO | HIGH | M3 | TASK-025, TASK-024 | NO | PROPOSED | YES |
+| [TASK-027](TASK-027.md) | Paket, item, referensi anggaran dan komitmen (WF-005 inti) | TODO | HIGH | M3 | TASK-025, TASK-024, TASK-026 | NO | PROPOSED | YES |
 | [TASK-028](TASK-028.md) | Penugasan pejabat paket dan rencana langkah per metode | TODO | HIGH | M3 | TASK-027, TASK-015 | NO | PROPOSED | YES |
 | [TASK-029](TASK-029.md) | HPS | TODO | HIGH | M3 | TASK-027, TASK-028 | NO | PROPOSED | YES |
 | [TASK-030](TASK-030.md) | Penetapan metode (WF-032) | TODO | HIGH | M3 | TASK-029, TASK-028 | NO | PROPOSED | YES |
-| [TASK-031](TASK-031.md) | Kegiatan paket, jadwal dan undangan (WF-006) | TODO | STANDARD | M3 | TASK-030, TASK-026 | YES | PROPOSED | YES |
-| [TASK-032](TASK-032.md) | Data penyedia inti: perusahaan, PIC, dokumen dan catatan DPT | TODO | HIGH | M3 | TASK-016, TASK-024 | YES | PROPOSED | YES |
-| [TASK-033](TASK-033.md) | Partisipasi, pencatatan kiriman dan pembacaan teraudit (WF-008, IX-024) | TODO | HIGH | M3 | TASK-031, TASK-032 | NO | PROPOSED | YES |
-| [TASK-034](TASK-034.md) | Evaluasi, klarifikasi dan negosiasi (WF-009) | TODO | HIGH | M3 | TASK-033 | NO | PROPOSED | YES |
+| [TASK-031](TASK-031.md) | Data penyedia inti: perusahaan, PIC, dokumen dan catatan DPT | TODO | HIGH | M3 | TASK-016, TASK-024 | YES | PROPOSED | YES |
+| [TASK-032](TASK-032.md) | Kegiatan paket, jadwal dan undangan (WF-006) | TODO | STANDARD | M3 | TASK-030, TASK-026, TASK-021, TASK-031 | YES | PROPOSED | YES |
+| [TASK-033](TASK-033.md) | Partisipasi, pencatatan kiriman dan pembacaan teraudit (WF-008, IX-024) | TODO | HIGH | M3 | TASK-032, TASK-031 | NO | PROPOSED | YES |
+| [TASK-034](TASK-034.md) | Evaluasi, klarifikasi dan negosiasi (WF-009) | TODO | HIGH | M3 | TASK-033, TASK-021 | NO | PROPOSED | YES |
 | [TASK-035](TASK-035.md) | Hasil dan penetapan pemenang (WF-010) | TODO | HIGH | M3 | TASK-034 | NO | PROPOSED | YES |
 | [TASK-036](TASK-036.md) | SPPBJ dengan empat tanggung jawab (WF-011) | TODO | HIGH | M3 | TASK-035, TASK-021 | NO | PROPOSED | YES |
 | [TASK-037](TASK-037.md) | Kontrak/SPK dan versi kontrak (WF-012) | TODO | HIGH | M3 | TASK-036 | NO | PROPOSED | YES |
@@ -174,7 +174,7 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-039](TASK-039.md) | Dasbor, inbox dan laporan pengadaan | TODO | STANDARD | M3 | TASK-037, TASK-023 | YES | NONE | YES |
 | [TASK-040](TASK-040.md) | Lingkungan staging dan skrip deploy | TODO | HIGH | M3 | TASK-005 | YES | NONE | NO |
 | [TASK-041](TASK-041.md) | Kesiapan UAT-1 Pengadaan | TODO | STANDARD | M3 | TASK-038, TASK-039, TASK-040, TASK-007 | NO | NONE | YES |
-| [TASK-042](TASK-042.md) | Verifikasi dokumen penyedia dan keputusan DPT (WF-007) | TODO | HIGH | M4 | TASK-032 | YES | PROPOSED | YES |
+| [TASK-042](TASK-042.md) | Verifikasi dokumen penyedia dan keputusan DPT (WF-007) | TODO | HIGH | M4 | TASK-031, TASK-037 | YES | PROPOSED | YES |
 | [TASK-043](TASK-043.md) | Portal Penyedia | TODO | HIGH | M4 | TASK-042, TASK-033 | NO | PROPOSED | YES |
 | [TASK-044](TASK-044.md) | Pelaksanaan kontrak, jaminan dan denda (WF-013) | TODO | HIGH | M4 | TASK-037 | YES | PROPOSED | YES |
 | [TASK-045](TASK-045.md) | Adendum kontrak (WF-033) | TODO | HIGH | M4 | TASK-037, TASK-021 | YES | PROPOSED | YES |
@@ -320,6 +320,7 @@ flowchart LR
   TASK005 --> TASK007
   TASK006 --> TASK007
   TASK004 --> TASK008
+  TASK007 --> TASK008
   TASK008 --> TASK009
   TASK006 --> TASK010
   TASK008 --> TASK010
@@ -352,19 +353,23 @@ flowchart LR
   TASK016 --> TASK026
   TASK025 --> TASK027
   TASK024 --> TASK027
+  TASK026 --> TASK027
   TASK027 --> TASK028
   TASK015 --> TASK028
   TASK027 --> TASK029
   TASK028 --> TASK029
   TASK029 --> TASK030
   TASK028 --> TASK030
-  TASK030 --> TASK031
-  TASK026 --> TASK031
-  TASK016 --> TASK032
-  TASK024 --> TASK032
-  TASK031 --> TASK033
+  TASK016 --> TASK031
+  TASK024 --> TASK031
+  TASK030 --> TASK032
+  TASK026 --> TASK032
+  TASK021 --> TASK032
+  TASK031 --> TASK032
   TASK032 --> TASK033
+  TASK031 --> TASK033
   TASK033 --> TASK034
+  TASK021 --> TASK034
   TASK034 --> TASK035
   TASK035 --> TASK036
   TASK021 --> TASK036
@@ -378,7 +383,8 @@ flowchart LR
   TASK039 --> TASK041
   TASK040 --> TASK041
   TASK007 --> TASK041
-  TASK032 --> TASK042
+  TASK031 --> TASK042
+  TASK037 --> TASK042
   TASK042 --> TASK043
   TASK033 --> TASK043
   TASK037 --> TASK044
@@ -464,14 +470,14 @@ flowchart LR
 
 Graf asiklik: setiap dependensi menunjuk Task bernomor lebih kecil (diperiksa otomatis saat penyusunan).
 
-- Rantai dependensi terpanjang menuju kesiapan UAT-1 (25 Task): TASK-001 → 002 → 003 → 004 → 006 → 010 → 011 → 013 → 014 → 016 → 018 → 019 → 025 → 027 → 028 → 029 → 030 → 031 → 033 → 034 → 035 → 036 → 037 → 038 → 041.
-- Rantai dependensi terpanjang menuju kesiapan rilis V1 (28 Task): TASK-001 → 002 → 003 → 004 → 006 → 010 → 011 → 013 → 014 → 016 → 018 → 019 → 025 → 027 → 028 → 029 → 030 → 031 → 033 → 034 → 035 → 036 → 037 → 039 → 071 → 072 → 074 → 078.
+- Rantai dependensi terpanjang menuju kesiapan UAT-1 (28 Task): TASK-001 → 002 → 003 → 004 → 005 → 007 → 008 → 010 → 011 → 013 → 014 → 016 → 018 → 019 → 025 → 026 → 027 → 028 → 029 → 030 → 032 → 033 → 034 → 035 → 036 → 037 → 038 → 041.
+- Rantai dependensi terpanjang menuju kesiapan rilis V1 (31 Task): TASK-001 → 002 → 003 → 004 → 005 → 007 → 008 → 010 → 011 → 013 → 014 → 016 → 018 → 019 → 025 → 026 → 027 → 028 → 029 → 030 → 032 → 033 → 034 → 035 → 036 → 037 → 039 → 071 → 072 → 074 → 078.
 - TASK-040 (staging) bergantung pada keputusan Owner tentang hosting; tanpa keputusan itu UAT-1 tidak dapat dimulai walaupun Task fungsional selesai.
 
 ## Aturan perubahan rencana
 
-Penambahan, pemecahan, penggabungan atau penggantian Task memakai blok TASK PLAN CHANGE AICWDF §22.6; ID tidak pernah diberi nomor ulang; Task yang diganti berstatus SUPERSEDED dengan rujukan penggantinya; Baseline Total tetap, Current Total berubah. Perubahan ruang lingkup memerlukan persetujuan Owner. Pembaruan otomatis saat Task DONE mengikuti AICWDF §22.3 dan [EXECUTOR_OPERATING_MODEL](EXECUTOR_OPERATING_MODEL.md).
+Penambahan, pemecahan, penggabungan, penggantian atau pengurutan ulang Task memakai blok TASK PLAN CHANGE AICWDF §22.6 yang **disusun Planning Agent** (GOV-10) atas usulan eksekutor, temuan review atau keputusan Owner; perubahan material melalui Second Review yang proporsional dan persetujuan Owner. ID tidak pernah diberi nomor ulang setelah baseline disetujui; Task yang diganti berstatus SUPERSEDED dengan rujukan penggantinya; Baseline Total tetap, Current Total berubah. Eksekutor hanya memperbarui status, tahap, checkbox, penghitung dan bukti Task (AICWDF §22.3, [EXECUTOR_OPERATING_MODEL §12](EXECUTOR_OPERATING_MODEL.md#12-pelaporan-kemajuan-dan-eskalasi-owner)); bila kontrak Task tidak dapat dipenuhi, Task terdampak menjadi BLOCKED sambil menunggu perubahan rencana.
 
 ## Hubungan dengan GAP
 
-GAP-001–GAP-029 tidak menghalangi implementasi Task karena aturan resmi dipegang sebagai kebijakan berversi DRAFT berlabel simulasi. GAP menghalangi **aktivasi resmi di produksi** dari aksi yang bergantung padanya; sebagian juga menjadi gerbang rilis/cutover (GAP-011/012/015/016/023) atau gerbang penerimaan V1 (GAP-024 untuk AC-16). Status per fitur dilaporkan pada kesiapan rilis (TASK-078). Perlakuan per GAP di [TRACEABILITY_MATRIX](TRACEABILITY_MATRIX.md#perlakuan-gap).
+GAP-001–GAP-029 tidak menghalangi implementasi Task karena aturan resmi dipegang sebagai kebijakan berversi DRAFT berlabel simulasi. GAP menghalangi **aktivasi resmi di produksi** dari aksi yang bergantung padanya; sebagian juga menjadi gerbang rilis/cutover (GAP-011/012/015/016/023) atau gerbang penerimaan V1 (GAP-024 untuk AC-16). Model gerbang ini dan daftar GAP yang wajib selesai sebelum go-live adalah **usulan yang menunggu keputusan Owner D-28** ([OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)). Status per fitur dilaporkan pada kesiapan rilis (TASK-078). Perlakuan per GAP di [TRACEABILITY_MATRIX](TRACEABILITY_MATRIX.md#perlakuan-gap).

@@ -43,7 +43,7 @@ Memilih ruang kerja tidak memberi izin (OD-20); pengalihan ruang kerja hanya men
 
 ## 4. Katalog kapabilitas
 
-Cakupan yang diizinkan: G = GLOBAL, U = ORG_UNIT, S = ORG_UNIT_SUBTREE, W = WAREHOUSE, K = WORKSPACE. "Penugasan" berarti kapabilitas hanya berlaku bila aktor juga memiliki penugasan proses yang sesuai pada objek.
+Cakupan yang diizinkan: G = GLOBAL, U = ORG_UNIT, S = ORG_UNIT_SUBTREE, W = WAREHOUSE, K = WORKSPACE, P = POLICY_FAMILY (satu keluarga kebijakan, `scope_key`). "Penugasan" berarti kapabilitas hanya berlaku bila aktor juga memiliki penugasan proses yang sesuai pada objek.
 
 ### 4.1 Administrasi
 
@@ -54,8 +54,8 @@ Cakupan yang diizinkan: G = GLOBAL, U = ORG_UNIT, S = ORG_UNIT_SUBTREE, W = WARE
 | `admin.access.approve` | G | Menyetujui grant istimewa; tidak untuk grant yang dibuatnya sendiri |
 | `admin.org.manage` | G | WF-029 F1/F2 (keputusan berlaku tetap BLOCKED_BY_GAP-021) |
 | `admin.reference.manage` | G | WF-029 F3 |
-| `admin.policy.author` | G | Menyusun/mengajukan versi kebijakan |
-| `admin.policy.activate` | G | Mengaktifkan versi; bukan penyusunnya |
+| `admin.policy.author` | P | Menyusun/mengajukan versi kebijakan keluarga dalam cakupan |
+| `admin.policy.activate` | P | Mengaktifkan versi keluarga dalam cakupan (misalnya `asset.depreciation` hanya oleh pengesah yang ditunjuk Keuangan); bukan penyusun atau pengajunya |
 | `admin.templates.manage` | G | Template dokumen (aktivasi maker-checker) |
 | `admin.audit.read` | G | Membaca audit non-rahasia |
 | `admin.confidential.read` | G | IX-024: baca rahasia beralasan, teraudit |
@@ -208,7 +208,7 @@ Aturan SOD-01–03 berasal dari kebijakan rezim sehingga dapat berbeda untuk rez
 | Pimpinan (baca) | `procurement.package.view`, `asset.view`, `inventory.view`, `*.report` | S/G/W |
 | Admin Akses | `admin.users.manage`, `admin.access.grant` | G (istimewa) |
 
-Profil yang memuat `admin.*` atau cakupan GLOBAL atas kapabilitas keputusan ditandai `is_privileged` dan memerlukan persetujuan orang kedua.
+Profil yang memuat `admin.*` atau cakupan GLOBAL atas kapabilitas keputusan ditandai `is_privileged` dan memerlukan persetujuan orang kedua. Pemegang penugasan keputusan aktif (bagian 5) diperlakukan istimewa untuk reset dibantu dan TOTP ([SECURITY_MODEL §3](SECURITY_MODEL.md#3-autentikasi), SEC-21).
 
 ## 10. Skenario regresi otorisasi
 
@@ -224,6 +224,8 @@ Profil yang memuat `admin.*` atau cakupan GLOBAL atas kapabilitas keputusan dita
 | AUTHZ-21 | Pembuat versi kebijakan tidak dapat mengaktifkannya |
 | AUTHZ-22 | Grant kedaluwarsa/dicabut langsung tidak berlaku pada permintaan berikutnya |
 | AUTHZ-23 | SUPER_ADMIN tidak dapat ditugaskan sebagai `METHOD_DETERMINER`/`WINNER_DETERMINER`/penanda tangan |
+| AUTHZ-24 | Admin tidak dapat sendirian mereset password/TOTP pemegang penugasan keputusan aktif; setelah reset dibantu, aksi keputusan ditolak sampai pengguna mengganti password dan memverifikasi TOTP |
+| AUTHZ-25 | Pengesah kebijakan hanya dapat mengaktifkan versi keluarga dalam cakupan grant `POLICY_FAMILY`-nya |
 | AUTHZ-30 | Penyedia A tidak dapat melihat penawaran, dokumen atau identitas partisipan penyedia B melalui rute, API, unduhan atau ID tebakan |
 | AUTHZ-31 | Super Admin membuka penawaran hanya setelah alasan; audit tercatat; tanpa ekspor |
 | AUTHZ-32 | Bila penulisan audit gagal, isi rahasia tidak ditampilkan |

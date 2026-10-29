@@ -33,7 +33,7 @@ OD-29: dokumen terkait dalam beberapa klik dari data yang sama.
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Owner/unit pengadaan menyediakan template kosong resmi bila tersedia
-- GAP terkait (GAP-017, GAP-019) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-017, GAP-019) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -87,7 +87,7 @@ OD-29: dokumen terkait dalam beberapa klik dari data yang sama.
 
 - Schema change: NONE
 - Migration required: NO
-- Tables: `data seed document_templates`
+- Tables: data seed document_templates
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -262,6 +262,6 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 ## DO NOT DO
 
 - Jangan menyalin isi dokumen historis
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

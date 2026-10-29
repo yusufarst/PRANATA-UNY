@@ -32,13 +32,14 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Resolusi GAP-007 sebelum run resmi di produksi
-- GAP terkait (GAP-007, GAP-008, GAP-009, GAP-013) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-007, GAP-008, GAP-009, GAP-013) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
 - Tabel `asset_depreciation_runs`, `asset_depreciation_lines` (partisi tahunan) + job pembuat partisi
 - State WF-022 (TR-211–214)
-- Run simulasi vs resmi; satu run resmi per periode
+- Run simulasi vs resmi; satu run resmi per periode dijaga constraint DB untuk status QUEUED/RUNNING/COMPLETED
+- Baris penyusutan ditulis per chunk; proyeksi nilai aset diperbarui hanya pada tahap penyelesaian run resmi dan dapat dilanjutkan bila gagal di tengah
 - PG-309 daftar run, detail per aset dengan penjelasan perhitungan
 - Uji tabel metode garis lurus dan pembulatan dengan kebijakan DRAFT
 
@@ -202,9 +203,10 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Run simulasi tidak mengubah proyeksi aset
-- TAC-02 Run resmi ganda untuk periode yang sama ditolak
-- TAC-03 PB-09 terpenuhi pada data sintetis
-- TAC-04 Setiap angka dapat dijelaskan dari aset, kebijakan dan periode
+- TAC-02 Run resmi kedua untuk periode yang sama ditolak saat dibuat selama run lain QUEUED/RUNNING/COMPLETED
+- TAC-03 Kegagalan di tengah run dilanjutkan tanpa penyusutan ganda (uji)
+- TAC-04 Run berjalan per chunk tanpa mengunci pengguna lain pada data representatif; PB-09 pada 1 juta aset dibuktikan di TASK-073
+- TAC-05 Setiap angka dapat dijelaskan dari aset, kebijakan dan periode
 
 ## TEST REQUIREMENTS
 
@@ -219,7 +221,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis
 - Production build: npm run build
-- Performance: PB-09
+- Performance: Uji chunk pada data representatif (PB-09 penuh di TASK-073)
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
 
 ## TEST CHECKLIST
@@ -274,6 +276,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 - Jangan menyusutkan per hari tanpa kebijakan
 - Jangan memakai formula sistem lama sebagai otoritas
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

@@ -25,6 +25,7 @@ Perjalanan kritis harus dibuktikan dengan browser nyata (AICWDF §26), dan kegag
 
 ## BLOCKS
 
+- TASK-008
 - TASK-041
 - TASK-075
 
@@ -253,6 +254,6 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 ## DO NOT DO
 
 - Jangan memakai basis data dev/test untuk E2E
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

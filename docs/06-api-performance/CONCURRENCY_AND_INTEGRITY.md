@@ -30,13 +30,14 @@ Contoh serah terima (TR-295): kunci `inv_requests` baris permintaan → kunci sa
 | Invarian | Penegakan |
 |---|---|
 | Stok fisik tidak negatif (INV-020) | `CHECK (quantity >= 0)` pada `inv_stock_balances` + validasi Action sebelum tulis |
+| Pencatatan terlambat tidak membuat saldo per tanggal negatif | Di bawah kunci saldo yang sama, Action memeriksa saldo menurut `occurred_at` pada titik gerakan dan setiap titik sesudahnya sebelum menulis; OPENING hanya sebelum gerakan lain |
 | Ledger dan riwayat tidak dapat diubah (INV-017) | Hak peran tanpa UPDATE/DELETE + trigger penolak |
 | Nomor dokumen unik (OD-29) | `UNIQUE(scheme_id, number_text)` dan `UNIQUE(scheme_id, scope_key, sequence_value)` |
 | Satu penetapan metode berlaku per paket | Unique parsial `WHERE status = 'DETERMINED'` |
 | Satu HPS ditetapkan per paket | Unique parsial `WHERE status = 'SET'` |
 | Satu hasil ditetapkan per paket | Unique parsial `WHERE status IN ('DETERMINED','ANNOUNCED')` |
 | Satu versi kebijakan ACTIVE per periode | `EXCLUDE USING gist` |
-| Maker-checker | `CHECK (activated_by <> created_by)`; `CHECK (approved_by <> granted_by)` |
+| Maker-checker (tidak lolos bila kosong) | Kebijakan: `CHECK (status <> 'ACTIVE' OR activated_by IS NOT NULL)` + `CHECK (activated_by IS NULL OR (activated_by <> created_by AND activated_by IS DISTINCT FROM submitted_by))`; template: pola yang sama; grant istimewa: `CHECK (status <> 'ACTIVE' OR NOT requires_approval OR approved_by IS NOT NULL)` + `CHECK (approved_by IS NULL OR approved_by <> granted_by)` ([DATA_MODEL](../04-architecture/DATA_MODEL.md)) |
 | Kuantitas serah terima ≤ disetujui | `CHECK` pada `inv_request_lines` |
 | Partisipasi unik per penyedia per paket | `UNIQUE(package_id, company_id)` |
 | Transfer bukan ke gudang sama | `CHECK (to_warehouse_id <> from_warehouse_id)` |
@@ -56,7 +57,7 @@ Invarian yang memerlukan konteks (pemisahan tugas, kebijakan ACTIVE, guard TR) d
 | Grant dicabut saat pengguna sedang bekerja | Otorisasi dievaluasi setiap permintaan; tidak ada cache izin melewati satu permintaan |
 | Konfirmasi penerima ganda | Idempotensi + guard state `PENDING` |
 | Job dokumen dijalankan ulang setelah timeout | Kunci idempotensi job + status revisi |
-| Run penyusutan periode yang sama dua kali | Unique parsial per periode non-simulasi + `ShouldBeUnique` |
+| Run penyusutan periode yang sama dua kali | Unique parsial per periode non-simulasi untuk status QUEUED/RUNNING/COMPLETED (run kedua ditolak saat dibuat) + `ShouldBeUnique`; proyeksi nilai aset hanya pada tahap penyelesaian; unique `(asset_id, period)` baris resmi |
 
 ## 5. Konkurensi job dan impor
 
@@ -85,7 +86,7 @@ Job `maintenance` harian: (a) membandingkan `inv_stock_balances` dengan jumlah l
 - Basis data pengujian tidak pernah sama dengan basis data pengembangan atau produksi; nama selalu berprefiks `pranata_` (`pranata_dev`, `pranata_test`, `pranata_test_<token>` untuk worker paralel, `pranata_e2e_<run>`).
 - Uji paralel Pest memakai satu basis data per proses; E2E memakai basis data khusus run yang dimigrasi dan di-seed ulang, lalu dihapus.
 - Tidak ada uji yang berjalan terhadap basis data proyek lain di mesin pengembang (MULTIPLECORP, BantuKasir, ELLIGBLE); konfigurasi mengikat host/port/kontainer proyek `pranata` ([INFRASTRUCTURE](../09-operations/INFRASTRUCTURE.md)).
-- Sebelum menjalankan perintah destruktif (`migrate:fresh`, `db:wipe`), skrip uji memastikan nama basis data cocok pola `pranata_(dev|test|e2e)` dan `APP_ENV` bukan `production`; selain itu berhenti.
+- Sebelum menjalankan perintah destruktif (`migrate:fresh`, `db:wipe`), skrip memastikan nama basis data cocok `^pranata_(dev|test|e2e|perf)(_[a-z0-9_]+)?$` dan `APP_ENV` bukan `production`; selain itu berhenti. Skrip uji otomatis memakai pola yang lebih sempit tanpa `dev` ([TEST_STRATEGY §4](../08-testing/TEST_STRATEGY.md#4-isolasi-basis-data-uji)).
 
 ## 9. Pengujian konkurensi
 

@@ -36,14 +36,15 @@ OD-28/BR-034 menuntut isolasi yang ditegakkan server, kueri, ekspor dan unduhan.
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Konfirmasi ruang kerja Gudang (perubahan dari OD-02)
-- GAP terkait (GAP-014) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-014) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
 - Enum/registry kapabilitas ACCESS_CONTROL §4
 - `access_profiles`, `access_profile_capabilities`, `access_grants` (constraint maker-checker)
 - Evaluator berlapis (ACCESS_CONTROL §1) + Gate/Policy integrasi
-- Builder scope SQL: GLOBAL, ORG_UNIT, ORG_UNIT_SUBTREE (ltree), WAREHOUSE, WORKSPACE
+- Builder scope SQL: GLOBAL, ORG_UNIT, ORG_UNIT_SUBTREE (ltree), WAREHOUSE, WORKSPACE, POLICY_FAMILY (`scope_key`)
+- Constraint grant istimewa: ACTIVE hanya dengan penyetuju yang berbeda dari pemberi (`requires_approval`)
 - Props bersama: ruang kerja/menu yang diizinkan, peta izin
 - PG-503 beri/setujui/cabut grant; profil awal ACCESS_CONTROL §9 sebagai seeder
 - Uji matriks otomatis dari katalog
@@ -91,7 +92,7 @@ OD-28/BR-034 menuntut isolasi yang ditegakkan server, kueri, ekspor dan unduhan.
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
-- AUTHZ-01–03, AUTHZ-20–22
+- AUTHZ-20, AUTHZ-22
 - Admin tidak dapat memberi grant ke dirinya
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
@@ -213,6 +214,8 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Grant istimewa berstatus PENDING_APPROVAL sampai disetujui orang lain
 - TAC-04 Pencabutan berlaku pada permintaan berikutnya
 - TAC-05 Akses langsung rute tanpa izin → 403/404
+- TAC-06 Grant istimewa ACTIVE tanpa penyetuju atau dengan penyetuju = pemberi ditolak constraint DB
+- TAC-07 Mekanisme scope diuji dengan resource uji; skenario AUTHZ-01/02 dibuktikan pada paket nyata di TASK-027 dan AUTHZ-03 pada aset di TASK-059
 
 ## TEST REQUIREMENTS
 
@@ -226,7 +229,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis
 - Production build: npm run build
-- Security: AUTHZ-01–03, 20–22
+- Security: AUTHZ-20, AUTHZ-22
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
 
 ## TEST CHECKLIST
@@ -281,6 +284,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan menegakkan izin hanya di frontend
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

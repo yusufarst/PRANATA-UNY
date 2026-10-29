@@ -40,7 +40,7 @@ CAP-11/18, AC-14/21, OD-16/22.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-008, GAP-011, GAP-016) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-008, GAP-011, GAP-016) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -48,7 +48,7 @@ CAP-11/18, AC-14/21, OD-16/22.
 - Layanan transaksi aset (sebelum/sesudah, pembalikan)
 - PG-302 daftar (filter unit/status/klasifikasi/lokasi/kata kunci), PG-303 detail
 - Scope unit subtree; isolasi dari Pengadaan (AUTHZ-03)
-- Uji jumlah kueri dan EXPLAIN pada data sintetis 1 juta (lokal/CI malam)
+- Uji jumlah kueri dan EXPLAIN pada data representatif (≥ 100.000 baris dari factory)
 
 ## OUT OF SCOPE
 
@@ -208,7 +208,7 @@ CAP-11/18, AC-14/21, OD-16/22.
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 PB-01 terpenuhi pada data sintetis 1 juta di lingkungan uji
+- TAC-01 Rencana kueri daftar aset memakai indeks yang dirancang pada data representatif; PB-01 pada 1 juta aset dibuktikan di TASK-073
 - TAC-02 Riwayat aset dari transaksi append-only; proyeksi konsisten
 - TAC-03 Pengguna Pengadaan tanpa grant aset tidak dapat mencari/membuka aset
 
@@ -224,7 +224,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis
 - Production build: npm run build
-- Performance: EXPLAIN + anggaran PB-01
+- Performance: EXPLAIN pada data representatif (PB-01 penuh di TASK-073)
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
 
 ## TEST CHECKLIST
@@ -278,6 +278,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan memuat seluruh aset ke browser
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

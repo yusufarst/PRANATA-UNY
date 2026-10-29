@@ -20,7 +20,7 @@ Peran peninjau mengikuti [AGENT_OPERATING_MODEL](../00-governance/AGENT_OPERATIN
 2. Amandemen P0–P3: bagian amandemen di [V1_SCOPE](../01-product/V1_SCOPE.md), [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md), [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) (BR-031–035, INV-020–022), [WORKFLOW_CATALOG](../03-workflows/WORKFLOW_CATALOG.md) (WF-030–033), [GAP_REGISTER](../00-governance/GAP_REGISTER.md) (GAP-026–029), [REGULATORY_SOURCE_REVIEW](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md).
 3. P4–P10: [ARCHITECTURE](../04-architecture/ARCHITECTURE.md), [DATA_MODEL](../04-architecture/DATA_MODEL.md), [POLICY_REGISTRY](../04-architecture/POLICY_REGISTRY.md), [ACCESS_CONTROL](../05-security/ACCESS_CONTROL.md), [CONCURRENCY_AND_INTEGRITY](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md), [INFORMATION_ARCHITECTURE](../07-ux-design/INFORMATION_ARCHITECTURE.md), [QUALITY_GATES](../08-testing/QUALITY_GATES.md), [INFRASTRUCTURE](../09-operations/INFRASTRUCTURE.md), [RELEASE_PLAN](../10-release/RELEASE_PLAN.md); dokumen lain menurut kebutuhan lewat [CONTEXT_INDEX](../CONTEXT_INDEX.md).
 4. P11: [TASK_PLAN](../11-tasks/TASK_PLAN.md), [TRACEABILITY_MATRIX](../11-tasks/TRACEABILITY_MATRIX.md), [EXECUTOR_OPERATING_MODEL](../11-tasks/EXECUTOR_OPERATING_MODEL.md), [EXECUTOR_BOOTSTRAP](../11-tasks/EXECUTOR_BOOTSTRAP.md), dan sampel Task: [TASK-001](../11-tasks/TASK-001.md), [TASK-015](../11-tasks/TASK-015.md), [TASK-030](../11-tasks/TASK-030.md), [TASK-036](../11-tasks/TASK-036.md), [TASK-050](../11-tasks/TASK-050.md), [TASK-053](../11-tasks/TASK-053.md), [TASK-066](../11-tasks/TASK-066.md), [TASK-078](../11-tasks/TASK-078.md).
-5. Bukti pemeriksaan: [P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md).
+5. Bukti pemeriksaan, termasuk satu pra-review internal oleh peninjau yang tidak ikut menyusun beserta disposisi temuannya: [P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md). Pra-review internal itu tidak menggantikan Second Review independen.
 
 Masukan referensi mentah (`reference-inputs/`, PDF peraturan) sengaja tidak ada di repositori; peninjau tidak membutuhkannya. Pengamatan yang dipakai beserta locator ada di dokumen review sumber.
 
@@ -36,7 +36,7 @@ Masukan referensi mentah (`reference-inputs/`, PDF peraturan) sengaja tidak ada 
 
 ## 4. Keputusan yang sengaja diserahkan ke Owner
 
-Lihat [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md): persetujuan batch dan konsolidasi APPR-005/AUTH-011, ruang kerja Gudang terhadap OD-02, model rilis, metode merge (GOV-08), alur berbasis trunk, Codex, opsi keamanan SEC-D1–D7, hosting/operasi/UAT, dan peran penjawab GAP. Peninjau diminta menilai apakah daftar ini lengkap dan apakah ada keputusan Owner yang justru diambil sendiri oleh perencanaan.
+Lihat [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md): persetujuan batch dan konsolidasi APPR-005/AUTH-011, ruang kerja Gudang terhadap OD-02, model rilis, metode merge (GOV-08), alur berbasis trunk, Codex, kewenangan token eksekutor, model gerbang GAP dan syarat go-live (tafsiran atas pernyataan GAP_REGISTER yang disetujui), opsi keamanan SEC-D1–D7, uji penetrasi opsional, hosting/operasi/UAT, dan peran penjawab GAP. Peninjau diminta menilai apakah daftar ini lengkap dan apakah ada keputusan Owner yang justru diambil sendiri oleh perencanaan.
 
 ## 5. Format hasil yang diminta
 

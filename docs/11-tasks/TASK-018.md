@@ -37,7 +37,7 @@ Semua aturan resmi yang masih OPEN dipegang sebagai data berversi (ADR-0003, CAP
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-013, GAP-021) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-013, GAP-021) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -48,6 +48,7 @@ Semua aturan resmi yang masih OPEN dipegang sebagai data berversi (ADR-0003, CAP
 - Komponen `SimulationBanner`, `BlockedReasonPanel`
 - PG-507: daftar paket, editor formulir dari skema, rujukan sumber/GAP, unggah bukti, hasil kasus uji, diff versi, riwayat
 - Keluarga awal: skema untuk semua keluarga di POLICY_REGISTRY §1 (isi diisi Task modul)
+- Penyusunan dan aktivasi bercakupan keluarga kebijakan (grant `POLICY_FAMILY`)
 
 ## OUT OF SCOPE
 
@@ -94,7 +95,8 @@ Semua aturan resmi yang masih OPEN dipegang sebagai data berversi (ADR-0003, CAP
 ## SECURITY / PERMISSION REQUIREMENTS
 
 - AUTHZ-21
-- admin.policy.author vs admin.policy.activate
+- AUTHZ-25
+- admin.policy.author vs admin.policy.activate, bercakupan keluarga
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
@@ -218,6 +220,8 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-04 Resolver memilih versi berlaku menurut tanggal; DRAFT hanya bila lingkungan mengizinkan dan ditandai simulasi
 - TAC-05 Di konfigurasi produksi, aksi resmi bergantung kebijakan non-ACTIVE tidak tersedia (uji)
 - TAC-06 Record yang memakai kebijakan menyimpan policy_version_id dan is_simulation (uji kontrak)
+- TAC-07 Versi ACTIVE tanpa pengesah, atau dengan pengesah sama dengan pembuat/pengaju, ditolak constraint DB
+- TAC-08 Pengesah hanya dapat mengaktifkan versi keluarga dalam cakupan grant-nya (AUTHZ-25)
 
 ## TEST REQUIREMENTS
 
@@ -225,7 +229,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Typecheck: Larastan + tsc
 - Unit: Validasi skema, resolver
 - Feature: Lifecycle, maker-checker, EXCLUDE, gerbang lingkungan
-- Authorization: AUTHZ-21
+- Authorization: AUTHZ-21, AUTHZ-25
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-16 bagian kebijakan
 - Localization/language switch: Dua bahasa; kunci hilang = 0
@@ -287,6 +291,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 - Jangan mengisi nilai ACTIVE dari dugaan
 - Jangan menyediakan editor JSON bebas sebagai satu-satunya antarmuka
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

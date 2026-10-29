@@ -26,6 +26,7 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 
 - TASK-038
 - TASK-039
+- TASK-042
 - TASK-044
 - TASK-045
 
@@ -34,7 +35,7 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-017, GAP-019, GAP-027) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-017, GAP-019, GAP-027) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -204,15 +205,15 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Bentuk bukti perjanjian disarankan sesuai nilai dan rezim (uji batas 20 juta/50 juta/700 juta PR 34 DRAFT)
+- TAC-01 Bentuk bukti perjanjian disarankan sesuai nilai dan rezim pada kebijakan DRAFT; pada pita yang belum diputus (GAP-027(b): di atas Rp20 juta s.d. Rp50 juta) sistem tidak memilih otomatis dan mewajibkan pilihan manusia beralasan
 - TAC-02 Versi ORIGINAL tercatat saat tanda tangan; nilai berjalan = nilai versi terakhir
-- TAC-03 Jaminan pelaksanaan diharapkan bila kebijakan menetapkan ambang
+- TAC-03 Jaminan pelaksanaan diharapkan bila kebijakan menetapkan ambang; selama GAP-027(c) terbuka dasar perhitungan (HPS atau pagu) dipilih manusia dengan alasan
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Unit: Evaluator bentuk/jaminan
+- Unit: Evaluator bentuk/jaminan: nilai jelas di luar pita GAP-027 dan pita yang mewajibkan pilihan manusia
 - Feature: WF-012
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
@@ -274,6 +275,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan menganggap tanda tangan tercatat sebagai pembayaran atau penerimaan
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

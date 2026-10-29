@@ -95,7 +95,7 @@ Semua Task berikutnya membutuhkan fondasi yang sesuai ADR-0001 dan versi yang di
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `tabel kerangka Laravel`
+- Tables: tabel kerangka Laravel
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -206,14 +206,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Typecheck: tsc
 - Feature: Uji rute masuk ada, registrasi tidak ada
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
-- Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)
-- Localization/language switch: Dua bahasa; kunci hilang = 0
-- Responsive: 390×844 dan 1440×900
-- Accessibility: axe tanpa pelanggaran serius/kritis
+- Route integrity: N/A — uji integritas rute dibuat TASK-004
+- Browser E2E: N/A — harness dibuat TASK-007 (uji asap halaman masuk)
+- Localization/language switch: N/A — infrastruktur i18n di TASK-006
+- Responsive: Pemeriksaan manual halaman masuk bawaan pada dua viewport
+- Accessibility: N/A — axe tersedia sejak TASK-007
 - Production build: npm run build
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
-- Build: npm run build
 
 ## TEST CHECKLIST
 
@@ -241,7 +240,7 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 - Semua ACCEPTANCE CRITERIA terbukti dengan bukti tercatat
 - Definition of Done [QUALITY_GATES §2](../08-testing/QUALITY_GATES.md#2-definition-of-done) untuk semua Task + §2.2 UI + §2.3 HIGH
-- PR ke `main` lulus `ci-gate` pada HEAD terakhir dan review sesuai REVIEW REQUIREMENT, di-merge, lalu `main` remote diverifikasi memuat merge tersebut ([EXECUTOR_OPERATING_MODEL §8](EXECUTOR_OPERATING_MODEL.md#8-merge-dan-rekonsiliasi-done))
+- PR ke `main` dengan bukti verifikasi lokal lengkap dan review sesuai REVIEW REQUIREMENT; merge mode bootstrap disaksikan Owner karena `ci-gate` belum ada ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada))
 - TASK_PLAN dan CURRENT_HANDOFF diperbarui; checklist dicentang hanya bila DONE
 
 ## COMPLETION EVIDENCE
@@ -267,6 +266,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 - Jangan menimpa AGENTS.md, CLAUDE.md atau isi docs/
 - Jangan memasang Sanctum/Passport/Socialite
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

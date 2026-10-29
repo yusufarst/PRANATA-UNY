@@ -26,7 +26,7 @@ Fitur pengadaan harus dapat diuji end-to-end tanpa mengarang aturan; nilai regul
 ## BLOCKS
 
 - TASK-027
-- TASK-032
+- TASK-031
 
 ## PREREQUISITES (READY GATE)
 
@@ -34,7 +34,7 @@ Fitur pengadaan harus dapat diuji end-to-end tanpa mengarang aturan; nilai regul
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Resolusi GAP-026/027 sebelum ACTIVE di produksi
-- GAP terkait (GAP-003, GAP-004, GAP-017, GAP-019, GAP-026, GAP-027, GAP-028, GAP-029) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-004, GAP-017, GAP-019, GAP-026, GAP-027, GAP-028, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -93,7 +93,7 @@ Fitur pengadaan harus dapat diuji end-to-end tanpa mengarang aturan; nilai regul
 
 - Schema change: NONE
 - Migration required: NO
-- Tables: `data seed policy_*`
+- Tables: data seed policy_*
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -241,6 +241,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 - Jangan menandai paket ACTIVE
 - Jangan mengisi pejabat penetap dari jawaban provisional sebagai nilai ACTIVE
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

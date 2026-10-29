@@ -26,6 +26,8 @@ CAP-08/OD-29: dokumen dihasilkan dari data sekali-input dengan asal yang dapat d
 
 ## BLOCKS
 
+- TASK-032
+- TASK-034
 - TASK-036
 - TASK-038
 - TASK-045
@@ -37,7 +39,7 @@ CAP-08/OD-29: dokumen dihasilkan dari data sekali-input dengan asal yang dapat d
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-013, GAP-017, GAP-019) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-013, GAP-017, GAP-019) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -45,6 +47,7 @@ CAP-08/OD-29: dokumen dihasilkan dari data sekali-input dengan asal yang dapat d
 - Validasi placeholder terhadap skema provider; tolak DOCM
 - Job antrean `documents` + klien Gotenberg + status konversi + ulang
 - Formatter uang/tanggal/terbilang Indonesia teruji tabel
+- Siklus isi dokumen DRAFT → FINAL; penerbitan dan bukti tanda tangan sebagai tindakan terpisah yang wajib/urutannya ditentukan per jenis dokumen oleh kebijakan (tanpa urutan bawaan)
 - DocumentCard, PG-010 penampil dokumen dan riwayat versi, PG-508 template
 - Provider contoh untuk uji (tidak resmi)
 
@@ -216,8 +219,9 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Dokumen DRAF dan SIMULASI berbanner; FINAL non-simulasi tanpa banner
 - TAC-03 Gotenberg mati → DOCX tetap tersedia, konversi dapat diulang
 - TAC-04 Revisi baru tidak menimpa revisi lama
-- TAC-05 Terbilang dan format lulus tabel uji
-- TAC-06 Paket dokumen menandai item wajib yang ada/kurang dan dapat dirakit menjadi PDF gabungan
+- TAC-05 Tanpa urutan dari kebijakan, penerbitan dan tanda tangan dapat dicatat dalam urutan apa pun; dengan urutan kebijakan, urutan lain ditolak
+- TAC-06 Terbilang dan format lulus tabel uji
+- TAC-07 Paket dokumen menandai item wajib yang ada/kurang dan dapat dirakit menjadi PDF gabungan
 
 ## TEST REQUIREMENTS
 
@@ -287,6 +291,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan menyalin nama/nomor/nilai dari dokumen historis ke template
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

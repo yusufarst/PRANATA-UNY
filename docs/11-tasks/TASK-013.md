@@ -33,11 +33,11 @@ Cakupan akses, asal usulan dan penanda tangan bergantung pada organisasi (OD-04/
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-001, GAP-014, GAP-021) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-001, GAP-014, GAP-021) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
-- `org_units` + `org_unit_history` + `org_positions` + `org_appointments`
+- `org_units` + `org_unit_history` + `org_positions` + `org_appointments` (kolom `evidence_file_id` ditambahkan TASK-016)
 - Perhitungan path ltree saat simpan/pindah induk
 - Permintaan perubahan F1/F2 dengan state WF-029 (TR-281–288); TR-285 hanya bila kebijakan `organization.maintenance` ACTIVE
 - PG-505 Administrasi → Organisasi (pohon, detail, riwayat, penunjukan)
@@ -270,6 +270,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan mengasumsikan struktur hanya fakultas
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

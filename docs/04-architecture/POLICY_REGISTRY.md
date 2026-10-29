@@ -45,7 +45,7 @@ stateDiagram-v2
 
 | Aturan | Isi |
 |---|---|
-| Maker-checker | Pengesah tidak boleh sama dengan pembuat atau pengaju (constraint DB + pemeriksaan aplikasi). Keduanya memerlukan kapabilitas berbeda: `policy.author` dan `policy.activate` untuk keluarga terkait. |
+| Maker-checker | Pengesah tidak boleh sama dengan pembuat atau pengaju dan tidak boleh kosong (constraint DB yang tidak lolos bila kosong + pemeriksaan aplikasi). Keduanya memerlukan kapabilitas berbeda yang bercakupan keluarga: `admin.policy.author` dan `admin.policy.activate` dengan cakupan `POLICY_FAMILY` ([ACCESS_CONTROL §4](../05-security/ACCESS_CONTROL.md#4-katalog-kapabilitas), AUTHZ-25). |
 | Bukti | Status ACTIVE mensyaratkan `resolution_evidence` untuk setiap `gap_refs`: rujukan keputusan resmi (nomor/tanggal instrumen, keputusan Owner yang tercatat di repositori) dan berkas bukti. |
 | Kasus uji | Semua `policy_test_cases` paket harus lulus terhadap versi kandidat sebelum aktivasi; hasil disimpan di audit. |
 | Tanggal berlaku | `effective_from` wajib; tidak ada dua versi ACTIVE yang tumpang tindih (EXCLUDE constraint). Versi baru tidak mengubah record lama yang sudah merujuk versi lama (INV-017/018). |
@@ -54,7 +54,7 @@ stateDiagram-v2
 
 ### 2.1 Hubungan dengan GAP_REGISTER
 
-Aktivasi di aplikasi **tidak** menutup GAP di repositori dan sebaliknya penutupan GAP tidak otomatis mengaktifkan kebijakan. Urutan yang aman:
+Aktivasi di aplikasi **tidak** menutup GAP di repositori dan sebaliknya penutupan GAP tidak otomatis mengaktifkan kebijakan. Pemakaian kebijakan DRAFT berlabel simulasi untuk membangun dan menguji fitur selama GAP terbuka adalah model usulan yang menunggu konfirmasi Owner (D-28). Urutan yang aman:
 
 1. Owner memperoleh jawaban resmi dari pemegang kewenangan (paket pertanyaan di [OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)).
 2. Jawaban dicatat di repositori melalui disiplin GAP (sumber/tanggal/versi, keputusan Owner, review independen) sehingga status GAP menjadi RESOLVED.

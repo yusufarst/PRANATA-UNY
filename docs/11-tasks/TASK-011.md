@@ -35,13 +35,13 @@ Pemulihan akun harus selalu tersedia tanpa ketergantungan email institusi (FUT-0
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: SEC-D6 SMTP opsional
 - Keputusan/prasyarat Owner: SEC-D7 kanal penyerahan kode aktivasi penyedia
-- GAP terkait (GAP-015) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-015) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
 - PG-502 daftar/detail/form pengguna (role_group, status, lokal)
 - `identity_password_resets` dan alur reset dibantu admin (password sementara sekali tampil, kedaluwarsa, wajib ganti)
-- Maker-checker reset akun SUPER_ADMIN/istimewa
+- Maker-checker reset akun SUPER_ADMIN/istimewa melalui penentu "akun istimewa" yang dapat diperluas (TASK-015 menambah pemegang penugasan keputusan)
 - Aktivasi akun baru dengan kode sekali pakai
 - Halaman sesi aktif pengguna + cabut sesi oleh admin
 - Reset via email bila mail dikonfigurasi (dinonaktifkan otomatis bila tidak)
@@ -279,6 +279,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan mengirim password lewat email
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

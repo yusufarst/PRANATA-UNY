@@ -1,79 +1,80 @@
-# TASK-032 — Data penyedia inti: perusahaan, PIC, dokumen dan catatan DPT
+# TASK-032 — Kegiatan paket, jadwal dan undangan (WF-006)
 
 Status dokumen: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
 STATUS: TODO
 EXECUTION STAGE: —
-RISK CLASS: HIGH
+RISK CLASS: STANDARD
 MILESTONE: M3 — Pengadaan inti (R1 / UAT-1)
 PARALLEL SAFE: YES
 ```
 
 ## OBJECTIVE
 
-Mewujudkan data penyedia sisi internal yang diperlukan pemilihan: perusahaan, PIC, dokumen kualifikasi berversi, catatan DPT per rezim dan peristiwanya (tercatat), dengan perlakuan RESTRICTED untuk nomor identitas usaha.
+Mewujudkan kegiatan paket (penjelasan, pembukaan, evaluasi, klarifikasi, negosiasi, survei lapangan, pengumuman), jadwal kalender, peserta, undangan penyedia beserta kanal resmi dan pencatatan hasil terpisah dari jadwal.
 
 ## WHY THIS EXISTS
 
-Partisipasi dan undangan bergantung pada data penyedia yang dapat dipakai ulang (CAP-07, AC-09).
+CAP-06/AC-08 dan IX-020.
 
 ## DEPENDS ON
 
-- TASK-016
-- TASK-024
+- TASK-030
+- TASK-026
+- TASK-021
+- TASK-031
 
 ## BLOCKS
 
 - TASK-033
-- TASK-042
 
 ## PREREQUISITES (READY GATE)
 
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-014, GAP-017, GAP-023, GAP-026) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
-- Tabel `vendor_companies`, `vendor_contacts`, `vendor_documents`, `vendor_dpt_records`, `vendor_dpt_events`
-- PG-120 daftar/detail penyedia (internal)
-- Penyamaran field RESTRICTED di daftar/ekspor
-- Kapabilitas `vendor.company.manage`
+- Tabel `proc_activities`, `proc_activity_participants`, `proc_invitations`
+- State WF-006 (TR-051–055)
+- PG-109 kalender minggu/bulan + daftar; panel detail
+- Undangan dengan pemeriksaan jumlah minimum dan DPT dari kebijakan (mis. Quotation ≥ 3 DPT)
+- Notulen sebagai dokumen draf
 
 ## OUT OF SCOPE
 
-- Verifikasi dan keputusan DPT (TASK-042)
-- Portal penyedia (TASK-043)
+- Integrasi kalender eksternal
 
 ## REFERENCES
 
 - [EXECUTION_CONTEXT](EXECUTION_CONTEXT.md)
-- [WF-007](../03-workflows/WORKFLOW_CONTRACTS.md#wf-007)
-- [DATA_MODEL §13](../04-architecture/DATA_MODEL.md#13-vendor)
-- [REGULATORY_SOURCE_REVIEW RG-03 DPT](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md)
+- [WF-006](../03-workflows/WORKFLOW_CONTRACTS.md#wf-006)
+- [STATE_TRANSITIONS WF-006](../03-workflows/STATE_TRANSITIONS.md#wf-006)
+- [RT-006](../03-workflows/ROUTE_CONTRACTS.md#rt-006)
+- [IX-020](../03-workflows/INTERACTION_CONTRACTS.md#ix-020)
 
 ## TRACEABILITY
 
-- CAP: CAP-07
-- AC/NFR: AC-09
-- WF/TR: WF-007 (TR-061–TR-066, 6 TR; BLOCKED_BY_GAP: TR-064)
-- RT: RT-007
-- IX: IX-001, IX-002, IX-011, IX-012
-- GAP: GAP-014, GAP-017, GAP-023, GAP-026
-- Keputusan Owner: OD-27, OD-28
+- CAP: CAP-06
+- AC/NFR: AC-08
+- WF/TR: WF-006 (TR-051–TR-055, 5 TR) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
+- RT: RT-006
+- IX: IX-001, IX-002, IX-009, IX-011, IX-020
+- GAP: GAP-003, GAP-013, GAP-017, GAP-029
+- Keputusan Owner: OD-07
 
 ## EXPECTED MODULES / FILE AREAS
 
-- `app/Modules/Vendor`
-- `resources/js/pages/procurement/vendors`
+- `app/Modules/Procurement (Activities)`
+- `resources/js/pages/procurement/activities`
 
 ## BUSINESS RULES
 
-- [BR-007](../02-domain/BUSINESS_RULES.md#br-007)
-- [BR-008](../02-domain/BUSINESS_RULES.md#br-008)
-- [BR-034](../02-domain/BUSINESS_RULES.md#br-034)
+- [BR-006](../02-domain/BUSINESS_RULES.md#br-006)
+- [INV-002](../02-domain/BUSINESS_RULES.md#inv-002)
 
 ## ARCHITECTURE RULES
 
@@ -82,27 +83,26 @@ Partisipasi dan undangan bergantung pada data penyedia yang dapat dipakai ulang 
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
-- RESTRICTED disamarkan
-- Tidak ada data riil di seeder
+- Peserta penyedia tidak melihat peserta lain bila kebijakan merahasiakan
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `vendor_companies`, `vendor_contacts`, `vendor_documents`, `vendor_dpt_records`, `vendor_dpt_events`
+- Tables: `proc_activities`, `proc_activity_participants`, `proc_invitations`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
 
 ## MODULARITY / EXTENSIBILITY
 
-- Module boundary affected: app/Modules/Vendor
+- Module boundary affected: app/Modules/Procurement (Activities)
 - Stable core kept provider-neutral: YES
 - External/vendor-specific code isolated: N/A
 - Replaceable adapter/contract required: NO
 - Provider lock-in risk: NONE
-- Future extension impact: MEDIUM
+- Future extension impact: LOW
 - Speculative abstraction avoided: YES
 
 ## AUTH IMPACT
@@ -142,7 +142,7 @@ Partisipasi dan undangan bergantung pada data penyedia yang dapat dipakai ulang 
 
 - Graph freshness: N/A bila Graphify tidak tersedia
 - Pre-change questions: modul/tabel/rute/izin mana yang disentuh; uji mana yang terdampak
-- Expected affected areas: app/Modules/Vendor, resources/js/pages/procurement/vendors
+- Expected affected areas: app/Modules/Procurement (Activities), resources/js/pages/procurement/activities
 
 ## CONTEXT7
 
@@ -163,56 +163,58 @@ Partisipasi dan undangan bergantung pada data penyedia yang dapat dipakai ulang 
 - Comfortable density: REQUIRED
 - shadcn/ui reuse: primitif shadcn + komposit PRANATA
 - Design reference: SRC-047/VIS-04 melalui DESIGN_SYSTEM; OD-34
-- Halaman: PG-120
-- Primary action: Tambah penyedia
+- Halaman: PG-109
+- Primary action: Jadwalkan kegiatan
 - Secondary actions: dalam menu "Lainnya" atau outline; tanpa duplikasi
 - Destructive actions: ConfirmActionDialog dengan alasan bila wajib
 - Redundancy constraints: satu aksi utama per halaman/panel
 - Loading state: skeleton
 - Empty state: penjelasan + aksi pertama
 - Error state: pesan + request id + langkah aman
+- Catatan: Kalender dengan alternatif daftar yang aksesibel
 
 ## ROUTE IMPACT
 
-- RT-007
+- RT-006
 
 ## INTERACTION CONTRACTS
 
 - IX-001
 - IX-002
+- IX-009
 - IX-011
-- IX-012
+- IX-020
 
 ## NAVIGATION CONTRACT
 
-- Parent: Pengadaan → Penyedia
-- Entry: Menu
-- Back action: Daftar penyedia
+- Parent: Detail paket / Jadwal
+- Entry: Tab Pemilihan atau menu Jadwal
+- Back action: Asal (paket/kalender dengan rentang)
 - Cancel: Kembali ke halaman asal tanpa menyimpan; konfirmasi bila ada perubahan belum tersimpan
-- Success destination: Detail penyedia
+- Success destination: Detail kegiatan
 - Error behavior: Galat validasi per field + ringkasan di atas form; input dipertahankan
-- State preservation: Filter, urutan, tab dan cursor di URL; dipulihkan saat kembali
-- Mobile behavior: Tabel menjadi kartu; aksi utama tetap terlihat; target sentuh ≥ 44 px
+- State preservation: Rentang kalender di URL
+- Mobile behavior: Daftar harian
 
 ## ACCEPTANCE CRITERIA
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Data penyedia dipakai ulang lintas paket tanpa input ulang
-- TAC-02 Nomor pajak/usaha disamarkan kecuali bagi verifikator
-- TAC-03 Status DPT per rezim beserta riwayat peristiwa terlihat
+- TAC-01 Kegiatan terjadwal dan hasilnya tercatat terpisah
+- TAC-02 Undangan Quotation memperingatkan bila < 3 penyedia DPT (kebijakan DRAFT)
+- TAC-03 Kalender dan daftar konsisten; dapat diakses keyboard
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: CRUD dan penyamaran
-- Authorization: vendor.company.manage
+- Feature: WF-006
+- Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)
+- Browser E2E: Bagian J-04
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
-- Accessibility: axe tanpa pelanggaran serius/kritis
+- Accessibility: Kalender
 - Production build: npm run build
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
 
@@ -236,12 +238,12 @@ Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
 ## REVIEW REQUIREMENT
 
-HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen kedua; lulus bila tidak ada temuan P0/P1 terbuka ([QUALITY_GATES §3](../08-testing/QUALITY_GATES.md#3-gerbang-review-berbasis-risiko))
+STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tidak ada temuan P0/P1 terbuka ([QUALITY_GATES §3](../08-testing/QUALITY_GATES.md#3-gerbang-review-berbasis-risiko))
 
 ## DEFINITION OF DONE
 
 - Semua ACCEPTANCE CRITERIA terbukti dengan bukti tercatat
-- Definition of Done [QUALITY_GATES §2](../08-testing/QUALITY_GATES.md#2-definition-of-done) untuk semua Task + §2.2 UI + §2.3 HIGH
+- Definition of Done [QUALITY_GATES §2](../08-testing/QUALITY_GATES.md#2-definition-of-done) untuk semua Task + §2.2 UI
 - PR ke `main` lulus `ci-gate` pada HEAD terakhir dan review sesuai REVIEW REQUIREMENT, di-merge, lalu `main` remote diverifikasi memuat merge tersebut ([EXECUTOR_OPERATING_MODEL §8](EXECUTOR_OPERATING_MODEL.md#8-merge-dan-rekonsiliasi-done))
 - TASK_PLAN dan CURRENT_HANDOFF diperbarui; checklist dicentang hanya bila DONE
 
@@ -266,7 +268,7 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## DO NOT DO
 
-- Jangan mengimpor data penyedia riil dalam Task ini
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan mewajibkan negosiasi/kegiatan untuk semua metode
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

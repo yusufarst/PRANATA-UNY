@@ -21,6 +21,7 @@ Kepercayaan riwayat (INV-017, CAP-19) dan hak minimum DB (ADR-0010) menjadi dasa
 ## DEPENDS ON
 
 - TASK-004
+- TASK-007
 
 ## BLOCKS
 
@@ -32,7 +33,7 @@ Kepercayaan riwayat (INV-017, CAP-19) dan hak minimum DB (ADR-0010) menjadi dasa
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-023) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-023) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -91,7 +92,7 @@ Kepercayaan riwayat (INV-017, CAP-19) dan hak minimum DB (ADR-0010) menjadi dasa
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `audit_events (partisi)`, `peran DB`
+- Tables: audit_events (partisi), peran DB
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -237,6 +238,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan memberi peran app hak DELETE pada tabel append-only
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

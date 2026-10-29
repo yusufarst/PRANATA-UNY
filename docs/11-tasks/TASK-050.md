@@ -35,11 +35,12 @@ INV-009/019/020 dan ADR-0004.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-005, GAP-006, GAP-025) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-005, GAP-006, GAP-025) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
-- Tabel ledger dan saldo + trigger/hak append-only
+- Tabel ledger dan saldo + trigger/hak append-only; kolom `is_simulation` dan `policy_version_id`
+- Aturan pencatatan terlambat: diterima hanya bila saldo menurut `occurred_at` tetap ≥ 0 pada titik itu dan setiap titik sesudahnya; OPENING hanya sebelum gerakan lain item–gudang
 - `StockPostingService` (kunci terurut, `balance_after`, kebijakan, idempotensi sumber)
 - Pembalikan movement
 - Job verifikasi saldo vs ledger → insiden
@@ -206,7 +207,9 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Dua posting bersamaan atas barang terakhir: satu sukses, satu ditolak; saldo tidak negatif
 - TAC-02 UPDATE/DELETE ledger ditolak
 - TAC-03 Saldo = jumlah ledger (job verifikasi); selisih membuat insiden
-- TAC-04 Kartu stok menampilkan saldo berjalan dari `balance_after`
+- TAC-04 Kartu stok diurutkan `(occurred_at, id)` dengan saldo berjalan dihitung saat kueri; `balance_after` mengikuti urutan posting untuk pemeriksaan integritas
+- TAC-05 Pencatatan terlambat yang membuat saldo per tanggal negatif ditolak
+- TAC-06 Gerakan di bawah kebijakan non-ACTIVE bertanda simulasi
 
 ## TEST REQUIREMENTS
 
@@ -275,6 +278,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan mengubah saldo langsung
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

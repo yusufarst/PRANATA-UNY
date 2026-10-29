@@ -201,12 +201,11 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Unit: Vitest komponen komposit
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)
-- Localization/language switch: Dua bahasa; kunci hilang = 0
-- Responsive: Screenshot dua viewport
-- Accessibility: axe pada shell
+- Browser E2E: N/A — harness dibuat TASK-007 (uji asap shell)
+- Localization/language switch: Pemeriksa kunci; dua bahasa
+- Responsive: Tangkapan layar dua viewport (manual terdokumentasi); otomatis sejak TASK-007
+- Accessibility: axe-core pada komponen melalui Vitest; axe di browser sejak TASK-007
 - Production build: npm run build
-- Localization: Pemeriksa kunci
 
 ## TEST CHECKLIST
 
@@ -261,6 +260,6 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 
 - Jangan menyalin warna atau aset dari video referensi
 - Jangan menambahkan mode gelap pada V1
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

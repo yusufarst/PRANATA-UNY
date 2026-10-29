@@ -32,11 +32,12 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-004, GAP-013, GAP-017) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-004, GAP-013, GAP-017) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
-- Tabel `proc_sppbj`
+- Tabel `proc_sppbj` dan `proc_sppbj_acts` (kontribusi PREPARED/CHECKED/ISSUED/SIGNED terpisah dengan pelaku, penugasan dan bukti)
+- Urutan antarkontribusi tidak dipaksakan kecuali kebijakan `procurement.authority` menetapkannya (WF-011: TR-102–104 tidak saling menjadi prasyarat universal)
 - State WF-011 (TR-101–TR-106)
 - Perhitungan tenggat jaminan memakai `ref_calendar_days` bila kebijakan menyatakan
 - PG-113
@@ -87,7 +88,7 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `proc_sppbj`
+- Tables: `proc_sppbj`, `proc_sppbj_acts`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -161,14 +162,14 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 - shadcn/ui reuse: primitif shadcn + komposit PRANATA
 - Design reference: SRC-047/VIS-04 melalui DESIGN_SYSTEM; OD-34
 - Halaman: PG-113
-- Primary action: Siapkan/Periksa/Terbitkan
+- Primary action: Catat kontribusi yang menjadi tanggung jawab pengguna
 - Secondary actions: dalam menu "Lainnya" atau outline; tanpa duplikasi
 - Destructive actions: ConfirmActionDialog dengan alasan bila wajib
 - Redundancy constraints: satu aksi utama per halaman/panel
 - Loading state: skeleton
 - Empty state: penjelasan + aksi pertama
 - Error state: pesan + request id + langkah aman
-- Catatan: Satu aksi utama sesuai giliran
+- Catatan: Satu aksi utama sesuai penugasan pengguna; status lengkap diturunkan dari kontribusi wajib
 
 ## ROUTE IMPACT
 
@@ -197,8 +198,9 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Satu orang tidak dapat menjalankan dua tanggung jawab yang dipisah kebijakan
-- TAC-02 Dokumen SPPBJ DRAF→FINAL bernomor unik
-- TAC-03 Tenggat jaminan dihitung hanya bila kebijakan menetapkannya
+- TAC-02 Tanpa urutan dari kebijakan, pemeriksaan, penerbitan dan penandatanganan dapat dicatat dalam urutan apa pun; SPPBJ lengkap bila semua kontribusi wajib tercatat
+- TAC-03 Dokumen SPPBJ DRAF→FINAL bernomor unik
+- TAC-04 Tenggat jaminan dihitung hanya bila kebijakan menetapkannya
 
 ## TEST REQUIREMENTS
 
@@ -265,6 +267,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan memaksakan PPK sebagai keempat fungsi
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

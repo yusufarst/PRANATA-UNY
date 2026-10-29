@@ -20,8 +20,8 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 
 ## DEPENDS ON
 
-- TASK-031
 - TASK-032
+- TASK-031
 
 ## BLOCKS
 
@@ -33,7 +33,7 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-014, GAP-017, GAP-029) **tidak menghalangi implementasi**; aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-014, GAP-017, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
@@ -86,7 +86,7 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
-- AUTHZ-30–33
+- AUTHZ-31, AUTHZ-32 (AUTHZ-30/33 di TASK-043)
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
@@ -205,7 +205,7 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Kiriman eksternal tercatat dengan tanda terima, waktu dan berkas rahasia
-- TAC-02 Penyedia/petugas tanpa penugasan tidak dapat membuka penawaran
+- TAC-02 Petugas tanpa penugasan tidak dapat membuka penawaran; isolasi antar-penyedia diuji di TASK-043 setelah akun penyedia ada
 - TAC-03 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
 - TAC-04 Revisi tertaut ke kiriman asal
 
@@ -214,7 +214,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Feature: WF-008, IX-024
-- Authorization: AUTHZ-30–33
+- Authorization: AUTHZ-31, AUTHZ-32
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-16 bagian baca teraudit
 - Localization/language switch: Dua bahasa; kunci hilang = 0
@@ -274,6 +274,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan mengaktifkan kiriman penawaran di PRANATA tanpa kebijakan kanal ACTIVE
-- Jangan memperluas ruang lingkup tanpa TASK PLAN CHANGE
+- Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

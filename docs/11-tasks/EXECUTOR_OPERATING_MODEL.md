@@ -8,24 +8,34 @@ Model ini **dirancang sekarang dan tidak aktif** (GOV-12). Tidak ada kemampuan p
 
 ## 1. Prasyarat aktivasi
 
+**Prasyarat mode SUPERVISED** (cukup untuk memulai TASK-001):
+
 | Prasyarat | Bukti | Pemutus |
 |---|---|---|
 | Kandidat P0–P3 (amandemen) dan P4–P11 disetujui pada SHA yang direview | [APPROVAL_RECORDS](../00-governance/APPROVAL_RECORDS.md) | Owner |
-| Planning Freeze dan baseline Task dinyatakan siap | APPROVAL_RECORDS, [PHASE_STATUS](../PHASE_STATUS.md) | Owner |
+| Planning Freeze dan baseline Task dinyatakan siap; TASK-001 READY | APPROVAL_RECORDS, [PHASE_STATUS](../PHASE_STATUS.md), TASK_PLAN | Owner |
 | Otorisasi eksekusi berdiri dengan ruang lingkup (milestone/Task, mode, izin merge, batas) | APPROVAL_RECORDS | Owner |
-| Keputusan metode merge dan proteksi `main` (bagian 8) | Jawaban paket keputusan Owner; keluaran `gh api` aturan cabang | Owner |
-| TASK-001 DONE dalam mode terawasi dengan laporan kemampuan | `docs/11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md` | Eksekutor, disaksikan Owner |
-| Otorisasi mode otonom | APPROVAL_RECORDS | Owner |
+| Keputusan metode merge (D-08), cakupan token eksekutor (D-27) dan model gerbang GAP (D-28) | Jawaban paket keputusan Owner | Owner |
+
+**Prasyarat tambahan mode AUTONOMOUS:**
+
+| Prasyarat | Bukti | Pemutus |
+|---|---|---|
+| TASK-001 DONE dengan laporan kemampuan; kemampuan pengaman (C-01, C-02, C-05, C-15, serta C-10 bila D-08 memilih opsi A) VERIFIED | `docs/11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md` | Eksekutor, disaksikan Owner |
+| TASK-002–TASK-005 DONE (TASK-001–TASK-004 dalam mode bootstrap, bagian 8.4); `ci-gate` terbukti pada PR | PR dan run CI | Eksekutor, disaksikan Owner |
+| Ruleset `main` dan perlindungan tag diterapkan sesuai D-08 dan diverifikasi | Keluaran `gh api` baca aturan cabang | Owner |
+| Token eksekutor sesuai D-27 terpasang khusus untuk runner | Laporan kemampuan C-15 | Owner |
+| Otorisasi mode otonom dengan ruang lingkup | APPROVAL_RECORDS | Owner |
 
 Mode eksekutor:
 
 | Mode | Kapan | Perilaku |
 |---|---|---|
 | `WAITING` | Sekarang sampai otorisasi | Bootstrap baca-saja; laporan; tidak mengubah apa pun ([EXECUTOR_BOOTSTRAP §2](EXECUTOR_BOOTSTRAP.md#2-bootstrap-baca-saja-waiting)) |
-| `SUPERVISED` | TASK-001 (wajib), boleh juga Task berikutnya bila Owner memilih | Sesi interaktif Claude Code dengan Owner hadir; setiap izin yang belum ada di allowlist ditanyakan |
-| `AUTONOMOUS` | Setelah laporan kemampuan dan otorisasi mode otonom | Runner headless + satu watcher (bagian 9); tanpa interaksi rutin Owner |
+| `SUPERVISED` | TASK-001–TASK-005 (wajib), setiap merge yang menyentuh jalur pengaman (bagian 11), dan Task lain bila Owner memilih | Sesi interaktif Claude Code dengan Owner hadir; setiap izin yang belum ada di allowlist ditanyakan |
+| `AUTONOMOUS` | Setelah semua prasyarat tambahan di atas | Runner headless + satu watcher (bagian 9); tanpa interaksi rutin Owner |
 
-Bila kemampuan pengaman (hook penolakan, pembatasan izin, penjaga atribusi) gagal pada saat mana pun, eksekutor **turun ke SUPERVISED**, menghentikan runner, mencatat alasannya dan melapor. Mode yang melewati semua izin tidak dipakai sebagai dasar desain.
+Bila kemampuan pengaman (hook penolakan, pembatasan izin, penjaga atribusi) gagal pada saat mana pun, eksekutor **turun ke SUPERVISED**, menghentikan runner, mencatat alasannya dan melapor. Mode yang melewati semua izin (bypass permissions) **tidak pernah dipakai**; langkah headless memakai allowlist dan alat di luar allowlist ditolak.
 
 ## 2. Siklus hidup Task
 
@@ -49,11 +59,11 @@ Pembedaan yang tidak boleh dikaburkan (U-007 §19): kode diimplementasi ≠ peme
 
 ## 3. Pemilihan Task, blokir dan paralelisme
 
-**Kelayakan.** Task layak bila berstatus TODO, semua DEPENDS ON berstatus DONE, prasyarat Owner pada bagian PREREQUISITES terpenuhi, dan Task tercakup otorisasi eksekusi. GAP OPEN **bukan** penghalang implementasi bila Task memakai kebijakan berversi berlabel simulasi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register)); ia penghalang aktivasi resmi di produksi.
+**Kelayakan.** Task layak bila berstatus TODO, semua DEPENDS ON berstatus DONE, prasyarat Owner pada bagian PREREQUISITES terpenuhi, dan Task tercakup otorisasi eksekusi. Menurut model gerbang usulan, GAP OPEN **bukan** penghalang implementasi bila Task memakai kebijakan berversi berlabel simulasi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register)); ia penghalang aktivasi resmi di produksi. Model ini berlaku setelah Owner mengonfirmasinya (D-28); sebelum itu Task yang aksi resminya bergantung pada GAP gerbang aktivasi ([TRACEABILITY_MATRIX — Perlakuan GAP](TRACEABILITY_MATRIX.md#perlakuan-gap)) tidak dianggap layak kecuali Owner menyatakan lain; GAP gerbang rilis tidak menahan implementasi.
 
 **Urutan.** Default: Task layak bernomor terkecil. Owner dapat menetapkan prioritas lain melalui TASK PLAN CHANGE. Task yang menunggu keputusan Owner (misalnya TASK-040 hosting staging) dilewati dengan catatan "menunggu keputusan Owner: …" tanpa menahan Task lain.
 
-**Blokir.** Task menjadi BLOCKED hanya karena penghalang nyata: dependensi BLOCKED, keputusan Owner yang belum ada, kemampuan platform yang gagal, konflik dengan dokumen kanonik, atau kegagalan CI yang tidak terselesaikan menurut bagian 7. Blokir dicatat dengan alasan, bukti dan pemutus yang dibutuhkan; eksekutor melanjutkan Task lain yang layak dan tidak bergantung padanya. Dependensi yang benar-benar menghalangi tidak pernah dilewati.
+**Blokir.** Task menjadi BLOCKED hanya karena penghalang nyata: dependensi BLOCKED, keputusan Owner yang belum ada, kemampuan platform yang gagal, konflik dengan dokumen kanonik, atau kegagalan CI yang tidak terselesaikan menurut bagian 7. Blokir dicatat dengan alasan, bukti dan pemutus yang dibutuhkan; eksekutor melanjutkan Task lain yang layak dan tidak bergantung padanya — kecuali hold `SHUTDOWN_AFTER_CURRENT_TASK` aktif, yang selalu didahulukan: eksekutor berhenti dan tidak memilih Task lain. Dependensi yang benar-benar menghalangi tidak pernah dilewati.
 
 **Paralelisme.** Satu eksekutor utama, satu Task aktif. Task kedua hanya boleh berjalan bersamaan bila keduanya `PARALLEL SAFE: YES` dan:
 
@@ -88,6 +98,7 @@ Urutan baca per Task: [AGENTS.md](../../AGENTS.md) → [EXECUTION_CONTEXT](EXECU
 - Proses panjang (suite, migrasi, build) dijalankan dengan log di `.pranata/logs/` dan dipantau kemajuannya; proses hanya dihentikan bila terbukti macet (tanpa keluaran dan tanpa aktivitas CPU melebihi ambang bagian 14), dan hanya PID milik PRANATA.
 - Dependensi baru hanya bila dalam ruang lingkup Task, sumber terbuka/gratis, lolos `composer audit`/`npm audit`, dan dicatat di TOOLCHAIN.
 - **Commit (GOV-08).** Sebelum setiap commit: `git config user.name` dan `user.email` dibaca (tanpa diubah) dan dibandingkan dengan identitas Owner rujukan; ketidakcocokan = berhenti. Pesan: `<type>(task-0xx): <ringkasan>`; tanpa trailer atribusi apa pun. Setelah commit dan sebelum push: metadata mentah (`git cat-file -p HEAD`) dan pesan lengkap diperiksa — author dan committer Owner saja, tanpa co-author AI/alat, tanpa trailer atribusi. Penyimpangan = tidak push, tidak amend otomatis, laporkan ke Owner. Tanpa force push.
+- **Jalur pengaman.** `.github/workflows/**`, `.claude/**`, `.githooks/**` dan `scripts/executor/**` hanya diubah oleh Task yang kontraknya mencakupnya (TASK-001, TASK-005) atau dengan persetujuan Owner; pada mode otonom penulisan ke jalur ini ditolak hook dan aturan izin, dan merge PR yang menyentuhnya hanya dalam mode SUPERVISED (bagian 8.1).
 - **Penjaga atribusi berlapis.** (1) Pengaturan atribusi Claude Code proyek dinonaktifkan untuk commit dan PR; (2) hook Git `commit-msg` repositori yang menolak trailer atribusi AI/alat; (3) hook PreToolUse yang menolak perintah commit/PR yang memuat atribusi; (4) pemeriksaan metadata pasca-commit. Pengaturan alat perlu tetapi tidak pernah cukup.
 
 ## 6. Review berbasis risiko dan review PR Codex
@@ -150,6 +161,7 @@ Aturan:
 3. Disposisi review lengkap: swa-review, review independen (HIGH), status Codex final atau review pengganti, tanpa temuan penghalang terbuka.
 4. Cabang mutakhir: `main` adalah leluhur HEAD PR dan `main` tidak bergerak sejak pemeriksaan.
 5. PR dapat di-merge dan otorisasi eksekusi mencakup merge.
+6. Diff tidak menyentuh jalur pengaman (bagian 5); bila menyentuh, merge hanya dalam mode SUPERVISED dengan Owner hadir — skrip merge menolaknya pada mode otonom.
 
 ### 8.2 Metode merge (keputusan Owner)
 
@@ -157,7 +169,7 @@ GOV-08 menuntut author **dan committer** hanya identitas Owner. Merge melalui to
 
 | Opsi | Cara | Identitas | Proteksi `main` |
 |---|---|---|---|
-| **A — fast-forward terverifikasi (rekomendasi)** | Setelah 8.1 lulus, `main` dimajukan tepat ke SHA HEAD PR (`git push origin <sha>:main`) oleh skrip merge terjaga; PR tercatat merged oleh GitHub karena commit-nya masuk ke cabang dasar (diverifikasi TASK-001) | Seluruh commit tetap author+committer Owner | Ruleset: status check `ci-gate` wajib (commit harus lulus di ref lain lebih dahulu), riwayat linear, tanpa force push/penghapusan; "PR wajib" ditegakkan oleh kebijakan dan hook eksekutor |
+| **A — fast-forward terverifikasi (rekomendasi)** | Setelah 8.1 lulus, `main` dimajukan tepat ke SHA HEAD PR (`git push origin <sha>:main`) oleh skrip merge terjaga; PR tercatat merged oleh GitHub karena commit-nya masuk ke cabang dasar (diverifikasi TASK-001) | Seluruh commit tetap author+committer Owner | Ruleset: status check `ci-gate` wajib (commit harus lulus di ref lain lebih dahulu), riwayat linear, tanpa force push/penghapusan, **tanpa** aturan PR wajib dan tanpa daftar bypass; "PR dahulu" ditegakkan kebijakan, hook dan skrip merge eksekutor |
 | B — merge GitHub (squash/merge commit) | `gh pr merge` | Author Owner; committer GitHub | Ruleset dengan PR wajib + `ci-gate` wajib; memerlukan penerimaan eksplisit Owner bahwa committer GitHub pada commit merge tidak melanggar GOV-08 |
 
 Cabang yang tertinggal dari `main` tidak di-rebase dengan force push: eksekutor membuat cabang baru dari `main` terbaru (`…-r2`), memindahkan commit dengan cherry-pick, membuka PR baru dan menutup PR lama dengan rujukan. Cabang tidak dihapus otomatis.
@@ -171,6 +183,10 @@ Cabang yang tertinggal dari `main` tidak di-rebase dengan force push: eksekutor 
 
 Task baru DONE setelah rekonsiliasi berada di `main`. Total di TASK_PLAN harus cocok dengan daftar Task.
 
+### 8.4 Mode bootstrap (sebelum CI ada)
+
+TASK-001–TASK-004 berjalan sebelum `ci.yml` ada, sehingga `ci-gate` tidak dapat dipersyaratkan. Untuk keempatnya: mode SUPERVISED; seluruh piramida verifikasi dijalankan lokal dan buktinya dicatat; PR tetap dibuka sebagai catatan; Owner menyaksikan bukti, diff dan metadata commit; merge memakai metode D-08 tanpa `ci-gate`. TASK-005 membuat `ci.yml`, sehingga PR-nya sendiri sudah menjalankan `ci-gate`; setelah TASK-005 ter-merge, Owner menerapkan ruleset `main`. Sejak TASK-006 setiap merge mensyaratkan `ci-gate`. Uji E2E browser tersedia sejak TASK-007; Task sebelumnya mencatatnya N/A dengan alasan.
+
 ## 9. Runner, watcher, checkpoint dan pemulihan
 
 ### 9.1 Komponen
@@ -178,7 +194,7 @@ Task baru DONE setelah rekonsiliasi berada di `main`. Total di TASK_PLAN harus c
 | Komponen | Bentuk | Tugas |
 |---|---|---|
 | Sesi eksekutor | Claude Code: interaktif (SUPERVISED) atau headless per langkah (AUTONOMOUS) | Mengerjakan Task |
-| Runner | `scripts/executor/runner.ps1`, satu instance (`.pranata/executor/runner.lock` berisi PID dan waktu mulai) | Membaca hold dan checkpoint, membangkitkan paket konteks, memanggil sesi headless dengan allowlist alat dan batas giliran, mencatat log, menunggu hasil eksternal tanpa memanggil model |
+| Runner | `scripts/executor/runner.ps1`, satu instance (`.pranata/executor/runner.lock` berisi PID dan waktu mulai) | Membaca hold dan checkpoint, membangkitkan paket konteks, memanggil sesi headless dengan allowlist alat, batas giliran **dan batas waktu dinding per langkah** (bagian 14), mencatat log, menunggu hasil eksternal tanpa memanggil model |
 | Watcher | `scripts/executor/watcher.ps1` dijalankan Penjadwal Tugas Windows berkala, kunci tunggal | Memeriksa sinyal murah (proses, umur heartbeat, mtime berkas, status PR/CI lewat `gh` dengan interval jarang), memulai ulang runner bila mati dan tidak ada hold, mencatat peringatan |
 | Checkpoint | `.pranata/executor/checkpoint.json` (diabaikan Git) | Status tahan lama: `authorization_id`, `mode`, `task_id`, `stage`, `branch`, `head_sha`, `pr_number`, `ci_run_ids`, `codex_status`, `review_status`, `last_action` + apakah idempoten, `next_action`, `session_id`, `updated_at` |
 | Heartbeat | `.pranata/executor/heartbeat` diperbarui hook PostToolUse | Bukti aktivitas yang murah |
@@ -187,7 +203,7 @@ Tidak ada polling AI berkelanjutan dan tidak ada watcher ganda. Pemantauan tidak
 
 ### 9.2 Deteksi idle
 
-Ambang kandidat **45 menit** tanpa heartbeat. Idle hanya disimpulkan bila **semua** benar: tidak ada proses Claude Code berdirektori kerja PRANATA yang aktif; tidak ada proses uji/migrasi/build PRANATA yang aktif atau masih menghasilkan keluaran; checkpoint tidak berada pada tahap tunggu yang sah (menunggu CI/Codex dengan timer yang masih berjalan); tidak ada hold. Tidak ada perubahan berkas kode **bukan** bukti idle. Suite PHP yang panjang, uji migrasi, tunggu CI atau review independen adalah pekerjaan aktif yang sah. Ambang dikalibrasi dari durasi nyata (bagian 14).
+Ambang kandidat **45 menit** tanpa heartbeat. Idle hanya disimpulkan bila **semua** benar: tidak ada proses Claude Code berdirektori kerja PRANATA yang aktif; tidak ada proses uji/migrasi/build PRANATA yang aktif atau masih menghasilkan keluaran; checkpoint tidak berada pada tahap tunggu yang sah (menunggu CI/Codex dengan timer yang masih berjalan); tidak ada hold. Sesi yang **macet** diperlakukan sama: proses Claude Code PRANATA masih hidup tetapi heartbeat tidak berubah melebihi ambang macet, tanpa proses anak yang aktif, atau langkah headless melewati batas waktu dinding. Runner menghentikan hanya PID itu setelah checkpoint menunjukkan tidak sedang dalam urutan commit/push/merge, lalu memulihkan menurut bagian 9.3. Tidak ada perubahan berkas kode **bukan** bukti idle. Suite PHP yang panjang, uji migrasi, tunggu CI atau review independen adalah pekerjaan aktif yang sah. Ambang dikalibrasi dari durasi nyata (bagian 14).
 
 ### 9.3 Pemulihan
 
@@ -210,7 +226,7 @@ Permintaan: Owner menjalankan `scripts/executor/hold.ps1 -Mode <MODE> -Reason "<
 
 Saat shutdown: perubahan yang belum di-commit disimpan sebagai commit lokal `wip(task-0xx): checkpoint <tahap>` di cabang Task (tidak di-push kecuali Owner meminta); checkpoint ditulis; runner, sesi eksekutor, proses uji PRANATA dan kontainer `pranata` dihentikan (`docker compose -p pranata stop`, tanpa menghapus volume); tugas terjadwal watcher PRANATA dinonaktifkan; proyek lain tidak disentuh; Task yang belum selesai tidak ditandai DONE; instruksi resume persis diberikan.
 
-Saat resume (hanya dengan instruksi Owner yang melepas hold): verifikasi status repositori; integritas checkpoint (SHA cabang = `head_sha`); sinkronisasi lokal/remote; pulihkan kunci watcher/runner yang basi dengan aman (PID mati); lepas hold; aktifkan kembali **satu** watcher; lanjutkan Task yang belum selesai. Shutdown tidak pernah disimpulkan dari jam atau lamanya Task.
+Saat resume (hanya dengan instruksi Owner yang melepas hold): verifikasi status repositori; integritas checkpoint (SHA cabang = `head_sha`); sinkronisasi lokal/remote; pulihkan kunci watcher/runner yang basi dengan aman (PID mati); lepas hold; aktifkan kembali **satu** watcher; lanjutkan Task yang belum selesai. Hold selalu mengalahkan aturan melanjutkan Task lain (bagian 3). Shutdown tidak pernah disimpulkan dari jam atau lamanya Task.
 
 ## 11. Isolasi multi-proyek dan keamanan sumber daya
 
@@ -221,6 +237,10 @@ Saat resume (hanya dengan instruksi Owner yang melepas hold): verifikasi status 
 | Docker | `docker compose -p pranata …` dan kontainer `pranata-*` | `docker system/volume/network/builder prune`, restart Docker Desktop, `rm`/`stop` kontainer atau volume non-`pranata` |
 | Basis data | `pranata_dev`, `pranata_test*`, `pranata_e2e_*`, `pranata_perf` di `pranata-postgres` | Host/port/basis data lain; staging dan produksi |
 | Proses | Menghentikan PID yang dicatat milik PRANATA setelah memeriksa direktori kerja/baris perintahnya | Menghentikan proses berdasarkan nama saja |
+| Jalur pengaman | Perubahan dalam Task yang kontraknya mencakupnya, dengan merge SUPERVISED | Penulisan ke `.github/workflows/**`, `.claude/**`, `.githooks/**`, `scripts/executor/**` pada mode otonom |
+| GitHub | Baca status PR/CI/review; membuat cabang, PR dan komentar; merge lewat skrip terjaga | `gh api` non-GET ke ruleset, proteksi cabang, ref, secret atau pengaturan repositori; `gh pr merge --admin`; `gh repo edit`; `gh secret`; `gh auth`; mengubah ruleset |
+| Token | Token runner sesuai D-27 (rekomendasi: token terbatas repositori ini tanpa hak Administration) | Memakai login admin Owner untuk langkah otonom bila D-27 memilih token terbatas |
+| Mode izin | Allowlist + hook deny | Mode bypass permissions dalam kondisi apa pun |
 | Rahasia | `.env` lokal PRANATA tanpa kredensial produksi | Membaca/menulis `.env` proyek lain; menyimpan token di repositori, log atau PR |
 | Layanan | Paket sumber terbuka/gratis dalam ruang lingkup Task | Layanan berbayar atau pemantauan/otomasi berbayar tanpa persetujuan Owner |
 | Produksi | — | Deploy produksi, akses basis data produksi, perubahan DNS/server (dilakukan operator atas keputusan Owner) |
@@ -245,9 +265,11 @@ Laporan dibuat pada Task DONE, BLOCKED, hold/resume, kebutuhan keputusan Owner, 
 
 Eskalasi ke Owner hanya untuk hal yang dicadangkan (U-007 §22): ambiguitas kebijakan pengadaan resmi, perubahan ruang lingkup produk yang material, ketidakpastian kebijakan akuntansi, penyimpangan keamanan/arsitektur yang material, layanan berbayar berulang, akses data institusi yang sensitif, persetujuan fase, Planning Freeze, otorisasi eksekusi, rilis produksi, ketidakcocokan identitas Git, dan kegagalan kemampuan pengaman. Pertanyaan dikelompokkan, dicatat di CURRENT_HANDOFF (DECISIONS PENDING), dan pekerjaan lain yang sah dilanjutkan. Pertanyaan yang sudah dijawab tidak diajukan ulang. Keputusan teknis biasa (komponen, paket yang sudah ada, perbaikan uji, cacat kode, refaktor aman, koreksi dokumen biasa, urutan Task sesuai graf) diambil eksekutor sendiri.
 
+**Perubahan rencana (GOV-10).** Eksekutor tidak menyusun kebenaran perencanaan. Dokumentasi yang boleh diperbarui eksekutor terbatas pada: COMPLETION EVIDENCE dan status/tahap Task aktif, checkbox dan penghitung TASK_PLAN, CURRENT_HANDOFF, fakta versi di TOOLCHAIN, laporan kemampuan dan status C-xx di bagian 13 (bukti TASK-001), serta pembaruan dokumentasi yang secara eksplisit dituntut kontrak Task. Usulan penambahan, pemecahan, penggabungan, pengurutan ulang atau perubahan isi Task, serta perubahan aturan dan parameter dokumen ini, dicatat sebagai usulan TASK PLAN CHANGE di CURRENT_HANDOFF; Task terdampak menjadi BLOCKED; Planning Agent menyusun perubahannya, dengan Second Review proporsional dan persetujuan Owner bila material.
+
 ## 13. Kemampuan platform yang wajib diverifikasi
 
-Semua berstatus **UNVERIFIED** sampai TASK-001 mencatat VERIFIED, FAILED atau NOT AVAILABLE beserta bukti di laporan kemampuan.
+Semua berstatus **UNVERIFIED** sampai TASK-001 (C-14 pada TASK-003) mencatat VERIFIED, FAILED atau NOT AVAILABLE beserta bukti di laporan kemampuan.
 
 | # | Kemampuan yang diasumsikan | Dipakai untuk | Cara verifikasi (TASK-001) | Jalan cadangan bila gagal |
 |---|---|---|---|---|
@@ -265,6 +287,7 @@ Semua berstatus **UNVERIFIED** sampai TASK-001 mencatat VERIFIED, FAILED atau NO
 | C-12 | Deteksi galat batas pemakaian dan waktu reset | Runner | Simulasi/log nyata | Hold otomatis dan laporan |
 | C-13 | Worktree Git di Windows untuk Task paralel | Paralelisme | Uji worktree | Tanpa paralelisme |
 | C-14 | Kinerja bind mount Docker Desktop dan batas sumber daya | Lingkungan dev | TASK-003 | Rekomendasi ke Owner (mis. kloning di WSL2) |
+| C-15 | Runner memakai token GitHub terpisah (variabel lingkungan dan kredensial Git khusus proses runner) tanpa memengaruhi login Owner; token tanpa hak Administration ditolak saat mencoba mengubah ruleset | Pembatasan kewenangan eksekutor (D-27) | Uji pada repositori sekali pakai | Bila tidak dapat dipisahkan: mode otonom memakai login Owner hanya bila Owner menerimanya secara eksplisit |
 
 Kemampuan yang FAILED atau NOT AVAILABLE memicu jalan cadangannya dan, bila memengaruhi Task lain, TASK PLAN CHANGE. Model ini diperbarui dari hasil uji, bukan dari dugaan.
 
@@ -280,6 +303,7 @@ Kemampuan yang FAILED atau NOT AVAILABLE memicu jalan cadangannya dan, bila meme
 | Ambang proses macet | 20 menit tanpa keluaran dan tanpa aktivitas CPU | Per jenis proses |
 | Task paralel maksimum | 2 (bagian 3) | Hanya bila terbukti lebih cepat |
 | Batas giliran per pemanggilan headless | Ditetapkan TASK-001 | Dari uji runner |
+| Batas waktu dinding per langkah headless | 90 menit (tidak termasuk menunggu hasil eksternal di luar sesi) | Dari durasi langkah nyata M0–M1 |
 | Karantina uji tidak stabil | 3 hari kerja | TEST_STRATEGY §6 |
 
-Perubahan parameter dicatat di dokumen ini melalui pembaruan dokumentasi yang dituntut Task; perubahan yang melemahkan pengaman (isolasi, atribusi, gerbang CI/review) memerlukan persetujuan Owner.
+Eksekutor mencatat hasil kalibrasi sebagai bukti dan mengusulkan perubahan parameter (bagian 12); Planning Agent memperbarui dokumen ini. Perubahan yang melemahkan pengaman (isolasi, atribusi, gerbang CI/review, karantina uji) memerlukan persetujuan Owner.

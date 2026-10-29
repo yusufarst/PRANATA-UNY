@@ -18,7 +18,7 @@ Isi increment ditentukan oleh Task beserta dependensinya di [TASK_PLAN](../11-ta
 
 Menurut V1_SCOPE yang disetujui, V1 diterima hanya bila seluruh hasil minimum CAP terbukti. Karena itu default rencana adalah **satu go-live produksi setelah R4**. Rilis produksi bertahap (misalnya R1 Pengadaan lebih dahulu) adalah perubahan batas rilis P1 yang memerlukan **keputusan Owner** ([OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)); bila disetujui, increment produksi tetap memenuhi gerbang bagian 2 dan V1 tetap baru dinyatakan diterima setelah seluruh CAP terbukti.
 
-Fitur yang bergantung pada kebijakan hanya aktif resmi di produksi bila versi kebijakannya ACTIVE (GAP terselesaikan). Go-live tidak menunggu semua GAP; fitur yang kebijakannya belum ACTIVE tampil dengan penjelasan "menunggu pengesahan kebijakan" dan tidak menghasilkan record resmi.
+Fitur yang bergantung pada kebijakan hanya aktif resmi di produksi bila versi kebijakannya ACTIVE (GAP terselesaikan); bila belum, fitur tampil dengan penjelasan "menunggu pengesahan kebijakan" dan tidak menghasilkan record resmi. **GAP mana yang wajib selesai sebelum go-live dan sebelum penerimaan V1 adalah keputusan Owner (D-28)**; usulan perencanaan: semua GAP yang menggerbangi aksi resmi kapabilitas V1 MUST yang akan dipakai sejak go-live, ditambah gerbang rilis/cutover dan GAP-024 untuk AC-16 ([TRACEABILITY_MATRIX — Perlakuan GAP](../11-tasks/TRACEABILITY_MATRIX.md#perlakuan-gap)). Go-live dengan GAP lain yang masih terbuka hanya terjadi bila Owner menerimanya secara eksplisit beserta daftar keterbatasan, dan V1 tidak dinyatakan diterima selama CAP terkait belum terbukti.
 
 ## 2. Gerbang rilis produksi
 
@@ -50,12 +50,12 @@ APPROVAL: rujukan persetujuan Owner
 Versi kalender `vYYYY.MM.N`; kandidat rilis untuk UAT `vYYYY.MM.N-rc.K`. Alur cabang (berbasis trunk):
 
 1. Cabang kerja per Task dari `main` terbaru: `feature/task-0xx-…`, `fix/…`, `chore/…`, `docs/…` — tanpa nama alat AI (GOV-09).
-2. PR ke `main` dengan status check wajib `ci-gate` dan review sesuai kelas risiko ([QUALITY_GATES](../08-testing/QUALITY_GATES.md)); merge hanya bila semua gerbang lulus, lalu `main` remote diverifikasi memuat merge tersebut (GOV-12).
+2. PR ke `main` dengan status check wajib `ci-gate` dan review sesuai kelas risiko ([QUALITY_GATES](../08-testing/QUALITY_GATES.md)); merge hanya bila semua gerbang lulus, dengan metode yang diputuskan Owner (D-08), lalu `main` remote diverifikasi memuat merge tersebut (GOV-12). Sebelum `ci-gate` ada (TASK-001–TASK-004) berlaku mode bootstrap yang disaksikan Owner.
 3. Staging memakai SHA `main` tertentu; UAT dijalankan pada tag kandidat `-rc.K` di staging.
 4. Produksi **hanya** dari tag rilis yang lulus gerbang bagian 2 dan disetujui Owner; tidak pernah dari HEAD cabang.
 5. Hotfix: bila `main` belum memuat perubahan yang belum dirilis, cabang `fix/…` dari `main` → PR → tag patch. Bila sudah memuat, cabang `release/vYYYY.MM` dari tag produksi → PR hotfix ke cabang itu → tag patch → perubahan yang sama di-PR ke `main`.
 
-`main` adalah cabang integrasi terlindungi (PR wajib, tanpa force push/penghapusan) yang memuat baseline perencanaan yang disetujui dan kode yang telah lulus gerbang Task; `main` **bukan** cermin produksi — produksi selalu menjalankan tag rilis yang tercatat. Model ini mengadaptasi default AICWDF §32 (`develop` → `main`) sesuai siklus GOV-12 dari U-007 §9/§19 yang menuntut merge dan verifikasi pada `main` remote; gerbang staging/UAT sebelum produksi dipertahankan melalui tag kandidat dan tag rilis, sehingga cabang `develop` tidak diperlukan. Adaptasi ini adalah bagian kandidat P10 dan memerlukan persetujuan Owner ([OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)).
+`main` adalah cabang integrasi terlindungi (status check `ci-gate` wajib, tanpa force push/penghapusan; aturan PR wajib hanya pada opsi merge B — [QUALITY_GATES §4](../08-testing/QUALITY_GATES.md#4-pipeline-ci-github-actions)) yang memuat baseline perencanaan yang disetujui dan kode yang telah lulus gerbang Task; `main` **bukan** cermin produksi — produksi selalu menjalankan tag rilis yang tercatat. Model ini mengadaptasi default AICWDF §32 (`develop` → `main`) sesuai siklus GOV-12 dari U-007 §9/§19 yang menuntut merge dan verifikasi pada `main` remote; gerbang staging/UAT sebelum produksi dipertahankan melalui tag kandidat dan tag rilis, sehingga cabang `develop` tidak diperlukan. Adaptasi ini adalah bagian kandidat P10 dan memerlukan persetujuan Owner ([OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)).
 
 ## 5. Pasca-rilis
 

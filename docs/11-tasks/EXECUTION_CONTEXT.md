@@ -18,9 +18,9 @@ TASK BASELINE: 78 Task kandidat (TASK-001–TASK-078); READY: 0
 1. Persetujuan Owner atas kandidat P0–P3 (amandemen) dan P4–P11 pada SHA yang direview, tercatat di [APPROVAL_RECORDS](../00-governance/APPROVAL_RECORDS.md).
 2. Planning Freeze tercatat dan baseline Task dinyatakan siap.
 3. Otorisasi eksekusi berdiri (standing) yang menyebut ruang lingkupnya: milestone/Task yang boleh dikerjakan, mode (terawasi atau otonom), izin merge ke `main`, dan batasnya.
-4. Untuk mode otonom: TASK-001 DONE dengan laporan kemampuan dan otorisasi Owner untuk mode otonom ([EXECUTOR_OPERATING_MODEL §1](EXECUTOR_OPERATING_MODEL.md#1-prasyarat-aktivasi)).
+4. Keputusan Owner D-08 (metode merge), D-27 (token eksekutor) dan D-28 (model gerbang GAP). Untuk mode otonom ada prasyarat tambahan: TASK-001–TASK-005 DONE dalam mode bootstrap, ruleset `main` aktif, token runner terpasang dan otorisasi mode otonom ([EXECUTOR_OPERATING_MODEL §1](EXECUTOR_OPERATING_MODEL.md#1-prasyarat-aktivasi)).
 
-Tanpa keempatnya: baca saja, laporkan, berhenti.
+Tanpa butir 1–4: baca saja, laporkan, berhenti.
 
 ## 2. Stack default
 

@@ -17,7 +17,7 @@ Balas dengan nomor butir dan pilihan, misalnya `D-01 setuju; D-05 a; D-08 A; D-1
 | D-01 | Persetujuan batch atas (1) amandemen remediasi P0–P3 AUTH-010, (2) amandemen kompatibilitas P0–P3 AUTH-012, (3) kandidat P4–P11, masing-masing pada identitas yang direview (SHA cabang; manifest remediasi) | Setujui bersama **setelah** Second Review berstatus READY_FOR_OWNER_APPROVAL dan koreksi delta selesai | Persetujuan per fase: lebih lambat, isi sama. Menolak satu bagian menahan bagian yang bergantung padanya | [APPROVAL_RECORDS](../00-governance/APPROVAL_RECORDS.md), [PHASE_STATUS](../PHASE_STATUS.md) |
 | D-02 | Konsolidasi gerbang cadangan: APPR-005 (persetujuan remediasi) dan AUTH-011 (publikasi remediasi) | Catat APPR-005 untuk remediasi, APPR-006 untuk kandidat AUTH-012, dan AUTH-011 sebagai otorisasi merge cabang `docs/p0-p11-planning` ke `main` dengan metode D-08 — dalam satu keputusan | Memisahkan publikasi remediasi lebih dahulu: menambah satu putaran tanpa manfaat karena kandidat sudah satu cabang | APPROVAL_RECORDS, [GIT_WORKFLOW](../00-governance/GIT_WORKFLOW.md) |
 | D-03 | Planning Freeze dan baseline 78 Task | Bekukan segera setelah merge D-02 diverifikasi; TASK-001 menjadi READY | Menunda freeze: eksekusi belum dapat dimulai | [TASK_PLAN](../11-tasks/TASK_PLAN.md) |
-| D-04 | Otorisasi eksekusi berdiri dan ruang lingkupnya | Bertahap: TASK-001 mode terawasi (Owner hadir) → otonom M0–M2 (TASK-002–TASK-023) → diperluas ke M3 setelah Owner melihat hasil M0–M2; merge mengikuti D-08 | Otonom penuh sejak awal: lebih cepat, risiko kemampuan yang belum terbukti. Terawasi terus: aman tetapi menuntut kehadiran Owner | [EXECUTOR_OPERATING_MODEL §1](../11-tasks/EXECUTOR_OPERATING_MODEL.md#1-prasyarat-aktivasi) |
+| D-04 | Otorisasi eksekusi berdiri dan ruang lingkupnya | Bertahap: TASK-001–TASK-005 mode terawasi (Owner hadir; TASK-001–TASK-004 dalam mode bootstrap tanpa CI) → ruleset `main` diterapkan → otonom TASK-006–TASK-023 → diperluas ke M3 setelah Owner melihat hasilnya; merge mengikuti D-08 | Otonom penuh sejak awal: lebih cepat, risiko kemampuan yang belum terbukti. Terawasi terus: aman tetapi menuntut kehadiran Owner | [EXECUTOR_OPERATING_MODEL §1](../11-tasks/EXECUTOR_OPERATING_MODEL.md#1-prasyarat-aktivasi) |
 
 ## B. Produk dan struktur
 
@@ -34,19 +34,21 @@ Balas dengan nomor butir dan pilihan, misalnya `D-01 setuju; D-05 a; D-08 A; D-1
 | D-08 | Metode merge ke `main` (berlaku juga untuk cabang perencanaan) | **A — fast-forward terverifikasi**: `main` dimajukan tepat ke HEAD PR yang sudah lulus CI dan review; author dan committer tetap Owner saja (GOV-08) | **B — merge GitHub**: proteksi "PR wajib" ditegakkan platform, tetapi commit merge ber-committer GitHub; perlu penerimaan eksplisit bahwa ini tidak melanggar GOV-08 | [EXECUTOR_OPERATING_MODEL §8.2](../11-tasks/EXECUTOR_OPERATING_MODEL.md#82-metode-merge-keputusan-owner) |
 | D-09 | Alur cabang berbasis trunk (PR Task langsung ke `main`; staging dari SHA `main`; produksi hanya dari tag rilis) menggantikan default AICWDF `develop` → `main` | Setujui: sesuai siklus GOV-12 (verifikasi `main` remote), lebih sederhana, gerbang staging/UAT tetap melalui tag | Pakai `develop`: dua cabang panjang, rekonsiliasi DONE tidak di `main` sampai rilis | [RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang), [QUALITY_GATES §4](../08-testing/QUALITY_GATES.md#4-pipeline-ci-github-actions) |
 | D-10 | Ketersediaan review PR Codex untuk repositori ini pada akun Owner | Pakai bila sudah tersedia tanpa biaya tambahan; bila tidak, review pengganti subagen segar dipakai permanen | Mengaktifkan layanan berbayar baru: memerlukan persetujuan biaya terpisah | [EXECUTOR_OPERATING_MODEL §6.3](../11-tasks/EXECUTOR_OPERATING_MODEL.md#63-review-pr-codex) |
+| D-27 | Kewenangan GitHub yang dipakai eksekutor otonom | Token terbatas khusus repositori ini (isi, PR, status CI) **tanpa** hak Administration, dipasang hanya untuk proses runner; login admin Owner tidak dipakai pada mode otonom | Memakai login Owner: lebih mudah, tetapi eksekutor secara teknis dapat mengubah ruleset sehingga pengaman bergantung pada kebijakan saja | [EXECUTOR_OPERATING_MODEL §11](../11-tasks/EXECUTOR_OPERATING_MODEL.md#11-isolasi-multi-proyek-dan-keamanan-sumber-daya), C-15 |
 | D-11 | Cara runner dimulai dan jendela eksekusi | Watcher via Penjadwal Tugas Windows; Owner menetapkan jam mesin menyala tanpa tidur | Mulai manual satu perintah: lebih sederhana, eksekusi berhenti saat Owner tidak memulai | [EXECUTOR_OPERATING_MODEL §9](../11-tasks/EXECUTOR_OPERATING_MODEL.md#9-runner-watcher-checkpoint-dan-pemulihan) |
 
 ## D. Keamanan
 
 | ID | Keputusan | Rekomendasi | Catatan |
 |---|---|---|---|
-| D-12 (SEC-D1) | TOTP wajib untuk Super Admin dan profil akses istimewa | Ya | Opsional untuk pengguna lain |
+| D-12 (SEC-D1) | TOTP wajib untuk Super Admin, profil akses istimewa dan pemegang penugasan keputusan aktif (penetap metode/HPS/pemenang, penerbit/penanda tangan, penyetuju permintaan, pemutus aset, penerima rekonsiliasi) | Ya | Mencegah admin yang mereset password bertindak sebagai pemegang keputusan (SEC-21); opsional untuk pengguna lain |
 | D-13 (SEC-D2) | Batas idle sesi | 60 menit; 30 menit Super Admin | |
 | D-14 (SEC-D3) | Profil password | AICWDF-COMPAT-8 | Profil lebih kuat bila ada kewajiban institusi |
 | D-15 (SEC-D4) | Antivirus ClamAV untuk unggahan | Aktif bila RAM server ≥ 16 GB; jika tidak, status `NOT_SCANNED` ditampilkan | Memakai RAM ±1–2 GB |
 | D-16 (SEC-D5) | Pemeriksaan password bocor via layanan eksternal | OFF | Menghindari ketergantungan eksternal |
 | D-17 (SEC-D6) | SMTP untuk reset/notifikasi | Opsional; sistem berfungsi tanpa SMTP | Bila ada SMTP institusi, dipakai |
 | D-18 (SEC-D7) | Penyerahan kode aktivasi akun penyedia | Diserahkan langsung oleh petugas pengadaan berwenang | Terkait GAP-015 |
+| D-29 | Uji penetrasi eksternal sebelum go-live | Opsional; bila dipilih, oleh pihak independen yang dibiayai klien | Tanpa itu, keamanan dibuktikan oleh regresi SEC/AUTHZ otomatis dan review independen (TASK-074) |
 
 Rincian: [SECURITY_MODEL §11](../05-security/SECURITY_MODEL.md#11-keputusan-owner-terkait-keamanan).
 
@@ -66,6 +68,8 @@ Dibutuhkan sebelum TASK-040 (staging), TASK-076 (produksi) dan TASK-077 (cadanga
 ## F. Penyelesaian GAP
 
 Tidak ada GAP yang diselesaikan oleh perencanaan. Fitur dibangun dengan kebijakan DRAFT berlabel simulasi; aksi resmi di produksi menunggu jawaban resmi ([TRACEABILITY_MATRIX — Perlakuan GAP](../11-tasks/TRACEABILITY_MATRIX.md#perlakuan-gap)). Urutan penyelesaian setiap aturan: Owner memperoleh jawaban resmi → GAP dicatat RESOLVED dengan bukti → steward menyusun versi kebijakan → pemeriksa yang berbeda mengaktifkannya ([POLICY_REGISTRY](../04-architecture/POLICY_REGISTRY.md)).
+
+**D-28 — Model gerbang GAP dan syarat go-live.** GAP_REGISTER yang disetujui menyatakan GAP menghalangi spesifikasi/Task yang bergantung. Kandidat mengusulkan tafsiran: (a) fitur boleh dibangun dan diuji dengan kebijakan DRAFT berlabel simulasi selama GAP terbuka; (b) aksi resmi di produksi hanya setelah GAP terselesaikan dan kebijakan ACTIVE; (c) GAP-011/012/015/016/023 menjadi gerbang rilis/cutover dan GAP-024 gerbang penerimaan V1 (AC-16). Rekomendasi: setujui (a)–(c) dan tetapkan bahwa **go-live mensyaratkan semua GAP yang menggerbangi aksi resmi kapabilitas V1 MUST yang dipakai sejak hari pertama** (untuk satu go-live setelah R4: praktis semua GAP kecuali GAP-020); go-live dengan GAP tertentu masih terbuka hanya dengan keputusan Owner tersendiri dan daftar keterbatasan. Alternatif: GAP tetap menghalangi Task yang bergantung sampai terselesaikan — eksekusi Task domain baru dapat dimulai setelah jawaban resmi tersedia. Terdampak: [RELEASE_PLAN](../10-release/RELEASE_PLAN.md), [GAP_REGISTER](../00-governance/GAP_REGISTER.md), seluruh Task bergantung kebijakan.
 
 **D-25 — Peran penjawab per kelompok** (jabatan, bukan nama pribadi):
 
@@ -111,3 +115,5 @@ Pertanyaan lengkap dan bukti per GAP ada di [GAP_REGISTER](../00-governance/GAP_
 | D-19–D-23 | TASK-040, TASK-076, TASK-077; UAT di staging |
 | D-24 | Pelaksanaan UAT |
 | D-25/D-26 | Aktivasi resmi aturan di produksi; penerimaan V1 untuk AC-16 (GAP-024) |
+| D-27 | Mode otonom (eksekusi terawasi tetap mungkin) |
+| D-28 | Task yang aksi resminya bergantung pada GAP gerbang aktivasi; Task tanpa GAP atau hanya dengan GAP gerbang rilis — TASK-001–TASK-012, TASK-016, TASK-022, TASK-023 dan Task operasi/rilis — tidak tertahan |

@@ -34,14 +34,14 @@ Retensi, arsip, anonimisasi dan dasar hukum data pribadi tetap GAP-023; sampai d
 | Throttle | Maks. 5 percobaan/menit per kombinasi identitas+IP; setelah 10 kegagalan dalam 15 menit akun terkunci 15 menit; pesan kegagalan generik; semua kegagalan tercatat |
 | Status akun | ACTIVE, SUSPENDED (admin), LOCKED (otomatis sementara), DEACTIVATED (tidak dapat masuk; riwayat tetap) |
 | Ganti password wajib | Setelah reset dibantu admin atau aktivasi pertama; sesi lain dicabut setelah ganti password |
-| TOTP 2FA | RFC 6238 + kode pemulihan sekali pakai. Usulan: **wajib untuk SUPER_ADMIN dan profil akses istimewa**, opsional untuk lainnya **[KEPUTUSAN OWNER]** |
+| TOTP 2FA | RFC 6238 + kode pemulihan sekali pakai. Usulan: **wajib untuk SUPER_ADMIN, profil akses istimewa dan pemegang penugasan keputusan aktif** (peran penugasan yang menetapkan, menerbitkan, menandatangani, menyetujui atau menerima, misalnya METHOD_DETERMINER, HPS_SETTER, WINNER_DETERMINER, SPPBJ_ISSUER/SIGNER, CONTRACT_SIGNER, AMENDMENT_DECIDER, REQUEST_APPROVER, ASSET_DECIDER, RECON_ACCEPTOR — [ACCESS_CONTROL §5](ACCESS_CONTROL.md#5-penugasan-proses)), opsional untuk lainnya **[KEPUTUSAN OWNER]** |
 | Pemeriksaan password bocor | Opsional, default OFF karena memerlukan panggilan ke layanan eksternal **[KEPUTUSAN OWNER — opsional]** |
 
 ### 3.1 Pemulihan akun
 
 | Jalur | Alur | Kontrol |
 |---|---|---|
-| Dibantu admin (selalu tersedia) | Pengguna menghubungi admin → admin memeriksa identitas (metode dicatat: tatap muka/kartu pegawai/surat resmi penyedia) → sistem membuat password sementara sekali-pakai berumur pendek (default 24 jam) yang ditampilkan sekali → pengguna masuk dan wajib mengganti | `identity_password_resets` + audit; reset akun SUPER_ADMIN/istimewa memerlukan admin kedua (maker-checker); notifikasi in-app ke pengguna setelah reset |
+| Dibantu admin (selalu tersedia) | Pengguna menghubungi admin → admin memeriksa identitas (metode dicatat: tatap muka/kartu pegawai/surat resmi penyedia) → sistem membuat password sementara sekali-pakai berumur pendek (default 24 jam) yang ditampilkan sekali → pengguna masuk dan wajib mengganti | `identity_password_resets` + audit; reset akun SUPER_ADMIN, profil istimewa dan pemegang penugasan keputusan aktif memerlukan admin kedua (maker-checker), begitu pula reset TOTP; setelah reset dibantu, aksi keputusan diblokir sampai pengguna mengganti password dan (bila wajib) memverifikasi TOTP, sehingga admin yang mengetahui password sementara tidak dapat bertindak sebagai pemegang keputusan; notifikasi in-app ke pengguna setelah reset |
 | Email swalayan (bila SMTP dikonfigurasi) | Tautan reset bertoken berumur 60 menit ke email terverifikasi | Throttle; respons generik; dinonaktifkan bila SMTP tidak tersedia |
 
 Kanal resmi penyerahan kode aktivasi/password sementara kepada penyedia tetap GAP-015; default aman: diserahkan langsung oleh petugas atau melalui kanal yang ditetapkan Owner.
@@ -131,6 +131,7 @@ Peristiwa yang dicatat di `audit_events`: login berhasil/gagal, penguncian, rese
 | SEC-18 | Log tidak memuat password/token/rahasia |
 | SEC-19 | CI gagal bila `composer audit`/`npm audit` menemukan kerentanan tinggi/kritis tanpa pengecualian tercatat |
 | SEC-20 | Reset dibantu admin: password sementara sekali pakai, kedaluwarsa, wajib ganti, tercatat, notifikasi ke pengguna |
+| SEC-21 | Admin tidak dapat sendirian mereset password atau TOTP pemegang penugasan keputusan aktif; setelah reset dibantu, aksi keputusan ditolak sampai pengguna mengganti password dan memverifikasi TOTP |
 
 Skenario otorisasi AUTHZ-* dimiliki ACCESS_CONTROL; strategi pengujian di [TEST_STRATEGY](../08-testing/TEST_STRATEGY.md).
 
@@ -138,7 +139,7 @@ Skenario otorisasi AUTHZ-* dimiliki ACCESS_CONTROL; strategi pengujian di [TEST_
 
 | ID | Keputusan | Usulan |
 |---|---|---|
-| SEC-D1 | TOTP wajib untuk Super Admin/akses istimewa | Ya |
+| SEC-D1 | TOTP wajib untuk Super Admin, akses istimewa dan pemegang penugasan keputusan aktif | Ya |
 | SEC-D2 | Timeout idle | 60 menit (30 menit Super Admin) |
 | SEC-D3 | Profil password | AICWDF-COMPAT-8 (default framework yang dipilih Owner) |
 | SEC-D4 | Antivirus ClamAV | Opsional; aktifkan bila server produksi berukuran 16 GB RAM ([INFRASTRUCTURE §4](../09-operations/INFRASTRUCTURE.md#4-topologi-staging-dan-produksi)) |
