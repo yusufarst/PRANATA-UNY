@@ -1,8 +1,8 @@
 # Product overview — PRANATA UNY
 
-Status: APPROVED | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
+Status: Approved baseline: published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
 
-Dokumen ini disusun berdasarkan [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) dan kandidat yang direview disetujui Owner melalui [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002), dengan seluruh hipotesis, usulan dan kewajiban validasinya tetap dipertahankan. Otorisasi perencanaan sendiri bukan persetujuan hasil P1. Arah Owner yang sudah berlaku tetap dimiliki [DECISION_LOG](../00-governance/DECISION_LOG.md); seluruh GAP-001–GAP-020 tetap OPEN dalam [GAP_REGISTER](../00-governance/GAP_REGISTER.md). P2–P11 dan implementasi belum diotorisasi.
+Dokumen ini disusun berdasarkan [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) dan kandidat yang direview disetujui Owner melalui [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002), dengan seluruh hipotesis, usulan dan kewajiban validasinya tetap dipertahankan. Otorisasi perencanaan sendiri bukan persetujuan hasil P1. Arah Owner yang sudah berlaku tetap dimiliki [DECISION_LOG](../00-governance/DECISION_LOG.md); seluruh GAP-001–GAP-025 tetap OPEN dalam [GAP_REGISTER](../00-governance/GAP_REGISTER.md). Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
 
 ## Identitas dan nilai produk
 
@@ -24,6 +24,7 @@ P0 memuat inspeksi terbatas atas sumber historis, bukan studi waktu kerja atau s
 | Input aset unit terlambat/membingungkan, kantor pusat menunggu kiriman, masalah baru terlihat dekat penutupan periode, koreksi dan lembur menumpuk | OD-07/19 dan U-002; SRC-026/031/034–036/044 menunjukkan laporan, rekap dan keluarga koreksi/lifecycle | Buat kesiapan unit, permintaan perbaikan dan pengecualian terlihat lebih awal. Sumber belum membuktikan waktu penyelesaian atau penyebab setiap keterlambatan; pengurangan lembur adalah hasil yang ingin diuji. |
 | Pengadaan lemah terhubung dengan pencatatan aset/persediaan/KDP dan rekonsiliasi Finance | OD-03/06; SRC-025/029, SRC-031/034 dan [PR-U05](../00-governance/evidence/PROCUREMENT_SOURCE_REVIEW.md#candidate-unresolved-questions-for-the-central-gap-register); GAP-010/018 | Hubungkan asal perolehan, kontrak, serah terima, draft downstream, rekonsiliasi dan laporan. Bukti belum menentukan peristiwa akuntansi atau siapa yang mengesahkan hasilnya. |
 | Data historis heterogen, koreksi/reporting sulit ditelusuri, manajemen sulit melihat kesiapan universitas | OD-07/16/19; SRC-018/019/027/030/031/034–036/044/046; [asset review](../00-governance/evidence/ASSET_SOURCE_REVIEW.md) | Validasi data, pengecualian yang dapat ditindaklanjuti, hubungan sumber dan riwayat harus tersedia. Tidak ada hasil audit menyeluruh, rekonsiliasi angka, atau benchmark sejuta baris yang sudah lulus. |
+| Pencatatan manual kertas/buku atas barang masuk dan keluar di beberapa gudang | Arahan Owner OD-25 saja; belum ada bukti sumber yang diinspeksi | Pencatatan operasional terstruktur yang berlaku ke depan dengan pemilik pekerjaan/pihak yang ditunggu/tindakan berikut dan riwayat; entri ulang catatan historis bukan prasyarat; aturan resmi GAP-025. |
 
 Sumber yang diklasifikasikan OBSERVED_CURRENT_PROCESS dapat berupa bahan historis yang penggunaan terkininya belum dikonfirmasi. Nama file, menu, formula, atau kepala surat tidak otomatis menjadi aturan resmi. [REFERENCE_COVERAGE](REFERENCE_COVERAGE.md) memiliki pemetaan sumber–kapabilitas dan batas pembuktiannya.
 
@@ -33,8 +34,8 @@ Sumber yang diklasifikasikan OBSERVED_CURRENT_PROCESS dapat berupa bahan histori
 |---|---|---|
 | GOAL-01 | Unit, petugas pusat, penyedia dan pengelola memahami pekerjaan, pihak yang ditunggu dan kesiapan tanpa harus mencari status di file terpisah | CAP-02–CAP-07, CAP-09, CAP-17 |
 | GOAL-02 | Data valid dipakai ulang pada keluaran dokumen dan handoff; operator melengkapi data yang benar-benar belum tersedia | CAP-07–CAP-10, CAP-15 |
-| GOAL-03 | Pengadaan sampai hasil aset/persediaan/KDP mempunyai hubungan asal, bukti, pemilik pekerjaan dan riwayat yang dapat ditelusuri | CAP-04–CAP-17, CAP-19 |
-| GOAL-04 | Kualitas data dan masalah rekonsiliasi terlihat sebelum laporan dianggap siap; sumber/rule yang belum valid tidak berubah menjadi angka final secara diam-diam | CAP-12–CAP-17, CAP-19 |
+| GOAL-03 | Pengadaan sampai hasil aset/persediaan/KDP mempunyai hubungan asal, bukti, pemilik pekerjaan dan riwayat yang dapat ditelusuri | CAP-04–CAP-17, CAP-19, CAP-21 |
+| GOAL-04 | Kualitas data dan masalah rekonsiliasi terlihat sebelum laporan dianggap siap; sumber/rule yang belum valid tidak berubah menjadi angka final secara diam-diam | CAP-12–CAP-17, CAP-19, CAP-21 |
 | GOAL-05 | Pekerjaan pada skala yang dituju tetap dapat dilakukan dengan pencarian, daftar yang terbatas, dan umpan balik operasi panjang | CAP-16–CAP-18, CAP-20 |
 | GOAL-06 | Pengguna Indonesia memperoleh pengalaman kerja yang jelas, nyaman, dapat diakses dan selaras dengan arah visual/motion Owner; English tetap tersedia | CAP-01–CAP-03, CAP-20 |
 
@@ -50,6 +51,7 @@ Tabel ini memetakan kebutuhan produk; bukan daftar role global, matriks izin, at
 | Pemeriksa/pemberi persetujuan dan tim proses | Menelaah bukti, meminta perbaikan, melaksanakan tanggung jawab yang ditugaskan, melihat hasil dan pengecualian | Ruang kerja sesuai penugasan; kandidat Reviewer / Approver |
 | Penyedia lama maupun baru, termasuk PIC perusahaan | Onboarding, profil dan dokumen kualifikasi yang dapat digunakan ulang, partisipasi paket, jadwal/tindakan, status dan bukti pengiriman | Vendor Portal; kandidat Vendor; hubungan akun–perusahaan/PIC belum diputuskan |
 | Petugas aset, persediaan dan KDP pusat | Menyelesaikan draft hasil perolehan, mengelola register/ledger/lifecycle, memeriksa kiriman unit, menindaklanjuti masalah data | Asset; kandidat Central Operator dengan tanggung jawab yang relevan |
+| Petugas/pengelola gudang | Mencatat penerimaan, pengeluaran kepada pegawai/Organization Unit, transfer antar gudang, hitung fisik dan selisih; melihat pihak yang ditunggu dan tindakan berikut | Asset (Persediaan); tanggung jawab kandidat melalui tipe tanggung jawab yang sudah ada; kustodian resmi GAP-025 |
 | Finance/bendahara dan penanggung jawab rekonsiliasi | Menelusuri SPJ/payment tracking, klasifikasi dan laporan, menilai selisih serta kesiapan periode | Asset/Procurement sesuai akses; penanggung jawab/signoff resmi masih GAP-010 |
 | Pimpinan universitas dan pimpinan unit | Melihat kesiapan, backlog, pengecualian dan hasil pelaporan dalam cakupan yang diizinkan | Ringkasan ruang kerja; tidak otomatis memperoleh akses ke seluruh detail sensitif |
 | Pemeriksa/auditor yang diotorisasi | Menelusuri asal, perubahan, bukti dan laporan untuk pemeriksaan | Akses penelaahan yang kelak divalidasi; tidak menambah role global wajib saat P1 |
@@ -74,7 +76,7 @@ Peta kerja produk: **Kebutuhan → Usulan Pengadaan → RUP → Proses Pengadaan
 
 Peta ini menunjukkan hubungan nilai dan bukti, bukan urutan resmi yang wajib diterapkan pada semua metode. Tahap dapat membutuhkan pengulangan, pengecualian atau hubungan yang berbeda setelah domain/workflow tervalidasi. Peristiwa yang menimbulkan tanggung jawab atau kapitalisasi belum dipilih (GAP-001–004/018).
 
-[V1_SCOPE](V1_SCOPE.md) memiliki katalog CAP-01–CAP-20 dan batas MUST/SHOULD/FUTURE/OUT. [ACCEPTANCE_CRITERIA](ACCEPTANCE_CRITERIA.md) memiliki syarat terukur untuk menilai hasil produk. P1 tidak membuat workflow state, route, schema, desain layar atau Task dari peta ini.
+[V1_SCOPE](V1_SCOPE.md) memiliki katalog CAP-01–CAP-21 dan batas MUST/SHOULD/FUTURE/OUT. [ACCEPTANCE_CRITERIA](ACCEPTANCE_CRITERIA.md) memiliki syarat terukur untuk menilai hasil produk. P1 tidak membuat workflow state, route, schema, desain layar atau Task dari peta ini.
 
 ## Arah pengalaman produk
 
@@ -90,7 +92,7 @@ Pengalaman masuk membedakan konteks Asset, Procurement dan Vendor; pengguna deng
 
 V1 yang diusulkan mencakup nilai ujung ke ujung dan pengelolaan data/laporan inti; bukan sekadar kumpulan form pencatatan. Pemindahan transaksi ke Asset/Persediaan/KDP harus tetap berbasis data yang memenuhi aturan validasi kelak. Handoff berbentuk draft terisi merupakan hipotesis pengalaman produk yang perlu divalidasi, bukan izin mengakui aset secara otomatis (OD-23; GAP-018).
 
-V1 tidak menggantikan SPSE/LPSE/SiRUP, sistem Finance umum, bank/pencairan dana, HR, atau layanan identitas institusi. Referensi/status/bukti dari proses eksternal yang relevan dapat dicatat lokal tanpa integrasi langsung. Produk melacak SPJ/pembayaran; produk tidak mengklaim mengeksekusi pembayaran. Layanan peminjaman fasilitas tidak masuk usulan V1; GAP-020 tetap OPEN sampai keputusan Owner. Rincian FUTURE dan OUT dimiliki V1_SCOPE.
+V1 tidak menggantikan SPSE/LPSE/SiRUP, sistem Finance umum, bank/pencairan dana, HR, atau layanan identitas institusi. Referensi/status/bukti dari proses eksternal yang relevan dapat dicatat lokal tanpa integrasi langsung. Produk melacak SPJ/pembayaran; produk tidak mengklaim mengeksekusi pembayaran. Layanan peminjaman fasilitas tidak masuk V1: keputusan Owner OD-24 telah tercatat (FUTURE saja); GAP-020 tetap OPEN hanya untuk prosedur/otoritas resmi bila kelak diaktifkan. Rincian FUTURE dan OUT dimiliki V1_SCOPE.
 
 ## Ukuran keberhasilan yang diusulkan
 
@@ -117,6 +119,6 @@ Ukuran di bawah adalah **target usulan untuk review Owner**, bukan data observas
 | Data historis, sumber saat cutover dan kapasitas belum tervalidasi | GAP-011/012/016; P4/P6/P8/P9/P10 kelak menentukan rencana ukur, validasi dan transisi aman. V1 bukan alasan mengabaikan sejarah. |
 | Compact roles, provisioning dan recovery belum disetujui secara rinci | GAP-014/015; P2/P5/P9 tetap mempertahankan lokal, backend authorization dan pemulihan yang dapat dipakai tanpa hidden institutional/paid dependency. |
 | Pengalaman premium dapat berubah menjadi komposisi terlalu kosong/animasi yang mengganggu atau tabel yang sulit dipakai | P7 menguji terjemahan referensi utama pada pekerjaan nyata, aksesibilitas, reduced motion, ID/EN dan perangkat berbeda; P1 tidak mendesain token. |
-| Peluang peminjaman dari sumber dapat memperluas lingkup tanpa keputusan | GAP-020 tetap OPEN; diusulkan FUTURE, tidak ada alur/role/fitur peminjaman wajib dalam V1. |
+| Peluang peminjaman dari sumber dapat memperluas lingkup tanpa keputusan | OD-24 telah tercatat: peminjaman bukan V1 dan FUTURE saja; GAP-020 tetap OPEN hanya untuk prosedur/otoritas resmi bila kelak diaktifkan; tidak ada alur/role/fitur peminjaman wajib dalam V1. |
 
 Tidak ada kesimpulan dalam dokumen ini yang menutup GAP. Kebutuhan MUST yang bergantung pada aturan belum tervalidasi adalah kewajiban rilis yang harus dipenuhi melalui perencanaan dan persetujuan fase terkait, bukan placeholder yang boleh langsung dieksekusi. P1 kini DONE — APPROVED melalui APPR-002; produk belum dinyatakan siap dibangun atau siap dirilis.

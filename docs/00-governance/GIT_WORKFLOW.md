@@ -1,6 +1,6 @@
 # Git and environment discipline
 
-Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Historical P0 inspection and completed checkpoint
 
@@ -16,7 +16,7 @@ Verify `git status --short`, `git ls-files`, `git diff --cached --name-only` and
 
 ## Future branch and environment baseline
 
-After authorized planning/freeze/READY Tasks, use bounded `codex/*` branches by default for feature/fix work, or an explicitly Owner-selected branch. Proposed AICWDF flow: work branch → PR/CI → `develop` → staging/verification/UAT → PR with required CI/approval → `main` → controlled production release. Protect `main`; no direct production experimentation. `develop`, CI, branch protections and environments have not been created or verified.
+Future branches use the neutral `<type>/<scope>` convention of GOV-09 (for example `docs/`, `feature/`, `fix/`, `chore/`) and never carry AI or tool identity; this prospectively supersedes the earlier `codex/*` default. No branch is created by this record. Proposed AICWDF flow: work branch → PR/CI → `develop` → staging/verification/UAT → PR with required CI/approval → `main` → controlled production release. Protect `main`; no direct production experimentation. `develop`, CI, branch protections and environments have not been created or verified.
 
 Environments are conceptual local/development, isolated staging, and controlled production. Local/staging use synthetic or approved anonymized data; credentials/configuration stay separate. Exact infrastructure, deployment tooling/providers, backup and release permissions remain P9/P10 decisions. AICWDF's Coolify/Hostinger/Cloudflare examples are not a claim that PRANATA infrastructure exists or that providers have been selected.
 
@@ -57,3 +57,20 @@ Starting baseline independently verified on 2026-10-05 Asia/Jakarta: main, HEAD 
 [AUTH-009](APPROVAL_RECORDS.md#auth-009) permits only the bounded P3 checkpoint after all integrity checks PASS. Stage explicit intended paths with per-command `core.autocrlf=false`, verify every staged blob equals manifest/worktree, exclude raw/helper/unrelated files. One normal `docs: finalize P3 workflows` commit, existing configured Owner author/committer only, no attribution trailers. No amend, force push, force-add, remote/identity/topology change. Push normally with `git push origin main`.
 
 Verify main, local HEAD = origin/main = live remote main; exact message/identity; P0/P1/P2 ancestry; remotely P3 DONE/APPR-004 and both historical review identities; post-approval manifest and all entry sizes/digests; unchanged corrected workflow semantics/counts, all 20 OPEN GAPs, no raw/reference-inputs/helper/Task/application/later-phase implementation and clean worktree except ignored references. Actual resulting SHA and live publication evidence belong to Git/session/final report. **After successful normal push/live verification AUTH-009 automatically becomes HISTORICAL / COMPLETED, current active phase authorization NONE; no closure commit.** On material failure do not commit/push; report failed check and safe correction. After verified checkpoint, subsequent Claude bootstrap is EXECUTION AGENT — WAITING only; P4 separately authorized, execution requires approved P4–P11/freeze/READY P11 Task. Stop after P3.
+
+## Standing identity, attribution and byte policy (GOV-08 / GOV-09)
+
+Operational checklist only; it adds no rule. The wording is owned by [GOV-08](DECISION_LOG.md#gov-08--standing-git-identity-and-no-attribution-policy) and [GOV-09](DECISION_LOG.md#gov-09--byte-preservation-line-endings-and-neutral-branch-convention) in DECISION_LOG.
+
+- Before any authorized commit, verify `git config user.name` and `user.email` read-only against the reference Owner identity; never change them without explicit Owner authorization; a mismatch stops the commit.
+- Use the exact reviewed commit message.
+- After the commit and before any push, inspect the raw commit metadata and the full message: author and committer are the Owner only; AI or tool co-authors none; AI or tool attribution trailers none.
+- Any deviation → STOP: no push and no automatic amend; the Owner decides the remediation of the unpublished commit.
+- Tool attribution settings are necessary, never sufficient.
+- Stage only with per-command `core.autocrlf=false`, after verifying that working-tree bytes equal the intended bytes.
+- No `.gitattributes` and no line-ending normalization.
+- No force push and no published-history rewrite to change attribution.
+
+## P3 publication completion and AUTH-010 Git boundary
+
+The approved P3 checkpoint `0e3f7de3acbed5213c13e22a61fc2728e57ccc77` (`docs: finalize P3 workflows`) is published on `main` and was verified read-only in the AUTH-010 preflight (local HEAD = origin/main = live remote main). [AUTH-009](APPROVAL_RECORDS.md#auth-009) is **HISTORICAL / COMPLETED**. [AUTH-010](APPROVAL_RECORDS.md#auth-010) authorizes no staging, commit, push or branch creation; any later checkpoint requires separately reviewed authority (reserved AUTH-011, not recorded).

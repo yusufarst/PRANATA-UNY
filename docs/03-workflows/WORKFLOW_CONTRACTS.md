@@ -1,10 +1,10 @@
 # Workflow contracts — PRANATA UNY
 
-Status: APPROVED (APPR-004) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
-Dokumen ini memiliki **tujuan, batas, pemicu, prasyarat, bukti, penyelesaian dan handoff WF-001–WF-028**. [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) adalah indeks. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki satu-satunya rumusan state dan tindakan/transisi TR; tabel yang ditautkan pada setiap kontrak adalah bagian kontrak tersebut, bukan salinan state machine. [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki tujuan navigasi RT, [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) hasil interaksi IX, dan [EXCEPTION_REVISION_PATTERNS](EXCEPTION_REVISION_PATTERNS.md) pola EP.
+Dokumen ini memiliki **tujuan, batas, pemicu, prasyarat, bukti, penyelesaian dan handoff WF-001–WF-029**. [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) adalah indeks. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki satu-satunya rumusan state dan tindakan/transisi TR; tabel yang ditautkan pada setiap kontrak adalah bagian kontrak tersebut, bukan salinan state machine. [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki tujuan navigasi RT, [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) hasil interaksi IX, dan [EXCEPTION_REVISION_PATTERNS](EXCEPTION_REVISION_PATTERNS.md) pola EP.
 
-Makna DC, tanggung jawab dan aturan tetap dimiliki P2: [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md), [DOMAIN_RESPONSIBILITIES](../02-domain/DOMAIN_RESPONSIBILITIES.md), dan [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md). ID di sini bukan Tasks, enum, route framework atau izin aplikasi. P3 APPROVED under APPR-004 dengan semua kualifikasi tetap; P4–P11 belum diotorisasi, freeze NOT REACHED, Tasks NONE, execution NOT AUTHORIZED, implementasi NONE.
+Makna DC, tanggung jawab dan aturan tetap dimiliki P2: [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md), [DOMAIN_RESPONSIBILITIES](../02-domain/DOMAIN_RESPONSIBILITIES.md), dan [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md). ID di sini bukan Tasks, enum, route framework atau izin aplikasi. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
 
 ## Cara membaca dan kontrak lintas workflow
 
@@ -62,7 +62,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | DC / tanggung jawab | DC-001/005/009/010/016/018/021/022/024; pihak asal/pengaju, operator penerima intake dan penelaah kelengkapan yang ditugaskan. |
 | State / actions | [WF-003 / TR-021–TR-026](STATE_TRANSITIONS.md#wf-003). |
 | Bukti / owner–waiting–next | Bukti pengajuan/revisi/receipt, origin, alasan kelengkapan dan hasil intake; owner berganti menurut pekerjaan yang tercatat, bukan hierarchy approval tebakan. |
-| Revisi / kegagalan / batal | Permintaan perbaikan menunjuk data/bukti yang kurang; pengaju melengkapi tanpa membuat usulan dasar baru. Official approval/routing ditahan EP-003; missing evidence EP-002; revision EP-001; withdrawal lokal EP-007. |
+| Revisi / kegagalan / batal | Permintaan perbaikan menunjuk data/bukti yang kurang; pengaju melengkapi tanpa membuat usulan dasar baru. Official approval/routing ditahan EP-003; missing evidence EP-002; revision EP-001; withdrawal lokal EP-007; conflicting source EP-005. |
 | Selesai / hasil / handoff | Lingkup intake selesai ketika receipt/hasil kelengkapan dan next action tercatat. Ini belum approval resmi/paket; referensi WF-004/005 hanya setelah guard yang berlaku tersedia. |
 | RT / IX / dependencies | RT-003; IX-001–007/009/011–013/021 sesuai TR; BR-001/003/005/026/029; INV-006/017; CAP-03/04/05/19; AC-03/05/06/07/22/24; GAP-001/002/003/013/014. |
 
@@ -94,7 +94,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | DC / tanggung jawab | DC-005/009/018/020/021–027/032–048/049/050; penanggung jawab paket, operator dan fungsi per extension sesuai penugasan tervalidasi. |
 | State / actions | [WF-005 / TR-041–TR-045](STATE_TRANSITIONS.md#wf-005); method guards pada bagian tersebut mengendalikan setiap extension WF-006–WF-016/028. |
 | Bukti / owner–waiting–next | Origin, konteks metode, bahan persiapan, versi, evidences dan next action masing-masing bagian. Paket tidak punya satu owner resmi universal; owner current mengikuti pekerjaan yang aktif dan diketahui. |
-| Revisi / kegagalan / batal | Revisi konteks menunjukkan bagian/bukti/hilir terdampak tanpa otomatis mengubah final lama. Unknown applicability EP-004; policy EP-003; conflicting source EP-005; cancellation EP-007. |
+| Revisi / kegagalan / batal | Revisi konteks menunjukkan bagian/bukti/hilir terdampak tanpa otomatis mengubah final lama. Unknown applicability EP-004; policy EP-003; conflicting source EP-005; revision EP-001; missing evidence EP-002; cancellation EP-007. |
 | Selesai / hasil / handoff | Penutupan paket resmi tetap blocked sampai metode menentukan applicable completion/evidence/authority. Ringkasan dapat menunjukkan bagian selesai/tertunda/unknown secara jujur. Semua child kembali ke paket yang sama. |
 | RT / IX / dependencies | RT-005; IX-001/002/006/009–013/015/017/020/021; BR-002–006/009–013/025/027/029; INV-001/002/005/006/012/017/018; CAP-03/05/06/08/09/10/19; AC-05/07/08/11/12/13/22/24/26; GAP-002/003/004/013/014/017/018/019. |
 
@@ -110,7 +110,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | DC / tanggung jawab | DC-004/005/009/010/012/013/024/025/042; penanggung jawab kegiatan, penyusun bahan/undangan, peserta dan pencatat hasil. |
 | State / actions | [WF-006 / TR-051–TR-055](STATE_TRANSITIONS.md#wf-006). |
 | Bukti / owner–waiting–next | Jadwal/perubahan, konteks peserta, undangan yang applicable, occurrence, hasil, pekerjaan lanjutan. Pengelola kegiatan menunggu kontribusi peserta/hasil yang benar-benar diminta. |
-| Revisi / kegagalan / batal | Reschedule mempertahankan jejak; missing result tetap pending, tidak dianggap telah hadir/selesai. EP-001/002/004/007. Undangan/hasil resmi memakai WF-028, tanpa kanal email wajib. |
+| Revisi / kegagalan / batal | Reschedule mempertahankan jejak; missing result tetap pending, tidak dianggap telah hadir/selesai. EP-001/002/003/004/007. Undangan/hasil resmi memakai WF-028, tanpa kanal email wajib. |
 | Selesai / hasil / handoff | Hasil kejadian/batal dan next action tercatat; tidak otomatis meluluskan evaluasi atau paket. Kembali ke paket asal; kalender dan presentation P7. |
 | RT / IX / dependencies | RT-006; IX-001/002/009–013/020/021; BR-003/004/006/009/026; INV-002/005/006/017; CAP-03/06/08/19; AC-05/08/11/22/24/26; GAP-003/013/014/017. |
 
@@ -126,7 +126,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | DC / tanggung jawab | DC-002/005/028–032/010/016/018; aktor penyedia, operator yang ditugaskan, penelaah profil/qualification dan pengelola sumber bila validitas unknown. |
 | State / actions | [WF-007 / TR-061–TR-066](STATE_TRANSITIONS.md#wf-007). |
 | Bukti / owner–waiting–next | Versi profil/bukti, hasil completeness, alasan update, sumber validitas dan scope reuse; penyedia menunggu review, reviewer menunggu bukti yang diminta. |
-| Revisi / kegagalan / batal | Update hanya informasi yang perlu dan menjelaskan alasan; perusahaan tidak dibuat ulang untuk paket. EP-001/002/003/006/007; konflik identitas tidak digabung dari nama saja. |
+| Revisi / kegagalan / batal | Update hanya informasi yang perlu dan menjelaskan alasan; perusahaan tidak dibuat ulang untuk paket. EP-001/002/003/005/006/007; konflik identitas tidak digabung dari nama saja. |
 | Selesai / hasil / handoff | Profil mempunyai konteks reuse yang dapat dijelaskan; bukan eligibility universal. WF-008 menggunakan referensi/versi applicable tanpa mengubah kiriman historis. Return ke profil/partisipasi yang memicu update. |
 | RT / IX / dependencies | RT-007; IX-001–006/009/011–013/021; BR-002/007/008/009/029; INV-003/004/006; CAP-03/07/08/19; AC-05/09/10/11/22/24; GAP-003/014/015/017. |
 
@@ -142,7 +142,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | DC / tanggung jawab | DC-002/005/009/028–035/010/016–018/024/025; aktor penyedia, operator penerima pusat yang relevan dan penelaah yang ditugaskan. |
 | State / actions | [WF-008 / TR-071–TR-077](STATE_TRANSITIONS.md#wf-008). |
 | Bukti / owner–waiting–next | Setiap submission/revision terhubung ke receipt, alasan revisi, outcome dan riwayat yang sama. Penerimaan teknis/konteks kiriman tidak berarti lulus evaluasi. Penyedia dan pusat melihat outcome yang konsisten dengan detail menurut akses. |
-| Revisi / kegagalan / batal | Alasan menunjuk kekurangan dan next action penyedia; resubmit mempertahankan versi lama dan tidak meminta unrelated company re-entry. EP-001/002/004/005/007. Gagal receipt tidak ditampilkan diterima; jangan retry jika penerimaan unknown sebelum memeriksa hasil. |
+| Revisi / kegagalan / batal | Alasan menunjuk kekurangan dan next action penyedia; resubmit mempertahankan versi lama dan tidak meminta unrelated company re-entry. EP-001/002/003/004/005/007. Gagal receipt tidak ditampilkan diterima; jangan retry jika penerimaan unknown sebelum memeriksa hasil. |
 | Selesai / hasil / handoff | Tindakan/pengiriman selesai pada scope outcome tercatat dan history dapat ditelusuri; award belum disimpulkan. Handoff WF-009 hanya menurut applicability. Return ke partisipasi asal atau paket asal bagi pusat. |
 | RT / IX / dependencies | RT-008; IX-001–009/011–013/021 sesuai TR; BR-002/003/004/007/008/026; INV-003/004/006/017; CAP-03/07/19; AC-05/09/10/22/24/26; GAP-003/014/015/017. |
 
@@ -158,7 +158,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | DC / tanggung jawab | DC-005/009/010/016/020/024/025/032–038/042; penelaah, penanggung jawab pekerjaan, pihak yang menjawab dan pencatat hasil; mapping jabatan unknown tetap visible. |
 | State / actions | [WF-009 / TR-081–TR-085](STATE_TRANSITIONS.md#wf-009). |
 | Bukti / owner–waiting–next | Rujukan kiriman/versi/dasar, pertanyaan–jawaban, hasil negosiasi jika applicable dan alasan hasil. Reviewer menunggu jawaban atau custodian metode; jawaban tidak otomatis revisi penawaran. |
-| Revisi / kegagalan / batal | Kekurangan dikembalikan ke WF-008 bila revision diizinkan; review baru mempunyai hubungan sebelum/sesudah. EP-001/002/003/004/007. Tidak mengarang scoring atau legal deadline. |
+| Revisi / kegagalan / batal | Kekurangan dikembalikan ke WF-008 bila revision diizinkan; review baru mempunyai hubungan sebelum/sesudah. EP-001/002/003/004/005/007. Tidak mengarang scoring atau legal deadline. |
 | Selesai / hasil / handoff | Penelaahan/bukti dan posisi keputusan yang masih diperlukan dapat dijelaskan; hasil resmi hanya sesuai guard sahih. WF-010 menautkan hasil tanpa auto-award. Return paket/participation review asal. |
 | RT / IX / dependencies | RT-009; IX-004/006–009/011–013/020/021 sesuai guard; BR-002/003/004/006/008/009/025; INV-004/005/006/017; CAP-03/05/06/07/19; AC-05/07/08/10/22/24; GAP-003/013/014/017/019. |
 
@@ -192,7 +192,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | Bukti / owner–waiting–next | Data/varian/versi draft, check outcome, issuance evidence dan signature authority masing-masing; pemilik tiap pekerjaan unresolved diperlihatkan bersama GAP-004, menunggu custodian pengadaan. |
 | Revisi / kegagalan / batal | Koreksi draft kembali ke sumber/versi; klaim issue/sign/final tetap ditahan bila dasar tidak ada. EP-001/003/004/005/007. Signed evidence tidak ditimpa revisi draft. |
 | Selesai / hasil / handoff | Penyelesaian resmi memerlukan semua kontribusi yang benar-benar disyaratkan metode/variant; tidak dapat ditetapkan sekarang. Tautan kontrak bukan efek issuance otomatis. Return paket asal. |
-| RT / IX / dependencies | RT-011; IX-002/006–009/010–013/021 sesuai guard; BR-002/004/009/010/011/026; INV-002/005/006/017; CAP-05/08/09/19; AC-07/11/12/22/24; GAP-003/004/013/014/017/019. |
+| RT / IX / dependencies | RT-011; IX-001/002/006–009/010–013/021 sesuai guard; BR-002/004/009/010/011/026; INV-002/005/006/017; CAP-05/08/09/19; AC-07/11/12/22/24; GAP-003/004/013/014/017/019. |
 
 <a id="wf-012"></a>
 
@@ -222,9 +222,9 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | DC / tanggung jawab | DC-005/009/010/016/018/024/041/043/072; penanggung jawab pekerjaan, operator pencatat, penelaah hasil dan pihak penyedia bila applicable. |
 | State / actions | [WF-013 / TR-121–TR-125](STATE_TRANSITIONS.md#wf-013). |
 | Bukti / owner–waiting–next | Update, bukti progress, alasan issue/correction, completion candidate; owner menunggu kontribusi pelaksana/reviewer yang ditugaskan atau authority hasil. |
-| Revisi / kegagalan / batal | Correction mempunyai hubungan versi dan alasan; issue terbuka tidak dihilangkan demi status selesai. EP-001/002/003/007; cancel kontrak resmi tidak diputuskan oleh pencatat progress. |
+| Revisi / kegagalan / batal | Correction mempunyai hubungan versi dan alasan; issue terbuka tidak dihilangkan demi status selesai. EP-001/002/003/005/007; cancel kontrak resmi tidak diputuskan oleh pencatat progress. |
 | Selesai / hasil / handoff | Tracking menghasilkan candidate inspection WF-014 atau KDP progress WF-024 sesuai applicability. Progress tidak menyatakan paid, BAST, recognition atau downstream final. Return kontrak/paket sama. |
-| RT / IX / dependencies | RT-013; IX-001/002/004–006/009/011–013/015/021; BR-003/012/021/026; INV-006/011/012/017; CAP-03/09/15/19; AC-05/12/18/22/24; GAP-003/008/014/017/018/019. |
+| RT / IX / dependencies | RT-013; IX-001–006/009/011–013/015/021; BR-003/012/021/026; INV-006/011/012/017; CAP-03/09/15/19; AC-05/12/18/22/24; GAP-003/008/014/017/018/019. |
 
 <a id="wf-014"></a>
 
@@ -240,7 +240,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | Bukti / owner–waiting–next | Hasil pemeriksaan, exception, bukti acceptance/receipt, handover dan BAST/provenance; pihak yang menunggu diketahui per kontribusi atau explicit unresolved GAP-018. |
 | Revisi / kegagalan / batal | Hasil kurang dikembalikan untuk perbaikan WF-013; bukti final tetap terkait versi lama. EP-001/002/003/007/008. BAST saja tidak mengaktifkan downstream. |
 | Selesai / hasil / handoff | Scope resmi selesai hanya bila kontribusi/rule applicable terpenuhi; WF-016 menerima candidate eligible yang masih memerlukan validasi trigger/classification, WF-015 hanya hubungan bukti. Return paket/kontrak/hasil asal. |
-| RT / IX / dependencies | RT-014; IX-004/006–009/010–015/021 sesuai guard; BR-002/009/010/012/013; INV-005/006/012/017; CAP-08/09/10/19; AC-11/12/13/22/24; GAP-003/013/014/017/018/019. |
+| RT / IX / dependencies | RT-014; IX-001/004/006–009/010–015/021 sesuai guard; BR-002/009/010/012/013; INV-005/006/012/017; CAP-08/09/10/19; AC-11/12/13/22/24; GAP-003/013/014/017/018/019. |
 
 <a id="wf-015"></a>
 
@@ -256,7 +256,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | Bukti / owner–waiting–next | Checklist berdasarkan rule tervalidasi, kekurangan, receipt/status reference dan evidence payment claim; waiting dapat penyedia/pihak Finance menurut assignment atau unresolved GAP-010. |
 | Revisi / kegagalan / batal | Perbaikan bahan menunjuk alasan; conflicting payment status memerlukan comparison/provenance, bukan auto-paid. EP-001/002/003/005/007. |
 | Selesai / hasil / handoff | Scope tracking menyimpan status yang didukung bukti dan outstanding action. PRANATA tidak mentransfer dana, mengotorisasi treasury atau menetapkan pajak; rekonsiliasi WF-025 ketika applicable. Return paket/kontrak. |
-| RT / IX / dependencies | RT-015; IX-002/004–006/009–013/015/021; BR-003/009/010/012/023; INV-005/006/014/017; CAP-03/08/09/17/19; AC-05/11/12/20/22/24; GAP-003/010/013/014/017/018/019. |
+| RT / IX / dependencies | RT-015; IX-001/002/004–006/009–013/015/021; BR-003/009/010/012/023; INV-005/006/014/017; CAP-03/08/09/17/19; AC-05/11/12/20/22/24; GAP-003/010/013/014/017/018/019. |
 
 <a id="wf-016"></a>
 
@@ -270,9 +270,9 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | DC / tanggung jawab | DC-005/009/010/016/018/020/044–050/051/063/065/070; penanggung jawab sumber, pengambil keputusan klasifikasi yang belum dipetakan, operator pelengkap/reviewer hilir. |
 | State / actions | [WF-016 / TR-151–TR-156](STATE_TRANSITIONS.md#wf-016). |
 | Bukti / owner–waiting–next | Source/version, eligibility/classification basis, sisa informasi, penugasan handoff dan receipt hilir; unknown tetap terlihat, source owner menunggu custodian decision atau receiving operator. |
-| Revisi / kegagalan / batal | EP-008/003/006/007; correction source/klasifikasi menunjukkan draft/record/outputs impacted dan membutuhkan review, tanpa overwrite hasil definitif. |
+| Revisi / kegagalan / batal | EP-008/001/003/005/006/007; correction source/klasifikasi menunjukkan draft/record/outputs impacted dan membutuhkan review, tanpa overwrite hasil definitif. |
 | Selesai / hasil / handoff | Handoff selesai dalam scope draft setelah tujuan/owner/missing information/receipt dapat ditelusuri. Definitiveness diselesaikan dalam WF-017/023/024 menurut rules, tidak di WF-016. Kedua workspace merujuk source dan draft sama; return sumber tersedia. |
-| RT / IX / dependencies | RT-016; IX-006/007/009/011–015/021; BR-013/018/021/025/029; INV-006/009/011/012/017/018; CAP-10/11/14/15/19; AC-11/13/14/17/18/22/24; GAP-008/009/010/014/018. |
+| RT / IX / dependencies | RT-016; IX-001/002/006/007/009/011–015/021; BR-013/018/021/025/029; INV-006/009/011/012/017/018; CAP-10/11/14/15/19; AC-11/13/14/17/18/22/24; GAP-008/009/010/014/018. |
 
 <a id="wf-017"></a>
 
@@ -318,7 +318,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | DC / tanggung jawab | DC-005/009/010/016–018/051/054–057/072; pemeriksa/penanggung jawab pekerjaan, kustodian dan operator follow-up. |
 | State / actions | [WF-019 / TR-181–TR-185](STATE_TRANSITIONS.md#wf-019). |
 | Bukti / owner–waiting–next | Observation asli, evidence, ketidaksesuaian, pekerjaan maintenance dan hasilnya; pemeriksa menunggu akses objek/bukti, pihak follow-up menunggu correction/reconciliation evidence. |
-| Revisi / kegagalan / batal | EP-001/002/003/005/007; revisi observation punya reason/history. Tidak menilai rusak dari depreciation age/useful life/book value/zero, tidak mengarang condition scale. |
+| Revisi / kegagalan / batal | EP-001/002/003/005/007/009; revisi observation punya reason/history. Tidak menilai rusak dari depreciation age/useful life/book value/zero, tidak mengarang condition scale. |
 | Selesai / hasil / handoff | Hasil observed scope tercatat; discrepancy belum resolved sampai WF-020/025 beres sesuai rule. Maintenance tidak otomatis capitalization. Return aset/check scope sama. |
 | RT / IX / dependencies | RT-019; IX-001/002/006/009/011–013/015/021; BR-003/014/015/016; INV-007/008/014/017; CAP-03/11/12/19; AC-05/14/15/22/24; GAP-008/009/010/013/014. |
 
@@ -352,7 +352,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | Bukti / owner–waiting–next | Dasar kondisi/business, decision/authority dan bukti actual removal yang berbeda dari proposal; owner menunggu authority/evidence tindakan yang benar-benar berlaku. |
 | Revisi / kegagalan / batal | EP-001/003/007; rejected/cancelled proposal tidak menghapus aset/history; accepted removal reversal membutuhkan rule, tidak simple restore. |
 | Selesai / hasil / handoff | Keputusan dan bukti lifecycle yang tervalidasi tertelusur, history tetap ada. Tidak ada rule disposal otomatis atau record deletion. Return aset yang sama; reconciliation/report effects menurut authority. |
-| RT / IX / dependencies | RT-021; IX-001/002/006–009/011–013/015/021 sesuai guard; BR-015/016/026; INV-007/008/017; CAP-12/19; AC-15/22/24; GAP-008/010/013/014. |
+| RT / IX / dependencies | RT-021; IX-001–003/006–009/011–013/015/021 sesuai guard; BR-015/016/026; INV-007/008/017; CAP-12/19; AC-15/22/24; GAP-008/010/013/014. |
 
 <a id="wf-022"></a>
 
@@ -376,15 +376,15 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 
 | Unsur kontrak | Spesifikasi |
 |---|---|
-| Tujuan / lingkup | Enam keluarga: opening/baseline, receipt/addition, usage/release, physical count/adjustment, correction dan reconciliation. Record ledger, observation, posisi dan keputusan tetap distinct; reconciliation memakai WF-025. |
-| Authority / dasar | APPROVED_PRODUCT_FLOW CAP-14/AC-17; PROPOSED_WORKFLOW untuk proposal/receipt; meaning/sign/accepted ledger/mapping BLOCKED_BY_GAP GAP-005/006. INV-009/010 APPROVED_DOMAIN_INVARIANT. |
+| Tujuan / lingkup | Tujuh keluarga: opening/baseline, receipt/addition, usage/release, physical count/adjustment, correction, reconciliation dan Transfer antar gudang, masing-masing dengan lingkup gudang (DC-079). Record ledger, observation, posisi dan keputusan tetap distinct; reconciliation memakai WF-025. |
+| Authority / dasar | APPROVED_PRODUCT_FLOW CAP-14/AC-17 serta CAP-21/AC-28 (OD-25); PROPOSED_WORKFLOW untuk proposal/receipt; meaning/sign/accepted ledger/mapping BLOCKED_BY_GAP GAP-005/006; aturan gudang/transfer/penerima BLOCKED_BY_GAP GAP-025/023. INV-009/010 APPROVED_DOMAIN_INVARIANT; BR-030 dan INV-019 berlaku. |
 | Pemicu / prasyarat | Transaksi/observation/source historical relevan; item, source, scope lokasi/waktu, family intent dan dictionary applicable harus dapat dijelaskan. Raw P01/P02 tidak diisi maknanya dari dugaan. |
-| DC / tanggung jawab | DC-005/010/016–020/065–069/071/072/074/075; operator ledger, pihak count, custodian dictionary, reviewer serta penanggung jawab rekonsiliasi. |
+| DC / tanggung jawab | DC-005/010/016–020/065–069/071/072/074/075/079; operator ledger, pihak count, custodian dictionary, reviewer serta penanggung jawab rekonsiliasi, dengan tipe tanggung jawab yang ada (Operator yang ditugaskan, Penanggung jawab pekerjaan, Penanggung jawab rekonsiliasi); penerima pengeluaran adalah konteks partisipan. |
 | State / actions | [WF-023 / TR-221–TR-226](STATE_TRANSITIONS.md#wf-023); guards family pada bagian itu mencegah uniform posting. |
 | Bukti / owner–waiting–next | Source/record, raw code/versi, makna yang tervalidasi, alasan transaksi/correction, physical-count evidence terpisah dan keputusan; owner menunggu dictionary/ambiguity resolution atau reviewer. |
 | Revisi / kegagalan / batal | EP-001/003/005/006/007/009; koreksi bukan manual override posisi stok. Unresolved mapping tetap pending, tidak masuk official ledger result. |
 | Selesai / hasil / handoff | Ledger accepted hanya dengan semantics/authority sahih; posisi mengikuti ledger diterima dan reconciliation. Count tidak otomatis adjustment; sumber procurement/intake tetap tertaut. Return item/ledger/handoff asal. |
-| RT / IX / dependencies | RT-023; IX-001–009/011–013/015/018/021 sesuai guard; BR-019/020/023/024/025/029; INV-009/010/014/015/017/018; CAP-14/16/17/19; AC-17/19/20/22/24; GAP-005/006/010/011/012/013/014. |
+| RT / IX / dependencies | RT-023; IX-001–009/011–013/015/018/021 sesuai guard; BR-019/020/023/024/025/029/030; INV-009/010/014/015/017/018/019; CAP-14/16/17/19/21; AC-17/19/20/22/24/28; GAP-005/006/010/011/012/013/014/023/025. |
 
 <a id="wf-024"></a>
 
@@ -400,7 +400,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | Bukti / owner–waiting–next | Source, progress, issues, candidate completion, decision and link to draft/outcome; unfinished masih tracking, pihak menunggu actual completion/authority ditampilkan. |
 | Revisi / kegagalan / batal | EP-001/003/007/008; completion claim without accepted basis remains blocked. No progress-to-value rule, premature Asset or automatic capitalization. |
 | Selesai / hasil / handoff | KDP scope closure dan asset eligibility memerlukan validated evidence/rules; applicable candidate diteruskan WF-016/017 sebagai draft. History KDP dan final accepted result tetap berbeda; return KDP/source context. |
-| RT / IX / dependencies | RT-024; IX-001/002/004–009/011–015/021 sesuai guard; BR-013/016/018/021/025/029; INV-006/011/012/017/018; CAP-10/15/19; AC-13/18/22/24; GAP-008/009/010/011/014/018. |
+| RT / IX / dependencies | RT-024; IX-001–009/011–015/021 sesuai guard; BR-013/016/018/021/025/029; INV-006/011/012/017/018; CAP-10/15/19; AC-13/18/22/24; GAP-008/009/010/011/014/018. |
 
 <a id="wf-025"></a>
 
@@ -416,7 +416,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | Bukti / owner–waiting–next | Scope/source comparison, perbedaan, assignments, alasan/evidence, decision/disposition dan signoff bila required; owner menunggu kontribusi/evidence/custodian authority per case. |
 | Revisi / kegagalan / batal | EP-003/005/007/009/010; explanation tidak otomatis resolved; recompare preserves run/version dan reopen relation. Angka sama tidak menetapkan official signoff. |
 | Selesai / hasil / handoff | Semua differences yang diklaim resolved mempunyai traceable explanation/evidence dan applicable acceptance. Signoff/period closure tetap blocked jika rule unknown. Crossworkspace links membatasi akses; evidence child kembali case sama. |
-| RT / IX / dependencies | RT-025; IX-006–009/011–013/015/018/021 sesuai guard; BR-003/022/023/025/026; INV-013/014/017/018; CAP-03/14/16/17/18/19; AC-05/17/19/20/21/22/24; GAP-005/006/007/008/009/010/011/012/013/014/016/018. |
+| RT / IX / dependencies | RT-025; IX-001/002/006–009/011–013/015/018/021 sesuai guard; BR-003/022/023/025/026; INV-013/014/017/018; CAP-03/14/16/17/18/19; AC-05/17/19/20/21/22/24; GAP-005/006/007/008/009/010/011/012/013/014/016/018. |
 
 <a id="wf-026"></a>
 
@@ -424,14 +424,14 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 
 | Unsur kontrak | Spesifikasi |
 |---|---|
-| Tujuan / lingkup | Source dataset → candidate intake → structural/semantic validation bila rule tersedia → ambiguity/duplicate review → cleansing/acceptance/rejection decision → target domain candidate/record serta reconciliation evidence. Ini alur produk, bukan import implementation. |
+| Tujuan / lingkup | Source dataset → candidate intake → structural/semantic validation bila rule tersedia → ambiguity/duplicate review → keputusan cleansing/disposisi kandidat → serah ke gate penerimaan domain tujuan → hasil tertaut dan bukti rekonsiliasi intake. Ini alur produk, bukan import implementation. |
 | Authority / dasar | APPROVED_PRODUCT_FLOW safety AC-19; PROPOSED_WORKFLOW validation stages; format/identity/trust/cleansing/acceptance/cutover BLOCKED_BY_GAP GAP-011/012/013/019. INV-015/016 APPROVED_DOMAIN_INVARIANT. |
 | Pemicu / prasyarat | Source approved for future intake with safe provenance/version, proposed target/domain and applicable validation basis; current P3 tidak menjalankan import atau menyentuh produksi. |
 | DC / tanggung jawab | DC-005/010/016–020/067/073–075/077 dan target domain; pengelola source, operator intake, penelaah identity/semantics, decision responsibility dan reconciliation owner. |
 | State / actions | [WF-026 / TR-251–TR-257](STATE_TRANSITIONS.md#wf-026). |
 | Bukti / owner–waiting–next | Source identity/locator/version, validation results, original-versus-proposed interpretation, duplicate rule, decisions per scope, accepted/rejected summary dan reconciliation link. Operator menunggu issue resolver/custodian rules. |
 | Revisi / kegagalan / batal | EP-001/003/005/006/007/009/010; raw source tidak ditimpa; corrected/rejected tetap traceable. Plaintext credentials bukan kandidat password PRANATA; missing identity rule tidak menjadi duplicate verdict. |
-| Selesai / hasil / handoff | Future accepted target record hanya menurut domain rules dan trust/cutover authority; summary tidak menyatakan production migrated/final sebelum reconciliation acceptance. Return source/intake run/issue scope sama. |
+| Selesai / hasil / handoff | Future accepted target record hanya menurut domain rules dan trust/cutover authority; summary tidak menyatakan production migrated/final sebelum reconciliation acceptance. Return source/intake run/issue scope sama. Kepemilikan gate: verdict identitas dan duplikasi → gate domain tujuan (WF-026 hanya mencatat concern); kelengkapan penempatan/lokasi dan kustodian → WF-017 untuk Aset, konteks item/gudang → WF-023 untuk Persediaan, konteks KDP → WF-024; kelengkapan spesifik domain → gate tujuan; validasi intake, provenance, disposisi kandidat dan finality rekonsiliasi intake → WF-026. |
 | RT / IX / dependencies | RT-026; IX-001/002/006–009/011–013/015/018/021 sesuai guard; BR-020/024/025/026/029; INV-010/015/016/017/018; CAP-16/17/18/19; AC-19/20/21/22/24/26; GAP-005/006/011/012/013/014/015/016/019. |
 
 <a id="wf-027"></a>
@@ -440,15 +440,15 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 
 | Unsur kontrak | Spesifikasi |
 |---|---|
-| Tujuan / lingkup | Memilih report family/lingkup, temporal input sahih, sources/policy/cutoff, melihat progress/result/exception dan menelusuri hasil. Empat families diperinci di STATE_TRANSITIONS. BMU tetap nama kebutuhan dengan definisi/form unknown. |
-| Authority / dasar | APPROVED_PRODUCT_FLOW CAP-13/17/18; PROPOSED_WORKFLOW request/view; official values/form/temporal policy BLOCKED_BY_GAP GAP-007/008/009/010/013. INV-013/018 APPROVED_DOMAIN_INVARIANT. |
+| Tujuan / lingkup | Memilih report family/lingkup, temporal input sahih, sources/policy/cutoff, melihat progress/result/exception dan menelusuri hasil. Empat families diperinci di STATE_TRANSITIONS. BMU tetap nama kebutuhan dengan definisi/form unknown. Laporan Persediaan dapat memakai lingkup gudang (DC-079). |
+| Authority / dasar | APPROVED_PRODUCT_FLOW CAP-13/17/18; PROPOSED_WORKFLOW request/view; official values/form/temporal policy BLOCKED_BY_GAP GAP-007/008/009/010/013. INV-013/018 APPROVED_DOMAIN_INVARIANT. Format laporan gudang BLOCKED_BY_GAP GAP-025. |
 | Pemicu / prasyarat | Pengguna memerlukan position/as-of, transaction range, periodic atau reconciliation report; tipe dan konteks waktu dipilih sesuai applicability, tidak semua filters pada setiap report. |
-| DC / tanggung jawab | DC-005/009/018–020/062–064/068/070–072/076; requester, pengelola sumber/policy, operator hasil dan reviewer/signoff bila applicable. |
+| DC / tanggung jawab | DC-005/009/018–020/062–064/068/070–072/076/079; requester, pengelola sumber/policy, operator hasil dan reviewer/signoff bila applicable. |
 | State / actions | [WF-027 / TR-261–TR-265](STATE_TRANSITIONS.md#wf-027), termasuk temporal-family contract. |
 | Bukti / owner–waiting–next | Scope/time/source/version/policy/cutoff, operation receipt, progress atau alasan tidak terukur, exceptions/result provenance. Requester menunggu operasi; policy blocked menunggu custodian, bukan data kosong. |
 | Revisi / kegagalan / batal | EP-003/005/009/010; no-data adalah hasil dengan scope/context jelas, berbeda dari invalid inputs/missing policy/failure. Request berubah tidak menimpa historical final output. Stop pre-acceptance hanya meninggalkan request draft; accepted-operation cancellation P6. |
 | Selesai / hasil / handoff | Hasil tersedia dan provenance/error/exception dapat dijelaskan; official finality/signoff tidak diperoleh dari generation. Return request/source list/filter yang sama, outcome dapat ditemukan lagi; tidak full dataset ke browser. |
-| RT / IX / dependencies | RT-027; IX-011–013/015/018/021; BR-017/018/019/020/022/023/025/027; INV-009/010/013/014/018; CAP-13/14/15/17/18/19/20; AC-16/17/18/20/21/22/23/24/26/27; GAP-005/006/007/008/009/010/012/013/016. |
+| RT / IX / dependencies | RT-027; IX-011–013/015/018/021; BR-017/018/019/020/022/023/025/027; INV-009/010/013/014/018; CAP-13/14/15/17/18/19/20/21; AC-16/17/18/20/21/22/23/24/26/27/28; GAP-005/006/007/008/009/010/012/013/016/025. |
 
 <a id="wf-028"></a>
 
@@ -466,6 +466,22 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | Selesai / hasil / handoff | Draft selesai pada generation sukses; final/issuance hanya jika authority terverifikasi. Dokumen kembali ke workflow/record/child context yang memicu generation dengan hasil/versi jelas. Digital signature FUTURE. |
 | RT / IX / dependencies | RT-028; IX-002/006–013/015/021 sesuai guard; BR-004/009/010/011/025/026/027; INV-005/006/017/018; CAP-05/06/08/09/19; AC-07/08/11/12/22/24/26; GAP-003/004/013/014/017/019. |
 
+<a id="wf-029"></a>
+
+## WF-029 — Pemeliharaan organisasi dan data referensi
+
+| Unsur kontrak | Spesifikasi |
+|---|---|
+| Tujuan / lingkup | Lifecycle keluarga F1–F9: struktur/riwayat Organization Unit, penugasan tanggung jawab, nilai referensi/master, nilai kebijakan/referensi bertanggal efektif, versi kamus/pemetaan, Klasifikasi Aset berversi, master gudang, varian dokumen dan konteks referensi metode pengadaan. Di luar lifecycle akun/pengguna dan desain izin; tidak ada penimpaan retroaktif. |
+| Authority / dasar | APPROVED_PRODUCT_FLOW hanya bila terbukti dari OD-04 (Organization Unit generik), OD-10 (Owner Super Admin, termasuk master/configuration) dan OD-25 (master gudang); PROPOSED_WORKFLOW untuk skeleton; BLOCKED_BY_GAP per keluarga; APPROVED_DOMAIN_INVARIANT BR-025/026, INV-017/018. |
+| Pemicu / prasyarat | Usulan record baru atau perubahan dengan keluarga, lingkup, alasan, sumber dan usulan tanggal efektif. |
+| DC / tanggung jawab | DC-001, DC-005, DC-067, DC-077, DC-078, DC-079, serta DC-015/020/025 yang terbukti dari DOMAIN_GLOSSARY (varian dokumen, kebijakan berversi, metode pengadaan); hanya tipe yang ada: Operator yang ditugaskan, Penelaah/reviewer, Pemberi persetujuan/approver (aktor belum dipetakan), Pengelola sumber/kebijakan. |
+| State / actions | [WF-029 / TR-281–TR-288](STATE_TRANSITIONS.md#wf-029). |
+| Bukti / owner–waiting–next | Permintaan, hasil validasi, rujukan keputusan, tanggal efektif dan tautan pendahulu; owner per state. |
+| Revisi / kegagalan / batal | EP-001/002/003/005/006/007 sesuai TR; penarikan permintaan tidak menarik versi yang sudah berlaku. |
+| Selesai / hasil / handoff | Versi efektif berlaku; pendahulu digantikan, tidak ditimpa. Workflow konsumen membaca versi efektif tanpa perubahan retroaktif. Return ke keluarga/record yang sama. |
+| RT / IX / dependencies | RT-032; IX-001–009/011–013/017 sesuai TR; BR-001/002/025/026/030; INV-017/018/019; CAP-02/19/21; AC-04/22/28; GAP-021/022/025/017/003/013/005/006. |
+
 ## Batas dan next action kandidat
 
-Seluruh GAP-001–GAP-020 tetap OPEN; GAP-020 tidak mengaktifkan borrowing workflow V1 (BR-028). Tidak ada procedure/actor/threshold/formula atau GAP resolution baru. Rangkaian yang tertahan tetap berguna sebagai konteks pekerjaan/bukti dan alasan blocked; tidak memberikan implementasi readiness. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md) memiliki pemetaan lengkap dan [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) kebutuhan validasi terkelompok. Next safe action: review independen kandidat P3 terhadap manifest, kemudian Owner approval atau bounded corrections/delta review. **Stop setelah P3 VERIFYING; P4 tidak diotorisasi.**
+Seluruh GAP-001–GAP-025 tetap OPEN; GAP-020 tidak mengaktifkan borrowing workflow V1 (OD-24, BR-028). Tidak ada procedure/actor/threshold/formula atau GAP resolution baru. Rangkaian yang tertahan tetap berguna sebagai konteks pekerjaan/bukti dan alasan blocked; tidak memberikan implementasi readiness. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md) memiliki pemetaan lengkap dan [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) kebutuhan validasi terkelompok. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.

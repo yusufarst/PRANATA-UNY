@@ -1,8 +1,8 @@
 # Decision index
 
-Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
-This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and provenance. OD-01–OD-20 derive from U-001; OD-21–OD-23 derive from U-002 on 2026-10-04. They remain OWNER_APPROVED_DECISION with candidate/preferred/unresolved qualifications. Direction alone implies no generated-artifact approval; separate explicit P1 approval is APPR-002.
+This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and provenance. OD-01–OD-20 derive from U-001; OD-21–OD-23 derive from U-002 on 2026-10-04. They remain OWNER_APPROVED_DECISION with candidate/preferred/unresolved qualifications. Direction alone implies no generated-artifact approval; separate explicit P1 approval is APPR-002. OD-24–OD-25 and GOV-07–GOV-09 derive from U-005 (2026-10-06). Current Owner Decisions: OD-01–OD-25.
 
 | ID | Subject | Canonical record |
 |---|---|---|
@@ -29,12 +29,17 @@ This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and pro
 | OD-21 | Primary visual/interaction/motion reference and P7 boundary | [OD-21](DECISION_LOG.md#od-21) |
 | OD-22 | Approximately 200 users / one million asset rows | [OD-22](DECISION_LOG.md#od-22) |
 | OD-23 | Integrated product evaluation, provider reuse, data-once/downstream hypothesis | [OD-23](DECISION_LOG.md#od-23) |
-| GOV-01 | Framework / authority / agents | DECISION_LOG.md, GOV-01 section |
-| GOV-02 | P0-only scope and final state | DECISION_LOG.md, GOV-02 section |
-| GOV-03 | Source/Git/privacy restrictions | DECISION_LOG.md, GOV-03 section |
-| GOV-04 | Preferred stack / capability policy | DECISION_LOG.md, GOV-04 section |
-| GOV-05 | MULTIPLECORP structural use only | DECISION_LOG.md, GOV-05 section |
-| GOV-06 | Quality gate / handoff / stop | DECISION_LOG.md, GOV-06 section |
-| FD-01 | Inherited framework operating defaults | DECISION_LOG.md, FD-01 section |
+| OD-24 | Facility borrowing outside V1; FUTURE only | [OD-24](DECISION_LOG.md#od-24) |
+| OD-25 | Multi-warehouse inventory operations, V1 MUST | [OD-25](DECISION_LOG.md#od-25) |
+| GOV-01 | Framework / authority / agents | [GOV-01](DECISION_LOG.md#gov-01--framework-and-durable-authority) |
+| GOV-02 | P0-only scope and final state | [GOV-02](DECISION_LOG.md#gov-02--p0-only-authorization-and-terminal-state) |
+| GOV-03 | Source/Git/privacy restrictions | [GOV-03](DECISION_LOG.md#gov-03--source-and-git-safety) |
+| GOV-04 | Preferred stack / capability policy | [GOV-04](DECISION_LOG.md#gov-04--preferred-stack-and-capabilities) |
+| GOV-05 | MULTIPLECORP structural use only | [GOV-05](DECISION_LOG.md#gov-05--structural-reference-boundary) |
+| GOV-06 | Quality gate / handoff / stop | [GOV-06](DECISION_LOG.md#gov-06--verification-and-handoff) |
+| GOV-07 | Operating agent model | [GOV-07](DECISION_LOG.md#gov-07--operating-agent-model) |
+| GOV-08 | Git identity / no-attribution | [GOV-08](DECISION_LOG.md#gov-08--standing-git-identity-and-no-attribution-policy) |
+| GOV-09 | Byte/EOL preservation / neutral branches | [GOV-09](DECISION_LOG.md#gov-09--byte-preservation-line-endings-and-neutral-branch-convention) |
+| FD-01 | Inherited framework operating defaults | [FD-01](DECISION_LOG.md#fd-01--adopted-operating-defaults) |
 
-Original preparation: [AUTH-001](APPROVAL_RECORDS.md#auth-001). P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **DONE — APPROVED** under APPR-004. AUTH-002–AUTH-008 **HISTORICAL / COMPLETED**. AUTH-009 authorizes only this P3 checkpoint until successful push/live verification; afterward it is automatically **HISTORICAL / COMPLETED**, current active phase authorization **NONE**. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. Historical [P3 authorization lifecycle record](DECISION_LOG.md#p3-authorization-lifecycle-record) / AUTH-008 records completed preparation. Current [P3 approval lifecycle record](DECISION_LOG.md#p3-approval-lifecycle-record), [APPR-004](APPROVAL_RECORDS.md#appr-004) and [AUTH-009](APPROVAL_RECORDS.md#auth-009) record exact-candidate approval and bounded checkpoint authority, not a new OD. OD-01–OD-23 remain exact/qualified; accepted ADRs NONE; gap resolutions NONE. [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) owns BR/INV wording; [WORKFLOW_CATALOG](../03-workflows/WORKFLOW_CATALOG.md) indexes APPROVED P3 contracts. Next: **Complete only the APPR-004/AUTH-009 checkpoint and verify publication; then bootstrap PRANATA in Claude Code as EXECUTION AGENT — WAITING in a subsequent session. P4 needs separate Owner authorization; execution requires approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Stop after P3.**
+Original preparation: [AUTH-001](APPROVAL_RECORDS.md#auth-001). Current state: see [PHASE_STATUS](../PHASE_STATUS.md) and [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation amendment candidate VERIFYING / NOT YET APPROVED; P4–P11 NOT AUTHORIZED; application execution NOT AUTHORIZED. Historical [P3 authorization lifecycle record](DECISION_LOG.md#p3-authorization-lifecycle-record) / AUTH-008 records completed preparation. Current [P3 approval lifecycle record](DECISION_LOG.md#p3-approval-lifecycle-record), [APPR-004](APPROVAL_RECORDS.md#appr-004) and [AUTH-009](APPROVAL_RECORDS.md#auth-009) record exact-candidate approval and bounded checkpoint authority, not a new OD. Current Owner Decisions: OD-01–OD-25; accepted ADRs NONE; GAP resolutions NONE. [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) owns BR/INV wording; [WORKFLOW_CATALOG](../03-workflows/WORKFLOW_CATALOG.md) indexes APPROVED P3 contracts.

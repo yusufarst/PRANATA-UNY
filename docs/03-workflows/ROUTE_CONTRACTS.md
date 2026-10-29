@@ -1,8 +1,8 @@
 # Route and navigation contracts — PRANATA UNY
 
-Status: APPROVED (APPR-004) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
-Dokumen ini memiliki **31 kontrak rute konseptual RT-001–RT-031**, termasuk kesinambungan konteks dan jalur kembali. Key rute adalah nama intent perencanaan, bukan URL, Laravel route, kontrak API atau rancangan halaman. Satu kontrak dapat mempunyai konteks daftar, detail dan tindakan anak; ini tidak menetapkan jumlah halaman atau endpoint. ID konseptual menunjuk objek domain yang perlu dapat dibedakan menurut [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md#identitas-dan-keunikan-konseptual), bukan format identifier atau kunci database.
+Dokumen ini memiliki **32 kontrak rute konseptual RT-001–RT-032**, termasuk kesinambungan konteks dan jalur kembali. Key rute adalah nama intent perencanaan, bukan URL, Laravel route, kontrak API atau rancangan halaman. Satu kontrak dapat mempunyai konteks daftar, detail dan tindakan anak; ini tidak menetapkan jumlah halaman atau endpoint. ID konseptual menunjuk objek domain yang perlu dapat dibedakan menurut [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md#identitas-dan-keunikan-konseptual), bukan format identifier atau kunci database.
 
 [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) memiliki index WF; [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md) memiliki tujuan/proses; [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki wording state/transition; [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) memiliki hasil tindakan IX; [EXCEPTION_REVISION_PATTERNS](EXCEPTION_REVISION_PATTERNS.md) memiliki pola EP. Rute membuka konteks tersebut tanpa menciptakan proses/aturan tandingan. [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) tetap sole owner wording BR/INV.
 
@@ -127,7 +127,7 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Workspace / intent / target ID | Procurement; Vendor hanya permintaan/jawaban yang sah: evaluasi/klarifikasi/negosiasi yang applicable. ID paket serta partisipasi/pengiriman terkait; ID assessment/activity bila tersedia. |
 | Entry / prerequisite / deep link | Paket, receipt review, clarification action/activity atau hasil. Konteks metode/dasar/penugasan diperlukan; deep link tidak membuka seluruh evaluasi ke penyedia. |
 | Return / empty | Review/clarification/negotiation/evidence → subkonteks assessment asal atau partisipasi/paket yang sama; entry aktivitas → aktivitas asal. Empty berarti penelaahan/bukti belum ada atau tidak applicable dengan alasan tervalidasi; unknown tetap unknown. |
-| Blocked / handoff | GAP-003/013/017/019: tidak menambahkan scoring, mandatory negotiation atau order resmi. WF-009; IX-004–008/011/020; P5 protected assessments, P7 contextual review/return. |
+| Blocked / handoff | GAP-003/013/017/019: tidak menambahkan scoring, mandatory negotiation atau order resmi. WF-009; IX-004/006–008/011/020; P5 protected assessments, P7 contextual review/return. |
 
 ## RT-010
 
@@ -182,7 +182,7 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Workspace / intent / target ID | Procurement serta downstream reader sah: pemeriksaan, penerimaan, serah terima, BAST terpisah. ID paket/kontrak/execution; ID inspection/handover/BAST version sesuai anak. |
 | Entry / prerequisite / deep link | Execution/paket, bukti BAST, SPJ atau handoff RT-016. Deep link mengenali jenis claim yang dibuka; BAST bukan ID aset otomatis. |
 | Return / empty | Inspection/acceptance/BAST/evidence → handover context/paket sama; datang dari downstream → sumber handoff yang sama. Empty hasil pemeriksaan/serah terima/BAST dijelaskan terpisah. |
-| Blocked / handoff | GAP-003/017/018: trigger/owner/acceptance unknown; no definitive downstream from BAST. WF-014; IX-003/006/007/010/011/021; P5 inspection/receipt responsibility, P7 distinction dan source return. |
+| Blocked / handoff | GAP-003/017/018: trigger/owner/acceptance unknown; no definitive downstream from BAST. WF-014; IX-006/007/010/011/021; P5 inspection/receipt responsibility, P7 distinction dan source return. |
 
 ## RT-015
 
@@ -239,7 +239,7 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Workspace / intent / target ID | Asset: observasi/verifikasi fisik, ketidaksesuaian dan bukti pemeliharaan. ID aset dan lingkup verifikasi; ID observasi/maintenance bila tersedia. |
 | Entry / prerequisite / deep link | Aset, lingkup pemeriksaan, discrepancy atau search. Deep link menunjukkan jenis observasi/waktu dan aset yang sama; bukan nilai buku sebagai kondisi. |
 | Return / empty | Observation/maintenance/evidence → observasi/aset atau lingkup pemeriksaan asal; discrepancy → case asal sah. Empty berarti belum diketahui/belum ada observasi, bukan baik/rusak dari umur. |
-| Blocked / handoff | Skala/authority/effect GAP-008/013/014; no depreciation/zero-book-value inference. WF-019; IX-001/002/003/006/011/015; P5 inspection scope, P7 physical versus accounting context. |
+| Blocked / handoff | Skala/authority/effect GAP-008/013/014; no depreciation/zero-book-value inference. WF-019; IX-001/002/006/011/015; P5 inspection scope, P7 physical versus accounting context. |
 
 ## RT-020
 
@@ -250,7 +250,7 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Workspace / intent / target ID | Asset: koreksi, pengembangan, reklasifikasi sebagai jenis berbeda. ID aset/transaksi/source parent; ID proposal/version/periode yang dibahas. |
 | Entry / prerequisite / deep link | Aset, discrepancy, KDP bila terkait, riwayat atau search. Jenis perubahan, before context, alasan dan sumber perlu jelas; deep link tidak berarti accounting posting tersedia. |
 | Return / empty | Proposal/review/compare/evidence → perubahan sama; lalu aset/kasus/KDP asal sah. Empty berarti belum ada proposal/hasil accepted; tidak mengganti histori dengan current value tanpa jejak. |
-| Blocked / handoff | GAP-008/009/010/013: official effect/journal/historical treatment unknown. WF-020; IX-001–009/011–015; P5 authority, P7 compare/controlled-change/source return. |
+| Blocked / handoff | GAP-008/009/010/013: official effect/journal/historical treatment unknown. WF-020; IX-001–009/011–013/015; P5 authority, P7 compare/controlled-change/source return. |
 
 ## RT-021
 
@@ -280,10 +280,10 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 
 | Aspek | Kontrak |
 |---|---|
-| Workspace / intent / target ID | Asset: item/ledger Persediaan, transaksi/hitung fisik/koreksi dan posisi yang diterima. ID item serta scope lokasi/waktu; ID transaksi/observasi/kandidat bila ada. |
-| Entry / prerequisite / deep link | Daftar item/ledger, downstream draft, import/reconciliation atau search. Dictionary/applicability harus diketahui untuk claim accepted; deep link mempertahankan kode sumber terpisah dari interpretation. |
-| Return / empty | Transaksi/count/evidence/correction → item/ledger dalam scope/waktu asal; dari handoff/import/case → asal sah. Empty ledger/filter berbeda dari unknown stock; raw unresolved code tidak menghasilkan saldo tebakan. |
-| Blocked / handoff | GAP-005/006/010/011: P01/P02 mapping/effect unresolved; no silent normalization/manual competing balance. WF-023; IX-001–009/011–015/018; P5 ledger scope/acceptance, P7 raw versus interpreted context. |
+| Workspace / intent / target ID | Asset: item/ledger Persediaan, transaksi/hitung fisik/koreksi/transfer antar gudang dan posisi yang diterima. ID item serta scope gudang/lokasi/waktu; ID transaksi/observasi/kandidat atau pasangan leg transfer bila ada. |
+| Entry / prerequisite / deep link | Daftar item/ledger dengan pemilihan/filter gudang, konteks leg transfer, downstream draft, import/reconciliation atau search. Dictionary/applicability harus diketahui untuk claim accepted; deep link mempertahankan kode sumber terpisah dari interpretation. |
+| Return / empty | Transaksi/count/evidence/correction → item/ledger dalam scope gudang/waktu asal, dengan pasangan leg transfer tetap tertaut; dari handoff/import/case → asal sah. Empty ledger/filter berbeda dari unknown stock; raw unresolved code tidak menghasilkan saldo tebakan. |
+| Blocked / handoff | GAP-005/006/010/011: P01/P02 mapping/effect unresolved; no silent normalization/manual competing balance. GAP-025: kewenangan transfer, in-transit dan penyesuaian; tidak ada rute duplikat khusus gudang. WF-023; IX-001–009/011–013/015/018; P5 ledger scope/acceptance, P7 raw versus interpreted context. |
 
 ## RT-024
 
@@ -318,7 +318,7 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Workspace / intent / target ID | Asset/Procurement atau Super Admin context yang sah: sumber/kandidat/validasi/cleansing/hasil diterima atau ditolak. ID source-intake/kandidat/issue; format/source/version yang disepakati untuk request. |
 | Entry / prerequisite / deep link | Intake, masalah validasi, calon tujuan/reconciliation atau search. Source provenance/authority dan later approved format required untuk penerimaan; deep link bukan izin import/cutover produksi. |
 | Return / empty | Candidate/issue/compare/evidence → intake/kandidat yang sama; target accepted → sumber keputusan intake sah. Empty source/accepted count berbeda dari operation incomplete atau semua rejected; jelaskan hasil per lingkup. |
-| Blocked / handoff | GAP-011/012/013/016/019: identity/trust/cutover unknown; plaintext credential never account import. WF-026; IX-003/006–009/011–013/015; P5 sensitive source, P6 long operation kelak, P7 issue/result continuity. |
+| Blocked / handoff | GAP-011/012/013/016/019: identity/trust/cutover unknown; plaintext credential never account import. WF-026; IX-006–009/011–013/015; P5 sensitive source, P6 long operation kelak, P7 issue/result continuity. |
 
 ## RT-027
 
@@ -351,7 +351,7 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Workspace / intent / target ID | Workspace aktif atau cakupan lintas workspace yang sah: menemukan allowed record/context. Query + type/scope/filter/order/portion; ID target dan owning context untuk open. |
 | Entry / prerequisite / deep link | Pencarian umum/quick find/daftar besar. Hasil/count/type/context hanya yang boleh dibaca; deep link query opsional, direct result mengikuti canonical RT objek. |
 | Return / empty | Search → canonical detail RT → prior query/filter/portion where practical; cancel pencarian kembali ke pekerjaan pemanggil. Tanpa saved origin, owning list/context sah. Empty ialah tidak ada hasil dalam scope yang dipilih, bukan bukti record di scope lain tidak ada. |
-| Blocked / handoff | Forbidden/unavailable result tidak bocorkan sensitive metadata atau membuka clone detail. IX-017; mendukung seluruh WF; GAP-014/016; P5 result scopes, P6 search mechanics/performance, P7 accessible find/open/return. |
+| Blocked / handoff | Forbidden/unavailable result tidak bocorkan sensitive metadata atau membuka clone detail. Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-017 pada WORKFLOW_CONTRACTS. IX-017; GAP-014/016; P5 result scopes, P6 search mechanics/performance, P7 accessible find/open/return. |
 
 ## RT-030
 
@@ -362,7 +362,7 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Workspace / intent / target ID | Owning workspace: menelusuri action/version/before-after yang sah. ID parent domain dan history/change/version yang dimaksud. |
 | Entry / prerequisite / deep link | Canonical detail, submission revision, document, correction, intake atau case. Deep link tetap mengikat history ke parent; authority/privacy per P5, bukan semua histori untuk semua pembaca. |
 | Return / empty | History/compare → parent/versi asal sama; dari search → query asal. Empty menunjukkan jejak belum tersedia pada scope, bukan klaim tidak pernah berubah. Notfound versi tidak membuka current version sebagai pengganti diam-diam. |
-| Blocked / handoff | Retention/reader/restore belum ditentukan P5/P9/P10; history viewer bukan restore/edit command. IX-012/013; seluruh WF material; BR-026/INV-017/018; P5 history scope, P7 parent/version continuity. |
+| Blocked / handoff | Retention/reader/restore belum ditentukan P5/P9/P10; history viewer bukan restore/edit command. Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-012 pada WORKFLOW_CONTRACTS. IX-012/013; BR-026/INV-017/018; P5 history scope, P7 parent/version continuity. |
 
 ## RT-031
 
@@ -373,7 +373,18 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Workspace / intent / target ID | Owning workspace: attach/view evidence dengan parent dan claim yang jelas. ID parent domain, ID bukti/versi bila ada; case + difference untuk reconciliation evidence. |
 | Entry / prerequisite / deep link | Canonical parent, aktivitas, partisipasi, pemeriksaan, case, intake, document atau history. Deep link harus dapat mengenali provenance dan parent; file presence bukan valid authority. |
 | Return / empty | Attach/view/cancel → parent tepat; Case → Difference → Evidence → same Difference/Case; Package → Activity → Evidence → same Activity/Package. Empty berarti bukti belum ada pada claim, bukan accepted claim. |
-| Blocked / handoff | Parent/evidence unavailable tidak meminta repost seluruh source sensitif; reason/prerequisite/action ditentukan IX-011/EP-002/005. IX-011/012; seluruh WF evidence; GAP-013/017/019 sesuai claim; P5 privacy/readers, P7 contextual attach/view/return. |
+| Blocked / handoff | Parent/evidence unavailable tidak meminta repost seluruh source sensitif; reason/prerequisite/action ditentukan IX-011/EP-002/005. Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-011 pada WORKFLOW_CONTRACTS. IX-011/012; GAP-013/017/019 sesuai claim; P5 privacy/readers, P7 contextual attach/view/return. |
+
+## RT-032
+
+**Key konseptual:** `reference.maintenance-context`
+
+| Aspek | Kontrak |
+|---|---|
+| Workspace / intent / target ID | Super Admin atau konteks workspace pemilik per keluarga (konteks, bukan izin): pemeliharaan organisasi dan data referensi. Keluarga beserta ID record/versi/permintaan perubahan. |
+| Entry / prerequisite / deep link | Daftar keluarga, detail record, permintaan perubahan, pencarian atau riwayat. Deep link mempertahankan keluarga dan versi; entry tidak memberi izin. |
+| Return / empty | Permintaan/bukti/riwayat → record/keluarga yang sama; daftar dengan filter; fallback RT-002. Empty berbeda dari not found. Versi yang sudah digantikan tidak pernah diganti diam-diam dengan versi yang berlaku. |
+| Blocked / handoff | Gate GAP per keluarga (GAP-021/022/025/017/003/013/005/006). WF-029; IX-001/002/003/006/007/009/011/012/013/017; P5 izin, P7 penyajian. |
 
 ## Kontrak crossing dan child-flow kritis
 
@@ -387,5 +398,6 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Procurement → Draft Asset/Persediaan/KDP | RT-014/RT-005 → RT-016 → RT-017/RT-023/RT-024 yang applicable dan sah → RT-016/source yang sama. Bila target belum ada/blocked, tetap sumber/handoff; bila akses tujuan tidak ada, tidak switch sebagai bypass. |
 | KDP → Completion Candidate → Draft Asset | RT-024 → RT-016 → RT-017 → RT-024/source sah; belum eligible/authority unknown tetap KDP/kandidat dengan alasan. |
 | Super Admin → Canonical owning context | RT-002 → RT domain pemilik → RT-002/entry asal sah. Kemampuan lintas workspace dari OD-10 tidak menghasilkan salinan record, signer bisnis atau bypass domain rule. |
+| Intake historis → gate domain tujuan → intake | RT-026 → RT-017/RT-023/RT-024 → RT-026 dengan kandidat, sumber dan keputusan yang sama; bila tujuan forbidden/blocked, tetap di konteks intake dengan alasan; penerimaan definitif hanya di gate domain tujuan. |
 
 Setiap crossing membawa jenis/ID konteks, origin return yang sah dan hubungan sumber/hasil; tidak menetapkan transfer ownership resmi. Dua pengguna dengan akses berbeda dapat melihat outcome bersama yang konsisten tanpa melihat rincian terlindungi yang sama. Locale switch juga menjaga parent/workspace/filter/input context sejauh aman; bahasa dokumen resmi tidak diubah otomatis. P7/P8 kelak memverifikasi continuity/accessibility/locale dan nol dead interaction melalui journey kritis, setelah perencanaan serta execution diotorisasi; belum ada browser/runtime verification pada P3 ini.

@@ -1,6 +1,6 @@
 # Toolchain
 
-Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
 This registry owns tool capability policy and honest availability (AICWDF §5–§7, §6A). A named tool is a preference; verified capability is the requirement. No application dependency was installed or application environment created in P0.
 
@@ -8,7 +8,7 @@ This registry owns tool capability policy and honest availability (AICWDF §5–
 
 The preferred baseline is Laravel, Inertia, React, TypeScript, shadcn/ui, Tailwind CSS, PostgreSQL, Nginx, and a Modular Monolith. The framework's layered/MVC/application-action direction is a baseline, not a P4 module design. Redis/Valkey is added only for a justified requirement. Exact versions, application packages, topology, and operational services are undecided. Material deviations require ADR plus Owner approval under [CHANGE_CONTROL](CHANGE_CONTROL.md).
 
-Codex/ChatGPT is the Planning Agent. Claude Code is the future Execution Agent, limited to the eventual approved `READY` Tasks and targeted context. See [AGENT_OPERATING_MODEL](AGENT_OPERATING_MODEL.md). OD-11's local Laravel-native authentication supersedes the framework Google default; no OAuth/authentication dependencies are installed now.
+Agent roles follow GOV-07 (see [AGENT_OPERATING_MODEL](AGENT_OPERATING_MODEL.md)). OD-11's local Laravel-native authentication supersedes the framework Google default; no OAuth/authentication dependencies are installed now.
 
 ## Capability registry
 
@@ -30,7 +30,7 @@ Metadata/version probes only; these are machine capabilities, not installed PRAN
 
 | Tool | Observation | Verification limit |
 | --- | --- | --- |
-| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002–008 historical/completed; AUTH-009 single approved P3 checkpoint only until verified publication, then completed; live baseline verified read-only |
+| Git | `2.55.0.windows.3`; initial version probe passed | AUTH-002–008 historical/completed; authority and current state: PHASE_STATUS / GIT_WORKFLOW; live baseline verified read-only |
 | ripgrep (`rg`) | Command available and used | Targeted search works; no graph claimed |
 | Node.js | `v24.18.0`; version probe passed | No application compatibility/build verification |
 | npm | `11.16.0`; version probe passed | No package installation performed |

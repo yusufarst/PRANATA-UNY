@@ -1,6 +1,6 @@
 # Interaction contracts — PRANATA UNY
 
-Status: APPROVED (APPR-004) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
 Dokumen ini memiliki **21 kontrak interaksi reusable IX-001–IX-021** pada tingkat intent/hasil produk. Kontrak tidak menentukan komponen, form fields final, layout, API, penegakan izin, mekanisme retry atau state database. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki wording state/transition WF; interaksi di bawah hanya dapat memakai transition yang applicable pada WF terkait. Tidak semua IX berlaku pada semua WF, dan generic review/accept tidak menambah official approval chain.
 
@@ -37,7 +37,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Kandidat tersimpan dan dapat dibuka dengan parent, provenance serta sisa pelengkapan/next action. State/klaim diterima/definitif tidak lahir dari create; hubungan source candidate tetap dapat ditelusuri. |
 | Failure / retry | Input tidak valid → jelaskan belum tersimpan/diterima dalam lingkup yang diketahui, pertahankan input aman, perbaiki; outcome uncertain → cek kandidat/status sebelumnya sebelum create ulang. EP-002/005/006/010. |
 | Preserved context / return | Success → candidate detail RT domain; cancel → parent/list asal dengan filter yang sama; failure tetap context create dengan return sah dan status simpan jelas. |
-| Applicability / authority | WF-003–028 pada candidate yang relevan; RT domain terkait. PROPOSED_WORKFLOW, product CAP-04–17/AC-06–20; BR-024/029, INV-015. Official create/acceptance gate mengikuti GAP pada WF. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-001 pada WORKFLOW_CONTRACTS. Kondisi: pada candidate yang relevan; RT domain terkait. PROPOSED_WORKFLOW, product CAP-04–17/AC-06–20; BR-024/029, INV-015. Official create/acceptance gate mengikuti GAP pada WF. |
 
 ## IX-002
 
@@ -50,7 +50,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Nyatakan bahan tersimpan dan apa yang belum submitted/accepted. Perubahan material mempertahankan versi/reason/source relation; output historis final tetap menjelaskan sumber lama dan kebutuhan generated draft baru bila applicable. |
 | Failure / retry | Validasi menunjukkan hal yang perlu diperbaiki dan apakah ada bagian sudah tersimpan; data berubah/stale → buka versi current sah dan compare sebelum melanjutkan. Hasil simpan uncertain → temukan history/status dulu. EP-001/005/010. |
 | Preserved context / return | Pertahankan input aman dan origin return; save → objek/versi yang sama; cancel → parent tepat dengan status input jelas; dari dokumen/partisipasi kembali kebutuhan dokumen/partisipasi asal. |
-| Applicability / authority | WF-003–028 sesuai ruang edit yang applicable; IX-013/RT-030 untuk compare. PROPOSED_WORKFLOW; BR-007/009/025/026; INV-003/005/006/017/018; GAP-008/013/017/019 dan GAP WF tetap mengendalikan. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-002 pada WORKFLOW_CONTRACTS. Kondisi: sesuai ruang edit yang applicable; IX-013/RT-030 untuk compare. PROPOSED_WORKFLOW; BR-007/009/025/026; INV-003/005/006/017/018; GAP-008/013/017/019 dan GAP WF tetap mengendalikan. |
 
 ## IX-003
 
@@ -63,7 +63,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Nyatakan kiriman tercatat/diterima untuk ditangani, receipt/versi dan next action/reviewer pending; jangan menyatakan accepted content/eligible/award. Provider dan central operator sah melihat outcome/receipt yang konsisten untuk kiriman sama. Bukti/history setiap submission retained. |
 | Failure / retry | Missing evidence/validation → tidak mengklaim kiriman diterima; pertahankan bahan. Receipt uncertain → cek status/history kiriman yang sama sebelum submit lagi. Gate actor/method/policy → EP-003/004. |
 | Preserved context / return | Success → parent submission/work context; penyedia tetap profil sama RT-007 atau partisipasi sama RT-008 sesuai WF pemanggil, dengan return ke partisipasi asal bila memicu update profil. Cancel → bahan yang sama; failure menyimpan orientation/requirement dan status simpan; child kembali RT parent. |
-| Applicability / authority | WF-003/007/008/013/014/017–021/023/024/026 sesuai WF; RT terkait. PROPOSED_WORKFLOW; approved AC-06/09/10/19; BR-008, INV-004/015; GAP-001/003/014/017 serta gate WF. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-003 pada WORKFLOW_CONTRACTS. Kondisi: sesuai WF; RT terkait. PROPOSED_WORKFLOW; approved AC-06/09/10/19; BR-008, INV-004/015; GAP-001/003/014/017 serta gate WF. |
 
 ## IX-004
 
@@ -76,7 +76,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Revision request tercatat, reason/scope/source version terbuka bagi pihak terkait sah, waiting party dan next correction action terlihat. Provider dan operator pusat melihat consistent revision outcome; request bukan cancellation/rejection final. |
 | Failure / retry | Reason/context tidak valid → request belum diterima bila diketahui, perbaiki; changed target → re-review current version; outcome uncertain → history/receipt sebelum ulang. Gate unresolved tidak diubah menjadi perintah revisi agar user menebak policy. |
 | Preserved context / return | Kembali object/review/partisipasi yang sama; reason dan relevant source accessible untuk reviser tanpa membuka protected data lain. Cancel menjaga review context dan tidak mengubah target. |
-| Applicability / authority | WF-003/007/008 dan WF review lain hanya bila revision applicable; EP-001. PROPOSED_WORKFLOW; approved AC-06/09/10; BR-003/007/008/026; INV-003/004/017; GAP WF. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-004 pada WORKFLOW_CONTRACTS. Kondisi: hanya bila revision applicable; EP-001. PROPOSED_WORKFLOW; approved AC-06/09/10; BR-003/007/008/026; INV-003/004/017; GAP WF. |
 
 ## IX-005
 
@@ -89,7 +89,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Revisi tercatat diterima untuk penelaahan ulang, prior version/reason/evidence/history terjaga. Provider dan central operator sah melihat receipt/status yang konsisten untuk revision sama; re-review berikut terlihat, bukan otomatis diterima/award. |
 | Failure / retry | Revision invalid/incomplete → jelaskan belum diterima atau bagian simpan yang diketahui, input aman tetap ada. Receipt unknown → buka history/outcome versi sama sebelum pengiriman ulang. EP-001/002/010. |
 | Preserved context / return | Success/cancel/failure tetap usulan/profil/partisipasi atau parent relevant yang sama; reviser dapat kembali ke reason dan relevant source. |
-| Applicability / authority | WF-003/007/008 serta review WF yang mengizinkan revision; RT domain. PROPOSED_WORKFLOW; approved AC-06/09/10; BR-007/008/026; INV-003/004/006/017; GAP WF. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-005 pada WORKFLOW_CONTRACTS. Kondisi: hanya bila WF mengizinkan revision; RT domain. PROPOSED_WORKFLOW; approved AC-06/09/10; BR-007/008/026; INV-003/004/006/017; GAP WF. |
 
 ## IX-006
 
@@ -102,7 +102,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Hasil penelaahan serta evidence/reason tersimpan dan next action jelas: completeness recorded, request revision, atau decision candidate bila permitted. Review result tidak otomatis award/issued/signed/downstream definitive/reconciliation signoff. |
 | Failure / retry | Bahan tidak tersedia/changed/criterion unknown → jelaskan review belum selesai/hasil belum accepted, siapa perlu menyediakan evidence/authority yang diketahui dan next safe action. Retry pembacaan setelah tersedia; hasil uncertain cek history. |
 | Preserved context / return | Review → target/parent/version sama; evidence/history child → review asal; cancel tidak mengubah reviewed claim. |
-| Applicability / authority | WF-003–028 pada review yang applicable; IX-004/007/008/011/013. PROPOSED_WORKFLOW; BR-004/011/023, INV-005/014; official scope/order/actor GAP-001–004/010/013/014/017–019 menurut WF. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-006 pada WORKFLOW_CONTRACTS. Kondisi: pada review yang applicable; IX-004/007/008/011/013. PROPOSED_WORKFLOW; BR-004/011/023, INV-005/014; official scope/order/actor GAP-001–004/010/013/014/017–019 menurut WF. |
 
 ## IX-007
 
@@ -115,7 +115,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Hanya claim/lingkup yang tervalidasi memperoleh accepted outcome/evidence/history. Nyatakan resulting record/status, next owner/waiting/action; approval tidak menyelesaikan claim lain atau mencairkan pembayaran. |
 | Failure / retry | Gate/evidence/authority belum valid → acceptance tidak dijalankan, bahan tetap kandidat dengan named block. Changed target → review/compare ulang. Result uncertain → cek decision/history sama; tidak mengulang keputusan buta. |
 | Preserved context / return | Success → keputusan/target dan parent yang sama; blocked/failure → target dengan prerequisite jelas; cancel → review asal tanpa accepted result. |
-| Applicability / authority | WF yang mempunyai accepted claim applicable, terutama WF-010–012/014/016–021/023–028; RT domain. PROPOSED_WORKFLOW; safety INV-005/011–015/017/018; official acceptance **BLOCKED_BY_GAP** sesuai GAP WF sampai validated decision, bukan universal approver. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-007 pada WORKFLOW_CONTRACTS. Kondisi: hanya bila accepted claim applicable; RT domain. PROPOSED_WORKFLOW; safety INV-005/011–015/017/018; official acceptance **BLOCKED_BY_GAP** sesuai GAP WF sampai validated decision, bukan universal approver. |
 
 ## IX-008
 
@@ -128,7 +128,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Hasil penolakan/reason/evidence/version retained dan pihak terkait sah melihat outcome; next allowed action/revision baru hanya bila WF mengizinkan. Parent/history tidak hilang. |
 | Failure / retry | Authority/context/reason invalid → tidak claim rejected; status simpan diketahui dijelaskan. Changed target/rejection uncertain → review/history sebelum retry. Policy unknown tetap EP-003, bukan forced reject. |
 | Preserved context / return | Keputusan → target/parent sama; cancel → review; rejected evidence/history tetap dapat dibuka sesuai P5 dan RT fallback. |
-| Applicability / authority | WF review yang mengizinkan rejection, termasuk WF-008/010/017–021/023/026; RT domain. PROPOSED_WORKFLOW; BR-024/026, INV-015/017; official rejection gate GAP WF tetap OPEN. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-008 pada WORKFLOW_CONTRACTS. Kondisi: hanya bila WF mengizinkan rejection; RT domain. PROPOSED_WORKFLOW; BR-024/026, INV-015/017; official rejection gate GAP WF tetap OPEN. |
 
 ## IX-009
 
@@ -141,7 +141,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Cancellation/supersession dicatat dengan alasan dan jejak source/replacement/effect; existing output/evidence/history tetap explainable. Tidak delete history, otomatis reverse accounting, reopen period atau reactivate older work. |
 | Failure / retry | Authority/effect belum sahih → cancellation ditahan, target tetap kedudukan sebelumnya; data/output changed → telaah dampak; outcome unknown → history dahulu. EP-007 dan related policy gate. |
 | Preserved context / return | Business result → parent/target historis sama atau replacement yang jelas dengan return ke versi asal; cancel input → parent asal dengan status simpan. Deep-link historical target tidak silently redirect tanpa explanation. |
-| Applicability / authority | WF yang memiliki cancellation/supersession applicable; RT domain/RT-030. PROPOSED_WORKFLOW; BR-026, INV-008/017/018; official effects GAP-001–004/008/010/013/017/018 menurut WF. Archive/restore/delete/anonymize tidak mendapat permission dari IX ini. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-009 pada WORKFLOW_CONTRACTS. Kondisi: hanya bila cancellation/supersession applicable; RT domain/RT-030. PROPOSED_WORKFLOW; BR-026, INV-008/017/018; official effects GAP-001–004/008/010/013/017/018 menurut WF. Archive/restore/delete/anonymize tidak mendapat permission dari IX ini. |
 
 ## IX-010
 
@@ -154,7 +154,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Generated **draft** dapat ditelusuri ke source/version/variant dan review next action. Final evidence bila sah mempunyai claim terpisah; source change memperlihatkan draft/versi terdampak dan kebutuhan regenerate/review tanpa menimpa historical final. |
 | Failure / retry | Missing source/variant/authority → nyatakan generation/issuance belum selesai dan data yang tetap tersimpan; failed/accepted operation mengikuti EP-010. Conflicting generated/uploaded/source → EP-005, bukan competing domain truth. |
 | Preserved context / return | Draft/evidence → RT-028 lalu parent tepat; source correction → source context lalu kebutuhan dokumen semula; cancel → parent/versi asal. |
-| Applicability / authority | WF-006/010–015/028 dan related outputs; RT-028/031. PROPOSED_WORKFLOW; approved CAP-08/AC-11, BR-009/010/011, INV-005/006/018; official variant/number/clause/signature **BLOCKED_BY_GAP** GAP-003/004/013/017/019. Digital signature remains FUTURE. |
+| Applicability / authority | WF-005/006/010–012/014/015/028; RT-028/031. PROPOSED_WORKFLOW; approved CAP-08/AC-11, BR-009/010/011, INV-005/006/018; official variant/number/clause/signature **BLOCKED_BY_GAP** GAP-003/004/013/017/019. Digital signature remains FUTURE. |
 
 ## IX-011
 
@@ -167,7 +167,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Evidence terhubung ke claim/parent dan dapat ditemukan kembali; nyatakan tersimpan, review/penerimaan bila belum ada tetap belum. Attach tidak membuktikan authenticity/validity/claim completion. Context/provenance/versi/history dapat ditelusuri. |
 | Failure / retry | Failed attach/open → jelaskan apakah bukti/association tersimpan atau belum diketahui; parent context tetap ada. Jika accepted state uncertain, cek evidence/history sebelum reattach. Missing/invalid evidence → EP-002; conflicting authority → EP-005. |
 | Preserved context / return | RT-031 kembali exact parent, activity/participation/submission/case/difference yang sama; file failure tidak menutup semua context. Cancel attach kembali parent tanpa ambiguous accepted claim. |
-| Applicability / authority | Seluruh WF evidence; RT-031/028/030. PROPOSED_WORKFLOW; BR-009/025/026, INV-005/006/017; GAP-013/017/019 sesuai claim. P5 privacy/evidence readers/retention; tidak publish raw source/secrets atau import credential. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-011 pada WORKFLOW_CONTRACTS. RT-031/028/030. PROPOSED_WORKFLOW; BR-009/025/026, INV-005/006/017; GAP-013/017/019 sesuai claim. P5 privacy/evidence readers/retention; tidak publish raw source/secrets atau import credential. |
 
 ## IX-012
 
@@ -180,7 +180,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Riwayat yang diizinkan menerangkan action, waktu, reason/source/evidence, prior/current/replacement dan accepted versus pending result. Receipt/provider revision yang sama mempertahankan outcome konsisten; view tidak mengubah status claim. |
 | Failure / retry | Empty/partial/unavailable/forbidden dijelaskan sesuai RT contract tanpa false claim history complete/no change; safe read retry bila tersedia, tidak menampilkan detail protected sebagai error. |
 | Preserved context / return | RT-030 → parent/versi/partisipasi/case semula; dari search → query semula bila praktis; unavailable parent memakai RT fallback sah. |
-| Applicability / authority | Semua WF material; RT-030. PROPOSED_WORKFLOW; approved CAP-19/AC-10/22; BR-026, INV-004/006/008/017/018; P5/P9 menentukan visibility/retention, bukan full audit access sekarang. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-012 pada WORKFLOW_CONTRACTS. RT-030. PROPOSED_WORKFLOW; approved CAP-19/AC-10/22; BR-026, INV-004/006/008/017/018; P5/P9 menentukan visibility/retention, bukan full audit access sekarang. |
 
 ## IX-013
 
@@ -193,7 +193,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Perbedaan yang dapat dijelaskan ditemukan dengan provenance/version/time, raw versus interpretation dan limitation; jika keputusan material dicatat, evidence/reason before/after retained. Tidak memilih source winner atau accounting effect dari diff saja. |
 | Failure / retry | Stale/version/context unavailable → jelaskan compare incomplete dan next source/re-review action; safe read retry. Authority/identity ambiguous → EP-005/006; status sebelumnya tidak ditimpa. |
 | Preserved context / return | Return ke revision/correction/review/candidate/document atau reconciliation case yang membuka compare; dua sumber dapat dibuka hanya dalam access scope dengan return ke compare yang sama. |
-| Applicability / authority | WF-008/017–021/023–028 dan source revision WF lain; RT-030/031/domain. PROPOSED_WORKFLOW; BR-024–026/029, INV-005/006/015/017/018; GAP-008/010–013/017/019 sesuai comparison. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-013 pada WORKFLOW_CONTRACTS. RT-030/031/domain. PROPOSED_WORKFLOW; BR-024–026/029, INV-005/006/015/017/018; GAP-008/010–013/017/019 sesuai comparison. |
 
 ## IX-014
 
@@ -219,7 +219,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Explanation/disposition terhubung, history before/after/decision evidence retained. Klaim resolved hanya bila WF prerequisite satisfied, status signoff terpisah; jika belum sahih, tersimpan sebagai penjelasan/pending review/authority. |
 | Failure / retry | Missing evidence/authority/expected relationship → tetap exception/block, jelaskan next party/decision yang diketahui. Correction failure tidak mengubah source agar angka terlihat sama. Result uncertain → case history dahulu. |
 | Preserved context / return | Exception → parent/case/difference/intake/source yang sama; evidence/compare anak kembali exception semula; cancel menjaga exception. |
-| Applicability / authority | WF-005/013–028 pada exception applicable; EP-002–009. PROPOSED_WORKFLOW; BR-023/024/029, INV-014/015/017; GAP-005–013/018/019 sesuai source. No invented tolerance/signoff/cutover. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-015 pada WORKFLOW_CONTRACTS. Kondisi: pada exception applicable; EP-002–009. PROPOSED_WORKFLOW; BR-023/024/029, INV-014/015/017; GAP-005–013/018/019 sesuai source. No invented tolerance/signoff/cutover. |
 
 ## IX-016
 
@@ -232,7 +232,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Context workspace berubah dan source/target orientation jelas, shared outcome tetap konsisten; tidak create copy record, reassign owner atau bypass permission/domain gate. Material associated action history hanya bila ada action tersendiri. |
 | Failure / retry | Destination forbidden/unavailable → tetap source sah atau fallback RT-002; jelaskan input/action status yang diketahui. Tidak membocorkan target protected; safe navigation retry bila akses/availability valid. |
 | Preserved context / return | Workspace asal/object/filter/input aman dapat ditemukan kembali; source unavailable → owning list/context sah dengan explanation. Handoff destination mengikuti IX-021. |
-| Applicability / authority | WF-002/all crossing; RT-002. PROPOSED_WORKFLOW, approved AC-02/04; BR-002, INV-001/002; GAP-014/P5, P7 workspace/scope presentation. |
+| Applicability / authority | WF-002; RT-002. PROPOSED_WORKFLOW, approved AC-02/04; BR-002, INV-001/002; GAP-014/P5, P7 workspace/scope presentation. |
 
 ## IX-017
 
@@ -245,7 +245,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Result menjelaskan type/context dan scope, open canonical RT object; empty scope/filter jelas dengan next search/refine action. Read/search tidak mengubah business status dan tidak memerlukan full dataset di browser. |
 | Failure / retry | Invalid filter/query/context → jelaskan input supported; data unavailable → query/context preserved dan safe read retry. Selected result forbidden/notfound → return prior search atau allowed owning list, bukan mirror detail. |
 | Preserved context / return | RT-029 → detail → prior query/filter/order/portion where practical; cancel quick find → caller yang sama, keyboard/focus completion/return ditentukan P7. |
-| Applicability / authority | Semua WF discovery; RT-029/domain. PROPOSED_WORKFLOW, approved CAP-18/20/AC-21/24; INV-001/004; GAP-014/016. P6 performance/search implementation, P7 find/navigation presentation tetap deferred. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-017 pada WORKFLOW_CONTRACTS. RT-029/domain. PROPOSED_WORKFLOW, approved CAP-18/20/AC-21/24; INV-001/004; GAP-014/016. P6 performance/search implementation, P7 find/navigation presentation tetap deferred. |
 
 ## IX-018
 
@@ -258,7 +258,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Nyatakan request **diterima belum selesai** atau hasil **selesai dalam lingkupnya** sesuai actual outcome; identitas/status dapat ditemukan kembali. Output menyertakan scope/type/time/source/version/policy/exception serta empty meaning; tidak mengesahkan formula/signoff. Report provenance retained. |
 | Failure / retry | Unresolved rule/cutoff/format → no false official numeric output; jelaskan block dan next evidence decision. No-data berbeda dari failed/blocked/pending. Long operation failure/status uncertain → EP-010 dengan result/status dahulu sebelum request ulang. |
 | Preserved context / return | RT-022/027 → request/result → report choices serta source/case asal yang sama, time input masih valid; pengguna dapat melanjutkan kerja dan menemukan operasi/hasil kembali. |
-| Applicability / authority | WF-022/025/027, terkait WF-023/024/026 outputs; RT-022/025/027. PROPOSED_WORKFLOW; BR-017/018/022/023/025, INV-013/014/018; GAP-005–010/013/016 sesuai report. P6 operation/performance dan P7 feedback kelak. |
+| Applicability / authority | WF-022/025/027, terkait WF-023/026 outputs; RT-022/025/027. PROPOSED_WORKFLOW; BR-017/018/022/023/025, INV-013/014/018; GAP-005–010/013/016 sesuai report. P6 operation/performance dan P7 feedback kelak. |
 
 ## IX-019
 
@@ -297,7 +297,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Success / history | Target yang sah dibuka atau handoff/draft outcome tercatat menurut gate; source/target relation dan owner/waiting/next action dapat ditelusuri. Record candidate tidak auto definitive, opening target tidak mengubah ownership/permission. |
 | Failure / retry | Target belum ada/blocked → source handoff context memberi prerequisite dan next safe decision; forbidden destination tidak bocorkan contents; target unavailable/data outcome uncertain → cek source/target status sebelum action baru. EP-003/008/010. |
 | Preserved context / return | Canonical source ↔ RT-016 ↔ target RT-017/023/024 atau cross-process source/case; exact return dua arah bila allowed, fallback owning list/RT-002 bila source access berubah. Super Admin menggunakan canonical owning RT dan kembali origin sah. |
-| Applicability / authority | WF-002/005/014/016/017/023–026 dan related crossings; RT-002/016/domain. PROPOSED_WORKFLOW; approved CAP-02/10/19, BR-013/027, INV-001/006/011/012; GAP-008/009/010/012/014/018 according handoff. |
+| Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-021 pada WORKFLOW_CONTRACTS. RT-002/016/domain. PROPOSED_WORKFLOW; approved CAP-02/10/19, BR-013/027, INV-001/006/011/012; GAP-008/009/010/012/014/018 according handoff. |
 
 ## Pending-action dan feedback yang tidak memerlukan kanal eksternal
 

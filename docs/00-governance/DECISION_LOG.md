@@ -1,6 +1,6 @@
 # Decision log
 
-Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Provenance and status
 
@@ -191,3 +191,73 @@ Recorded 2026-10-05 (Asia/Jakarta): [APPR-004](APPROVAL_RECORDS.md#appr-004) exp
 Approved P1/P2 bytes, OD-01–OD-23, CAP 20 / AC 27 / DC 77 / BR 29 / INV 18, APPR-001/002/003, qualified P3 meaning and corrected locators remain intact. Counts 28 WF / 27 stateful / 142 states / 148 TR / 31 RT / 21 IX / 10 EP; all GAP-001–GAP-020 OPEN, resolved NONE/new NONE, A 0 / B 15 / C 3 / D 2.
 
 P0/P1/P2 DONE and published; P3 **DONE — APPROVED**; P4–P11 TODO / NOT AUTHORIZED; Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; Execution NOT AUTHORIZED; application implementation NONE. After verified checkpoint, subsequent Claude bootstrap may be **EXECUTION AGENT — WAITING** only. No onboarding now; P4 separately Owner-authorized; implementation requires approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Stop after P3.
+
+## P3 post-publication completion
+
+Recorded 2026-10-06 (Asia/Jakarta) under [AUTH-010](APPROVAL_RECORDS.md#auth-010): the approved P3 checkpoint `0e3f7de3acbed5213c13e22a61fc2728e57ccc77` (`docs: finalize P3 workflows`) is published on `main`; read-only verification in the AUTH-010 preflight confirmed local HEAD = origin/main = live remote main. [AUTH-009](APPROVAL_RECORDS.md#auth-009) is **HISTORICAL / COMPLETED** under its automatic completion rule. Administrative record only: no new approval, OD or ADR.
+
+## P0–P3 remediation decision provenance
+
+Source: [U-005](SOURCE_INVENTORY.md#u-005-p0p3-remediation-owner-decisions), recorded under [AUTH-010](APPROVAL_RECORDS.md#auth-010) on 2026-10-06 (Asia/Jakarta). OD-24, OD-25 and GOV-07–GOV-09 below are **OWNER_APPROVED_DECISION**. Recording them does not approve the P0–P3 remediation candidate. APPR-005 and AUTH-011 are reserved and not recorded.
+
+## OD-24
+
+Facility borrowing (peminjaman fasilitas), including facility booking and return procedures, is NOT PART OF V1. It remains a FUTURE opportunity only (V1_SCOPE FUT-04). No borrowing capability, acceptance criterion, domain concept, business rule, workflow, route or interaction is added to V1. Borrowing source materials remain evidence of existence only. GAP-020 stays OPEN solely for the official procedure and authority question if borrowing is later activated by a new Owner scope decision. This decision resolves no procedure, sets no precedence between historical borrowing sources and grants no permission. OD-12's local V1 boundary is preserved.
+
+## OD-25
+
+Multi-warehouse inventory operations are a V1 MUST operational requirement (provenance label OWNER-NEW-REQ-01). Goal: replace the current manual paper/book recording of incoming and outgoing warehouse goods with structured PRANATA operational recording. UNY operates multiple warehouses.
+
+V1 supports operational semantics for: multiple warehouses; stock position by warehouse; incoming-goods receipt; outgoing-goods issue/usage, including issue to an employee or to an Organization Unit; the responsible warehouse officer/context; recipient context; evidence/acknowledgement where applicable; inter-warehouse transfer preserving source warehouse, destination warehouse, dispatch context, receipt context, discrepancy/exception and history/evidence, without invented accounting effects; physical stock count (stock opname); discrepancy; reconciliation; warehouse-scoped operational reporting; provenance/history; and action/owner/waiting/next-action semantics.
+
+A Warehouse (Gudang) is a distinct concept, not an Organization Unit; one Organization Unit may operate several warehouses. Not every stored item is an Asset: Asset, Persediaan and KDP keep distinct meanings. Primary warehouse stock operations belong to Persediaan. An Asset may reference a warehouse as its physical location/context without becoming Persediaan. A warehouse does not determine accounting classification. No rack/bin model is decided.
+
+V1 prioritizes going-forward digital recording. Full re-entry of historical warehouse paper/books is not a V1 prerequisite; any later digitization follows the historical intake path under validated rules.
+
+An employee without a PRANATA account may be recorded as an issue recipient using only the minimum identity/context required by an approved rule. There is no HR integration and this decision defines no personal-data field; retention and privacy are governed by GAP-023. A recipient is participant/recipient context, not a responsibility type, unless an accountable action is later approved.
+
+Scanning is not required in V1 and is FUTURE only (FUT-07): no hardware, barcode standard or technology is selected; scanning never becomes an acceptance, evidence or authority gate; manual search/selection is a complete V1 path. Official warehouse rules and authority remain GAP-025.
+
+## GOV-07 — Operating agent model
+
+Classification: OWNER_APPROVED_DECISION (provenance U-005), effective prospectively from its recording date. The Owner is the final decision and approval authority. Claude Project is the primary planning, orchestration and proposal agent for future authorized planning work; the role confers no phase authority, and every P4–P11 phase requires explicit Owner authorization. ChatGPT is the independent Second Review agent; a Second Review verdict never constitutes Owner approval. Claude Code is the execution agent: application execution stays WAITING until approved P4–P11, Planning Freeze, an explicitly READY P11 Task and execution authority all exist; Claude Code may perform bounded repository documentation corrections only under an explicit Owner authorization or instruction that has passed Second Review, and such authority never authorizes application implementation. Two review vocabularies stay distinct: phase/candidate review uses READY_FOR_OWNER_APPROVAL or CORRECTIONS_REQUIRED; independent Second Review of proposals and instructions uses APPROVED, APPROVED WITH CONDITIONS, REVISE or BLOCKED. Repository truth outranks chat or project memory. GOV-01 wording and provenance are unchanged; only its agent-assignment clause is superseded, prospectively.
+
+## GOV-08 — Standing Git identity and no-attribution policy
+
+Classification: OWNER_APPROVED_DECISION (provenance U-005). Every future commit uses only the Owner's configured Git author and committer identity. No AI system, model, agent, tool or bot — including Claude, Claude Code, Anthropic, OpenAI, ChatGPT and Codex — may appear as author, committer, co-author or attribution, and no attribution trailer may be added (Co-Authored-By naming an AI, tool or model; Generated-By; Assisted-By; AI-generated; AI-assisted; or an equivalent). Before every authorized commit, git config user.name and user.email are verified read-only and never changed without explicit Owner authorization; the reference identity is the Owner identity on the published commits unless the Owner states otherwise, and a mismatch stops the commit. After every commit and before any push, the raw commit metadata and the full message are inspected: author and committer are the Owner only, AI or tool co-authors none, AI or tool attribution trailers none. Any deviation stops publication; there is no automatic amend, and the Owner decides the remediation of an unpublished commit. Tool attribution settings are necessary but never sufficient. No force push and no rewrite of published history merely to change attribution. Branch names never carry AI or tool identity (GOV-09).
+
+## GOV-09 — Byte preservation, line endings and neutral branch convention
+
+Classification: OWNER_APPROVED_DECISION (provenance U-005). Line endings are not normalized, and no .gitattributes is added until the Owner's working-clone line-ending behavior has been inspected and a separate Owner decision exists. Existing BOMs, historical CRLF/LF patterns (including per-line endings in mixed files) and the bytes of untouched files are preserved where feasible; whole-file diffs caused only by line-ending conversion are avoided. Authorized staging uses per-command core.autocrlf=false after verifying that working-tree bytes equal the intended bytes. Future branches use the neutral form `<type>/<scope>` (for example docs/, feature/, fix/, chore/) and never carry AI, model or tool identity; this prospectively supersedes the earlier codex/* default. This decision creates no branch.
+
+## P0–P3 remediation lifecycle record
+
+Recorded 2026-10-06 (Asia/Jakarta) under [AUTH-010](APPROVAL_RECORDS.md#auth-010); provenance [U-005](SOURCE_INVENTORY.md#u-005-p0p3-remediation-owner-decisions). Process decisions recorded verbatim:
+
+Checkpoint strategy (ODR-F):
+
+- One bounded P0–P3 remediation checkpoint, in this sequence:
+  1. preparation authorization (AUTH-010)
+  2. documentation correction candidate
+  3. exact candidate manifest
+  4. independent review
+  5. bounded correction and delta review, if required
+  6. explicit Owner approval (reserved APPR-005)
+  7. one approved remediation checkpoint (reserved AUTH-011)
+  8. normal push
+  9. remote verification
+  10. that authorization becomes HISTORICAL / COMPLETED automatically
+- No separate governance and domain commits, unless a future material blocker forces a split, and then only by Owner decision.
+
+Optional findings (ODR-G):
+
+- AUD-P03-016: DEFERRED. No external review-report storage is required before P4.
+- AUD-P03-017: ADOPTED. Low-cost provenance cross-reference cleanup, without rewriting historical records.
+
+Execution terminology:
+
+- Documentation remediation execution and application execution are always stated separately.
+- Before AUTH-010 is active, and after its completion: documentation remediation execution NOT AUTHORIZED; application execution NOT AUTHORIZED.
+- While AUTH-010 is active: documentation remediation execution AUTHORIZED ONLY BY ACTIVE AUTH-010; application execution NOT AUTHORIZED.
+
+Governing rules are recorded in [SOURCE_OF_TRUTH](SOURCE_OF_TRUTH.md): the [authority-basis rule](SOURCE_OF_TRUTH.md#authority-hierarchy), and the [snapshot rule and amendment-status convention](SOURCE_OF_TRUTH.md#document-lifecycle). Prospective supersessions: the GOV-01 agent-assignment clause, by GOV-07; and the [GIT_WORKFLOW](GIT_WORKFLOW.md) `codex/*` branch default, by GOV-09. GAP-020 V1 relevance is decided by OD-24; GAP-021–GAP-025 are added OPEN; no GAP is resolved. The P0–P3 remediation candidate is VERIFYING; no accepted ADR; no cost exception.

@@ -1,8 +1,8 @@
 # State and transition contracts — PRANATA UNY
 
-Status: APPROVED (APPR-004) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
-Dokumen ini memiliki **rumusan state dan transition/action TR P3**. Tujuan, scope, trigger, DC/BR/INV/CAP/AC/GAP dan handoff fase tiap workflow dimiliki [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md). [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) hanya indeks; RT/IX/EP memiliki kontrak navigasi/interaksi/pola kegagalan. State IDs adalah referensi lokal per workflow, bukan enum atau database fields. **WF-001 context-only; WF-002–WF-028 mempunyai state workflow/konteks, total 27 stateful workflows.**
+Dokumen ini memiliki **rumusan state dan transition/action TR P3**. Tujuan, scope, trigger, DC/BR/INV/CAP/AC/GAP dan handoff fase tiap workflow dimiliki [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md). [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) hanya indeks; RT/IX/EP memiliki kontrak navigasi/interaksi/pola kegagalan. State IDs adalah referensi lokal per workflow, bukan enum atau database fields. **WF-001 context-only; WF-002–WF-029 mempunyai state workflow/konteks, total 28 stateful workflows.**
 
 ## Semantik dan authority
 
@@ -472,17 +472,18 @@ Tidak ditetapkan urutan universal examination, acceptance/receipt, handover dan 
 | WF023-S2 / Makna kode/dasar belum sahih | Mapping/sign/identity/authority unknown atau conflicting | TR-221/222/223/224/226 | Fungsi ledger/resolver; GAP-005/006 custodian; raw preserved/reason |
 | WF023-S3 / Bahan ditelaah | Submitted transaction/observation evidence available | TR-223/224/226 | Reviewer; actual applicable rule/decision; receipt/evidence |
 | WF023-S4 / Transaksi diterima bersyarat | Meaning/sign/mapping/evidence/authority tervalidasi, ledger acceptance sahih | TR-225; controlled correction new scope | Ledger responsible; comparison/correction bila relevant; accepted version |
-| WF023-S5 / Perbandingan/selisih tertaut | Physical observation versus accepted ledger perlu ditelaah | TR-221/223/225/226; WF-025 | Difference owner; explanation/adjustment authority; count/ledger/source |
+| WF023-S5 / Perbandingan/selisih tertaut | Comparison tercatat dan tertaut — physical observation versus accepted ledger, atau penerimaan di gudang tujuan versus dispatch yang diterima — dan perlu ditelaah. Menautkan comparison tidak pernah mencabut acceptance transaksi yang sudah diterima serta tidak membuat atau menerima transaksi | TR-221/223/225/226; WF-025 | Difference owner; explanation/adjustment authority; count/ledger/source |
 | WF023-S6 / Bahan ditolak/dihentikan | Validated rejection/local withdrawal recorded | History/follow-up | Pemilik bahan/decision owner; affected scope; reason/raw provenance |
 
 | Keluarga | Guard dan bukti yang membedakan workflow |
 |---|---|
-| Opening/baseline | Basis sumber pembuka, lingkup item/lokasi/waktu dan penerimaan saldo awal sahih; bukan input posisi stok mandiri tanpa ledger context. |
-| Receipt/addition | Bukti perolehan/penerimaan applicable dan quantity/unit meaning sesuai dictionary; source procurement bila ada, bukan BAST otomatis accepted ledger. |
-| Usage/release | Bukti penggunaan/pengeluaran dan responsible context; meaning/sign/effect tidak ditebak dari label. |
-| Physical count/adjustment | Observation DC-069 dapat direkam; comparison ke ledger accepted terpisah. Adjustment menjadi transaksi hanya dengan decision/rule sahih, bukan auto posting hasil count. |
-| Correction | Reason/source/version/before–after dan applicable correction authority; nilai posisi tidak diedit sebagai truth kedua. |
-| Reconciliation | Expected relationship/source/time/owner/evidence WF-025; closure/signoff bukan efek balance matching. |
+| Opening/baseline | Basis sumber pembuka, lingkup item/gudang (DC-079)/lokasi/waktu dan penerimaan saldo awal sahih; bukan input posisi stok mandiri tanpa ledger context. |
+| Receipt/addition | Bukti perolehan/penerimaan applicable dan quantity/unit meaning sesuai dictionary; source procurement bila ada, bukan BAST otomatis accepted ledger. Gudang tujuan penerimaan dinyatakan. |
+| Usage/release | Bukti penggunaan/pengeluaran, gudang pengeluaran dan responsible context; meaning/sign/effect tidak ditebak dari label. Konteks penerima — pegawai dengan atau tanpa akun, atau Organization Unit — adalah konteks partisipan dengan hanya identitas minimum yang disyaratkan aturan yang disetujui; bentuk dan field-nya BLOCKED_BY_GAP-025/023. Tanda terima/bukti bila berlaku; bentuknya BLOCKED_BY_GAP-025. |
+| Physical count/adjustment | Observation DC-069 dapat direkam dengan lingkup hitung per gudang; comparison ke ledger accepted terpisah. Adjustment menjadi transaksi hanya dengan decision/rule sahih, bukan auto posting hasil count; persetujuan adjustment BLOCKED_BY_GAP-025, bersama GAP-005/006. |
+| Correction | Reason/source/version/before–after dan applicable correction authority; nilai posisi tidak diedit sebagai truth kedua; lingkup gudang dinyatakan bila posisi terlibat. |
+| Reconciliation | Expected relationship/source/time/owner/evidence WF-025, dengan lingkup gudang bila posisi terlibat; closure/signoff bukan efek balance matching. |
+| Transfer antar gudang | Dua leg tertaut: dispatch di gudang asal dan receipt di gudang tujuan; setiap leg melalui acceptance kanonik TR-221 → TR-222 → TR-224. Leg dispatch yang diterima menampilkan waiting: receipt di gudang tujuan. Semantik posisi in-transit BLOCKED_BY_GAP-025. Comparison dispatch–receipt dan selisih melalui TR-225 → S5 → WF-025. Kedua leg mempertahankan gudang asal, gudang tujuan, riwayat dan bukti; tidak ada aturan transfer akuntansi. |
 
 Tidak ada family dipetakan otomatis ke kode raw P01/P02. Meaning, sign, effective historical mapping dan approved examples seluruhnya GAP-005/006; raw dan canonical interpretation tetap dibedakan.
 
@@ -492,7 +493,7 @@ Tidak ada family dipetakan otomatis ke kode raw P01/P02. Meaning, sign, effectiv
 | TR-222 | PROPOSED_WORKFLOW | S1/S2 → submit review scope → S3 atau S2 | Operator | Evidence/receipt, unresolved meaning explicitly retained | Review candidate tanpa canonical guess | Reviewer/custodian; dictionary/identity; assess | Unsupported mapping S2; INV-010 |
 | TR-223 | PROPOSED_WORKFLOW | S3/S2/S5 → request meaning/correction evidence → S2/S5 | Reviewer/issue owner | Reason/source/basis required | Pending resolver visible | Operator/custodian; clarification; correct/resubmit | Tidak normalize raw; EP-001/003 |
 | TR-224 | BLOCKED_BY_GAP | S3/S2 → accept/reject ledger transaction → S2 selama unknown; S4/S6 conditional | Ledger acceptance responsibility belum dipetakan | GAP-005/006/011/014 meaning/sign/effective dictionary/identity/authority/evidence | Accepted ledger only conditional; rejection traceable | Ledger/decision owner; next comparison; view history | Position not from unsupported rule/manual overwrite |
-| TR-225 | PROPOSED_WORKFLOW | S4/S5 → compare position/count/link reconciliation → S5 atau confirmed S4 | Operator/difference owner | Accepted ledger semantics/time plus actual count evidence, WF-025 basis | Position derived from accepted ledger; difference linked | Case/difference owner; explanation/adjustment rule; WF-025 | No auto adjustment/signoff; GAP-005/006/010, EP-009 |
+| TR-225 | PROPOSED_WORKFLOW | S4/S5 → catat comparison pada lingkup item/gudang/waktu yang sama (posisi accepted ledger vs bukti count, atau receipt di gudang tujuan vs dispatch yang diterima) dan tautkan WF-025 → S5 bila ada selisih atau hubungan yang belum terjelaskan; selain itu transaksi yang sudah diterima tetap di S4 tanpa perubahan | Operator/difference owner | Accepted ledger semantics dan waktu; bukti count aktual atau kedua leg transfer; basis WF-025 | Comparison tercatat dan tertaut; tidak ada transaksi ledger yang dibuat atau diterima; posisi tetap diturunkan dari accepted ledger | Case/difference owner; explanation/adjustment rule; WF-025 | Adjustment apa pun adalah bahan terpisah melalui TR-221 → TR-222 → TR-224; no auto adjustment/signoff; GAP-005/006/010/025, EP-009 |
 | TR-226 | PROPOSED_WORKFLOW | S1/S2/S3/S5 → withdraw/supersede bahan → S6 | Pemilik bahan/pihak decision sahih | Reason/raw/source/version/impact | Candidate historical, no deletion or accepted ledger reversal | Decision/pemilik bahan; affected work; review impact | Accepted correction/reversal requires rules; EP-007 |
 
 <a id="wf-024"></a>
@@ -550,13 +551,13 @@ Tidak ada family dipetakan otomatis ke kode raw P01/P02. Meaning, sign, effectiv
 | WF026-S2 / Hasil validasi candidate tersedia | Structural/semantic checks with supported basis produced result | TR-253/254/255/257 | Intake reviewer; issue decisions; findings/basis |
 | WF026-S3 / Ambiguitas/duplikasi/policy belum selesai | Missing meaning/trust/identity rule/cutover authority atau conflicting source | TR-252/253/254/255/257 | Issue resolver/custodian; applicable rule/evidence; original-versus-candidate |
 | WF026-S4 / Keputusan candidate terdokumentasi | Cleansing/reject/conditional accept decision traceable; target belum diterima | TR-254/255/257 | Intake/domain reviewer; applicable acceptance/reconciliation; decision/history |
-| WF026-S5 / Target diterima bersyarat, rekonsiliasi diperlukan | Future domain acceptance/cutover authority sahih, outcome/source related | TR-256; controlled correction/history | Target/case owner; reconciliation acceptance; target/source/decision links |
+| WF026-S5 / Target diterima bersyarat, rekonsiliasi diperlukan | Target diterima di gate domain tujuannya (hasil tertaut); rekonsiliasi intake diperlukan | TR-256; controlled correction/history | Target/case owner; reconciliation acceptance; target/source/decision links |
 | WF026-S6 / Scope penerimaan direkonsiliasi bersyarat | Target telah diterima melalui S5; applicable reconciliation/trust acceptance sahih | History/approved domain follow-up | Target/source accountable function; — (accepted scope); completion evidence |
 | WF026-S7 / Candidate ditolak/dihentikan | Valid rejection atau local withdrawal recorded | History; corrected candidate relation bila allowed | Decision/pemilik bahan; — (scope lama); reason/provenance |
 
 Tidak ada transition di sini mengizinkan P3 menjalankan importer/migrasi. Future intake operation semantics yang bisa panjang mengikuti EP-010; accepted-operation outcome unknown memerlukan pengecekan status dahulu. Raw source tidak diedit; credential-like plaintext values bukan candidate password dan tidak masuk bukti domain. Duplicate verdict memerlukan explicit identity rule yang validated, bukan similarity label.
 
-Keputusan di S4 bukan penerimaan target. Finality record domain yang diterima hanya melalui S5 → TR-256 → S6 dengan seluruh guard penerimaan dan rekonsiliasi terpenuhi. Penolakan/withdrawal mengikuti TR-255/TR-257 ke S7 sesuai guard masing-masing; penutupan scope candidate itu tidak menyatakan accepted-record finality.
+Keputusan di S4 bukan penerimaan target. Penerimaan definitif target hanya terjadi di gate domain tujuan; WF-026 hanya menyerahkan kandidat dan mencatat hasilnya. Finality rekonsiliasi intake hanya melalui S5 → TR-256 → S6 dengan seluruh guard penerimaan dan rekonsiliasi terpenuhi. Penolakan/withdrawal mengikuti TR-255/TR-257 ke S7 sesuai guard masing-masing; penutupan scope candidate itu tidak menyatakan accepted-record finality.
 
 | TR | Authority | Dari / action / ke | Responsible | Prasyarat / bukti | Efek bisnis | Owner; tunggu; next | Failure / revision |
 |---|---|---|---|---|---|---|---|
@@ -564,8 +565,8 @@ Keputusan di S4 bukan penerimaan target. Finality record domain yang diterima ha
 | TR-252 | PROPOSED_WORKFLOW | S1/S3 → record supported structural/semantic validation → S2/S3 | Intake operator/reviewer | Approved format/rule evidence where known, result/error scope | Candidate issues/success distinguished | Reviewer/resolver; findings/rule; assess | Unknown meaning stays S3, credential exclusion INV-016 |
 | TR-253 | PROPOSED_WORKFLOW | S2/S3 → detect/record ambiguity/duplicate concern → S3 | Reviewer | Source/candidate comparison, identity uncertainty/rule stated | Concern bukan automatic duplicate verdict | Identity/source resolver; rule/evidence; decide safely | EP-005/006; no merge/overwrite raw |
 | TR-254 | PROPOSED_WORKFLOW | S2/S3/S4 → propose/document cleansing/rejection decision → S4 atau S3 | Reviewer/source custodian within validated scope | Original/proposed values meaning, reason/version/evidence, authority scope | Decision traceable; official accept/reject subject own guard | Decision/domain owner; applicable approval; review | Unvalidated source precedence/authority stays S3 |
-| TR-255 | BLOCKED_BY_GAP | S2/S3/S4 → official accept/reject target record → S3 selama unknown; S5/S7 conditional | Acceptance/cutover responsibility belum dipetakan | GAP-011/012/013/019 format/identity/trust/write ownership/authority/domain rules | Future accepted domain outcome conditional, not production action now | Target/case function; reconciliation; WF-025 | Invalid/ambiguous records not silently final; INV-015 |
-| TR-256 | BLOCKED_BY_GAP | S5 → accepted reconciliation/intake finality → S3 selama unknown; S6 conditional | Reconciliation/acceptance responsibility belum dipetakan | Target diterima melalui TR-255 dengan domain/trust/cutover authority sahih dan target/source/decision links; GAP-010/011/012 official comparison/disposition/signoff evidence | Final accepted scope only with traceable basis | Target/case owner; — (scope completed); retain provenance | Summary counts not proof final production migration |
+| TR-255 | BLOCKED_BY_GAP | S4 → serahkan keputusan kandidat terdokumentasi ke gate penerimaan domain tujuan dan catat/tautkan hasil gate itu (Asset: WF-017 → TR-164; Persediaan: WF-023 → TR-224; KDP: WF-024 → TR-232) → S5 bila diterima di gate tujuan, S7 bila ditolak secara sahih di sana, S3 selama unknown; juga S2/S3/S4 → catat penolakan intake tervalidasi atas kandidat → S7 | Intake/handoff responsibility belum dipetakan | GAP-011/012/013/019 (trust intake, cutover dan kewenangan write-ownership); guard penerimaan target dimiliki gate tujuan | WF-026 tidak pernah menetapkan state definitif target; hanya ada satu peristiwa penerimaan definitif, yaitu di gate tujuan | Target/case function; reconciliation; WF-025 | Invalid/ambiguous records not silently final; INV-015 |
+| TR-256 | BLOCKED_BY_GAP | S5 → accepted reconciliation/intake finality → S3 selama unknown; S6 conditional | Reconciliation/acceptance responsibility belum dipetakan | target diterima di gate domain tujuan dan hasilnya tertaut melalui TR-255; GAP-010/011/012 official comparison/disposition/signoff evidence | Final accepted scope only with traceable basis | Target/case owner; — (scope completed); retain provenance | Summary counts not proof final production migration |
 | TR-257 | PROPOSED_WORKFLOW | S1–S4 → withdraw local candidate/record validated supersession → S7 | Pemilik bahan/pihak decision sahih | Reason/source/version/impact | Rejected/withdrawn/corrected history retained | Pemilik bahan; relevant follow-up; view decision | Accepted target reversal requires controlled rule, EP-007 |
 
 <a id="wf-027"></a>
@@ -619,8 +620,47 @@ Keempat families adalah klasifikasi semantik P2/P3 yang proposed, bukan mapping 
 | TR-275 | APPROVED_DOMAIN_INVARIANT | S3/S4/S6 → inspect history/compare source change impact → same scope | Authorized reviewer/penyusun | Source/output/variant version links, reason, affected parent/outcome | Old final retains provenance; change may need new linked draft | Parent/change owner; impact assessment; validate new version if permitted | INV-005/006/018; no overwrite/conflicting truth |
 | TR-276 | PROPOSED_WORKFLOW | S1–S4/S6 → withdraw draft/record validated supersession → S5 | Pemilik bahan/pihak decision sahih | Reason/authority if final/version and parent/downstream impact | Historical outputs/evidence retained | Decision/parent owner; impacted work; controlled follow-up | Official revocation unknown blocked GAP-017/019; EP-007 |
 
+<a id="wf-029"></a>
+
+## WF-029 — Pemeliharaan organisasi dan data referensi
+
+| State ID / nama | Makna / entry | Actions / exit | Owner; waiting / evidence |
+|---|---|---|---|
+| WF029-S1 / Draf permintaan perubahan | Record baru atau perubahan dengan keluarga, lingkup, alasan, usulan tanggal efektif dan sumber/bukti; belum ada yang berlaku | TR-281/282/288 | Operator yang ditugaskan; kelengkapan/bukti; request/source |
+| WF029-S2 / Hasil validasi tersedia | Pemeriksaan tercatat: konflik dengan versi efektif, kekhawatiran duplikasi/identitas, bukti kurang | TR-281/283/284/288 | Penelaah/reviewer; koreksi atau pengajuan; hasil validasi |
+| WF029-S3 / Perlu keputusan kewenangan | Menunggu keputusan kewenangan yang berlaku | TR-285/288 | Fungsi belum dipetakan (GAP keluarga); kewenangan/bukti; decision request |
+| WF029-S4 / Disetujui untuk berlaku (bersyarat) | Keputusan kewenangan sahih dengan tanggal efektif; belum berlaku | TR-286/288 | Pengelola sumber/kebijakan; tanggal efektif; decision reference |
+| WF029-S5 / Berlaku | Versi berlaku sejak tanggal efektifnya; pendahulu tidak ditimpa | TR-287; history | Pengelola sumber/kebijakan; — (selesai scope); versi efektif/tautan pendahulu |
+| WF029-S6 / Digantikan | Digantikan oleh penerus yang efektif; riwayat dan rujukan dipertahankan | History saja | — (selesai scope); —; tautan supersession |
+| WF029-S7 / Ditarik/ditolak | Penarikan lokal atau penolakan tervalidasi; riwayat dipertahankan | History; relasi permintaan baru bila diizinkan | Pemilik bahan/pihak keputusan sahih; — (selesai scope); alasan/riwayat |
+
+| TR | Authority | Dari / action / ke | Responsible | Prasyarat / bukti | Efek bisnis | Owner; tunggu; next | Failure / revision |
+|---|---|---|---|---|---|---|---|
+| TR-281 | PROPOSED_WORKFLOW | Entry/S1/S2 → buat atau koreksi permintaan perubahan → S1 | Operator yang ditugaskan | Keluarga, lingkup, alasan, sumber dan usulan tanggal efektif | Draf saja; belum ada yang berlaku | Operator; kelengkapan; ajukan | Dasar kurang tetap S1; EP-002 |
+| TR-282 | PROPOSED_WORKFLOW | S1 → ajukan untuk validasi → S2 | Operator | Kelengkapan/bukti | Lingkup validasi tercatat | Penelaah; pemeriksaan; telaah | Tidak lengkap → S1; EP-002 |
+| TR-283 | PROPOSED_WORKFLOW | S2 → minta koreksi / catat masalah → S1 | Penelaah | Alasan/masalah eksplisit | Koreksi tertunda terlihat | Operator; koreksi; ajukan ulang | Versi asal dipertahankan; EP-001 |
+| TR-284 | PROPOSED_WORKFLOW | S2 → ajukan untuk keputusan kewenangan → S3 | Penelaah/Operator | Validasi tanpa masalah yang memblokir | Keputusan tertunda | Fungsi kewenangan belum dipetakan; keputusan; putuskan | Masalah belum selesai tetap S2; EP-005/006 |
+| TR-285 | BLOCKED_BY_GAP | S3 → catat keputusan kewenangan (setujui untuk berlaku dengan tanggal efektif, atau tolak) → S3 selama unknown; S4 atau S7 conditional | Pemberi persetujuan — aktor belum dipetakan | GAP keluarga (021/022/025/017/003/013/005/006), kewenangan dan bukti | Keputusan bersyarat, hanya dengan kewenangan sahih | Pengelola sumber/kebijakan; tanggal efektif; siapkan keberlakuan | Tidak ada aktor tebakan; EP-003 |
+| TR-286 | PROPOSED_WORKFLOW | S4 → catat keberlakuan pada tanggal efektif → S5 | Pengelola sumber/kebijakan | Keputusan S4 sahih; tanggal efektif tercapai | Versi berlaku; pendahulu berpindah melalui TR-287; record yang merujuk pendahulu mempertahankan rujukan historisnya | Konsumen; —; lihat versi efektif | Tidak pernah backdate menimpa riwayat; INV-017/018 |
+| TR-287 | PROPOSED_WORKFLOW | S5 → catat penggantian oleh penerus yang efektif → S6 | Pengelola sumber/kebijakan | Penerus efektif melalui TR-286 | Riwayat pendahulu dipertahankan | — (selesai scope); —; lihat riwayat | Tanpa penghapusan; EP-007 |
+| TR-288 | PROPOSED_WORKFLOW | S1–S4 → tarik permintaan lokal / catat supersession permintaan yang tervalidasi → S7 | Pemilik bahan/pihak keputusan sahih | Alasan, dampak | Riwayat permintaan dipertahankan | Pemilik bahan; tindak lanjut bila ada; lihat alasan | Versi efektif tidak pernah ditarik oleh TR ini; EP-007 |
+
+| Keluarga | Lingkup | Gate / GAP pengendali |
+|---|---|---|
+| F1 | Struktur dan riwayat Organization Unit | GAP-021 (berdekatan GAP-001/014) |
+| F2 | Penugasan/penugasan ulang tanggung jawab | GAP-021 (GAP-003/014) |
+| F3 | Nilai referensi/master bisnis | GAP-021 |
+| F4 | Nilai kebijakan/referensi bertanggal efektif | GAP-013, ditambah GAP-007/009 bila kebijakan akuntansi berlaku |
+| F5 | Versi kamus/pemetaan (DC-067) | GAP-005/006; lifecycle saja, maknanya dipakai WF-023 |
+| F6 | Klasifikasi Aset (DC-078) | GAP-022 |
+| F7 | Master gudang (DC-079) | GAP-025 |
+| F8 | Varian dokumen | GAP-017 |
+| F9 | Konteks referensi metode pengadaan | GAP-003/013 |
+
+Di luar WF-029: lifecycle pengguna/akun (WF-001, P5) dan desain izin (P5). Penarikan permintaan tidak pernah menarik versi yang sudah berlaku; perubahan atas versi berlaku memakai permintaan perubahan baru.
+
 ## Cakupan kandidat dan verification boundary
 
-**28 WF / 27 stateful workflows / 148 TR**. TR blocks intentionally leave unused identifiers reserved; hanya baris `TR-xxx` di atas adalah transition/action definitions. Tidak ada extra implicit universal approve/reject/cancel transition. Interaksi yang available harus menunjuk TR applicable/guard-nya; blocked official actions mengikuti IX/EP/RT yang menjelaskan alasan dan next action validasi. Context-only entry bukan kontrak auth implementation.
+**29 WF / 28 stateful workflows / 156 TR**. TR blocks intentionally leave unused identifiers reserved; hanya baris `TR-xxx` di atas adalah transition/action definitions. Tidak ada extra implicit universal approve/reject/cancel transition. Interaksi yang available harus menunjuk TR applicable/guard-nya; blocked official actions mengikuti IX/EP/RT yang menjelaskan alasan dan next action validasi. Context-only entry bukan kontrak auth implementation.
 
-State/TR baru tidak meredefinisi 77 DC, 29 BR, 18 INV atau responsibility model P2. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md) memetakan coverage, [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) mengelompokkan evidence yang diperlukan; GAP_REGISTER tetap pemilik status OPEN. Tidak ada schema/permission matrix/API/idempotency/design specification/Task. Kandidat P3 berakhir VERIFYING, menunggu independent review exact manifest dan Owner approval/corrections. P4–P11 dan implementasi tetap NOT AUTHORIZED.
+State/TR baru tidak meredefinisi 79 DC, 30 BR, 19 INV atau responsibility model P2. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md) memetakan coverage, [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) mengelompokkan evidence yang diperlukan; GAP_REGISTER tetap pemilik status OPEN. Tidak ada schema/permission matrix/API/idempotency/design specification/Task. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.

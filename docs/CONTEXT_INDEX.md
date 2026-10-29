@@ -1,8 +1,8 @@
 # Context index
 
-Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
-Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Project state: **PARTIALLY_PLANNED**. P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **DONE — APPROVED** under APPR-004. AUTH-002–AUTH-008 **HISTORICAL / COMPLETED**. AUTH-009 authorizes only this P3 checkpoint until successful push/live verification; afterward it is automatically **HISTORICAL / COMPLETED**, current active phase authorization **NONE**. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. [APPR-004](00-governance/APPROVAL_RECORDS.md#appr-004) approves the corrected reviewed candidate; [AUTH-009](00-governance/APPROVAL_RECORDS.md#auth-009) is checkpoint only; starting main HEAD `9e7950db6f9d6c6ab900a6328778807e057fb812` matched the live remote before edits. Only the intended P3 checkpoint may be staged/committed/pushed after integrity PASS. Exact next safe action: **Complete only the APPR-004/AUTH-009 checkpoint and verify publication; then bootstrap PRANATA in Claude Code as EXECUTION AGENT — WAITING in a subsequent session. P4 needs separate Owner authorization; execution requires approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Stop after P3.**
+Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Current state: see [PHASE_STATUS](PHASE_STATUS.md) and [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation amendment candidate VERIFYING / NOT YET APPROVED; P4–P11 NOT AUTHORIZED; application execution NOT AUTHORIZED.
 
 | Need | Read |
 |---|---|
@@ -17,6 +17,7 @@ Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURR
 | Procurement and SOP observations | [PROCUREMENT_SOURCE_REVIEW](00-governance/evidence/PROCUREMENT_SOURCE_REVIEW.md) |
 | Historical screenshots/login clip and new primary UI/motion video | [VISUAL_SOURCE_REVIEW](00-governance/evidence/VISUAL_SOURCE_REVIEW.md) / [PRODUCT_EXPERIENCE_DIRECTION](01-product/PRODUCT_EXPERIENCE_DIRECTION.md) |
 | Missing authority or conflicting evidence | [GAP_REGISTER](00-governance/GAP_REGISTER.md) |
+| GAP-resolution operating track | [GAP_REGISTER](00-governance/GAP_REGISTER.md#gap-resolution-operating-track) |
 | Engineering / localization / interaction constraints | [ENGINEERING_PRINCIPLES](00-governance/ENGINEERING_PRINCIPLES.md) |
 | Changes and architecture decisions | [CHANGE_CONTROL](00-governance/CHANGE_CONTROL.md) / [ADR policy](adr/README.md) |
 | Current capabilities / future tools / MCP on demand | [TOOLCHAIN](00-governance/TOOLCHAIN.md) |
@@ -40,6 +41,7 @@ Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURR
 | P3 route intent / contextual returns / interactions | [ROUTE_CONTRACTS](03-workflows/ROUTE_CONTRACTS.md) / [INTERACTION_CONTRACTS](03-workflows/INTERACTION_CONTRACTS.md) |
 | P3 exception/revision patterns / traceability / decisions | [EXCEPTION_REVISION_PATTERNS](03-workflows/EXCEPTION_REVISION_PATTERNS.md) / [WORKFLOW_TRACEABILITY](03-workflows/WORKFLOW_TRACEABILITY.md) / [WORKFLOW_DECISION_REQUESTS](03-workflows/WORKFLOW_DECISION_REQUESTS.md) |
 | P3 preparation evidence / candidate identity | [P3_QUALITY_GATE](00-governance/evidence/P3_QUALITY_GATE.md) / [P3_ARTIFACT_MANIFEST](00-governance/evidence/P3_ARTIFACT_MANIFEST.json) |
+| P0–P3 remediation evidence / candidate identity | [P0_P3_REMEDIATION_QUALITY_GATE](00-governance/evidence/P0_P3_REMEDIATION_QUALITY_GATE.md) / [P0_P3_REMEDIATION_ARTIFACT_MANIFEST](00-governance/evidence/P0_P3_REMEDIATION_ARTIFACT_MANIFEST.json) |
 | Current operational state / exact next action | [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) |
 
 ## Reserved future document locations

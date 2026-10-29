@@ -1,0 +1,520 @@
+{
+  "project": "PRANATA UNY",
+  "date": "2026-10-06",
+  "timezone": "Asia/Jakarta",
+  "role": "EXECUTION AGENT — DOCUMENTATION REMEDIATION (AUTH-010)",
+  "authorization": "AUTH-010 / P0–P3 REMEDIATION PREPARATION ONLY",
+  "manifest_state": "REMEDIATION_CANDIDATE_VERIFYING",
+  "approved_baseline": {
+    "commit": "0e3f7de3acbed5213c13e22a61fc2728e57ccc77",
+    "message": "docs: finalize P3 workflows",
+    "approvals": [
+      "APPR-001",
+      "APPR-002",
+      "APPR-003",
+      "APPR-004"
+    ]
+  },
+  "remediation_candidate": "VERIFYING / NOT YET APPROVED",
+  "phase_states": {
+    "P0": "DONE",
+    "P1": "DONE",
+    "P2": "DONE",
+    "P3": "DONE",
+    "P4": "TODO / NOT AUTHORIZED",
+    "P5": "TODO / NOT AUTHORIZED",
+    "P6": "TODO / NOT AUTHORIZED",
+    "P7": "TODO / NOT AUTHORIZED",
+    "P8": "TODO / NOT AUTHORIZED",
+    "P9": "TODO / NOT AUTHORIZED",
+    "P10": "TODO / NOT AUTHORIZED",
+    "P11": "TODO / NOT AUTHORIZED"
+  },
+  "active_phase_authorization": "NONE",
+  "planning_freeze": "NOT REACHED",
+  "tasks": "NONE",
+  "task_baseline": "NOT READY",
+  "documentation_remediation_execution": "AUTH-010 only; completed on delivery",
+  "application_execution": "NOT AUTHORIZED",
+  "application_implementation": "NONE",
+  "manifest_path": "docs/00-governance/evidence/P0_P3_REMEDIATION_ARTIFACT_MANIFEST.json",
+  "manifest_excludes_itself": true,
+  "quality_evidence": "docs/00-governance/evidence/P0_P3_REMEDIATION_QUALITY_GATE.md",
+  "provenance": {
+    "owner_source": "U-005",
+    "package_file": {
+      "locator": "C:\\Projects\\PRANATA-UNY-authority\\PRANATA-REM-P03-EXEC-02_PACKAGE.txt",
+      "bytes": 109661,
+      "sha256": "96133da8cae5bd0d9c1becf849841e93e828ae88bb4af8aa3fac390433ba020d",
+      "use": "provenance only; never an execution dependency"
+    }
+  },
+  "counts": {
+    "OD": 25,
+    "GOV": 9,
+    "CAP": 21,
+    "AC": 28,
+    "FUT": 7,
+    "NFR": 4,
+    "DC": 79,
+    "domain_areas": 9,
+    "BR": 30,
+    "INV": 19,
+    "responsibility_dimensions": 6,
+    "responsibility_types": 16,
+    "WF": 29,
+    "stateful": 28,
+    "states": 149,
+    "TR": 156,
+    "RT": 32,
+    "IX": 21,
+    "EP": 10,
+    "DR": 7,
+    "WDR": 9
+  },
+  "gaps": {
+    "total": 25,
+    "open": 25,
+    "resolved": 0,
+    "new": 5,
+    "p3_classes": {
+      "A": 0,
+      "B": 18,
+      "C": 5,
+      "D": 2
+    },
+    "p2_classes": {
+      "A": 0,
+      "B": 17,
+      "C": 5,
+      "D": 3
+    }
+  },
+  "reciprocity": {
+    "unresolved_at_published_baseline": 285,
+    "unresolved_in_candidate": 0
+  },
+  "reference_safety": {
+    "original_files": 47,
+    "all_ignored": true,
+    "tracked_or_staged": false,
+    "content_inspected": false,
+    "unchanged_by_remediation": true
+  },
+  "git_actions": "NONE",
+  "candidate_file_count_including_manifest": 69,
+  "entry_count_excluding_manifest": 68,
+  "created_including_manifest": 2,
+  "amended": 37,
+  "preserved": 30,
+  "files": [
+    {
+      "path": ".gitignore",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 362,
+      "sha256": "93f182f0548487276fe26c189d5f0c96561a1e30a3e46537b7ac47c8265e8807"
+    },
+    {
+      "path": "AGENTS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 4527,
+      "sha256": "33a0b04b9b1e127affce0141240dde34325c12e57f2d0eaa796f50a776204d87"
+    },
+    {
+      "path": "CLAUDE.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 444,
+      "sha256": "c2a2ed086b477c2801a213af24ebed6f82a648161eec69998f1a92a568682768"
+    },
+    {
+      "path": "README.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 1711,
+      "sha256": "7489bd8ef9eff188c57ab7024630cc07fba5420c547234b063af775694b04593"
+    },
+    {
+      "path": "docs/00-governance/AGENT_OPERATING_MODEL.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 5684,
+      "sha256": "4d181b102105076fde274ca0e489364771402454c4e44cf6cad2ea74fb218ecb"
+    },
+    {
+      "path": "docs/00-governance/APPROVAL_RECORDS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 54420,
+      "sha256": "0dd8d9a3e0c8a1d801e686409d738914b0f1f3658839216ee4b5dff047cae08d"
+    },
+    {
+      "path": "docs/00-governance/CHANGE_CONTROL.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 4686,
+      "sha256": "e53b90a158bdcc64b71ce5294a5b7516f4c31aff40f3926e2ddab4d0a1d8724a"
+    },
+    {
+      "path": "docs/00-governance/COST_POLICY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 2831,
+      "sha256": "d435b42602efbac806bc47cb181232ca5bcb1009eb45bcd793c38e7a761ddb96"
+    },
+    {
+      "path": "docs/00-governance/DECISION_INDEX.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 5019,
+      "sha256": "8df2347813c14e665057ed73ba5bfc2bbe41df15ff74aa754d27cac9e238fc4a"
+    },
+    {
+      "path": "docs/00-governance/DECISION_LOG.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 33725,
+      "sha256": "865b896047030aa2607cba7c0d8ac6a99fe7d6441408459eed189203c9efc605"
+    },
+    {
+      "path": "docs/00-governance/ENGINEERING_PRINCIPLES.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 5367,
+      "sha256": "7c53aa1b26811d63ce3bfa732f95cc96b9d03f240fea1f1af6c0b3cacf733476"
+    },
+    {
+      "path": "docs/00-governance/EVIDENCE_POLICY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 4027,
+      "sha256": "d4cc1ab78a8918e35ed98c4c5b2f93d155af53d56d6375ea1675be4b117e55c2"
+    },
+    {
+      "path": "docs/00-governance/GAP_REGISTER.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 15592,
+      "sha256": "02a4264419c2ee8b02d1066d66fcc6145441039ef0f53973f008572795d31dab"
+    },
+    {
+      "path": "docs/00-governance/GIT_WORKFLOW.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 13580,
+      "sha256": "444bbd613f4bbe1f38741f6239caebf5b5146407a740d5247f40780b838ebffa"
+    },
+    {
+      "path": "docs/00-governance/PRODUCTION_DATA_SAFETY.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 3394,
+      "sha256": "75e72e8043b52c0910d1f0651e41e37edc76faadecf0b6a9967d9455f4f6a966"
+    },
+    {
+      "path": "docs/00-governance/PROJECT_CHARTER.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 3730,
+      "sha256": "f69b510fb4f8bee1692d225a6fe900e2119209bd76bbb6d60b3add81df1d5dfc"
+    },
+    {
+      "path": "docs/00-governance/SOURCE_INVENTORY.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 35165,
+      "sha256": "6eed10ae58e3bfa53ee5304fd506c8776a5f6c7d91386f2647af143637cabb27"
+    },
+    {
+      "path": "docs/00-governance/SOURCE_OF_TRUTH.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 14627,
+      "sha256": "5efc1d43e9537ebebf7dfbcb4951e0d22806e5dad1234b2a96e3e3313feeb75c"
+    },
+    {
+      "path": "docs/00-governance/TOOLCHAIN.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 14155,
+      "sha256": "205eda60238342f0c0f63d4e5e56649642d9d2e0a76d987c38c34934e5903195"
+    },
+    {
+      "path": "docs/00-governance/evidence/ASSET_SOURCE_REVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 20781,
+      "sha256": "4c02803796783fb92310397fcc38fac8a5f1f531a380a29d7924bea64ad45c4d"
+    },
+    {
+      "path": "docs/00-governance/evidence/FRAMEWORK_ADOPTION.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 23400,
+      "sha256": "0538b5a97597c7cfd7f903113440900855b813a21c7a779b63b8c55f151c502c"
+    },
+    {
+      "path": "docs/00-governance/evidence/P0_ARTIFACT_MANIFEST.json",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 12285,
+      "sha256": "eefa3dfdfd9630d1f39873d9e72d540f86f893329a276c2308c519eb5317dcf2"
+    },
+    {
+      "path": "docs/00-governance/evidence/P0_P3_REMEDIATION_QUALITY_GATE.md",
+      "disposition": "CREATED_REMEDIATION",
+      "bytes": 30766,
+      "sha256": "fb9a026abe38f3b73c278fc28cafab52a2394ae7d368c539800176ad14464b8a"
+    },
+    {
+      "path": "docs/00-governance/evidence/P0_QUALITY_GATE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 23082,
+      "sha256": "d3110a7c05ec621a6687890c0a71b1c27defc218ceab3a4aba9de2615748a81d"
+    },
+    {
+      "path": "docs/00-governance/evidence/P1_ARTIFACT_MANIFEST.json",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 14055,
+      "sha256": "89dba7100409d900dc32a7b4e5d792293f03731c51ff28c5c2320f0663d540ba"
+    },
+    {
+      "path": "docs/00-governance/evidence/P1_QUALITY_GATE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 24133,
+      "sha256": "b86964ea7812891fbbdf0055fbb0894b11694febace3e0205db88c4af305214a"
+    },
+    {
+      "path": "docs/00-governance/evidence/P2_ARTIFACT_MANIFEST.json",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 16547,
+      "sha256": "ad3dc9303446a5ed36f8b55591d4dda60612d668d67442cd602e8888c7f53b25"
+    },
+    {
+      "path": "docs/00-governance/evidence/P2_QUALITY_GATE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 21687,
+      "sha256": "9cb415246fa18690a7034e28ce9142e3aaa158d88606bc75503e1c5a361693ef"
+    },
+    {
+      "path": "docs/00-governance/evidence/P3_ARTIFACT_MANIFEST.json",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 21198,
+      "sha256": "0c3c25cba5b31b511861f554fd2e26f43d6d82102d9e3e4f78d8165a109a8975"
+    },
+    {
+      "path": "docs/00-governance/evidence/P3_QUALITY_GATE.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 29310,
+      "sha256": "37510aa13abe9fda4349a72c469d5c9e8b7375e6a0dcee8cc6e0971f4424aba2"
+    },
+    {
+      "path": "docs/00-governance/evidence/PROCUREMENT_SOURCE_REVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 25378,
+      "sha256": "ebff32a3b87e7e1ca8bdcd37ac1d0f1259806ecfd91756283ea1c2469daa6819"
+    },
+    {
+      "path": "docs/00-governance/evidence/VISUAL_SOURCE_REVIEW.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 3245,
+      "sha256": "2f4703162473710ebffa29bb1624a46e9d135774c238775e65b6ad1945c292bb"
+    },
+    {
+      "path": "docs/00-governance/sources/AI_First_Complex_WebApp_Task_Framework_v4.3_EN.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 76025,
+      "sha256": "bb578adabcd8ebddcb97c278e6589b935137f26f851b7218dd86c141744b70fe"
+    },
+    {
+      "path": "docs/01-product/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/01-product/ACCEPTANCE_CRITERIA.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 17491,
+      "sha256": "4b83fcaf5a236f7d5662364b711e4547adb49b21a9913de075e6ff82a495286a"
+    },
+    {
+      "path": "docs/01-product/PRODUCT_EXPERIENCE_DIRECTION.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 17036,
+      "sha256": "3bca90581dd459c583912ecd6c7dcc492608bb67eb62456fcd832f3c3917b64e"
+    },
+    {
+      "path": "docs/01-product/PRODUCT_OVERVIEW.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 21441,
+      "sha256": "d5169182df965615e70041a7c7f32b6f18fc95a4c51d0c62cf6e61d1863b9a2e"
+    },
+    {
+      "path": "docs/01-product/REFERENCE_COVERAGE.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 31488,
+      "sha256": "14aafa7a9fd857eef32ab7fa29f7b1bafca282b6582387546c2996be24b5529e"
+    },
+    {
+      "path": "docs/01-product/V1_SCOPE.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 26658,
+      "sha256": "90e7b5f10fcb765a166b42b9b922c53cff7197f549e9d3c51a6676fc30094f6f"
+    },
+    {
+      "path": "docs/02-domain/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/02-domain/BUSINESS_RULES.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 64655,
+      "sha256": "9ba297dfdf81a3055b5449fa4539dc462d66d266dde5f57f1367fb51d8280cf5"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_DECISION_REQUESTS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 11724,
+      "sha256": "64f74d278a6694e3bb606b4ba0b61f85b49ec2e179f4b21518648d4a164226b1"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_GLOSSARY.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 37198,
+      "sha256": "8d7c2678ac7aa9a7d508d5e90826da6973cf5745506ca04daa7fb92cd0269da7"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_LIFECYCLES.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 16502,
+      "sha256": "5316821340842f2848b75b6fcdf1a17d250831e2a1af57254a048b6dcdea8d37"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_MODEL.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 46197,
+      "sha256": "6b6e92aba20cb6134d6d7af0db1bc575c46788f045e28fc5bd8d7f56bf8dccbd"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_RESPONSIBILITIES.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 10330,
+      "sha256": "2d8c640d2d4cbe17d7416f2662dada5e7232cc835ddc4a29cc738d6fe58173f8"
+    },
+    {
+      "path": "docs/02-domain/DOMAIN_TRACEABILITY.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 24842,
+      "sha256": "15b5340393942721277dd417c84f0744f51fd241a1c28a310f62aae7878a047a"
+    },
+    {
+      "path": "docs/03-workflows/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/03-workflows/EXCEPTION_REVISION_PATTERNS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 21946,
+      "sha256": "9c4f00e103754c430b3b1583f65fc0ed39a8ac735a71e19650bdee3925c5bf5e"
+    },
+    {
+      "path": "docs/03-workflows/INTERACTION_CONTRACTS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 43214,
+      "sha256": "8c4cdb6964d11899a6805c07dd35280db778fe3a100f77a7a9b9c448d0e9bcf4"
+    },
+    {
+      "path": "docs/03-workflows/ROUTE_CONTRACTS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 40531,
+      "sha256": "62a97dd0e599e683463b3c2c3c839d1c0f779ad7fa0e8f29346ef79670120efb"
+    },
+    {
+      "path": "docs/03-workflows/STATE_TRANSITIONS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 105163,
+      "sha256": "729274094c2edb53396597e5451588d1ae10d864950d93a07a7d03efcf77adcf"
+    },
+    {
+      "path": "docs/03-workflows/WORKFLOW_CATALOG.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 15475,
+      "sha256": "a2427e230d37e3d58dc4b2c758d3b2efaff6e0edb0797f58b55e1044ab88d05d"
+    },
+    {
+      "path": "docs/03-workflows/WORKFLOW_CONTRACTS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 58610,
+      "sha256": "919978670f5b60655156b4380ee8b6a82ed06d7d168043ac58fe49b43f7313f0"
+    },
+    {
+      "path": "docs/03-workflows/WORKFLOW_DECISION_REQUESTS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 22831,
+      "sha256": "4b3bbe040e34945e33877af0e70711e8ed920b21743eb6f4f48ae0921b77dd04"
+    },
+    {
+      "path": "docs/03-workflows/WORKFLOW_TRACEABILITY.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 47198,
+      "sha256": "d3cb4a4e3387396f6a8570e6bd23e7af50643a5b8a120f2a2e61b4c86d7b0d08"
+    },
+    {
+      "path": "docs/04-architecture/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/05-security/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/06-api-performance/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/07-ux-design/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/08-testing/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/09-operations/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/10-release/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/11-tasks/.gitkeep",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/CONTEXT_INDEX.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 8228,
+      "sha256": "b4b0faa1de9a75d7856a650f208f10d12645b6a624b5acb927eddb484a8834cb"
+    },
+    {
+      "path": "docs/PHASE_STATUS.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 5063,
+      "sha256": "bfc005b9d8f541456af188642498277e85e6ac3ad2b9fc38f4ec5c5da068cedf"
+    },
+    {
+      "path": "docs/adr/README.md",
+      "disposition": "PRESERVED_BASELINE",
+      "bytes": 1276,
+      "sha256": "b125d6a3ea5743c5bdbb9b630588387c5917493755f87486b1f255332f3972cf"
+    },
+    {
+      "path": "docs/handoff/CURRENT_HANDOFF.md",
+      "disposition": "AMENDED_REMEDIATION",
+      "bytes": 5825,
+      "sha256": "5ef9c643a34b06cc83a26bce92792b6812b84983e1e87a4602da3831044c9fb1"
+    }
+  ]
+}

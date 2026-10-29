@@ -1,12 +1,12 @@
 # Framework adoption evidence
 
-Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
 This record owns the AICWDF coverage map, explicit project exceptions, and structural-reference evidence. It is not an independent product specification or an Owner approval. The operating hierarchy is [SOURCE_OF_TRUTH](../SOURCE_OF_TRUTH.md); current authorization/status is [PHASE_STATUS](../../PHASE_STATUS.md).
 
 ## Historical P0 framework source and project-state snapshot
 
-The P0/P1 table/map/adaptation statements below describe approved historical coverage. Current state: P0/P1/P2 DONE — APPROVED AND PUBLISHED; P3 DONE — APPROVED under APPR-004; AUTH-002–AUTH-008 completed. AUTH-009 permits only the P3 checkpoint until verified publication, then automatically completed with current active phase authorization NONE. P4–P11 remain not authorized. See current P3 amendment below and PHASE_STATUS; older deferral wording is historical.
+The P0/P1 table/map/adaptation statements below describe approved historical coverage. Current state: see [PHASE_STATUS](../../PHASE_STATUS.md) and [CURRENT_HANDOFF](../../handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation amendment candidate VERIFYING / NOT YET APPROVED; P4–P11 NOT AUTHORIZED; application execution NOT AUTHORIZED. Older deferral wording is historical.
 
 | Item | Evidence |
 | --- | --- |
@@ -38,7 +38,7 @@ The framework is the master operating baseline; PRANATA's explicit Owner directi
 | §4B | Indonesian-first bilingual UI | OD-17; [ENGINEERING_PRINCIPLES](../ENGINEERING_PRINCIPLES.md); P7 localization, P8 verification | APPLIED P0 obligation: `id-ID`, `en`, clear switch; mechanisms/tests DEFERRED |
 | §4C | Near-zero additional production cost | [COST_POLICY](../COST_POLICY.md) | APPLIED P0; no paid exceptions |
 | §5–§7, §6A | Capabilities, bootstrap, registry, MCP on demand | [TOOLCHAIN](../TOOLCHAIN.md) | APPLIED P0 policy/probes; application setup DEFERRED; named tools not falsely verified |
-| §8–§9 | Targeted context and agent roles | [AGENT_OPERATING_MODEL](../AGENT_OPERATING_MODEL.md); [AGENTS.md](../../../AGENTS.md) | APPLIED P0; Codex planning / future Claude execution |
+| §8–§9 | Targeted context and agent roles | [AGENT_OPERATING_MODEL](../AGENT_OPERATING_MODEL.md); [AGENTS.md](../../../AGENTS.md) | APPLIED P0; agent roles per GOV-07 (prospective; GOV-01 historical) |
 | §10–§11 | Delivery model and P0 continuity | Charter; phase status; governance; handoff | APPLIED P0; deployment examples not selected |
 | §12 | P1 product, scope, acceptance | Reserved `docs/01-product/` | DEFERRED P1; Owner direction is preserved without new product specification |
 | §13 | P2 domain, lifecycles, business rules | Reserved `docs/02-domain/` | DEFERRED P2 |

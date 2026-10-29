@@ -1,10 +1,10 @@
 # Ketertelusuran workflow — PRANATA UNY
 
-Status: APPROVED (APPR-004) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
 Dokumen ini memiliki **pemetaan P3 dan penilaian dampak workflow seluruh GAP**. [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) adalah indeks; [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md) memiliki tujuan/batas/handoff; [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki keadaan/TR; [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki RT; [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) memiliki IX. Semua ID di sini adalah locator perencanaan, bukan Tasks atau kriteria penerimaan aplikasi yang sudah diuji.
 
-[DECISION_LOG](../00-governance/DECISION_LOG.md) tetap memiliki OD-01–OD-23. [V1_SCOPE](../01-product/V1_SCOPE.md) dan [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md) tetap memiliki 20 CAP, 27 AC dan target NFR usulan. [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md) / [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md) memiliki 77 DC/9 area; [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) adalah satu-satunya pemilik wording/status/authority **29 BR / 18 INV**. P3 tidak mengganti rumusan sumber-sumber approved tersebut. [GAP_REGISTER](../00-governance/GAP_REGISTER.md) tetap memiliki status kanonik: semua 20 OPEN, tidak ada resolution atau GAP baru.
+[DECISION_LOG](../00-governance/DECISION_LOG.md) tetap memiliki OD-01–OD-25. [V1_SCOPE](../01-product/V1_SCOPE.md) dan [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md) tetap memiliki 21 CAP, 28 AC dan target NFR usulan. [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md) / [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md) memiliki 79 DC/9 area; [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) adalah satu-satunya pemilik wording/status/authority **30 BR / 19 INV**. P3 tidak mengganti rumusan sumber-sumber approved tersebut. [GAP_REGISTER](../00-governance/GAP_REGISTER.md) tetap memiliki status kanonik: semua 25 OPEN, tidak ada resolution; GAP-021–GAP-025 baru dari U-005.
 
 ## Sumber yang dipakai dan batas pembuktian
 
@@ -57,18 +57,19 @@ Setiap baris menunjuk **saat aturan perlu dinilai**, tanpa menyalin wording BR/I
 | WF-020 / RT-020 | DC-053/058–060 | BR-014/016/018/025/026 | INV-008/017/018 | CAP-12/15/19; AC-15/18/22 | ASSET-05/11/12; GAP-008/009/010/013 |
 | WF-021 / RT-021 | DC-051/056/061 | BR-014/015/016/026 | INV-007/008/017 | CAP-12; AC-15 | ASSET-11 p1–2; AC-15 boundary; GAP-008/013/014 |
 | WF-022 / RT-022 | DC-019/020/062/064/076 | BR-017/022/025 | INV-007/013/018 | CAP-13/17; AC-16/20 | ASSET-03/11/12; GAP-007/008/013 |
-| WF-023 / RT-023 | DC-065–069 | BR-019/020/023/025/026 | INV-009/010/014/017/018 | CAP-14/17; AC-17/20 | ASSET-01/02/04/05 exact discrepancy locators; GAP-005/006/010/011/013 |
+| WF-023 / RT-023 | DC-065–069, DC-079 | BR-019/020/023/025/026/030 | INV-009/010/014/017/018/019 | CAP-14/17/21; AC-17/20/28 | ASSET-01/02/04/05 exact discrepancy locators; GAP-005/006/010/011/013/023/025 |
 | WF-024 / RT-024 | DC-041/043/049–053/070 | BR-013/016/018/021/025 | INV-006/008/011/012/018 | CAP-10/15; AC-13/18 | ASSET-04 KDP/06 GD. KDP/11; PROC-30; GAP-008/009/010/018 |
 | WF-025 / RT-025 | DC-019/071/072 | BR-003/022/023/025/026 | INV-014/017/018 | CAP-03/17/19; AC-05/20/22 | ASSET-04–09 scoped locators; GAP-005–010/012/013/018 per source |
 | WF-026 / RT-026 | DC-018/020/073–075 | BR-010/024/025/026/029 | INV-010/015/016/017/018 | CAP-16/19; AC-19/22 | ASSET-01/02/04/08/10/12; PROC-30/31; GAP-011/012/013/016/019 |
 | WF-027 / RT-027 | DC-019/020/064/068/070–072/076 | BR-017/018/019/020/022/023/025 | INV-009/010/013/014/018 | CAP-13/17/18; AC-16/17/20/21 | ASSET-03/04/11/12; U-002 BMU need; GAP-005–010/013/016 |
 | WF-028 / RT-028 | DC-010–018/020 | BR-004/009/010/025/026 | INV-005/006/017/018 | CAP-08/19; AC-11/22 | PR-F04 Input/Mail Merge/Isian Nomor/SPJ PL C1267; GAP-013/017/019 |
+| WF-029 / RT-032 | DC-001/005/067/077/078/079, DC-015/020/025 | BR-001/002/025/026/030 | INV-017/018/019 | CAP-02/19/21; AC-04/22/28 | OD-04/10/25 (U-005); GAP-021/022/025/017/003/013/005/006 |
 
-RT-029 search, RT-030 history dan RT-031 evidence memberi jejak lintas konteks WF-002–028; scope serta confidentiality tetap prerequisite P5. Mapping bukan izin membaca semua objek dalam satu ekosistem.
+RT-029 search, RT-030 history dan RT-031 evidence memberi jejak lintas konteks WF-002–029; scope serta confidentiality tetap prerequisite P5. Mapping bukan izin membaca semua objek dalam satu ekosistem.
 
 ## Cakupan seluruh konsep domain
 
-Pengelompokan berikut mencakup DC-001–DC-077 tepat sebagai **konsep yang direferensikan**, bukan klaim seluruh konsep diimplementasikan atau membutuhkan state machine sendiri. Konsep pendukung dapat dipakai beberapa workflow tanpa membuat canonical definition kedua.
+Pengelompokan berikut mencakup DC-001–DC-079 tepat sebagai **konsep yang direferensikan**, bukan klaim seluruh konsep diimplementasikan atau membutuhkan state machine sendiri. Konsep pendukung dapat dipakai beberapa workflow tanpa membuat canonical definition kedua.
 
 | Area P2 / seluruh DC yang terkait | WF dan kontrak lintas workflow | Makna kontribusi P3 |
 |---|---|---|
@@ -78,7 +79,9 @@ Pengelompokan berikut mencakup DC-001–DC-077 tepat sebagai **konsep yang diref
 | Penyedia/partisipasi DC-028–035 | WF-007/008, terhubung WF-005/009/010/012 | Company/PIC/account/participation berbeda; submission/revision/receipt/outcome sama ditelusuri |
 | Klasifikasi/handoff DC-049–050 | WF-016/017/023/024 | Classified draft hypothesis, unmet prerequisites dan definitive acceptance tetap berbeda |
 | Aset/lifecycle DC-051–064 | WF-017–022, terhubung WF-016/024/027 | Registrasi/placement/condition/change/disposal/report request sesuai aturan yang applicable |
-| Persediaan DC-065–069 | WF-023, terhubung WF-016/025/026/027 | Enam transaction families, observed count, accepted ledger dan stock view terpisah |
+| Klasifikasi Aset berversi DC-078 | WF-029 keluarga F6; terkait WF-022/027 | Versi taksonomi bertanggal efektif tanpa penimpaan retroaktif; isi taksonomi dan pemetaan BLOCKED_BY_GAP GAP-022 |
+| Persediaan DC-065–069 | WF-023, terhubung WF-016/025/026/027 | Tujuh transaction families, observed count, accepted ledger dan stock view terpisah |
+| Gudang DC-079 | WF-023 (lingkup gudang, keluarga Transfer antar gudang), WF-027 (lingkup gudang), WF-029 keluarga F7 | Gudang bukan Organization Unit; posisi per gudang dari accepted ledger; aturan dan kewenangan resmi BLOCKED_BY_GAP GAP-025 |
 | KDP DC-070 | WF-024, terhubung WF-013/016/017/025/027 | Progress/completion candidate berbeda dari definitive asset |
 | Rekonsiliasi/intake/laporan DC-071–076 | WF-025/026/027 | Scope, comparison, validation issue, acceptance dan temporal meaning mempunyai jejak masing-masing |
 
@@ -106,6 +109,7 @@ Pengelompokan berikut mencakup DC-001–DC-077 tepat sebagai **konsep yang diref
 | CAP-18 | RT-029 dan daftar/detail seluruh RT; WF-025/026/027 | IX-017/018; EP-010; NFR timing/workload tidak difinalkan P3 |
 | CAP-19 | RT-030/031, WF-008/018/020/025/026/028 dan history semua workflow material | IX-011–013; EP-007; retention/audit access P5/P9 |
 | CAP-20 | WF-002; semua RT/IX | IX-016/017/019; accessible action, textual outcome, deterministic return; visual/ID-EN design P7 |
+| CAP-21 | WF-023 (lingkup gudang, tujuh keluarga termasuk Transfer antar gudang), WF-027 (lingkup gudang), WF-029 (master gudang); RT-023/027/032 | IX-001–009/011–013/015/018; EP-003/005/009; aturan resmi gudang GAP-025; FUT-07 bukan dependency |
 
 ## Cakupan balik seluruh AC
 
@@ -117,7 +121,7 @@ Ini **coverage kontrak perencanaan**, bukan PASS aplikasi, UAT, accounting arith
 | AC-02 | WF-002; RT-002; IX-016 | Switch mempertahankan konteks shared record dan tidak memberi hak baru; P5 enforcement |
 | AC-03 | WF-003/002; RT-003/002 | Asal Unit Organisasi generic retained; tidak ada faculty-only route; GAP-001/014 |
 | AC-04 | WF-002; RT-002/030/031 dan owning route | Super Admin entry ke owning workspace/context serta traceability; administration action details P5/P7 |
-| AC-05 | WF-002–028; semua RT utama | Status/current owner/waiting/next/evidence/blocked reason dan no-waiting explanation pada kontrak, bukan guessed responsibility |
+| AC-05 | WF-002–029; semua RT utama | Status/current owner/waiting/next/evidence/blocked reason dan no-waiting explanation pada kontrak, bukan guessed responsibility |
 | AC-06 | WF-003/004; RT-003/004; IX-003–006 | Same request, reason/required correction, resubmission dan reuse baseline; approval path GAP-001 |
 | AC-07 | WF-004/005/008–011; RT terkait | Request/RUP/package/material/offer/evaluation/result/SPPBJ relation; applicability gate per metode GAP-003/017 |
 | AC-08 | WF-006; RT-006; IX-020/010/011 | Package-linked schedule/participants/invitation/outcome; child return ke package; tidak menjadi mandatory gate |
@@ -129,7 +133,7 @@ Ini **coverage kontrak perencanaan**, bukan PASS aplikasi, UAT, accounting arith
 | AC-14 | WF-017/018/019; RT-017–019/030/031 | Origin/placement/custodian/movement/observation evidence; physical condition independen; identity GAP-011 |
 | AC-15 | WF-019/020/021; IX-002/007/011–013 | Condition/maintenance/change/disposal reason, before/after dan gate authority; book zero tidak otomatis removal |
 | AC-16 | WF-022/027; RT-022/027; IX-018 | Applicable policy/cutoff/provenance; unsupported accounting output blocked; official BMU definition/format/example belum tersedia |
-| AC-17 | WF-023/025/027; RT-023/025/027 | Separate accepted ledger / six tx families / comparison; raw dictionary/P01/P02 gaps tidak dinormalisasi |
+| AC-17 | WF-023/025/027; RT-023/025/027 | Separate accepted ledger / seven tx families / comparison; raw dictionary/P01/P02 gaps tidak dinormalisasi |
 | AC-18 | WF-013/016/024/017; RT terkait | Source/progress/KDP/completion/asset-draft relation; no premature definitive asset; capitalization remains blocked |
 | AC-19 | WF-026; RT-026/030/031; IX-013/015 | Source→candidate→structural/semantic issues→traceable cleansing/reject/accept; ambiguity retained; cutover authority GAP-012 |
 | AC-20 | WF-025/027; RT-025/027; IX-015/018 | Scope/unit/source/time/difference/action/evidence; no resolved difference without explanation; institutional signoff GAP-010 |
@@ -140,6 +144,7 @@ Ini **coverage kontrak perencanaan**, bukan PASS aplikasi, UAT, accounting arith
 | AC-25 | WF-002/006; RT-029/owning detail; IX-016/017/020 | Persistent context/search/detail continuity/activity intent dari recorded VIS-04; final shell/components/motion P7 |
 | AC-26 | WF-001/004/005/012–016/028 serta seluruh MUST | Local evidence/reference path tanpa future integration; official external obligations must still be validated |
 | AC-27 | Seluruh WF/RT/IX | Tidak menambah recurring paid dependency; recovery/cost validation P5/P9; COST_POLICY tetap canonical |
+| AC-28 | WF-023/025/027/029; RT-023/025/027/032 | Banyak gudang, penerimaan, pengeluaran dengan konteks penerima, transfer dua leg dengan perbandingan kirim–terima (TR-225 → WF-025), hitung fisik, selisih/rekonsiliasi, posisi dan laporan per gudang, riwayat/bukti; tanpa pemindaian; aturan resmi GAP-025/005/006/010/023 |
 
 ## Seluruh arah Owner ke kontrak P3
 
@@ -150,7 +155,7 @@ Ini **coverage kontrak perencanaan**, bukan PASS aplikasi, UAT, accounting arith
 | [OD-03](../00-governance/DECISION_LOG.md#od-03) | WF-014/016/017/023/024/025; IX-021; source/outcome relation dan correction evidence |
 | [OD-04](../00-governance/DECISION_LOG.md#od-04) | WF-003; RT-003; BR-001; unit generic tanpa faculty-only model |
 | [OD-05](../00-governance/DECISION_LOG.md#od-05) | WF-003/004; GAP-001 named routing/approval gate retained |
-| [OD-06](../00-governance/DECISION_LOG.md#od-06) | WF-003–028 integrated families; WF-005 method extensions; map nilai tidak dipaksakan sebagai sequence resmi |
+| [OD-06](../00-governance/DECISION_LOG.md#od-06) | WF-003–028 integrated families; WF-029 memelihara data referensi yang dipakai keluarga tersebut; WF-005 method extensions; map nilai tidak dipaksakan sebagai sequence resmi |
 | [OD-07](../00-governance/DECISION_LOG.md#od-07) | WF-003/008/016/025/028; party-next/revision/reuse/exception; tidak mengklaim penghematan terukur |
 | [OD-08](../00-governance/DECISION_LOG.md#od-08) | WF-028; IX-010/013; provenance/source/version bagi reuse/output |
 | [OD-09](../00-governance/DECISION_LOG.md#od-09) | Responsibility concept setiap WF; INV-002; tidak memberi role baru tiap jabatan |
@@ -168,6 +173,8 @@ Ini **coverage kontrak perencanaan**, bukan PASS aplikasi, UAT, accounting arith
 | [OD-21](../00-governance/DECISION_LOG.md#od-21) | WF-002/006; RT-029/owning detail; recorded SRC-047 context/panel/search/calendar intent only; final visual/motion P7 |
 | [OD-22](../00-governance/DECISION_LOG.md#od-22) | CAP-18/AC-21; NFR proposals byte-preserved; ~200 population bukan concurrency; GAP-016 |
 | [OD-23](../00-governance/DECISION_LOG.md#od-23) | WF-006/007/008/016/023/024/027/028; provider reuse, ledger, KDP, report/BMU need, downstream hypothesis qualifications |
+| [OD-24](../00-governance/DECISION_LOG.md#od-24) | WORKFLOW_CATALOG scope exclusion; tidak ada borrowing WF/RT/IX; bukan V1, FUTURE (FUT-04); GAP-020 hanya prosedur/otoritas bila kelak diaktifkan |
+| [OD-25](../00-governance/DECISION_LOG.md#od-25) | WF-023 lingkup gudang dan keluarga Transfer antar gudang, WF-027 lingkup gudang, WF-029 master gudang; RT-023/027/032; BR-030, INV-019; GAP-025/023 |
 
 ## Cakupan balik seluruh BR dan INV
 
@@ -175,8 +182,8 @@ Tabel memberi lokasi evaluasi aturan/invariant di workflow dan interaction; **wo
 
 | BR canonical | WF / kontrak yang harus menilai applicability |
 |---|---|
-| [BR-001](../02-domain/BUSINESS_RULES.md#br-001) | WF-002/003/017/026 — identitas asal dan konteks organisasi |
-| [BR-002](../02-domain/BUSINESS_RULES.md#br-002) | WF-002/005/011 dan responsibility context setiap WF |
+| [BR-001](../02-domain/BUSINESS_RULES.md#br-001) | WF-002/003/017/026/029 — identitas asal dan konteks organisasi |
+| [BR-002](../02-domain/BUSINESS_RULES.md#br-002) | WF-002/005/011/029 dan responsibility context setiap WF |
 | [BR-003](../02-domain/BUSINESS_RULES.md#br-003) | Semua WF operasional/TR/IX — party-waiting-next dan uncertainty |
 | [BR-004](../02-domain/BUSINESS_RULES.md#br-004) | WF-005/006/008–012/028 — titik ekstensi/action/doc applicability |
 | [BR-005](../02-domain/BUSINESS_RULES.md#br-005) | WF-003/004/005 — need/request/RUP/package origin |
@@ -199,11 +206,12 @@ Tabel memberi lokasi evaluasi aturan/invariant di workflow dan interaction; **wo
 | [BR-022](../02-domain/BUSINESS_RULES.md#br-022) | WF-022/025/027 — four time families dan output context |
 | [BR-023](../02-domain/BUSINESS_RULES.md#br-023) | WF-023/025/027; IX-015/018 — case/difference/acceptance |
 | [BR-024](../02-domain/BUSINESS_RULES.md#br-024) | WF-026; IX-013/015 — candidate/validation/cleansing/acceptance |
-| [BR-025](../02-domain/BUSINESS_RULES.md#br-025) | WF-004/005/010/012/016/020/022–028 — applicable policy version/provenance |
+| [BR-025](../02-domain/BUSINESS_RULES.md#br-025) | WF-004/005/010/012/016/020/022–029 — applicable policy version/provenance |
 | [BR-026](../02-domain/BUSINESS_RULES.md#br-026) | Semua workflow material; IX-009/012/013; EP-007 — disposition/history |
 | [BR-027](../02-domain/BUSINESS_RULES.md#br-027) | Semua WF/RT/IX; khusus001/004/028 — local reference independence/future boundary |
 | [BR-028](../02-domain/BUSINESS_RULES.md#br-028) | WORKFLOW_CATALOG scope exclusion; tidak ada borrowing WF/RT/IX |
 | [BR-029](../02-domain/BUSINESS_RULES.md#br-029) | WF-007/017/023/024/026; EP-006 — identity/duplicate ambiguity |
+| [BR-030](../02-domain/BUSINESS_RULES.md#br-030) | WF-023 (lingkup gudang, Transfer antar gudang), WF-027 (lingkup gudang), WF-029 (master gudang) — gudang dan operasi multi-gudang |
 
 | INV canonical | WF / interaction / exception yang menjaga batas |
 |---|---|
@@ -224,7 +232,8 @@ Tabel memberi lokasi evaluasi aturan/invariant di workflow dan interaction; **wo
 | [INV-015](../02-domain/BUSINESS_RULES.md#inv-015) | WF-017/026; IX-013/015; EP-005/006; explicit identity acceptance |
 | [INV-016](../02-domain/BUSINESS_RULES.md#inv-016) | WF-001/026; historical source filtering boundary; no credential reproduction/import |
 | [INV-017](../02-domain/BUSINESS_RULES.md#inv-017) | Semua workflow material; IX-009/012/013; EP-007; reason/supersession/affected outcome history |
-| [INV-018](../02-domain/BUSINESS_RULES.md#inv-018) | WF-004/005/012/016/020/022–028; IX-010/013/018; applicable historical version explainable |
+| [INV-018](../02-domain/BUSINESS_RULES.md#inv-018) | WF-004/005/012/016/020/022–029; IX-010/013/018; applicable historical version explainable |
+| [INV-019](../02-domain/BUSINESS_RULES.md#inv-019) | WF-023/029 — kanal input, termasuk pemindaian FUT-07 kelak, tidak membuat record definitif; pemilihan manual adalah jalur V1 lengkap |
 
 ## Penilaian seluruh GAP dari perspektif workflow P3
 
@@ -234,26 +243,31 @@ Tabel memberi lokasi evaluasi aturan/invariant di workflow dan interaction; **wo
 |---|---|---|---|
 | GAP-001 / B | WF-003/004; RT-003/004 — **jalur persetujuan dan routing unit→pusat** | Intake/completeness/revision tidak mengklaim official approval; asal generic retained. PR-F03 PROC-04/06/08/13; OD-04/05 | Owner + authorized procurement: approved current routing, delegation, unit variants, exceptions |
 | GAP-002 / B | WF-004/005; RT-004/005 — **RUP preparation/publication/revision/cancel handoff** | Associate reference/version tanpa mengklaim publication; dependent progression tetap applicable-policy gate. PROC-06 t6 rows3–8/PROC-08 t1 row3 | Current approved RUP procedure, publication/change/cancel responsibility dan source/version |
-| GAP-003 / B | WF-003/005/006/008–015; RT terkait — **aktor/urutan per metode** | Common package context + conditional method extensions; semua assignment unknown visible. PR-F05 PROC-14–27/30 | Procurement specialist + Owner: responsibility/method/action/receipt/review/delegation matrix berbasis evidence, tanpa P5 enforcement sekarang |
+| GAP-003 / B | WF-003/005/006/008–015/029; RT terkait — **aktor/urutan per metode** | Common package context + conditional method extensions; semua assignment unknown visible. PR-F05 PROC-14–27/30 | Procurement specialist + Owner: responsibility/method/action/receipt/review/delegation matrix berbasis evidence, tanpa P5 enforcement sekarang |
 | GAP-004 / B | WF-011; RT-011 — **empat pemetaan SPPBJ** | Draft/check/issue/sign responsibility dibedakan tanpa pemilihan universal. PR-F02 PROC-02 step14/PROC-10 step11/PROC-12 iteml | Approved procedure memetakan masing-masing responsibility per metode/delegasi |
-| GAP-005 / B | WF-023/025/026/027; RT terkait — **kamus transaksi diterima** | Enam transaction families dan raw-code review safe skeleton; official sign/effect masih blocked. ASSET-01/02/04/05 | Inventory/Finance versioned dictionary, sign, effective dates, historical applicability/examples |
-| GAP-006 / D | WF-023/025/026/027 — **actual P01/P02 interpretation/mapping** | Preserve raw/issue provenance; tidak menganggap safe interface sebagai jawaban mapping. Sheet2 K/CSV11 vs Neraca Psd E6/C44/journal F4 | Inventory/Finance authoritative discrepancy explanation dan approved reversible mapping/reconciliation |
+| GAP-005 / B | WF-023/025/026/027/029; RT terkait — **kamus transaksi diterima** | Tujuh transaction families dan raw-code review safe skeleton; official sign/effect masih blocked. ASSET-01/02/04/05 | Inventory/Finance versioned dictionary, sign, effective dates, historical applicability/examples |
+| GAP-006 / D | WF-023/025/026/027/029 — **actual P01/P02 interpretation/mapping** | Preserve raw/issue provenance; tidak menganggap safe interface sebagai jawaban mapping. Sheet2 K/CSV11 vs Neraca Psd E6/C44/journal F4 | Inventory/Finance authoritative discrepancy explanation dan approved reversible mapping/reconciliation |
 | GAP-007 / B | WF-022/027; RT-022/027 — **policy/cutoff applicable** | Four temporal families, valid input/error/policy block; unsupported result tidak tampak resmi. ASSET-03/12; OD-14/15 | Asset/Finance approved instrument/effective dates/cutoff/rounding dan validated examples termasuk arbitrary-date applicability |
 | GAP-008 / B | WF-016–024/027 — **accounting/historical-period effect controlled change/KDP** | Proposal/reason/before-after/authority gate; tidak mengisi jurnal, restatement atau capitalization timing. ASSET-05/11/12 | Asset/Finance approved change/reversal/period semantics, KDP completion dan reconciliable examples |
 | GAP-009 / B | WF-016/017/020/024/027 — **recognition/capitalization applicability** | Classification pending dan policy gate, tanpa minima/equality assumption. ASSET-10 Akun C4:D5/Kapitalisasi B1:C11 | Approved instrument/version/category/comparator/currency/basis/effective/historical rules |
 | GAP-010 / B | WF-015/023/024/025/027 — **owner/waiting/signoff/cadence/output authority** | Assigned follow-up jika tervalidasi, evidence/penjelasan dan acceptance gate terpisah; no Finance signoff guess. ASSET-04–09 | Owner + Finance/Asset/Procurement/Persediaan: responsibility, expected relationship, exception/period closure acceptance evidence |
 | GAP-011 / B | WF-017/023/024/026 — **source identity/format/duplicate/acceptance** | Structural/semantic checks, ambiguity/duplicate decision dan compare safe skeleton; no schema/import now. ASSET-01/02/08/12, PROC-30/31 | Later authorized source inventory/approved samples, identity, field semantics, validation, reversible reconciliation |
 | GAP-012 / B | WF-025/026/027 — **cutover source/write-owner/acceptance boundary** | P3 now names authoritative-source/write-ownership decision gate and prevents candidate acceptance/official comparison that assumes it. P2 C→P3 B; actual cutover sequence tetap P9/P10. OD-01/03; ASSET-06/08 | Approved cutover/write ownership/reconciliation/fallback/rollback/signoff plan in separately authorized P9/P10 |
-| GAP-013 / D | Semua WF dependent official procedure/policy, terutama003–028 — **current source/issuer/version/applicability proof** | Provenance/candidate labels retained; P3 cannot authenticate sources by writing workflow. PR-F01, ASSET-04/10/12 | Source custodian confirms current approved version/issuer/applicability/supersession/latest HTML provenance |
+| GAP-013 / D | Semua WF dependent official procedure/policy, terutama003–029 — **current source/issuer/version/applicability proof** | Provenance/candidate labels retained; P3 cannot authenticate sources by writing workflow. PR-F01, ASSET-04/10/12 | Source custodian confirms current approved version/issuer/applicability/supersession/latest HTML provenance |
 | GAP-014 / B | WF-002/003/005/007/008/011/016–026; owning RT — **responsibility assignment/representation versus authorization** | Function/unit/actor unknown stated at action boundary; no permission matrix; privacy prerequisite remains. OD-09/10/20; P2 responsibility dimensions | Owner validates compact roles/scope/assignment/segregation/representation with P5 scenarios |
 | GAP-015 / C | WF-001/007/008; RT-001/007/008 — **local account eligibility/provisioning/recovery** | Account entry is reference-only; profile flow does not imply open self-registration or account representation. OD-11/12; ASSET-10 risk-only | Owner/security/operations in P5/P9: usable local account/recovery contracts, binding external profile if any |
 | GAP-016 / C | WF-025/026/027; RT-029/large lists — **workload/operation budgets/capacity** | Long-operation accepted/progress/result/failure semantics and partial list navigation only; no timer/queue/index implementation. OD-16/22; AC-21/NFR proposals | P4/P6/P8/P9 representative workload, funded capacity, concurrency and benchmark/operating contract |
-| GAP-017 / B | WF-005–015/028 — **method variant/number/signature/evidence** | Applicable/unknown/required/optional/not-applicable contract and output block; no inference from filename. PROC-21 p1; PROC-30 Isian Nomor | Procurement custodian: current variant/clause/number/issuer/signers/applicability/external-reference rules |
+| GAP-017 / B | WF-005–015/028/029 — **method variant/number/signature/evidence** | Applicable/unknown/required/optional/not-applicable contract and output block; no inference from filename. PROC-21 p1; PROC-30 Isian Nomor | Procurement custodian: current variant/clause/number/issuer/signers/applicability/external-reference rules |
 | GAP-018 / B | WF-014/015/016/017/023/024 — **eligible handover/payment trigger and responsibility** | Distinct inspection/acceptance/handover/BAST and classification/draft/definitive gate; no auto record. PROC-02 steps16–20/PROC-04 k–l/PROC-30 KO2:KV2 | Procurement/Asset/Persediaan/Finance validate event/evidence/assignment/exception/correction handoff |
 | GAP-019 / B | WF-005/009/012/013/015/026/028 — **canonical source fields/output trust** | Required-values/source-version validation and unresolved variant/dependency block; no copied formula/clause. PROC-30 SPJ PL C1267; PROC-31 headers | Authorized domain review of canonical fields/formulas/clauses/dependency/cache reliability and official examples |
-| GAP-020 / C | Catalog scope exclusion; **no borrowing WF/RT/IX** | Remains FUTURE/outside V1; no procedure resurrection from source availability. PR-F06 PROC-28/29; BR-028 | Separate Owner scope decision first, then current custodian procedure if included later |
+| GAP-020 / C | Catalog scope exclusion; **no borrowing WF/RT/IX**; relevansi V1 diputuskan OD-24: bukan V1, FUTURE | Pertanyaan yang tersisa hanya prosedur dan otoritas resmi peminjaman bila kelak diaktifkan melalui keputusan lingkup Owner baru; no procedure resurrection from source availability. PR-F06 PROC-28/29; BR-028; OD-24 | New Owner scope decision first, then current custodian procedure and authority if activated |
+| GAP-021 / B | WF-029 keluarga F1–F3, RT-032; terkait WF-002/003/017/018 — **kewenangan pemeliharaan struktur/riwayat Organization Unit, penugasan dan data referensi/master** | WF-029 memisahkan draf permintaan, hasil validasi, keputusan kewenangan (BLOCKED_BY_GAP), keberlakuan pada tanggal efektif dan penggantian tanpa penimpaan; aktor kewenangan tetap belum dipetakan. OD-04; BR-001/025/026; INV-017/018 | Owner + custodian institusi: kewenangan pemeliharaan per keluarga, aturan tanggal efektif/supersession, bukti yang diperlukan dan pelestarian riwayat |
+| GAP-022 / B | WF-029 keluarga F6, RT-032; terkait WF-022/027 — **taksonomi Klasifikasi Aset berversi dan pemetaannya** | DC-078 dikelola sebagai versi dengan tanggal efektif melalui WF-029; isi taksonomi dan pemetaan ke kategori/akun/laporan tidak ditetapkan. Berdekatan GAP-007/008/009; BR-018/025 | Instrumen klasifikasi yang disetujui dengan versi/tanggal efektif, aturan pemetaan ke kategori/akun/laporan dan applicability historis |
+| GAP-023 / C | WF-023 (konteks penerima pengeluaran), WF-026, WF-029 serta disposisi lifecycle — **retensi, arsip, penghapusan, anonimisasi dan kewajiban data pribadi** | Penerima dicatat sebagai konteks partisipan dengan identitas minimum menurut aturan yang disetujui; tidak ada field data pribadi; keputusan utama di luar P3 (P2/P5/P9/P10). OD-25; BR-026; INV-016/017 | Kewajiban hukum/institusi yang berlaku, jadwal retensi yang disetujui, aturan penghapusan/anonimisasi dan penanganan material historis sensitif kredensial |
+| GAP-024 / C | WF-027; RT-027 — **definisi/ekspansi, bentuk, semantik temporal dan otoritas BMU** | BMU tetap nama kebutuhan laporan (CAP-13, AC-16, DC-076) dengan definisi/bentuk belum diketahui; tidak ada keluaran resmi yang tampak final. Keputusan utama di luar P3 | Definisi/ekspansi otoritatif, bentuk, penerbit/peminta, semantik temporal dan contoh tervalidasi |
+| GAP-025 / B | WF-023 (lingkup gudang, keluarga Transfer antar gudang), WF-027 (lingkup gudang), WF-029 keluarga F7; RT-023/027/032 — **aturan dan kewenangan resmi operasi gudang** | Lingkup gudang, dua leg transfer, perbandingan kirim–terima melalui TR-225/WF-025 dan gate BLOCKED_BY_GAP untuk transfer, in-transit, penyesuaian, bukti pengeluaran dan format laporan; tanpa efek akuntansi. OD-25; BR-030; INV-019 | Custodian gudang + Owner mengonfirmasi aturan yang berlaku dengan sumber/versi/tanggal dan contoh, serta kewenangan aktual per tindakan |
 
-Counts: **20 reviewed; A 0 / B 15 / C 3 / D 2; resolved 0; OPEN 20; new 0**. B: GAP-001–005/007–012/014/017–019. C: GAP-015/016/020. D: GAP-006/013. **15 partially clarified** means operational skeleton/decision visibility in P3, not 15 resolved gaps or official partial approvals. P2's historical classification remains intact. GAP-012 moves from P2 C to P3 B because P3 can identify acceptance/write-ownership boundaries; its cutover implementation and actual official plan remain unavailable/outside authorization.
+Counts: **25 reviewed; A 0 / B 18 / C 5 / D 2; resolved 0; OPEN 25; new 5 (GAP-021–GAP-025, dari U-005)**. B: GAP-001–005/007–012/014/017–019/021/022/025. C: GAP-015/016/020/023/024. D: GAP-006/013. **18 partially clarified** means operational skeleton/decision visibility in P3, not 18 resolved gaps or official partial approvals. P2's historical classification remains intact. GAP-012 moves from P2 C to P3 B because P3 can identify acceptance/write-ownership boundaries; its cutover implementation and actual official plan remain unavailable/outside authorization.
 
 ## Framework adoption and handoff evidence
 
@@ -268,4 +282,4 @@ Counts: **20 reviewed; A 0 / B 15 / C 3 / D 2; resolved 0; OPEN 20; new 0**. B: 
 
 Adversarial P3 review must check coverage against these locators and source-authority qualifications, especially WF-008 submission/revision consistency, WF-011 four SPPBJ gates, WF-016 blocked classification, WF-023 raw P01/P02, WF-024 completion, WF-025 signoff and WF-027 time/policy. [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) groups exact unresolved decisions; answers require source/version/date/custodian/actual approval and targeted impact review before any owning specification or GAP changes.
 
-P4 receives conceptual context/identity relationships only; P5 receives authorized-actor/privacy/assignment needs; P6 receives conflict-sensitive/long-operation and consistency needs without mechanisms; P7 receives route/return/action/accessibility/language intent without visual design. P8–P10 later validate critical journeys, policy examples, operating/source trust and acceptance. No later-phase work starts now. Independent review against the exact P3 manifest is the next safe action; P3 remains VERIFYING, P4 NOT AUTHORIZED, freeze NOT REACHED, Tasks NONE, execution NOT AUTHORIZED and application NONE.
+P4 receives conceptual context/identity relationships only; P5 receives authorized-actor/privacy/assignment needs; P6 receives conflict-sensitive/long-operation and consistency needs without mechanisms; P7 receives route/return/action/accessibility/language intent without visual design. P8–P10 later validate critical journeys, policy examples, operating/source trust and acceptance. No later-phase work starts now. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.

@@ -1,6 +1,6 @@
 # Safe source inventory
 
-Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Authority and coverage
 
@@ -14,6 +14,7 @@ In P0, 45 historical files received bounded content inspection and SRC-033/VIS-0
 | U-002 | Explicit Owner P1 request; verified original bytes/digest in [U-002 provenance](#u-002-p1-owner-request) | AUTH-004, reaffirmed prior direction, OD-21–OD-23, P1 product evaluation/experience mandate | OWNER_APPROVED_DECISION for explicit qualified direction; not approval of generated P1 scope/metrics/artifacts | Historical preparation required independent review/Owner approval; now recorded separately in APPR-002 without promoting source authority |
 | U-003 | Explicit Owner P2 request; original fingerprint in [U-003 provenance](#u-003-p2-owner-request) | AUTH-006, domain semantics/rule authority/safety and phase boundaries | OWNER_APPROVED_DECISION for explicit direction; generated conceptual candidates were VERIFYING during preparation | Exact candidate subsequently approved APPR-003; AUTH-007 source/provenance in APPROVAL_RECORDS, qualifications retained |
 | U-004 | Explicit Owner P3 request and same-scope resume/finalization instruction; original fingerprints in [AUTH-008](APPROVAL_RECORDS.md#auth-008) | P3 workflow/route/interaction planning, authority classifications, safety and review candidate | OWNER_APPROVED_DECISION for explicit direction only; generated P3 artifacts were VERIFYING during preparation | Preparation historical/completed; corrected candidate subsequently approved APPR-004 under AUTH-009, does not authorize P4 or resolve GAPs; original external/unchanged/unpublished |
+| U-005 | Owner P0–P3 remediation decision package; provenance in [U-005](#u-005-p0p3-remediation-owner-decisions) | OD-24, OD-25 (OWNER-NEW-REQ-01), GOV-07–GOV-09, authority-basis, snapshot and amendment-status rules, GAP-020 narrowing, GAP-021–GAP-025 | OWNER_APPROVED_DECISION for the recorded sanitized direction; not approval of the remediation candidate | Candidate approval only by a later explicit Owner approval; the recorded wording is durable truth |
 | FW-001 | Unchanged repository AICWDF v4.3 English source | Master operating framework | AUTHORITATIVE_SOURCE for operating rules through Owner adoption; not UNY accounting/procurement authority | Preserved hash and full section map in FRAMEWORK_ADOPTION |
 | STRUCT-001 | GitHub yusufarst/MULTIPLECORP, pinned main a526daf47444d12b4ae5c51e1ae14c9dfe3f4978 | Entry point, adapter, governance/evidence/phase/context/handoff structures | INFERENCE for reusable structural patterns; never PRANATA domain/security/financial truth | Exact inspected paths and excluded content in FRAMEWORK_ADOPTION |
 
@@ -46,6 +47,17 @@ Local historical sources below are provisional evidence; **none is certified by 
 - Durable scope/exclusions in AUTH-006; the authorized rule catalog preserves instruction-section locators and distinguishes explicit Owner safety direction from proposed domain modeling. No additional OD identifier or institutional accounting/procurement authority is inferred.
 - Original attachment is separate from the **47** local raw sources. If available later, compare original bytes/digest; do not hash a reconstruction. AUTH-006 and domain references preserve safe semantics without requiring this attachment for a later reader.
 - P2 reuses existing source reviews/P1 coverage. No raw-content reinspection or formula recalculation is required for this candidate; fingerprint/ignore checks do not constitute policy validation.
+
+## U-004 P3 Owner request
+
+U-004 provenance — the P3 request, its same-scope continuation and the minor-correction instruction — is recorded in [AUTH-008](APPROVAL_RECORDS.md#auth-008); the P3 approval/checkpoint instruction is recorded in [AUTH-009](APPROVAL_RECORDS.md#auth-009) and in 'P3 approval/checkpoint instruction provenance' below. No original is reconstructed here.
+
+## U-005 P0–P3 remediation Owner decisions
+
+- Received: **2026-10-06 (Asia/Jakarta)**, with the Owner's in-session issuance of [AUTH-010](APPROVAL_RECORDS.md#auth-010) (00:47); the package was reviewed under the Second Review verdict named in AUTH-010 (APPROVED WITH CONDITIONS — SR-FINAL-01).
+- Durable contents: the sanitized Owner-decision texts recorded verbatim in [DECISION_LOG](DECISION_LOG.md) (OD-24, OD-25, GOV-07–GOV-09 and the remediation process decisions), [SOURCE_OF_TRUTH](SOURCE_OF_TRUTH.md) (authority-basis rule, snapshot rule, amendment-status convention) and [GAP_REGISTER](GAP_REGISTER.md) (GAP-020 revision, GAP-021–GAP-025, GAP-resolution operating track). OWNER-NEW-REQ-01 is a provenance label only; the operative decision is OD-25. GOV-09 carries one authorized formatting change: its branch placeholder is a code span (`<type>/<scope>`) under the dated AUTH-010 correction continuation (REV-REM-01).
+- Original: Owner-supplied package file, safe locator `C:\Projects\PRANATA-UNY-authority\PRANATA-REM-P03-EXEC-02_PACKAGE.txt` (outside the repository), **109,661 bytes**, SHA-256 **`96133da8cae5bd0d9c1becf849841e93e828ae88bb4af8aa3fac390433ba020d`**; supplied with the Owner continuation of 2026-10-06 02:13 (Asia/Jakarta) and fingerprinted read-only.
+- Handling: external, unchanged and unpublished; read only; never an execution dependency. Its absence or a differing digest never invalidates the recorded sanitized wording, which is the durable truth.
 
 ## Historical local originals — P0 inventory
 

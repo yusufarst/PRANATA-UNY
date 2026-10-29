@@ -1,25 +1,28 @@
 # Agent operating model
 
-Status: APPROVED (APPR-004; AUTH-009 checkpoint only) | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Roles
 
 | Role | Responsibility | Boundary |
 |---|---|---|
 | Owner | Final decisions, phase approval, material scope/architecture/cost approval | Explicit approval is never inferred from silence |
-| Codex / ChatGPT Planning Agent | Authorized phase documentation, evidence, decisions, gaps and executor clarity | APPR-004 P3 approved; AUTH-009 single checkpoint only until verified publication, then completed; no P4–P11 or implementation authority |
-| Claude Code future Execution Agent | Implement and verify an approved READY Task, update progress/evidence | No planning redesign or hidden-chat dependency |
-| Review Agent | Check authority, scope, tests/evidence, drift and false completion | Findings are evidence; cannot grant Owner approval |
+| Claude Project — planning / orchestration / proposal agent | Authorized planning work, proposals and instructions | The role confers no phase authority; every P4–P11 phase needs explicit Owner authorization |
+| ChatGPT — independent Second Review agent | Reviews proposals and instructions: APPROVED / APPROVED WITH CONDITIONS / REVISE / BLOCKED | A verdict never constitutes Owner approval |
+| Claude Code — execution agent | Bounded documentation corrections only under an explicit Owner authorization that passed Second Review; later, READY P11 Tasks | Application execution WAITING until approved P4–P11, Planning Freeze, a READY P11 Task and execution authority |
+| Review Agent | Check authority, scope, tests/evidence, drift and false completion; phase/candidate verdicts READY_FOR_OWNER_APPROVAL / CORRECTIONS_REQUIRED | Findings are evidence; cannot grant Owner approval |
 | Release Agent | Verify approved release path, staging/UAT/regression/rollback declarations | No release authorization exists yet |
 | Maintenance Agent | Safely reproduce and resolve a bounded maintenance Task | Production DB zero-touch; preserve historical semantics |
+
+Before GOV-07, planning was performed by Codex/ChatGPT under GOV-01 (historical).
 
 Provider replacement does not alter canonical project truth. Tool adapters point to AGENTS.md.
 
 ## Phase authorization
 
-P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **DONE — APPROVED** under APPR-004. AUTH-002–AUTH-008 **HISTORICAL / COMPLETED**. AUTH-009 authorizes only this P3 checkpoint until successful push/live verification; afterward it is automatically **HISTORICAL / COMPLETED**, current active phase authorization **NONE**. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. [AUTH-009](APPROVAL_RECORDS.md#auth-009) authorizes only the approved P3 checkpoint. P2 qualifications remain binding. Each later phase needs separate explicit authorization.
+Current state: see [PHASE_STATUS](../PHASE_STATUS.md) and [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation amendment candidate VERIFYING / NOT YET APPROVED; P4–P11 NOT AUTHORIZED; application execution NOT AUTHORIZED.
 
-Finish authorized artifacts → self-review/evidence → VERIFYING → independent review → Owner approves the exact candidate or requests corrections. Owner approval moves a phase to DONE; agent PASS, folders, conversation or commit do not grant approval.
+Finish authorized artifacts → self-review/evidence → VERIFYING → independent review → Owner approves the exact candidate or requests corrections. Owner approval moves a phase to DONE; agent PASS, folders, conversation or commit do not grant approval. Phase/candidate review returns READY_FOR_OWNER_APPROVAL or CORRECTIONS_REQUIRED; independent Second Review of proposals and instructions returns APPROVED, APPROVED WITH CONDITIONS, REVISE or BLOCKED; neither is Owner approval.
 
 ## Future execution boundary
 
@@ -37,8 +40,8 @@ Review decisions against their classification and exact source. Challenge assump
 
 ## Session end obligation
 
-Update handoff, changed files, evidence/decisions/gaps, tool/cost/DB impact, checks and next action together. P0/P1/P2 **DONE — APPROVED AND PUBLISHED** under APPR-001/APPR-002/APPR-003. P3 **DONE — APPROVED** under APPR-004. AUTH-002–AUTH-008 **HISTORICAL / COMPLETED**. AUTH-009 authorizes only this P3 checkpoint until successful push/live verification; afterward it is automatically **HISTORICAL / COMPLETED**, current active phase authorization **NONE**. P4–P11 **TODO / NOT AUTHORIZED**. Planning Freeze **NOT REACHED**; Tasks **NONE**; Task Baseline **NOT READY**; Execution **NOT AUTHORIZED**; application implementation **NONE**. Only intended P3 approval/checkpoint Git actions under AUTH-009 after integrity PASS. Next: **Complete only the APPR-004/AUTH-009 checkpoint and verify publication; then bootstrap PRANATA in Claude Code as EXECUTION AGENT — WAITING in a subsequent session. P4 needs separate Owner authorization; execution requires approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Stop after P3.**
+Update handoff, changed files, evidence/decisions/gaps, tool/cost/DB impact, checks and next action together. Current state: see [PHASE_STATUS](../PHASE_STATUS.md) and [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation amendment candidate VERIFYING / NOT YET APPROVED; P4–P11 NOT AUTHORIZED; application execution NOT AUTHORIZED.
 
 ## Subsequent execution-agent onboarding
 
-After verified P3 publication, a subsequent session may bootstrap Claude Code as **EXECUTION AGENT — WAITING**: read repository, AGENTS.md, CLAUDE.md, CURRENT_HANDOFF and approved P0–P3, understand unfinished P4–P11, and report waiting. No onboarding is performed in this checkpoint session. Do not scaffold/install dependencies/create schema/migrations/auth/UI/Tasks, infer unfinished planning, close GAPs or alter planning truth. Execution remains blocked until P4–P11 are complete/approved, Planning Freeze is reached and a P11 Task is explicitly READY.
+The read-only Claude Code bootstrap as EXECUTION AGENT — WAITING was completed in the AUTH-010 preflight (2026-10-06). Application execution remains blocked until approved P4–P11, Planning Freeze and an explicitly READY P11 Task. Do not scaffold/install dependencies/create schema/migrations/auth/UI/Tasks, infer unfinished planning, close GAPs or alter planning truth.
