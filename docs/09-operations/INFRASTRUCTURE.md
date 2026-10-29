@@ -30,11 +30,11 @@ Mesin Owner juga menjalankan MULTIPLECORP, BantuKasir dan ELLIGBLE. PRANATA waji
 | Larangan | Tidak menjalankan `docker system prune`, `docker volume prune`, `docker network prune`, restart Docker Desktop global, atau perintah yang menyentuh kontainer/volume/basis data/berkas `.env` proyek lain |
 | Basis data | `pranata_dev`, `pranata_test*`, `pranata_e2e_*` hanya di `pranata-postgres` |
 
-Kinerja bind mount dari sistem berkas Windows diverifikasi saat bootstrap (TASK-001); bila terlalu lambat, rekomendasi dicatat untuk keputusan Owner (mis. kloning di filesystem WSL2) tanpa mengubah lokasi repositori secara sepihak.
+Kinerja bind mount dari sistem berkas Windows diverifikasi saat menyiapkan lingkungan (TASK-003); bila terlalu lambat, rekomendasi dicatat untuk keputusan Owner (mis. kloning di filesystem WSL2) tanpa mengubah lokasi repositori secara sepihak.
 
 ## 3. CI
 
-GitHub Actions dengan runner GitHub (repositori publik — tanpa biaya menit). Desain workflow di [QUALITY_GATES](../08-testing/QUALITY_GATES.md). Rahasia CI hanya untuk uji. Cabang terlindungi: `main` (rilis) dan `develop` (integrasi Task) dengan status check wajib dan larangan force push; pembuatan proteksi dilakukan Owner atau melalui Task berizin.
+GitHub Actions dengan runner GitHub (repositori publik — tanpa biaya menit). Desain workflow di [QUALITY_GATES](../08-testing/QUALITY_GATES.md). Rahasia CI hanya untuk uji. Cabang terlindungi: `main` (integrasi Task berbasis trunk) dengan status check wajib `ci-gate`, PR wajib dan larangan force push/penghapusan; tag rilis `v*` dilindungi dan produksi hanya dari tag ([RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang)). Pembuatan proteksi dilakukan Owner atau melalui Task berizin.
 
 ## 4. Topologi staging dan produksi
 

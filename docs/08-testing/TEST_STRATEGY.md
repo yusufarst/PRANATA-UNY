@@ -72,3 +72,29 @@ Uji yang gagal tidak konsisten dicatat sebagai temuan; boleh di-*quarantine* pal
 ## 7. Evidence per Task
 
 Setiap Task mencatat: perintah uji yang dijalankan dan ringkasan hasil, jumlah uji, cakupan area yang diubah, tautan run CI, artefak E2E untuk Task UI, bukti EXPLAIN untuk Task kueri besar, dan daftar pemeriksaan keamanan/basis data. Format di [QUALITY_GATES](QUALITY_GATES.md) dan [EXECUTOR_OPERATING_MODEL](../11-tasks/EXECUTOR_OPERATING_MODEL.md).
+
+## 8. Piramida verifikasi dan pemeriksaan sebelum PR
+
+Urutan verifikasi per Task (U-007 §10.3): **berkas berubah → pemeriksaan statis cepat → uji fungsional terarah → integrasi/otorisasi/keamanan yang relevan → CI final wajib**.
+
+| Langkah | Kapan | Isi minimum |
+|---|---|---|
+| Statis cepat | Setiap siklus edit | `pint --dirty`, ESLint/Prettier pada berkas berubah, `tsc --noEmit` (inkremental), Larastan dengan cache hasil |
+| Uji terarah | Setelah perilaku berubah | Pest untuk berkas/grup yang menyentuh perilaku (`--filter`, `--group`), Vitest berkas terkait |
+| Relevan | Sebelum membuka/memperbarui PR | Uji otorisasi dan integritas rute modul yang disentuh; `migrate:fresh` + rollback bila migrasi berubah; build produksi bila frontend berubah; E2E lokal hanya perjalanan yang disentuh pada Chromium |
+| CI final | Setiap pembaruan PR | `ci-gate` pada HEAD PR terakhir ([QUALITY_GATES §4](QUALITY_GATES.md#4-pipeline-ci-github-actions)); WebKit, E2E penuh yang terpicu dan audit dependensi dijalankan di CI |
+
+Aturan bukti:
+
+- Bukti lokal hanya berlaku untuk SHA tempat bukti itu dihasilkan. Setelah perbaikan, uji terarah untuk area yang berubah dijalankan ulang; suite yang tidak terdampak tidak perlu diulang secara lokal karena CI final menjalankannya pada HEAD terakhir.
+- Bukti CI yang dipakai untuk merge selalu dari HEAD PR terakhir; hasil run lama tidak berlaku untuk kode yang berubah.
+- Suite lengkap tidak dijalankan setelah setiap edit kecil; suite yang berat (E2E penuh, performa) tidak dijalankan lokal pada stasiun kerja yang terbatas kecuali Task menuntutnya.
+- Sumber daya lokal diukur (durasi, CPU/RAM) pada TASK-003/TASK-007; paralelisme lokal hanya dipakai bila terbukti lebih cepat tanpa mengganggu proyek lain.
+
+## 9. Keandalan fixture dan kegagalan setup
+
+- `globalSetup` Playwright memverifikasi basis data E2E, `ScenarioSeeder`, dan state login per peran **sebelum** suite berjalan. Bila gagal, run dihentikan dengan pesan **SETUP FAILURE** yang menyebut langkah dan penyebabnya, sehingga kegagalan setup tidak terbaca sebagai puluhan cacat UI.
+- Fixture idempoten dan aman dijalankan berulang: identitas unik dibangkitkan per run/worker (sufiks run id), tidak ada ketergantungan urutan uji, tidak ada state lintas uji yang di-hardcode.
+- Fixture menghormati otorisasi dan scope organisasi: setiap peran masuk sebagai pengguna yang benar; uji yang membutuhkan data unit/gudang lain membuatnya melalui factory dengan scope eksplisit.
+- Uji asap fixture bersama (`tests/e2e/smoke/fixtures.spec.ts`) berjalan pertama di CI dan lokal; kegagalannya menghentikan job dengan status setup.
+- Selektor stabil berbasis peran/label; asersi aksesibilitas (axe) dipertahankan pada perjalanan yang disentuh; proyek Chromium dan WebKit didukung.

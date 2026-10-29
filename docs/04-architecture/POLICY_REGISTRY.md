@@ -25,7 +25,7 @@ Policy Registry adalah mekanisme agar PRANATA dapat dibangun lengkap **tanpa men
 | `reconciliation` | Jenis kasus, pemilik, penerima hasil, periode | `reconciliation.uny` | GAP-010/012 | WF-025 |
 | `organization.maintenance` | Kewenangan pemeliharaan per keluarga F1–F9 | `organization.maintenance.uny` | GAP-021 | WF-029 |
 | `numbering` | Skema nomor per jenis dokumen | `numbering.uny` | GAP-017 | Numbering |
-| `reporting.formats` | Format laporan resmi (termasuk BMU) | `reporting.formats.uny` | GAP-007–010/013 | WF-027 |
+| `reporting.formats` | Format laporan resmi (termasuk BMU setelah definisinya diketahui) | `reporting.formats.uny` | GAP-007–010/013/024 | WF-027 |
 | `retention` | Jadwal retensi/arsip/anonimisasi | `retention.uny` | GAP-023 | P9/P10 (kelak) |
 
 Daftar ini dapat bertambah melalui TASK PLAN CHANGE; setiap keluarga baru memerlukan skema JSON, evaluator dan kasus uji.

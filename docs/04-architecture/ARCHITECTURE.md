@@ -92,7 +92,7 @@ lang/{id,en}/             # pesan server (validasi, notifikasi, dokumen)
 tests/{Unit,Feature,Arch}/  e2e/  perf/
 ```
 
-Satu modul memiliki tabel, model, aksi, kebijakan dan halamannya sendiri. Struktur final mengikuti kerangka resmi Laravel React starter kit pada saat bootstrap (TASK-001), dengan registrasi publik dimatikan.
+Satu modul memiliki tabel, model, aksi, kebijakan dan halamannya sendiri. Struktur final mengikuti kerangka resmi Laravel React starter kit pada saat bootstrap aplikasi (TASK-002), dengan registrasi publik dimatikan.
 
 ## 4. Katalog modul
 
@@ -214,8 +214,8 @@ Satu server produksi (VPS/server yang dibiayai klien) menjalankan Nginx, PHP-FPM
 | Kompleksitas lima metode × dua rezim × empat jenis pengadaan | Satu kerangka paket + ekstensi metode yang dikendalikan kebijakan; pengujian matriks dengan data sintetis |
 | Driver database untuk antrean menjadi bottleneck | Beban diperkirakan rendah; antrean terpisah per jenis; pemantauan Pulse; ADR-0006 mencatat kriteria pindah ke Redis/Valkey |
 | Ketergantungan Gotenberg untuk PDF | Kontainer lokal; DOCX tetap dapat diunduh bila PDF gagal; health check |
-| Versi framework berubah sebelum eksekusi | TASK-001 memverifikasi versi terkini via dokumentasi resmi dan mencatatnya di TOOLCHAIN |
+| Versi framework berubah sebelum eksekusi | TASK-002 memverifikasi versi terkini via dokumentasi resmi dan mencatatnya di TOOLCHAIN |
 
 ## 13. Verifikasi yang ditunda ke eksekusi
 
-Versi pasti Laravel/PHP/Inertia/React/Tailwind/shadcn/PostgreSQL, perilaku starter kit (helper rute, fitur 2FA bawaan), dan kompatibilitas paket pihak ketiga diverifikasi dari dokumentasi resmi saat TASK-001/TASK-002 dan dicatat di [TOOLCHAIN](../00-governance/TOOLCHAIN.md). Bila ada ketidakcocokan dengan dokumen ini, eksekutor berhenti dan mengajukan TASK PLAN CHANGE, bukan menyimpang diam-diam.
+Versi pasti Laravel/PHP/Inertia/React/Tailwind/shadcn/PostgreSQL, perilaku starter kit (helper rute, fitur 2FA bawaan), dan kompatibilitas paket pihak ketiga diverifikasi dari dokumentasi resmi saat TASK-002 (aplikasi) dan TASK-003 (lingkungan) dan dicatat di [TOOLCHAIN](../00-governance/TOOLCHAIN.md). Bila ada ketidakcocokan dengan dokumen ini, eksekutor berhenti dan mengajukan TASK PLAN CHANGE, bukan menyimpang diam-diam.

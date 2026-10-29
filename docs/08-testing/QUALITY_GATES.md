@@ -63,22 +63,30 @@ Tingkat temuan: **P0** kerusakan/kehilangan data, celah keamanan atau pelanggara
 
 ## 4. Pipeline CI (GitHub Actions)
 
-| Workflow | Pemicu | Isi | Target durasi |
+Dua workflow: `ci.yml` (PR dan `main`) dan `ci-nightly.yml` (terjadwal). Nama job di bawah dipakai sebagai nama check.
+
+| Job | Workflow dan pemicu | Isi | Target durasi |
 |---|---|---|---|
-| `ci-fast` | PR ke `develop`/`main`, push ke cabang kerja | Pint, Larastan, ESLint, Prettier, tsc, Vitest, Pest (paralel, PostgreSQL service), arch tests, route integrity, pemeriksa kunci terjemahan, `migrate:fresh`, build produksi, `composer audit`, `npm audit`, gitleaks | ≤ 10 menit (cache hangat), ≤ 15 menit run pertama |
-| `ci-e2e` | PR yang menyentuh `app/`, `resources/`, `routes/`, `database/`, `tests/e2e/`; nightly | Build + server uji + Playwright Chromium & WebKit (sharded) + axe | ≤ 20 menit |
-| `ci-nightly` | Terjadwal | E2E penuh, uji performa ringan PERF-03, uji migrasi penuh, Gotenberg integration | Bebas |
-| `docs-check` | PR yang hanya menyentuh `docs/` | Pemeriksa tautan/anchor/ID dokumen | ≤ 2 menit |
+| `changes` | `ci.yml`: setiap PR ke `main` dan push ke `main` | Menentukan kelompok berkas yang berubah (kode aplikasi, E2E, dokumen, workflow) | < 1 menit |
+| `ci-fast` | `ci.yml`, bila kode/konfigurasi/workflow berubah | Pint, Larastan, ESLint, Prettier, tsc, Vitest, Pest (paralel, PostgreSQL service), arch tests, route integrity, pemeriksa kunci terjemahan, `migrate:fresh`, build produksi, `composer audit`, `npm audit`, gitleaks | ≤ 10 menit (cache hangat), ≤ 15 menit run pertama |
+| `ci-e2e` | `ci.yml`, bila `app/`, `resources/`, `routes/`, `database/`, `lang/`, `tests/e2e/` berubah | Build + server uji + Playwright Chromium & WebKit (sharded) + axe | ≤ 20 menit |
+| `docs-check` | `ci.yml`, bila `docs/` atau berkas Markdown akar berubah | Pemeriksa tautan/anchor/ID dokumen dan konsistensi TASK_PLAN | ≤ 2 menit |
+| `ci-gate` | `ci.yml`, selalu | Agregat: lulus hanya bila setiap job yang diperlukan menurut `changes` lulus | < 1 menit |
+| `ci-nightly` | `ci-nightly.yml`: terjadwal pada `main` + manual | E2E penuh, uji performa ringan PERF-03, uji migrasi penuh, integrasi Gotenberg | Bebas |
 
 Aturan kecepatan dan keandalan:
 
-- `concurrency` per cabang dengan `cancel-in-progress: true`.
-- Filter path agar perubahan dokumentasi tidak menjalankan suite aplikasi.
+- `ci.yml` tidak berjalan pada setiap push cabang kerja (menghindari run ganda push+PR); pemeriksaan sebelum PR dijalankan lokal menurut piramida verifikasi [TEST_STRATEGY](TEST_STRATEGY.md). PR draft boleh dibuka lebih awal; CI berjalan pada setiap pembaruan PR.
+- `concurrency` per PR dengan `cancel-in-progress: true` (run usang dibatalkan); run push ke `main` tidak dibatalkan agar setiap SHA `main` memiliki hasil.
+- Filter path di dalam `ci.yml` (job `changes`) agar perubahan dokumentasi tidak menjalankan suite aplikasi.
 - Cache Composer (`composer.lock`), npm (`package-lock.json`), browser Playwright (versi), dan build Vite antarjob dalam satu run (artefak).
 - Pest paralel (`--parallel`) dengan basis data per proses; Playwright sharding 2–4.
 - Service container `postgres` versi yang sama dengan produksi; Gotenberg hanya di `ci-nightly` dan Task dokumen.
 - Tidak ada rahasia produksi di CI; variabel hanya untuk uji.
-- Status check wajib sebelum merge ke `develop`: `ci-fast` (+ `ci-e2e` bila terpicu). `main` dilindungi; merge ke `main` hanya melalui rilis (P10).
+- Status check wajib sebelum merge ke `main` adalah satu job agregat **`ci-gate`** yang selalu berjalan pada setiap PR dan lulus hanya bila setiap job yang dipicu filter path (di dalam workflow, bukan filter tingkat workflow) lulus. Dengan begitu PR dokumentasi tidak menunggu check yang tidak dipicu, dan PR kode tidak dapat di-merge bila `ci-fast`/`ci-e2e` yang relevan gagal atau dilewati secara keliru.
+- `main` dilindungi: hanya melalui PR, cabang harus mutakhir terhadap `main` sebelum merge, tanpa force push atau penghapusan; tag `v*` dilindungi. Produksi hanya dari tag rilis ([RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang)).
+- Hasil run dapat dibedakan menurut pemicu (push cabang kerja, PR, `main` setelah merge, terjadwal) melalui nama workflow/job dan ringkasan run; artefak kegagalan (log, laporan Playwright, trace) disimpan menurut [TEST_STRATEGY §5](TEST_STRATEGY.md#5-e2e-browser).
+- Penanganan kegagalan CI mengikuti prosedur akar masalah di [EXECUTOR_OPERATING_MODEL §7](../11-tasks/EXECUTOR_OPERATING_MODEL.md#7-kegagalan-ci); job wajib tidak pernah dinonaktifkan dan asersi valid tidak pernah dilemahkan untuk memperoleh status hijau.
 
 ## 5. Bukti di Task
 

@@ -4,7 +4,7 @@ Status: PROPOSED (P4 candidate, AUTH-012) | Date: 2026-10-30 (Asia/Jakarta) | Cu
 
 ## Konteks dan bukti
 
-INV-009/019/020 menuntut posisi stok per gudang diturunkan dari ledger yang diterima dan tidak negatif; BR-026/INV-017 menuntut riwayat tidak ditimpa. Serah terima, pengembalian dan transfer dapat terjadi bersamaan.
+INV-009, INV-020 dan BR-030 menuntut posisi stok per gudang diturunkan dari ledger yang diterima dan tidak negatif; BR-026/INV-017 menuntut riwayat tidak ditimpa. Serah terima, pengembalian dan transfer dapat terjadi bersamaan.
 
 ## Alternatif
 

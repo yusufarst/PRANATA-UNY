@@ -1,8 +1,8 @@
 # Context index
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 P0–P11 planning) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
 
-Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Current state: see [PHASE_STATUS](PHASE_STATUS.md) and [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation amendment candidate VERIFYING / NOT YET APPROVED; P4–P11 NOT AUTHORIZED; application execution NOT AUTHORIZED.
+Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Current state: see [PHASE_STATUS](PHASE_STATUS.md) and [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation and compatibility amendments plus P4–P11 candidates VERIFYING / NOT YET APPROVED on branch `docs/p0-p11-planning`; P4–P11 preparation authorized by AUTH-012 (not approval); application execution NOT AUTHORIZED. Future executors enter through [EXECUTION_CONTEXT](11-tasks/EXECUTION_CONTEXT.md) instead of this index.
 
 | Need | Read |
 |---|---|
@@ -42,24 +42,35 @@ Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURR
 | P3 exception/revision patterns / traceability / decisions | [EXCEPTION_REVISION_PATTERNS](03-workflows/EXCEPTION_REVISION_PATTERNS.md) / [WORKFLOW_TRACEABILITY](03-workflows/WORKFLOW_TRACEABILITY.md) / [WORKFLOW_DECISION_REQUESTS](03-workflows/WORKFLOW_DECISION_REQUESTS.md) |
 | P3 preparation evidence / candidate identity | [P3_QUALITY_GATE](00-governance/evidence/P3_QUALITY_GATE.md) / [P3_ARTIFACT_MANIFEST](00-governance/evidence/P3_ARTIFACT_MANIFEST.json) |
 | P0–P3 remediation evidence / candidate identity | [P0_P3_REMEDIATION_QUALITY_GATE](00-governance/evidence/P0_P3_REMEDIATION_QUALITY_GATE.md) / [P0_P3_REMEDIATION_ARTIFACT_MANIFEST](00-governance/evidence/P0_P3_REMEDIATION_ARTIFACT_MANIFEST.json) |
+| Regulatory instrument observations (PR 34/2023, Perpres 16/2018 and amendments) | [REGULATORY_SOURCE_REVIEW](00-governance/evidence/REGULATORY_SOURCE_REVIEW.md) |
+| P4 architecture, data model, policy registry, document engine, ADRs | [ARCHITECTURE](04-architecture/ARCHITECTURE.md) / [DATA_MODEL](04-architecture/DATA_MODEL.md) / [POLICY_REGISTRY](04-architecture/POLICY_REGISTRY.md) / [DOCUMENT_ENGINE](04-architecture/DOCUMENT_ENGINE.md) / [ADR policy](adr/README.md) |
+| P5 authentication, sessions, threats, access model, SoD, authorization scenarios | [SECURITY_MODEL](05-security/SECURITY_MODEL.md) / [ACCESS_CONTROL](05-security/ACCESS_CONTROL.md) |
+| P6 command/API contracts, concurrency and integrity, performance and scale | [COMMAND_AND_API_CONTRACTS](06-api-performance/COMMAND_AND_API_CONTRACTS.md) / [CONCURRENCY_AND_INTEGRITY](06-api-performance/CONCURRENCY_AND_INTEGRITY.md) / [PERFORMANCE_AND_SCALE](06-api-performance/PERFORMANCE_AND_SCALE.md) |
+| P7 design tokens/components, information architecture and pages, interaction patterns, localization, journeys | [DESIGN_SYSTEM](07-ux-design/DESIGN_SYSTEM.md) / [INFORMATION_ARCHITECTURE](07-ux-design/INFORMATION_ARCHITECTURE.md) / [INTERACTION_PATTERNS](07-ux-design/INTERACTION_PATTERNS.md) / [LOCALIZATION](07-ux-design/LOCALIZATION.md) / [USER_JOURNEYS](07-ux-design/USER_JOURNEYS.md) |
+| P8 test strategy, quality gates, Definition of Done, CI | [TEST_STRATEGY](08-testing/TEST_STRATEGY.md) / [QUALITY_GATES](08-testing/QUALITY_GATES.md) |
+| P9 environments, isolation, monitoring, backup/restore, runbooks | [INFRASTRUCTURE](09-operations/INFRASTRUCTURE.md) / [OPERATIONS_RUNBOOK](09-operations/OPERATIONS_RUNBOOK.md) |
+| P10 increments, release gates, UAT, migration and cutover | [RELEASE_PLAN](10-release/RELEASE_PLAN.md) / [UAT_PLAN](10-release/UAT_PLAN.md) / [MIGRATION_AND_CUTOVER](10-release/MIGRATION_AND_CUTOVER.md) |
+| P11 executor context, Task plan and contracts, traceability, executor operating model and bootstrap | [EXECUTION_CONTEXT](11-tasks/EXECUTION_CONTEXT.md) / [TASK_PLAN](11-tasks/TASK_PLAN.md) / [TRACEABILITY_MATRIX](11-tasks/TRACEABILITY_MATRIX.md) / [EXECUTOR_OPERATING_MODEL](11-tasks/EXECUTOR_OPERATING_MODEL.md) / [EXECUTOR_BOOTSTRAP](11-tasks/EXECUTOR_BOOTSTRAP.md) |
+| Pending Owner decisions / independent Second Review handoff | [OWNER_DECISION_PACKAGE](handoff/OWNER_DECISION_PACKAGE.md) / [SECOND_REVIEW_HANDOFF](handoff/SECOND_REVIEW_HANDOFF.md) |
+| P0–P11 planning candidate quality evidence | [P0_P11_PLANNING_QUALITY_GATE](00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md) |
 | Current operational state / exact next action | [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) |
 
 ## Reserved future document locations
 
-P1 contains five APPROVED product documents and P2 seven APPROVED domain artifacts with all authority/GAP qualifications. P3 contains APPROVED workflow/route/interaction contracts under APPR-004; approval does not grant execution readiness. P4–P11 contain only reserved `.gitkeep` markers. Approved P1/P2 phase snapshots are historical; PHASE_STATUS owns current progress.
+P1 contains five APPROVED product documents and P2 seven APPROVED domain artifacts with all authority/GAP qualifications. P3 contains APPROVED workflow/route/interaction contracts under APPR-004; approval does not grant execution readiness. P4–P11 now contain AUTH-012 **candidates** (VERIFYING, not approved) next to their `.gitkeep` markers. Approved P1/P2 phase snapshots are historical; PHASE_STATUS owns current progress.
 
-| Phase | Reserved path | Future coverage when separately authorized |
+| Phase | Path | Coverage |
 |---|---|---|
 | P1 | `docs/01-product/` | APPROVED product definition/scope/acceptance/reference/experience; APPR-002, P1 DONE |
 | P2 | `docs/02-domain/` | APPROVED conceptual glossary/model/rules/responsibilities/lifecycles/traceability/decision requests; APPR-003, P2 DONE; qualifications retained |
 | P3 | `docs/03-workflows/` | APPROVED workflow/transition/route/interaction contracts, exceptions, traceability and decision requests; APPR-004 |
-| P4 | `docs/04-architecture/` | Application/database architecture, modules and justified integration boundaries |
-| P5 | `docs/05-security/` | Auth/account/session/recovery, compact roles/assignments, backend policies, threats, audit and secrets |
-| P6 | `docs/06-api-performance/` | API/concurrency/idempotency/performance contracts and scale strategy |
-| P7 | `docs/07-ux-design/` | IA/pages/design/navigation/ID-EN localization and visual references |
-| P8 | `docs/08-testing/` | Verification strategy and definition of done |
-| P9 | `docs/09-operations/` | Infrastructure, observability, backup/recovery and cost inventory |
-| P10 | `docs/10-release/` | UAT, migration/cutover, release/rollback and controlled execution |
-| P11 | `docs/11-tasks/` | EXECUTION_CONTEXT, TASK_PLAN, definitive bounded Tasks/dependencies/counts; NONE created now |
+| P4 | `docs/04-architecture/`, `docs/adr/` | Candidate: application/database architecture, modules, policy registry, document engine, ADR-0001–0010 (PROPOSED) |
+| P5 | `docs/05-security/` | Candidate: auth/account/session/recovery, compact roles/assignments, backend policies, threats, audit and secrets |
+| P6 | `docs/06-api-performance/` | Candidate: API/concurrency/idempotency/performance contracts and scale strategy |
+| P7 | `docs/07-ux-design/` | Candidate: IA/pages/design/navigation/ID-EN localization and journeys |
+| P8 | `docs/08-testing/` | Candidate: verification strategy, quality gates and definition of done |
+| P9 | `docs/09-operations/` | Candidate: infrastructure, observability, backup/recovery, runbooks and cost inventory |
+| P10 | `docs/10-release/` | Candidate: UAT, migration/cutover, release/rollback |
+| P11 | `docs/11-tasks/` | Candidate: EXECUTION_CONTEXT, TASK_PLAN, 78 bounded Task contracts, dependency graph, traceability, executor operating model and bootstrap; none READY |
 
 Local `reference-inputs/` is ignored evidence, not a portable executor context. If absent for a later agent, approved documentation must contain required semantics; never invent them from inventory labels. Source limitations are recorded in the inventory and gaps.

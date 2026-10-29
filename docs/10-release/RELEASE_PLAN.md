@@ -11,8 +11,10 @@ Dokumen ini memiliki **urutan increment, gerbang rilis, deklarasi rilis, versi, 
 | R0 Fondasi | M0–M2: kerangka, CI, identitas, akses, organisasi, referensi, kebijakan, berkas, audit, dokumen, penomoran, shell UI | Staging | Uji teknis + review |
 | R1 Pengadaan inti | M3: usulan, RUP, paket, HPS, penetapan metode, kegiatan, partisipasi tercatat, evaluasi, hasil, SPPBJ, kontrak, dokumen | Staging | **UAT-1 Pengadaan** (OD-32) |
 | R2 Gudang | M5: gudang ALP/PSRT, katalog, ledger, permintaan, serah terima, konfirmasi, pengembalian, opname, transfer | Staging | UAT-2 Gudang |
-| R3 Aset | M6–M7: register, handoff, mutasi, inventarisasi, perubahan, penghapusan, penyusutan, KDP, intake | Staging | UAT-3 Aset |
-| R4 Lengkap V1 | M4 + M8: pelaksanaan kontrak, adendum, BAST, SPJ, pembayaran, portal penyedia/DPT, rekonsiliasi, laporan, hardening | Staging → Produksi | UAT-4 + penerimaan V1 |
+| R3 Aset | M6–M7 + prasyarat dari M4 (TASK-044 pelaksanaan kontrak, TASK-046 pemeriksaan/BAST): register, handoff, mutasi, inventarisasi, perubahan, penghapusan, penyusutan, KDP, intake | Staging | UAT-3 Aset |
+| R4 Lengkap V1 | Sisa M4 + M8: adendum, SPJ, pembayaran, portal penyedia/DPT, dokumen pengadaan tahap 2, rekonsiliasi, laporan, hardening (pelaksanaan kontrak dan BAST diuji ulang dalam regresi) | Staging → Produksi | UAT-4 + penerimaan V1 |
+
+Isi increment ditentukan oleh Task beserta dependensinya di [TASK_PLAN](../11-tasks/TASK_PLAN.md), bukan oleh nomor milestone semata; Task yang menjadi prasyarat increment lain diselesaikan lebih dahulu menurut urutan eksekusi [EXECUTOR_OPERATING_MODEL](../11-tasks/EXECUTOR_OPERATING_MODEL.md).
 
 Menurut V1_SCOPE yang disetujui, V1 diterima hanya bila seluruh hasil minimum CAP terbukti. Karena itu default rencana adalah **satu go-live produksi setelah R4**. Rilis produksi bertahap (misalnya R1 Pengadaan lebih dahulu) adalah perubahan batas rilis P1 yang memerlukan **keputusan Owner** ([OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)); bila disetujui, increment produksi tetap memenuhi gerbang bagian 2 dan V1 tetap baru dinyatakan diterima setelah seluruh CAP terbukti.
 
@@ -45,7 +47,15 @@ APPROVAL: rujukan persetujuan Owner
 
 ## 4. Versi dan cabang
 
-Versi kalender `vYYYY.MM.N`. Alur cabang: cabang kerja Task (`feature/…`, `fix/…`, `chore/…`, `docs/…` — tanpa nama alat AI, GOV-09) → PR ke `develop` (CI wajib) → staging dari `develop` → PR rilis `develop` → `main` dengan persetujuan → tag → produksi. `main` selalu mencerminkan rilis produksi atau baseline dokumentasi yang disetujui.
+Versi kalender `vYYYY.MM.N`; kandidat rilis untuk UAT `vYYYY.MM.N-rc.K`. Alur cabang (berbasis trunk):
+
+1. Cabang kerja per Task dari `main` terbaru: `feature/task-0xx-…`, `fix/…`, `chore/…`, `docs/…` — tanpa nama alat AI (GOV-09).
+2. PR ke `main` dengan status check wajib `ci-gate` dan review sesuai kelas risiko ([QUALITY_GATES](../08-testing/QUALITY_GATES.md)); merge hanya bila semua gerbang lulus, lalu `main` remote diverifikasi memuat merge tersebut (GOV-12).
+3. Staging memakai SHA `main` tertentu; UAT dijalankan pada tag kandidat `-rc.K` di staging.
+4. Produksi **hanya** dari tag rilis yang lulus gerbang bagian 2 dan disetujui Owner; tidak pernah dari HEAD cabang.
+5. Hotfix: bila `main` belum memuat perubahan yang belum dirilis, cabang `fix/…` dari `main` → PR → tag patch. Bila sudah memuat, cabang `release/vYYYY.MM` dari tag produksi → PR hotfix ke cabang itu → tag patch → perubahan yang sama di-PR ke `main`.
+
+`main` adalah cabang integrasi terlindungi (PR wajib, tanpa force push/penghapusan) yang memuat baseline perencanaan yang disetujui dan kode yang telah lulus gerbang Task; `main` **bukan** cermin produksi — produksi selalu menjalankan tag rilis yang tercatat. Model ini mengadaptasi default AICWDF §32 (`develop` → `main`) sesuai siklus GOV-12 dari U-007 §9/§19 yang menuntut merge dan verifikasi pada `main` remote; gerbang staging/UAT sebelum produksi dipertahankan melalui tag kandidat dan tag rilis, sehingga cabang `develop` tidak diperlukan. Adaptasi ini adalah bagian kandidat P10 dan memerlukan persetujuan Owner ([OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)).
 
 ## 5. Pasca-rilis
 

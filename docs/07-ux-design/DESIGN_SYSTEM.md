@@ -48,7 +48,7 @@ Skala merek sama dengan skala biru Tailwind sehingga mudah dipakai, tetapi nilai
 | `text-on-brand` | `#FFFFFF` di atas `#172554` | 14,7:1 | — |
 | `link` | `#1D4ED8` | 6,7:1 | 6,2:1 |
 
-Teks abu yang lebih terang dari `#475569` tidak dipakai untuk teks yang perlu dibaca; misalnya `#64748B` hanya 4,4:1 di atas `canvas`. Cincin fokus `#2563EB` memiliki 5,2:1 pada putih dan 4,8:1 pada `canvas` (syarat non-teks 3:1). Nilai kontras adalah perhitungan perencanaan; implementasi memverifikasinya dengan uji otomatis.
+Teks abu yang lebih terang dari `#475569` tidak dipakai untuk teks yang perlu dibaca; misalnya `#64748B` hanya 4,4:1 di atas `canvas`. Cincin fokus `#2563EB` memiliki 5,2:1 pada putih dan 4,7:1 pada `canvas` (syarat non-teks 3:1). Nilai kontras adalah perhitungan perencanaan; implementasi memverifikasinya dengan uji otomatis.
 
 ### 2.3 Semantik
 
@@ -60,7 +60,7 @@ Teks abu yang lebih terang dari `#475569` tidak dipakai untuk teks yang perlu di
 | Informasi | `#1E40AF` | `#EFF6FF` | `info` | 8,0:1 |
 | Netral/draf | `#334155` | `#F1F5F9` | `file-pen` | 9,5:1 |
 | Terblokir kebijakan/GAP | `#5B21B6` | `#F5F3FF` | `lock` | 8,2:1 |
-| Simulasi | `#78350F` | `#FEF3C7` | `flask-conical` | 8,2:1 |
+| Simulasi | `#78350F` | `#FEF3C7` | `flask-conical` | 8,1:1 |
 
 ### 2.4 Visualisasi data
 

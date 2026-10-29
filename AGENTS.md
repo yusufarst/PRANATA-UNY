@@ -15,7 +15,7 @@ Check the actual branch, HEAD and working tree before acting. Current state: see
 
 ## Operating boundaries
 
-Current gates: Planning Freeze NOT REACHED; Tasks NONE; Task Baseline NOT READY; application implementation NONE; application execution NOT AUTHORIZED.
+Current gates: Planning Freeze NOT REACHED; Tasks: 78 candidate Task contracts (VERIFYING), none READY; Task Baseline NOT READY; application implementation NONE; application execution NOT AUTHORIZED.
 
 - Work is phase and Task gated. Agent roles follow GOV-10: Claude Planning is the sole planning author, ChatGPT performs independent Second Review only, the Owner decides, and Claude Code executes only READY P11 Tasks after approved P0–P11, Planning Freeze and a standing execution authorization. See [AGENT_OPERATING_MODEL](docs/00-governance/AGENT_OPERATING_MODEL.md).
 - Future executors read this file, [EXECUTION_CONTEXT](docs/11-tasks/EXECUTION_CONTEXT.md), the handoff, [TASK_PLAN](docs/11-tasks/TASK_PLAN.md), the active Task and its exact references, following [EXECUTOR_OPERATING_MODEL](docs/11-tasks/EXECUTOR_OPERATING_MODEL.md). These P11 artifacts are VERIFYING candidates: until they are approved and a standing execution authorization exists, they forbid execution. Use minimal targeted context.

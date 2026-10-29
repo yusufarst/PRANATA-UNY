@@ -1,0 +1,81 @@
+# Konteks eksekusi — PRANATA UNY
+
+Status: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
+
+Konteks minimum yang stabil untuk eksekutor (AICWDF §34A). Dokumen ini **tidak menyalin** aturan; ia menunjuk pemilik kanoniknya. Bila ada konflik, pemilik kanonik yang berlaku dan konflik dicatat, bukan diselesaikan diam-diam.
+
+```text
+PROJECT: PRANATA UNY — sistem informasi pengadaan, gudang dan aset DPSA UNY (ALP; Gudang ALP dan PSRT)
+CURRENT RELEASE: belum ada (pra-implementasi)
+CURRENT PHASE: P4–P11 kandidat VERIFYING; Planning Freeze NOT REACHED
+EXECUTION AUTHORITY: NONE — eksekusi aplikasi NOT AUTHORIZED
+EXECUTOR STATE: EXECUTION AGENT — WAITING (bootstrap baca-saja saja; EXECUTOR_BOOTSTRAP §2)
+TASK BASELINE: 78 Task kandidat (TASK-001–TASK-078); READY: 0
+```
+
+## 1. Otoritas yang harus ada sebelum Task apa pun
+
+1. Persetujuan Owner atas kandidat P0–P3 (amandemen) dan P4–P11 pada SHA yang direview, tercatat di [APPROVAL_RECORDS](../00-governance/APPROVAL_RECORDS.md).
+2. Planning Freeze tercatat dan baseline Task dinyatakan siap.
+3. Otorisasi eksekusi berdiri (standing) yang menyebut ruang lingkupnya: milestone/Task yang boleh dikerjakan, mode (terawasi atau otonom), izin merge ke `main`, dan batasnya.
+4. Untuk mode otonom: TASK-001 DONE dengan laporan kemampuan dan otorisasi Owner untuk mode otonom ([EXECUTOR_OPERATING_MODEL §1](EXECUTOR_OPERATING_MODEL.md#1-prasyarat-aktivasi)).
+
+Tanpa keempatnya: baca saja, laporkan, berhenti.
+
+## 2. Stack default
+
+Laravel (versi stabil terkini, diverifikasi pada TASK-002) + Inertia 2 + React + TypeScript + Tailwind CSS 4 + shadcn/ui; PostgreSQL ≥ 16 (`pg_trgm`, `ltree`, `btree_gist`); Nginx; antrean/cache/sesi basis data (tanpa Redis pada V1); Gotenberg (PDF), PhpWord TemplateProcessor (DOCX), OpenSpout (XLSX/CSV); `brick/math` untuk desimal; i18next/react-i18next. Modular monolith `app/Modules/<Module>`. Pemilik: [ARCHITECTURE](../04-architecture/ARCHITECTURE.md), [DATA_MODEL](../04-architecture/DATA_MODEL.md), ADR di [docs/adr](../adr/).
+
+## 3. Profil autentikasi
+
+```text
+AUTH PROFILE:
+- implementation: LARAVEL_NATIVE (starter kit resmi Laravel React; registrasi publik mati)
+- password profile: AICWDF-COMPAT-8 (kecuali Owner memilih profil lebih kuat, SEC-D3)
+- Google sign-in: OFF (OD-11/OD-12)
+- Google registration behavior: N/A
+- identitas masuk: username atau email + password; TOTP sesuai SECURITY_MODEL
+- akun internal dibuat admin berwenang; akun penyedia dibuat petugas pengadaan berwenang
+```
+
+Pemilik: [SECURITY_MODEL](../05-security/SECURITY_MODEL.md), [ACCESS_CONTROL](../05-security/ACCESS_CONTROL.md).
+
+## 4. Aturan global
+
+| Area | Ringkas | Pemilik kanonik |
+|---|---|---|
+| Bahasa UI | Indonesia sederhana default; Inggris didukung; pengalih bahasa mempertahankan konteks | [LOCALIZATION](../07-ux-design/LOCALIZATION.md) |
+| Desain | Navy `#172554`, kanvas `#EFF6FF`, permukaan putih dominan; shadcn/ui; tanpa mode gelap V1 | [DESIGN_SYSTEM](../07-ux-design/DESIGN_SYSTEM.md) (OD-34) |
+| Interaksi | Satu aksi utama; tanpa tombol mati; kembali/batal kontekstual; keadaan memuat/kosong/galat/terlarang | [INTERACTION_PATTERNS](../07-ux-design/INTERACTION_PATTERNS.md), RT/IX P3 |
+| Responsif | Mobile-first; 390×844 dan 1440×900 wajib diperiksa | [INTERACTION_PATTERNS §7](../07-ux-design/INTERACTION_PATTERNS.md#7-responsif) |
+| Akses | Grup peran SUPER_ADMIN/INTERNAL/VENDOR + grant berscope + penugasan proses; penegakan server/kueri/unduhan | [ACCESS_CONTROL](../05-security/ACCESS_CONTROL.md) |
+| Aturan resmi | Nilai resmi hanya dari kebijakan berversi; non-ACTIVE = simulasi berlabel; GAP tidak diselesaikan agen | [POLICY_REGISTRY](../04-architecture/POLICY_REGISTRY.md), [GAP_REGISTER](../00-governance/GAP_REGISTER.md) |
+| Data | Tanpa hapus record bisnis; tabel append-only; uang `numeric`; waktu `timestamptz` UTC | [DATA_MODEL §1](../04-architecture/DATA_MODEL.md#1-konvensi) |
+| Konkurensi | Idempotency key, `lock_version`, urutan kunci tetap | [CONCURRENCY_AND_INTEGRITY](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md) |
+| Biaya | Tambahan biaya produksi berulang ≈ 0 di luar infrastruktur yang dibiayai klien; layanan berbayar perlu persetujuan Owner | [COST_POLICY](../00-governance/COST_POLICY.md) |
+| Produksi | Basis data produksi zero-touch; eksekutor tidak memegang kredensial staging/produksi | [PRODUCTION_DATA_SAFETY](../00-governance/PRODUCTION_DATA_SAFETY.md), [INFRASTRUCTURE](../09-operations/INFRASTRUCTURE.md) |
+| Git | Identitas Owner saja; tanpa atribusi AI; tanpa force push; cabang netral | [GIT_WORKFLOW](../00-governance/GIT_WORKFLOW.md) (GOV-08/GOV-09), [RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang) |
+| Isolasi | Hanya sumber daya `pranata`; MULTIPLECORP, BantuKasir, ELLIGBLE tidak disentuh | [INFRASTRUCTURE §2](../09-operations/INFRASTRUCTURE.md#2-pengembangan-lokal-terisolasi), [EXECUTOR_OPERATING_MODEL §11](EXECUTOR_OPERATING_MODEL.md#11-isolasi-multi-proyek-dan-keamanan-sumber-daya) |
+
+## 5. Lingkungan lokal
+
+```text
+Compose project: pranata (kontainer pranata-*)
+Port host: web 8180, Vite 5183, PostgreSQL 55432, Mailpit 8125
+Basis data: pranata_dev, pranata_test(_N), pranata_e2e_<run>, pranata_perf — hanya di pranata-postgres
+Volume: pranata_pgdata, pranata_storage, pranata_composer_cache, pranata_node_modules
+Perintah dev/uji: ditetapkan TASK-003/TASK-004 dan dicatat di TOOLCHAIN; sampai saat itu belum ada
+```
+
+## 6. Masuk eksekusi
+
+1. Baca [AGENTS.md](../../AGENTS.md), dokumen ini, [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md), tabel status [TASK_PLAN](TASK_PLAN.md), lalu Task aktif.
+2. Baca **hanya** bagian yang dirujuk Task (REFERENCES, TRACEABILITY) dan berkas sumber yang relevan; jangan membaca ulang seluruh P0–P11.
+3. Ikuti siklus dan aturan [EXECUTOR_OPERATING_MODEL](EXECUTOR_OPERATING_MODEL.md); jawaban pertama memakai format AICWDF §38.
+4. Indeks ID: BR/INV → [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md); WF/TR/RT/IX → [docs/03-workflows](../03-workflows/); PG → [INFORMATION_ARCHITECTURE](../07-ux-design/INFORMATION_ARCHITECTURE.md); AUTHZ/SOD → [ACCESS_CONTROL](../05-security/ACCESS_CONTROL.md); SEC → [SECURITY_MODEL](../05-security/SECURITY_MODEL.md); PB/PERF → [PERFORMANCE_AND_SCALE](../06-api-performance/PERFORMANCE_AND_SCALE.md); J/E2E → [USER_JOURNEYS](../07-ux-design/USER_JOURNEYS.md); RB → [OPERATIONS_RUNBOOK](../09-operations/OPERATIONS_RUNBOOK.md); UAT → [UAT_PLAN](../10-release/UAT_PLAN.md).
+
+## 7. Jangan dibuka ulang
+
+- Keputusan Owner yang tercatat (OD, GOV) dan baseline P0–P3 yang disetujui, kecuali ada konflik nyata — konflik dicatat dan dilaporkan.
+- Pemilihan stack, modular monolith, model akses tiga grup peran, Policy Registry sebagai gerbang aturan resmi, dan model ledger append-only — kecuali ADR baru disetujui Owner.
+- Aturan resmi pengadaan/akuntansi/organisasi: tidak pernah disimpulkan sendiri; GAP tetap OPEN sampai Owner/pemegang kewenangan menjawab.

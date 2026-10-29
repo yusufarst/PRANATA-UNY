@@ -40,7 +40,7 @@ Review decisions against their classification and exact source. Challenge assump
 
 ## Session end obligation
 
-Update handoff, changed files, evidence/decisions/gaps, tool/cost/DB impact, checks and next action together. Current state: see [PHASE_STATUS](../PHASE_STATUS.md) and [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation amendment candidate VERIFYING / NOT YET APPROVED; P4–P11 NOT AUTHORIZED; application execution NOT AUTHORIZED.
+Update handoff, changed files, evidence/decisions/gaps, tool/cost/DB impact, checks and next action together. Current state: see [PHASE_STATUS](../PHASE_STATUS.md) and [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation and compatibility amendments plus P4–P11 candidates VERIFYING / NOT YET APPROVED; P4–P11 preparation authorized by AUTH-012 (not approval); application execution NOT AUTHORIZED.
 
 ## Subsequent execution-agent onboarding
 

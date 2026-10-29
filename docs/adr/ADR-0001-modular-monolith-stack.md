@@ -21,7 +21,7 @@ Satu aplikasi Laravel modular monolith dengan modul domain eksplisit ([ARCHITECT
 
 ## Risiko
 
-- Starter kit/versi berubah sebelum eksekusi → TASK-001 memverifikasi dan menghentikan bila ada konflik.
+- Starter kit/versi berubah sebelum eksekusi → TASK-002 memverifikasi dan menghentikan bila ada konflik.
 - Monolith tumbuh tanpa disiplin batas → aturan dependensi + arch tests di CI.
 
 ## Biaya

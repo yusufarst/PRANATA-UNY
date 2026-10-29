@@ -1,52 +1,49 @@
 # Current handoff
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Role: EXECUTION AGENT — DOCUMENTATION REMEDIATION (AUTH-010) | Phase: P0–P3 remediation | Authorization: AUTH-010 (completion rule)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 P0–P11 planning) | Updated: 2026-10-30 (Asia/Jakarta) | Role: LEAD PLANNING AGENT (GOV-10) | Phase: P0–P11 planning candidate | Authorization: AUTH-012 (preparation only)
 
 ## Current state
 
-Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRANATA-UNY`, specifically published `main`, is the durable shared Source of Truth. `C:\Projects\PRANATA-UNY` is the Owner's working clone and local evidence context; unpublished working-tree changes are candidates, not shared truth.
+Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRANATA-UNY`, specifically published `main`, is the durable shared Source of Truth. Branch `docs/p0-p11-planning` carries the planning candidate for review; nothing on it is approved or merged.
 
 - Approved published baseline: P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de3acbed5213c13e22a61fc2728e57ccc77` (`docs: finalize P3 workflows`); approvals APPR-001–APPR-004.
-- Remediation amendment candidate: VERIFYING / NOT YET APPROVED (P0–P3 remediation; exact identity: P0_P3_REMEDIATION_ARTIFACT_MANIFEST).
-- Active phase authorization: NONE.
-- Active non-phase authorization: AUTH-010 only during remediation preparation; HISTORICAL / COMPLETED on delivery of this VERIFYING candidate and its final report (completion rule). AUTH-002–AUTH-009: HISTORICAL / COMPLETED.
-- P4–P11: TODO / NOT AUTHORIZED.
-- Planning Freeze: NOT REACHED. Tasks: NONE. Task Baseline: NOT READY.
-- Documentation remediation execution: authorized only by an active AUTH-010; none after delivery — a correction requires a new explicit Owner instruction.
-- Application implementation: NONE. Application execution: NOT AUTHORIZED.
-- GAP-001–GAP-025: OPEN (resolved NONE).
-- Claude Code: EXECUTION AGENT — WAITING for application execution.
-- Next safe action: independent review of the exact remediation candidate manifest; then explicit Owner approval (reserved APPR-005) or bounded corrections with delta review; publication only under a separately reviewed checkpoint authorization (reserved AUTH-011). P4 remains NOT AUTHORIZED.
+- Candidates on `docs/p0-p11-planning`, all **VERIFYING / NOT YET APPROVED**: AUTH-010 P0–P3 remediation amendment (imported byte for byte); AUTH-012 P0–P3 compatibility amendment; AUTH-012 P4–P11 planning candidates.
+- Active authorization: [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012) — planning preparation and bounded planning Git operations only. APPR-005 and AUTH-011 reserved, not recorded.
+- Planning Freeze: NOT REACHED. Task backlog: 78 candidate Tasks, none READY. Task Baseline: NOT READY.
+- Application implementation: NONE. Application execution: NOT AUTHORIZED. Claude Code: EXECUTION AGENT — WAITING.
+- GAP-001–GAP-029: OPEN (resolved NONE).
 
 ## Handoff (AICWDF §36)
 
 | Field | Current value |
 |---|---|
-| Current phase | No active phase authorization. P0–P3 remediation amendment candidate VERIFYING, prepared under AUTH-010 (completion rule). |
-| Current Task / status | NONE / N/A — Tasks are not defined before P11. |
-| Last completed action | Remediation candidate RC-01–RC-29 prepared in the Owner's working clone; not staged, committed or pushed. |
-| Evidence | [P0_P3_REMEDIATION_QUALITY_GATE](../00-governance/evidence/P0_P3_REMEDIATION_QUALITY_GATE.md): QG-01–QG-24 PASS; locator reciprocity 0 unresolved pairs (285 at the published baseline); every CRLF line and protected file preserved. [P0_P3_REMEDIATION_ARTIFACT_MANIFEST](../00-governance/evidence/P0_P3_REMEDIATION_ARTIFACT_MANIFEST.json): exact candidate identity; its own byte size and SHA-256 are reported in the session final report. |
-| Files changed | Relative to published `0e3f7de`: **2 created / 37 amended / 30 preserved**; **69 eligible files / 68 manifest entries** (the manifest excludes itself). The exact list is the manifest. |
-| Task plan | Not defined before P11; Task Baseline NOT READY; no Task counts or progress percentage. |
-| Open blockers | Publication of the candidate waits for independent review, explicit Owner approval (reserved APPR-005, not recorded) and a separately reviewed checkpoint authorization (reserved AUTH-011, not recorded). Application execution waits for approved P4–P11, Planning Freeze and an explicitly READY P11 Task. |
-| Open gaps | **GAP-001–GAP-025 OPEN**, resolved NONE; GAP-021–GAP-025 are new from U-005 ([GAP_REGISTER](../00-governance/GAP_REGISTER.md)). P3 classes **A 0 / B 18 / C 5 / D 2** ([WORKFLOW_TRACEABILITY](../03-workflows/WORKFLOW_TRACEABILITY.md)). |
-| Decisions made | Current Owner Decisions OD-01–OD-25 and governance decisions GOV-01–GOV-09 ([DECISION_INDEX](../00-governance/DECISION_INDEX.md)); OD-24, OD-25 and GOV-07–GOV-09 come from Owner source [U-005](../00-governance/SOURCE_INVENTORY.md#u-005-p0p3-remediation-owner-decisions). |
-| Records | Approvals [APPR-001](../00-governance/APPROVAL_RECORDS.md#appr-001), [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002), [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003), [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004); [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009) completion (HISTORICAL / COMPLETED); [AUTH-010](../00-governance/APPROVAL_RECORDS.md#auth-010) (remediation preparation, completion rule). Historical approval, review and publication detail stays in these owning records and the phase quality gates. |
-| Decisions pending | Owner decision on the exact candidate; publication checkpoint authorization; answers to all open GAPs. |
-| Toolchain / cost | No tool or package installed or configured; no new recurring cost. Graphify, Context7 and UI/UX checks: N/A for documentation remediation. |
-| Database | Direct production DB touched: NO. Schema change: NONE. Migration: NONE. |
-| Tests | Documentation, link, ID, locator, count, manifest and byte/EOL checks only; application tests N/A (no application exists). |
-| Next READY Task | NONE. |
+| Current phase | P0–P11 planning candidate complete for review; P4–P11 DRAFTED — VERIFYING. Approved phases 4/12. |
+| Current Task / status | NONE — Tasks become executable only after P11 approval, Planning Freeze and a standing execution authorization. |
+| Last completed action | P11 candidate completed (78 Task contracts, TASK_PLAN, TRACEABILITY_MATRIX, EXECUTION_CONTEXT, EXECUTOR_OPERATING_MODEL, EXECUTOR_BOOTSTRAP), cross-phase consistency corrections, Owner decision package and Second Review handoff prepared on `docs/p0-p11-planning`. |
+| Evidence | [P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md) (link/anchor, ID, coverage, dependency-graph and attribution checks). The exact review identity is the branch head SHA reported with the review request. |
+| Task plan | Baseline candidate 78 · Current 78 · DONE 0 · READY 0 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 78 · SUPERSEDED 0 · progress percentage not reported before the baseline is approved. |
+| Open blockers | Independent Second Review; Owner batch decision ([OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md)); Planning Freeze; standing execution authorization. Staging/UAT also need Owner hosting decisions (TASK-040). |
+| Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates, never as invented rules ([TRACEABILITY_MATRIX — Perlakuan GAP](../11-tasks/TRACEABILITY_MATRIX.md#perlakuan-gap)). |
+| Decisions made | OD-01–OD-34 and GOV-01–GOV-12 as recorded in [DECISION_INDEX](../00-governance/DECISION_INDEX.md); GOV-08 Owner identity confirmation. |
+| Decisions pending | See [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md): batch approval, APPR-005/AUTH-011 consolidation, workspace structure, security options SEC-D1–D7, merge method and trunk-based flow, release model, hosting/operations, autonomy scope, GAP resolver roles. |
+| Files changed | Branch `docs/p0-p11-planning` relative to `0e3f7de`; the exact list is `git diff --stat 0e3f7de...docs/p0-p11-planning`. |
+| Toolchain | Planning used only Git, GitHub CLI and Python standard-library scripts in the session scratchpad (renderer and link/ID checks); nothing installed in the repository; no MCP configuration changed. |
+| Graphify / Context7 | Graphify N/A (no application code). Version-sensitive facts are deferred to TASK-002/TASK-003 verification; Claude Code capabilities to TASK-001. |
+| Cost | New recurring cost: NONE. Paid exception: NONE. Hosting and offsite storage are client-funded Owner decisions. |
+| UI / UX / localization | Candidate design system (OD-34 colors), information architecture with 74 page contracts (PG), Indonesian default with English, mobile-first, contextual returns — not implemented. |
+| Database | Direct production DB touched: NO. Schema: candidate design only. Migration: NONE. |
+| Tests | Documentation checks only; application tests N/A (no application exists). |
+| Next READY Task | NONE (TASK-001 becomes READY only after approval, Planning Freeze and execution authorization). |
 
 ## Exact next safe action
 
-Independent review of the exact remediation candidate manifest; then explicit Owner approval (reserved APPR-005, not recorded) or bounded corrections with delta review; publication only under a separately reviewed checkpoint authorization (reserved AUTH-011, not recorded). P4 remains NOT AUTHORIZED.
+Independent Second Review of branch `docs/p0-p11-planning` at the reported head SHA using [SECOND_REVIEW_HANDOFF](SECOND_REVIEW_HANDOFF.md); focused corrections and a delta check; then the Owner's explicit batch decision using [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md). Merge into `main` only after that decision, with the merge method the Owner selects.
 
 ## DO NOT DO
 
-- No P4 or later-phase work (P4–P11 NOT AUTHORIZED).
+- No merge of the planning candidate into `main` before explicit Owner approval.
 - No application work: implementation, scaffolding, packages, schema, migrations, authentication or UI.
-- No Tasks, Task Baseline or Planning Freeze.
-- No staging, commit or push.
-- No GAP closure or resolution.
-- No settings changes: Claude Code settings, Git configuration or identity, `.gitattributes`.
+- No Task marked READY, no Planning Freeze, no execution authorization by an agent.
+- No GAP closure or resolution; no invented procurement, accounting, organization or security rule.
+- No Git identity/configuration change, no force push, no history rewrite, no AI attribution.
+- No access to MULTIPLECORP, BantuKasir or ELLIGBLE resources.

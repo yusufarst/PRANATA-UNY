@@ -1,0 +1,260 @@
+# Matriks ketertelusuran Task — PRANATA UNY
+
+Status: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
+
+Matriks ini dibangkitkan dari kontrak Task dan diperiksa otomatis: setiap CAP-01–CAP-23, AC-01–AC-32, NFR-P01–P04/NFR-O01–O02, WF-001–WF-033, RT-001–RT-036 dan IX-001–IX-024 dipetakan ke minimal satu Task.
+
+## Kapabilitas (CAP)
+
+| ID | Task |
+|---|---|
+| CAP-01 | [TASK-002](TASK-002.md), [TASK-010](TASK-010.md), [TASK-011](TASK-011.md), [TASK-012](TASK-012.md), [TASK-078](TASK-078.md) |
+| CAP-02 | [TASK-011](TASK-011.md), [TASK-013](TASK-013.md), [TASK-014](TASK-014.md), [TASK-015](TASK-015.md), [TASK-017](TASK-017.md), [TASK-074](TASK-074.md), [TASK-078](TASK-078.md) |
+| CAP-03 | [TASK-015](TASK-015.md), [TASK-019](TASK-019.md), [TASK-025](TASK-025.md), [TASK-039](TASK-039.md), [TASK-072](TASK-072.md), [TASK-078](TASK-078.md) |
+| CAP-04 | [TASK-025](TASK-025.md), [TASK-041](TASK-041.md), [TASK-078](TASK-078.md) |
+| CAP-05 | [TASK-024](TASK-024.md), [TASK-026](TASK-026.md), [TASK-027](TASK-027.md), [TASK-028](TASK-028.md), [TASK-029](TASK-029.md), [TASK-030](TASK-030.md), [TASK-034](TASK-034.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md), [TASK-041](TASK-041.md), [TASK-078](TASK-078.md) |
+| CAP-06 | [TASK-028](TASK-028.md), [TASK-031](TASK-031.md), [TASK-041](TASK-041.md), [TASK-078](TASK-078.md) |
+| CAP-07 | [TASK-032](TASK-032.md), [TASK-033](TASK-033.md), [TASK-042](TASK-042.md), [TASK-043](TASK-043.md), [TASK-078](TASK-078.md) |
+| CAP-08 | [TASK-020](TASK-020.md), [TASK-021](TASK-021.md), [TASK-029](TASK-029.md), [TASK-036](TASK-036.md), [TASK-038](TASK-038.md), [TASK-041](TASK-041.md), [TASK-047](TASK-047.md), [TASK-048](TASK-048.md), [TASK-078](TASK-078.md) |
+| CAP-09 | [TASK-037](TASK-037.md), [TASK-044](TASK-044.md), [TASK-045](TASK-045.md), [TASK-046](TASK-046.md), [TASK-047](TASK-047.md), [TASK-078](TASK-078.md) |
+| CAP-10 | [TASK-046](TASK-046.md), [TASK-060](TASK-060.md), [TASK-061](TASK-061.md), [TASK-078](TASK-078.md) |
+| CAP-11 | [TASK-058](TASK-058.md), [TASK-059](TASK-059.md), [TASK-060](TASK-060.md), [TASK-062](TASK-062.md), [TASK-078](TASK-078.md) |
+| CAP-12 | [TASK-063](TASK-063.md), [TASK-064](TASK-064.md), [TASK-065](TASK-065.md), [TASK-078](TASK-078.md) |
+| CAP-13 | [TASK-023](TASK-023.md), [TASK-058](TASK-058.md), [TASK-066](TASK-066.md), [TASK-071](TASK-071.md), [TASK-078](TASK-078.md) |
+| CAP-14 | [TASK-049](TASK-049.md), [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-055](TASK-055.md), [TASK-057](TASK-057.md), [TASK-078](TASK-078.md) |
+| CAP-15 | [TASK-067](TASK-067.md), [TASK-078](TASK-078.md) |
+| CAP-16 | [TASK-068](TASK-068.md), [TASK-069](TASK-069.md), [TASK-078](TASK-078.md) |
+| CAP-17 | [TASK-023](TASK-023.md), [TASK-039](TASK-039.md), [TASK-055](TASK-055.md), [TASK-070](TASK-070.md), [TASK-071](TASK-071.md), [TASK-078](TASK-078.md) |
+| CAP-18 | [TASK-009](TASK-009.md), [TASK-022](TASK-022.md), [TASK-023](TASK-023.md), [TASK-039](TASK-039.md), [TASK-059](TASK-059.md), [TASK-071](TASK-071.md), [TASK-072](TASK-072.md), [TASK-073](TASK-073.md), [TASK-078](TASK-078.md) |
+| CAP-19 | [TASK-004](TASK-004.md), [TASK-008](TASK-008.md), [TASK-009](TASK-009.md), [TASK-016](TASK-016.md), [TASK-017](TASK-017.md), [TASK-019](TASK-019.md), [TASK-021](TASK-021.md), [TASK-074](TASK-074.md), [TASK-078](TASK-078.md) |
+| CAP-20 | [TASK-004](TASK-004.md), [TASK-006](TASK-006.md), [TASK-007](TASK-007.md), [TASK-075](TASK-075.md), [TASK-078](TASK-078.md) |
+| CAP-21 | [TASK-049](TASK-049.md), [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-057](TASK-057.md), [TASK-078](TASK-078.md) |
+| CAP-22 | [TASK-052](TASK-052.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-078](TASK-078.md) |
+| CAP-23 | [TASK-018](TASK-018.md), [TASK-024](TASK-024.md), [TASK-030](TASK-030.md), [TASK-045](TASK-045.md), [TASK-078](TASK-078.md) |
+
+## Kriteria penerimaan dan NFR
+
+| ID | Task |
+|---|---|
+| AC-01 | [TASK-002](TASK-002.md), [TASK-010](TASK-010.md), [TASK-011](TASK-011.md), [TASK-012](TASK-012.md) |
+| AC-02 | [TASK-014](TASK-014.md) |
+| AC-03 | [TASK-013](TASK-013.md), [TASK-025](TASK-025.md) |
+| AC-04 | [TASK-011](TASK-011.md), [TASK-013](TASK-013.md), [TASK-014](TASK-014.md), [TASK-015](TASK-015.md), [TASK-017](TASK-017.md), [TASK-074](TASK-074.md) |
+| AC-05 | [TASK-019](TASK-019.md), [TASK-025](TASK-025.md), [TASK-027](TASK-027.md), [TASK-039](TASK-039.md), [TASK-072](TASK-072.md) |
+| AC-06 | [TASK-025](TASK-025.md) |
+| AC-07 | [TASK-024](TASK-024.md), [TASK-026](TASK-026.md), [TASK-027](TASK-027.md), [TASK-028](TASK-028.md), [TASK-029](TASK-029.md), [TASK-030](TASK-030.md), [TASK-034](TASK-034.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md) |
+| AC-08 | [TASK-031](TASK-031.md) |
+| AC-09 | [TASK-032](TASK-032.md), [TASK-033](TASK-033.md), [TASK-042](TASK-042.md), [TASK-043](TASK-043.md) |
+| AC-10 | [TASK-033](TASK-033.md), [TASK-043](TASK-043.md) |
+| AC-11 | [TASK-020](TASK-020.md), [TASK-021](TASK-021.md), [TASK-029](TASK-029.md), [TASK-036](TASK-036.md), [TASK-038](TASK-038.md), [TASK-047](TASK-047.md), [TASK-048](TASK-048.md) |
+| AC-12 | [TASK-037](TASK-037.md), [TASK-044](TASK-044.md), [TASK-045](TASK-045.md), [TASK-046](TASK-046.md), [TASK-047](TASK-047.md) |
+| AC-13 | [TASK-046](TASK-046.md), [TASK-060](TASK-060.md), [TASK-061](TASK-061.md) |
+| AC-14 | [TASK-058](TASK-058.md), [TASK-059](TASK-059.md), [TASK-060](TASK-060.md), [TASK-062](TASK-062.md) |
+| AC-15 | [TASK-063](TASK-063.md), [TASK-064](TASK-064.md), [TASK-065](TASK-065.md) |
+| AC-16 | [TASK-023](TASK-023.md), [TASK-058](TASK-058.md), [TASK-066](TASK-066.md), [TASK-071](TASK-071.md) |
+| AC-17 | [TASK-049](TASK-049.md), [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-055](TASK-055.md), [TASK-057](TASK-057.md), [TASK-071](TASK-071.md) |
+| AC-18 | [TASK-067](TASK-067.md) |
+| AC-19 | [TASK-068](TASK-068.md), [TASK-069](TASK-069.md) |
+| AC-20 | [TASK-039](TASK-039.md), [TASK-055](TASK-055.md), [TASK-070](TASK-070.md), [TASK-071](TASK-071.md) |
+| AC-21 | [TASK-009](TASK-009.md), [TASK-022](TASK-022.md), [TASK-023](TASK-023.md), [TASK-039](TASK-039.md), [TASK-059](TASK-059.md), [TASK-071](TASK-071.md), [TASK-072](TASK-072.md), [TASK-073](TASK-073.md) |
+| AC-22 | [TASK-008](TASK-008.md), [TASK-009](TASK-009.md), [TASK-016](TASK-016.md), [TASK-019](TASK-019.md), [TASK-021](TASK-021.md), [TASK-074](TASK-074.md) |
+| AC-23 | [TASK-004](TASK-004.md), [TASK-006](TASK-006.md), [TASK-075](TASK-075.md) |
+| AC-24 | [TASK-006](TASK-006.md), [TASK-007](TASK-007.md), [TASK-075](TASK-075.md) |
+| AC-25 | [TASK-006](TASK-006.md), [TASK-075](TASK-075.md) |
+| AC-26 | [TASK-002](TASK-002.md), [TASK-019](TASK-019.md), [TASK-026](TASK-026.md), [TASK-078](TASK-078.md) |
+| AC-27 | [TASK-003](TASK-003.md), [TASK-005](TASK-005.md), [TASK-040](TASK-040.md), [TASK-076](TASK-076.md), [TASK-078](TASK-078.md) |
+| AC-28 | [TASK-049](TASK-049.md), [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-057](TASK-057.md) |
+| AC-29 | [TASK-052](TASK-052.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md) |
+| AC-30 | [TASK-024](TASK-024.md), [TASK-028](TASK-028.md), [TASK-030](TASK-030.md), [TASK-041](TASK-041.md) |
+| AC-31 | [TASK-014](TASK-014.md), [TASK-015](TASK-015.md), [TASK-033](TASK-033.md), [TASK-043](TASK-043.md), [TASK-049](TASK-049.md), [TASK-059](TASK-059.md), [TASK-074](TASK-074.md) |
+| AC-32 | [TASK-018](TASK-018.md), [TASK-021](TASK-021.md), [TASK-024](TASK-024.md), [TASK-030](TASK-030.md), [TASK-045](TASK-045.md) |
+| NFR-O01 | [TASK-077](TASK-077.md) |
+| NFR-O02 | [TASK-077](TASK-077.md) |
+| NFR-P01 | [TASK-073](TASK-073.md) |
+| NFR-P02 | [TASK-073](TASK-073.md) |
+| NFR-P03 | [TASK-073](TASK-073.md) |
+| NFR-P04 | [TASK-041](TASK-041.md), [TASK-075](TASK-075.md) |
+
+## Workflow (WF)
+
+| ID | Task |
+|---|---|
+| WF-001 (TR-001–TR-003, 3 TR; BLOCKED_BY_GAP: TR-003) | [TASK-002](TASK-002.md), [TASK-010](TASK-010.md), [TASK-011](TASK-011.md), [TASK-012](TASK-012.md) |
+| WF-002 (TR-011–TR-014, 4 TR) | [TASK-006](TASK-006.md), [TASK-014](TASK-014.md), [TASK-072](TASK-072.md) |
+| WF-003 (TR-021–TR-026, 6 TR; BLOCKED_BY_GAP: TR-025) | [TASK-025](TASK-025.md) |
+| WF-004 (TR-031–TR-034, 4 TR; BLOCKED_BY_GAP: TR-033) | [TASK-026](TASK-026.md) |
+| WF-005 (TR-041–TR-045, 5 TR; BLOCKED_BY_GAP: TR-044) | [TASK-024](TASK-024.md), [TASK-027](TASK-027.md), [TASK-028](TASK-028.md), [TASK-029](TASK-029.md) |
+| WF-006 (TR-051–TR-055, 5 TR) | [TASK-031](TASK-031.md) |
+| WF-007 (TR-061–TR-066, 6 TR; BLOCKED_BY_GAP: TR-064) | [TASK-032](TASK-032.md), [TASK-042](TASK-042.md), [TASK-043](TASK-043.md) |
+| WF-008 (TR-071–TR-077, 7 TR; BLOCKED_BY_GAP: TR-076) | [TASK-033](TASK-033.md), [TASK-043](TASK-043.md) |
+| WF-009 (TR-081–TR-085, 5 TR; BLOCKED_BY_GAP: TR-084) | [TASK-034](TASK-034.md) |
+| WF-010 (TR-091–TR-094, 4 TR; BLOCKED_BY_GAP: TR-092) | [TASK-035](TASK-035.md) |
+| WF-011 (TR-101–TR-106, 6 TR; BLOCKED_BY_GAP: TR-102, TR-103, TR-104, TR-105) | [TASK-036](TASK-036.md) |
+| WF-012 (TR-111–TR-115, 5 TR; BLOCKED_BY_GAP: TR-112, TR-114) | [TASK-037](TASK-037.md) |
+| WF-013 (TR-121–TR-125, 5 TR; BLOCKED_BY_GAP: TR-124) | [TASK-044](TASK-044.md) |
+| WF-014 (TR-131–TR-136, 6 TR; BLOCKED_BY_GAP: TR-132, TR-133, TR-135) | [TASK-046](TASK-046.md) |
+| WF-015 (TR-141–TR-145, 5 TR; BLOCKED_BY_GAP: TR-144) | [TASK-047](TASK-047.md) |
+| WF-016 (TR-151–TR-156, 6 TR; BLOCKED_BY_GAP: TR-152) | [TASK-061](TASK-061.md) |
+| WF-017 (TR-161–TR-166, 6 TR; BLOCKED_BY_GAP: TR-164, TR-165) | [TASK-059](TASK-059.md), [TASK-060](TASK-060.md), [TASK-069](TASK-069.md) |
+| WF-018 (TR-171–TR-175, 5 TR; BLOCKED_BY_GAP: TR-174) | [TASK-062](TASK-062.md) |
+| WF-019 (TR-181–TR-185, 5 TR) | [TASK-063](TASK-063.md) |
+| WF-020 (TR-191–TR-195, 5 TR; BLOCKED_BY_GAP: TR-194) | [TASK-064](TASK-064.md) |
+| WF-021 (TR-201–TR-205, 5 TR; BLOCKED_BY_GAP: TR-203, TR-204) | [TASK-065](TASK-065.md) |
+| WF-022 (TR-211–TR-214, 4 TR; BLOCKED_BY_GAP: TR-212) | [TASK-066](TASK-066.md) |
+| WF-023 (TR-221–TR-226, 6 TR; BLOCKED_BY_GAP: TR-224) | [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-069](TASK-069.md) |
+| WF-024 (TR-231–TR-236, 6 TR; BLOCKED_BY_GAP: TR-232, TR-235) | [TASK-067](TASK-067.md) |
+| WF-025 (TR-241–TR-246, 6 TR; BLOCKED_BY_GAP: TR-245) | [TASK-055](TASK-055.md), [TASK-070](TASK-070.md) |
+| WF-026 (TR-251–TR-257, 7 TR; BLOCKED_BY_GAP: TR-255, TR-256) | [TASK-068](TASK-068.md), [TASK-069](TASK-069.md) |
+| WF-027 (TR-261–TR-265, 5 TR; BLOCKED_BY_GAP: TR-262) | [TASK-023](TASK-023.md), [TASK-039](TASK-039.md), [TASK-057](TASK-057.md), [TASK-071](TASK-071.md) |
+| WF-028 (TR-271–TR-276, 6 TR; BLOCKED_BY_GAP: TR-274) | [TASK-016](TASK-016.md), [TASK-020](TASK-020.md), [TASK-021](TASK-021.md), [TASK-038](TASK-038.md), [TASK-048](TASK-048.md) |
+| WF-029 (TR-281–TR-288, 8 TR; BLOCKED_BY_GAP: TR-285) | [TASK-013](TASK-013.md), [TASK-017](TASK-017.md), [TASK-018](TASK-018.md), [TASK-049](TASK-049.md), [TASK-058](TASK-058.md) |
+| WF-030 (TR-291–TR-298, 8 TR; BLOCKED_BY_GAP: TR-293) | [TASK-052](TASK-052.md), [TASK-053](TASK-053.md) |
+| WF-031 (TR-301–TR-306, 6 TR; BLOCKED_BY_GAP: TR-304) | [TASK-054](TASK-054.md) |
+| WF-032 (TR-311–TR-316, 6 TR; BLOCKED_BY_GAP: TR-313, TR-315) | [TASK-024](TASK-024.md), [TASK-030](TASK-030.md) |
+| WF-033 (TR-321–TR-327, 7 TR; BLOCKED_BY_GAP: TR-325) | [TASK-045](TASK-045.md) |
+
+## Keputusan Owner
+
+| ID | Task |
+|---|---|
+| GOV-08 | [TASK-001](TASK-001.md) |
+| GOV-12 | [TASK-001](TASK-001.md), [TASK-003](TASK-003.md), [TASK-005](TASK-005.md) |
+| OD-04 | [TASK-013](TASK-013.md), [TASK-025](TASK-025.md) |
+| OD-05 | [TASK-013](TASK-013.md), [TASK-025](TASK-025.md) |
+| OD-06 | [TASK-027](TASK-027.md) |
+| OD-07 | [TASK-031](TASK-031.md) |
+| OD-08 | [TASK-021](TASK-021.md), [TASK-027](TASK-027.md), [TASK-038](TASK-038.md) |
+| OD-09 | [TASK-014](TASK-014.md) |
+| OD-10 | [TASK-011](TASK-011.md), [TASK-013](TASK-013.md), [TASK-014](TASK-014.md), [TASK-017](TASK-017.md) |
+| OD-11 | [TASK-002](TASK-002.md), [TASK-010](TASK-010.md), [TASK-011](TASK-011.md), [TASK-012](TASK-012.md) |
+| OD-12 | [TASK-002](TASK-002.md), [TASK-010](TASK-010.md) |
+| OD-14 | [TASK-058](TASK-058.md), [TASK-064](TASK-064.md), [TASK-066](TASK-066.md), [TASK-068](TASK-068.md), [TASK-069](TASK-069.md), [TASK-071](TASK-071.md) |
+| OD-15 | [TASK-066](TASK-066.md), [TASK-071](TASK-071.md) |
+| OD-16 | [TASK-022](TASK-022.md), [TASK-023](TASK-023.md), [TASK-059](TASK-059.md), [TASK-073](TASK-073.md) |
+| OD-17 | [TASK-006](TASK-006.md), [TASK-075](TASK-075.md) |
+| OD-18 | [TASK-040](TASK-040.md), [TASK-076](TASK-076.md) |
+| OD-19 | [TASK-019](TASK-019.md), [TASK-025](TASK-025.md), [TASK-039](TASK-039.md), [TASK-057](TASK-057.md), [TASK-072](TASK-072.md) |
+| OD-20 | [TASK-014](TASK-014.md) |
+| OD-21 | [TASK-006](TASK-006.md), [TASK-075](TASK-075.md) |
+| OD-22 | [TASK-022](TASK-022.md), [TASK-059](TASK-059.md), [TASK-073](TASK-073.md) |
+| OD-23 | [TASK-019](TASK-019.md) |
+| OD-25 | [TASK-049](TASK-049.md), [TASK-056](TASK-056.md) |
+| OD-26 | [TASK-049](TASK-049.md) |
+| OD-27 | [TASK-018](TASK-018.md), [TASK-024](TASK-024.md), [TASK-026](TASK-026.md), [TASK-028](TASK-028.md), [TASK-030](TASK-030.md), [TASK-032](TASK-032.md), [TASK-035](TASK-035.md), [TASK-042](TASK-042.md) |
+| OD-28 | [TASK-014](TASK-014.md), [TASK-015](TASK-015.md), [TASK-028](TASK-028.md), [TASK-032](TASK-032.md), [TASK-033](TASK-033.md), [TASK-043](TASK-043.md), [TASK-074](TASK-074.md) |
+| OD-29 | [TASK-020](TASK-020.md), [TASK-021](TASK-021.md), [TASK-029](TASK-029.md), [TASK-037](TASK-037.md), [TASK-038](TASK-038.md), [TASK-039](TASK-039.md), [TASK-045](TASK-045.md), [TASK-047](TASK-047.md), [TASK-048](TASK-048.md) |
+| OD-30 | [TASK-018](TASK-018.md), [TASK-027](TASK-027.md), [TASK-046](TASK-046.md), [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-060](TASK-060.md), [TASK-061](TASK-061.md), [TASK-064](TASK-064.md), [TASK-066](TASK-066.md), [TASK-067](TASK-067.md) |
+| OD-31 | [TASK-018](TASK-018.md), [TASK-049](TASK-049.md), [TASK-052](TASK-052.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md) |
+| OD-32 | [TASK-041](TASK-041.md), [TASK-073](TASK-073.md), [TASK-076](TASK-076.md), [TASK-077](TASK-077.md), [TASK-078](TASK-078.md) |
+| OD-33 | [TASK-006](TASK-006.md), [TASK-072](TASK-072.md), [TASK-075](TASK-075.md) |
+| OD-34 | [TASK-006](TASK-006.md), [TASK-075](TASK-075.md) |
+
+## Kontrak rute (RT)
+
+| RT | Task |
+|---|---|
+| RT-001 | [TASK-002](TASK-002.md), [TASK-007](TASK-007.md), [TASK-010](TASK-010.md), [TASK-011](TASK-011.md), [TASK-012](TASK-012.md) |
+| RT-002 | [TASK-006](TASK-006.md), [TASK-007](TASK-007.md), [TASK-011](TASK-011.md), [TASK-014](TASK-014.md), [TASK-015](TASK-015.md), [TASK-019](TASK-019.md), [TASK-039](TASK-039.md), [TASK-057](TASK-057.md), [TASK-072](TASK-072.md) |
+| RT-003 | [TASK-025](TASK-025.md), [TASK-041](TASK-041.md) |
+| RT-004 | [TASK-026](TASK-026.md), [TASK-041](TASK-041.md) |
+| RT-005 | [TASK-027](TASK-027.md), [TASK-028](TASK-028.md), [TASK-029](TASK-029.md), [TASK-041](TASK-041.md) |
+| RT-006 | [TASK-031](TASK-031.md), [TASK-041](TASK-041.md) |
+| RT-007 | [TASK-032](TASK-032.md), [TASK-042](TASK-042.md), [TASK-043](TASK-043.md) |
+| RT-008 | [TASK-033](TASK-033.md), [TASK-041](TASK-041.md), [TASK-043](TASK-043.md) |
+| RT-009 | [TASK-034](TASK-034.md), [TASK-041](TASK-041.md) |
+| RT-010 | [TASK-035](TASK-035.md), [TASK-041](TASK-041.md) |
+| RT-011 | [TASK-036](TASK-036.md), [TASK-041](TASK-041.md) |
+| RT-012 | [TASK-037](TASK-037.md), [TASK-041](TASK-041.md) |
+| RT-013 | [TASK-044](TASK-044.md) |
+| RT-014 | [TASK-046](TASK-046.md) |
+| RT-015 | [TASK-047](TASK-047.md) |
+| RT-016 | [TASK-061](TASK-061.md) |
+| RT-017 | [TASK-059](TASK-059.md), [TASK-060](TASK-060.md), [TASK-069](TASK-069.md) |
+| RT-018 | [TASK-062](TASK-062.md) |
+| RT-019 | [TASK-063](TASK-063.md) |
+| RT-020 | [TASK-064](TASK-064.md) |
+| RT-021 | [TASK-065](TASK-065.md) |
+| RT-022 | [TASK-066](TASK-066.md) |
+| RT-023 | [TASK-049](TASK-049.md), [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-069](TASK-069.md) |
+| RT-024 | [TASK-067](TASK-067.md) |
+| RT-025 | [TASK-070](TASK-070.md) |
+| RT-026 | [TASK-068](TASK-068.md), [TASK-069](TASK-069.md) |
+| RT-027 | [TASK-023](TASK-023.md), [TASK-039](TASK-039.md), [TASK-057](TASK-057.md), [TASK-071](TASK-071.md) |
+| RT-028 | [TASK-021](TASK-021.md), [TASK-038](TASK-038.md), [TASK-048](TASK-048.md) |
+| RT-029 | [TASK-022](TASK-022.md), [TASK-072](TASK-072.md) |
+| RT-030 | [TASK-019](TASK-019.md), [TASK-059](TASK-059.md), [TASK-072](TASK-072.md) |
+| RT-031 | [TASK-016](TASK-016.md), [TASK-059](TASK-059.md) |
+| RT-032 | [TASK-013](TASK-013.md), [TASK-017](TASK-017.md), [TASK-018](TASK-018.md), [TASK-020](TASK-020.md), [TASK-024](TASK-024.md), [TASK-049](TASK-049.md), [TASK-058](TASK-058.md) |
+| RT-033 | [TASK-052](TASK-052.md), [TASK-053](TASK-053.md) |
+| RT-034 | [TASK-054](TASK-054.md) |
+| RT-035 | [TASK-030](TASK-030.md), [TASK-041](TASK-041.md) |
+| RT-036 | [TASK-045](TASK-045.md) |
+
+## Kontrak interaksi (IX)
+
+| IX | Task |
+|---|---|
+| IX-001 | [TASK-011](TASK-011.md), [TASK-013](TASK-013.md), [TASK-014](TASK-014.md), [TASK-015](TASK-015.md), [TASK-017](TASK-017.md), [TASK-018](TASK-018.md), [TASK-025](TASK-025.md), [TASK-026](TASK-026.md), [TASK-027](TASK-027.md), [TASK-028](TASK-028.md), [TASK-029](TASK-029.md), [TASK-030](TASK-030.md), [TASK-031](TASK-031.md), [TASK-032](TASK-032.md), [TASK-037](TASK-037.md), [TASK-043](TASK-043.md), [TASK-044](TASK-044.md), [TASK-045](TASK-045.md), [TASK-049](TASK-049.md), [TASK-051](TASK-051.md), [TASK-052](TASK-052.md), [TASK-054](TASK-054.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-058](TASK-058.md), [TASK-060](TASK-060.md), [TASK-062](TASK-062.md), [TASK-063](TASK-063.md), [TASK-064](TASK-064.md), [TASK-065](TASK-065.md), [TASK-067](TASK-067.md), [TASK-070](TASK-070.md) |
+| IX-002 | [TASK-009](TASK-009.md), [TASK-011](TASK-011.md), [TASK-013](TASK-013.md), [TASK-017](TASK-017.md), [TASK-025](TASK-025.md), [TASK-026](TASK-026.md), [TASK-027](TASK-027.md), [TASK-029](TASK-029.md), [TASK-031](TASK-031.md), [TASK-032](TASK-032.md), [TASK-037](TASK-037.md), [TASK-043](TASK-043.md), [TASK-049](TASK-049.md), [TASK-052](TASK-052.md), [TASK-060](TASK-060.md) |
+| IX-003 | [TASK-013](TASK-013.md), [TASK-017](TASK-017.md), [TASK-018](TASK-018.md), [TASK-025](TASK-025.md), [TASK-027](TASK-027.md), [TASK-029](TASK-029.md), [TASK-030](TASK-030.md), [TASK-033](TASK-033.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md), [TASK-037](TASK-037.md), [TASK-043](TASK-043.md), [TASK-044](TASK-044.md), [TASK-045](TASK-045.md), [TASK-046](TASK-046.md), [TASK-047](TASK-047.md), [TASK-051](TASK-051.md), [TASK-052](TASK-052.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-058](TASK-058.md), [TASK-060](TASK-060.md), [TASK-062](TASK-062.md), [TASK-064](TASK-064.md), [TASK-065](TASK-065.md), [TASK-067](TASK-067.md), [TASK-068](TASK-068.md) |
+| IX-004 | [TASK-018](TASK-018.md), [TASK-025](TASK-025.md), [TASK-029](TASK-029.md), [TASK-030](TASK-030.md), [TASK-033](TASK-033.md), [TASK-042](TASK-042.md), [TASK-045](TASK-045.md), [TASK-052](TASK-052.md) |
+| IX-005 | [TASK-025](TASK-025.md), [TASK-033](TASK-033.md), [TASK-042](TASK-042.md), [TASK-043](TASK-043.md), [TASK-052](TASK-052.md) |
+| IX-006 | [TASK-025](TASK-025.md), [TASK-034](TASK-034.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md), [TASK-037](TASK-037.md), [TASK-042](TASK-042.md), [TASK-044](TASK-044.md), [TASK-045](TASK-045.md), [TASK-046](TASK-046.md), [TASK-054](TASK-054.md), [TASK-060](TASK-060.md), [TASK-068](TASK-068.md), [TASK-070](TASK-070.md) |
+| IX-007 | [TASK-011](TASK-011.md), [TASK-014](TASK-014.md), [TASK-018](TASK-018.md), [TASK-029](TASK-029.md), [TASK-034](TASK-034.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md), [TASK-037](TASK-037.md), [TASK-042](TASK-042.md), [TASK-045](TASK-045.md), [TASK-046](TASK-046.md), [TASK-051](TASK-051.md), [TASK-052](TASK-052.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-058](TASK-058.md), [TASK-060](TASK-060.md), [TASK-062](TASK-062.md), [TASK-064](TASK-064.md), [TASK-065](TASK-065.md), [TASK-067](TASK-067.md), [TASK-068](TASK-068.md), [TASK-069](TASK-069.md), [TASK-070](TASK-070.md) |
+| IX-008 | [TASK-014](TASK-014.md), [TASK-018](TASK-018.md), [TASK-034](TASK-034.md), [TASK-035](TASK-035.md), [TASK-042](TASK-042.md), [TASK-045](TASK-045.md), [TASK-052](TASK-052.md), [TASK-054](TASK-054.md), [TASK-062](TASK-062.md), [TASK-064](TASK-064.md), [TASK-065](TASK-065.md), [TASK-068](TASK-068.md) |
+| IX-009 | [TASK-015](TASK-015.md), [TASK-026](TASK-026.md), [TASK-027](TASK-027.md), [TASK-031](TASK-031.md), [TASK-035](TASK-035.md), [TASK-052](TASK-052.md), [TASK-054](TASK-054.md) |
+| IX-010 | [TASK-020](TASK-020.md), [TASK-021](TASK-021.md), [TASK-036](TASK-036.md), [TASK-037](TASK-037.md), [TASK-038](TASK-038.md), [TASK-045](TASK-045.md), [TASK-046](TASK-046.md), [TASK-047](TASK-047.md), [TASK-048](TASK-048.md), [TASK-053](TASK-053.md), [TASK-062](TASK-062.md), [TASK-065](TASK-065.md) |
+| IX-011 | [TASK-016](TASK-016.md), [TASK-021](TASK-021.md), [TASK-025](TASK-025.md), [TASK-026](TASK-026.md), [TASK-027](TASK-027.md), [TASK-031](TASK-031.md), [TASK-032](TASK-032.md), [TASK-033](TASK-033.md), [TASK-034](TASK-034.md), [TASK-037](TASK-037.md), [TASK-042](TASK-042.md), [TASK-043](TASK-043.md), [TASK-044](TASK-044.md), [TASK-046](TASK-046.md), [TASK-047](TASK-047.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-060](TASK-060.md), [TASK-063](TASK-063.md), [TASK-065](TASK-065.md), [TASK-068](TASK-068.md), [TASK-070](TASK-070.md) |
+| IX-012 | [TASK-008](TASK-008.md), [TASK-013](TASK-013.md), [TASK-017](TASK-017.md), [TASK-019](TASK-019.md), [TASK-025](TASK-025.md), [TASK-026](TASK-026.md), [TASK-027](TASK-027.md), [TASK-032](TASK-032.md), [TASK-033](TASK-033.md), [TASK-042](TASK-042.md), [TASK-050](TASK-050.md), [TASK-059](TASK-059.md), [TASK-066](TASK-066.md) |
+| IX-013 | [TASK-018](TASK-018.md), [TASK-021](TASK-021.md), [TASK-029](TASK-029.md), [TASK-034](TASK-034.md), [TASK-038](TASK-038.md), [TASK-045](TASK-045.md), [TASK-058](TASK-058.md), [TASK-064](TASK-064.md) |
+| IX-014 | [TASK-061](TASK-061.md), [TASK-067](TASK-067.md) |
+| IX-015 | [TASK-044](TASK-044.md), [TASK-047](TASK-047.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-063](TASK-063.md), [TASK-068](TASK-068.md), [TASK-069](TASK-069.md), [TASK-070](TASK-070.md) |
+| IX-016 | [TASK-006](TASK-006.md), [TASK-014](TASK-014.md), [TASK-049](TASK-049.md), [TASK-072](TASK-072.md) |
+| IX-017 | [TASK-022](TASK-022.md), [TASK-027](TASK-027.md), [TASK-039](TASK-039.md), [TASK-057](TASK-057.md), [TASK-059](TASK-059.md), [TASK-072](TASK-072.md) |
+| IX-018 | [TASK-023](TASK-023.md), [TASK-039](TASK-039.md), [TASK-057](TASK-057.md), [TASK-066](TASK-066.md), [TASK-071](TASK-071.md) |
+| IX-019 | [TASK-002](TASK-002.md), [TASK-010](TASK-010.md), [TASK-012](TASK-012.md), [TASK-043](TASK-043.md) |
+| IX-020 | [TASK-031](TASK-031.md) |
+| IX-021 | [TASK-019](TASK-019.md), [TASK-028](TASK-028.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-061](TASK-061.md), [TASK-067](TASK-067.md), [TASK-069](TASK-069.md), [TASK-070](TASK-070.md) |
+| IX-022 | [TASK-053](TASK-053.md) |
+| IX-023 | [TASK-030](TASK-030.md) |
+| IX-024 | [TASK-033](TASK-033.md), [TASK-072](TASK-072.md), [TASK-074](TASK-074.md) |
+
+## Perlakuan GAP
+
+Gerbang aktivasi: fitur dibangun dan diuji dengan kebijakan DRAFT berlabel simulasi; aksi resmi di produksi hanya setelah versi kebijakan ACTIVE dengan bukti resolusi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register)). Gerbang rilis/cutover dan penerimaan V1 diperiksa pada TASK-078 dan [RELEASE_PLAN](../10-release/RELEASE_PLAN.md). Tidak ada GAP yang menghalangi implementasi Task; tidak ada GAP yang diselesaikan oleh rencana ini.
+
+| GAP | Perlakuan | Kebijakan / gerbang | Task |
+|---|---|---|---|
+| [GAP-001](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | rantai persetujuan usulan (DRAFT per jenis unit/sumber dana) | [TASK-013](TASK-013.md), [TASK-019](TASK-019.md), [TASK-025](TASK-025.md) |
+| [GAP-002](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `procurement.authority` (peran RUP) | [TASK-025](TASK-025.md), [TASK-026](TASK-026.md) |
+| [GAP-003](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `procurement.authority` | [TASK-015](TASK-015.md), [TASK-019](TASK-019.md), [TASK-024](TASK-024.md), [TASK-025](TASK-025.md), [TASK-027](TASK-027.md), [TASK-028](TASK-028.md), [TASK-030](TASK-030.md), [TASK-031](TASK-031.md), [TASK-033](TASK-033.md), [TASK-034](TASK-034.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md), [TASK-037](TASK-037.md), [TASK-044](TASK-044.md), [TASK-046](TASK-046.md) |
+| [GAP-004](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `procurement.authority` (empat tanggung jawab SPPBJ) | [TASK-015](TASK-015.md), [TASK-024](TASK-024.md), [TASK-028](TASK-028.md), [TASK-036](TASK-036.md) |
+| [GAP-005](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi + cutover | `inventory.codes`; pemetaan kode historis | [TASK-017](TASK-017.md), [TASK-049](TASK-049.md), [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-055](TASK-055.md), [TASK-069](TASK-069.md) |
+| [GAP-006](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi + cutover | `inventory.codes` (P01/P02 tetap terpisah) | [TASK-050](TASK-050.md), [TASK-055](TASK-055.md), [TASK-069](TASK-069.md) |
+| [GAP-007](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `asset.depreciation`, `reporting.formats` | [TASK-066](TASK-066.md), [TASK-071](TASK-071.md) |
+| [GAP-008](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `asset.capitalization`, `asset.lifecycle` | [TASK-059](TASK-059.md), [TASK-060](TASK-060.md), [TASK-061](TASK-061.md), [TASK-062](TASK-062.md), [TASK-063](TASK-063.md), [TASK-064](TASK-064.md), [TASK-065](TASK-065.md), [TASK-066](TASK-066.md), [TASK-067](TASK-067.md), [TASK-071](TASK-071.md) |
+| [GAP-009](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `asset.capitalization` | [TASK-060](TASK-060.md), [TASK-061](TASK-061.md), [TASK-064](TASK-064.md), [TASK-066](TASK-066.md), [TASK-067](TASK-067.md), [TASK-071](TASK-071.md) |
+| [GAP-010](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `reconciliation`, `reporting.formats` | [TASK-047](TASK-047.md), [TASK-064](TASK-064.md), [TASK-070](TASK-070.md), [TASK-071](TASK-071.md) |
+| [GAP-011](../00-governance/GAP_REGISTER.md) | Gerbang rilis/cutover | impor historis riil hanya setelah format, semantik dan rekonsiliasi disahkan ([MIGRATION_AND_CUTOVER](../10-release/MIGRATION_AND_CUTOVER.md)) | [TASK-051](TASK-051.md), [TASK-059](TASK-059.md), [TASK-060](TASK-060.md), [TASK-068](TASK-068.md), [TASK-069](TASK-069.md), [TASK-078](TASK-078.md) |
+| [GAP-012](../00-governance/GAP_REGISTER.md) | Gerbang rilis/cutover | kepemilikan tulis selama transisi dan rencana cutover disahkan | [TASK-068](TASK-068.md), [TASK-069](TASK-069.md), [TASK-070](TASK-070.md), [TASK-078](TASK-078.md) |
+| [GAP-013](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | semua template dan kebijakan: versi sumber terkini yang sah | [TASK-018](TASK-018.md), [TASK-021](TASK-021.md), [TASK-025](TASK-025.md), [TASK-026](TASK-026.md), [TASK-027](TASK-027.md), [TASK-031](TASK-031.md), [TASK-034](TASK-034.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md), [TASK-039](TASK-039.md), [TASK-057](TASK-057.md), [TASK-063](TASK-063.md), [TASK-064](TASK-064.md), [TASK-065](TASK-065.md), [TASK-066](TASK-066.md), [TASK-068](TASK-068.md), [TASK-071](TASK-071.md) |
+| [GAP-014](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | profil akses dan aturan SoD sebagai konfigurasi; model akses P5 | [TASK-013](TASK-013.md), [TASK-014](TASK-014.md), [TASK-015](TASK-015.md), [TASK-028](TASK-028.md), [TASK-032](TASK-032.md), [TASK-033](TASK-033.md), [TASK-042](TASK-042.md), [TASK-043](TASK-043.md), [TASK-060](TASK-060.md), [TASK-062](TASK-062.md), [TASK-063](TASK-063.md), [TASK-065](TASK-065.md), [TASK-074](TASK-074.md) |
+| [GAP-015](../00-governance/GAP_REGISTER.md) | Gerbang rilis | penyediaan akun dan kanal pemulihan (SEC-D6/SEC-D7) | [TASK-010](TASK-010.md), [TASK-011](TASK-011.md), [TASK-012](TASK-012.md), [TASK-042](TASK-042.md), [TASK-043](TASK-043.md) |
+| [GAP-016](../00-governance/GAP_REGISTER.md) | Gerbang rilis | anggaran kinerja terukur (PB/PERF) sebelum klaim NFR | [TASK-003](TASK-003.md), [TASK-009](TASK-009.md), [TASK-022](TASK-022.md), [TASK-023](TASK-023.md), [TASK-040](TASK-040.md), [TASK-059](TASK-059.md), [TASK-071](TASK-071.md), [TASK-072](TASK-072.md), [TASK-073](TASK-073.md), [TASK-076](TASK-076.md), [TASK-078](TASK-078.md) |
+| [GAP-017](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `procurement.documents`, `numbering` | [TASK-020](TASK-020.md), [TASK-021](TASK-021.md), [TASK-024](TASK-024.md), [TASK-031](TASK-031.md), [TASK-032](TASK-032.md), [TASK-033](TASK-033.md), [TASK-034](TASK-034.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md), [TASK-037](TASK-037.md), [TASK-038](TASK-038.md), [TASK-042](TASK-042.md), [TASK-044](TASK-044.md), [TASK-045](TASK-045.md), [TASK-046](TASK-046.md), [TASK-047](TASK-047.md), [TASK-048](TASK-048.md) |
+| [GAP-018](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | pemicu serah terima hilir (`asset.capitalization`, WF-016) | [TASK-044](TASK-044.md), [TASK-046](TASK-046.md), [TASK-047](TASK-047.md), [TASK-060](TASK-060.md), [TASK-061](TASK-061.md), [TASK-067](TASK-067.md) |
+| [GAP-019](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi + impor | `procurement.hps`, `procurement.documents` | [TASK-021](TASK-021.md), [TASK-024](TASK-024.md), [TASK-029](TASK-029.md), [TASK-034](TASK-034.md), [TASK-037](TASK-037.md), [TASK-038](TASK-038.md), [TASK-044](TASK-044.md), [TASK-045](TASK-045.md), [TASK-047](TASK-047.md), [TASK-068](TASK-068.md) |
+| [GAP-020](../00-governance/GAP_REGISTER.md) | Tidak relevan V1 | OD-24: peminjaman fasilitas FUTURE; tanpa Task | — |
+| [GAP-021](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `organization.maintenance` | [TASK-013](TASK-013.md), [TASK-017](TASK-017.md), [TASK-018](TASK-018.md) |
+| [GAP-022](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi + impor | `asset.classification` | [TASK-017](TASK-017.md), [TASK-058](TASK-058.md), [TASK-069](TASK-069.md) |
+| [GAP-023](../00-governance/GAP_REGISTER.md) | Gerbang rilis | `retention`; kewajiban data pribadi sebelum go-live | [TASK-008](TASK-008.md), [TASK-016](TASK-016.md), [TASK-032](TASK-032.md), [TASK-052](TASK-052.md), [TASK-053](TASK-053.md), [TASK-076](TASK-076.md), [TASK-077](TASK-077.md), [TASK-078](TASK-078.md) |
+| [GAP-024](../00-governance/GAP_REGISTER.md) | Gerbang penerimaan V1 | definisi BMU wajib untuk membuktikan AC-16 | [TASK-071](TASK-071.md), [TASK-078](TASK-078.md) |
+| [GAP-025](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `warehouse.operations` (ALP dan PSRT terpisah) | [TASK-049](TASK-049.md), [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-052](TASK-052.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-057](TASK-057.md) |
+| [GAP-026](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `procurement.regime`, `vendor.dpt` dan keluarga terkait | [TASK-024](TASK-024.md), [TASK-030](TASK-030.md), [TASK-032](TASK-032.md), [TASK-042](TASK-042.md), [TASK-045](TASK-045.md) |
+| [GAP-027](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | pilihan manusia wajib untuk setiap inkonsistensi (a)–(e) di `procurement.methods`/`contract`/`hps` | [TASK-024](TASK-024.md), [TASK-029](TASK-029.md), [TASK-030](TASK-030.md), [TASK-035](TASK-035.md), [TASK-037](TASK-037.md), [TASK-045](TASK-045.md) |
+| [GAP-028](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | `procurement.budget` | [TASK-024](TASK-024.md), [TASK-027](TASK-027.md), [TASK-045](TASK-045.md) |
+| [GAP-029](../00-governance/GAP_REGISTER.md) | Gerbang aktivasi | kanal resmi per langkah di `procurement.methods`; fitur penawaran penyedia di PRANATA hanya bila sah | [TASK-024](TASK-024.md), [TASK-026](TASK-026.md), [TASK-030](TASK-030.md), [TASK-031](TASK-031.md), [TASK-033](TASK-033.md), [TASK-043](TASK-043.md) |
+
+## Task berisiko tinggi
+
+[TASK-001](TASK-001.md), [TASK-002](TASK-002.md), [TASK-008](TASK-008.md), [TASK-009](TASK-009.md), [TASK-010](TASK-010.md), [TASK-011](TASK-011.md), [TASK-012](TASK-012.md), [TASK-013](TASK-013.md), [TASK-014](TASK-014.md), [TASK-015](TASK-015.md), [TASK-016](TASK-016.md), [TASK-018](TASK-018.md), [TASK-020](TASK-020.md), [TASK-021](TASK-021.md), [TASK-024](TASK-024.md), [TASK-027](TASK-027.md), [TASK-028](TASK-028.md), [TASK-029](TASK-029.md), [TASK-030](TASK-030.md), [TASK-032](TASK-032.md), [TASK-033](TASK-033.md), [TASK-034](TASK-034.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md), [TASK-037](TASK-037.md), [TASK-040](TASK-040.md), [TASK-042](TASK-042.md), [TASK-043](TASK-043.md), [TASK-044](TASK-044.md), [TASK-045](TASK-045.md), [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-052](TASK-052.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md), [TASK-059](TASK-059.md), [TASK-060](TASK-060.md), [TASK-061](TASK-061.md), [TASK-064](TASK-064.md), [TASK-065](TASK-065.md), [TASK-066](TASK-066.md), [TASK-068](TASK-068.md), [TASK-069](TASK-069.md), [TASK-073](TASK-073.md), [TASK-074](TASK-074.md), [TASK-076](TASK-076.md), [TASK-077](TASK-077.md), [TASK-078](TASK-078.md)

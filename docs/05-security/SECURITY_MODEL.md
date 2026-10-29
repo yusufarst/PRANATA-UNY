@@ -141,7 +141,7 @@ Skenario otorisasi AUTHZ-* dimiliki ACCESS_CONTROL; strategi pengujian di [TEST_
 | SEC-D1 | TOTP wajib untuk Super Admin/akses istimewa | Ya |
 | SEC-D2 | Timeout idle | 60 menit (30 menit Super Admin) |
 | SEC-D3 | Profil password | AICWDF-COMPAT-8 (default framework yang dipilih Owner) |
-| SEC-D4 | Antivirus ClamAV | Opsional; aktifkan bila RAM server ≥ 8 GB |
+| SEC-D4 | Antivirus ClamAV | Opsional; aktifkan bila server produksi berukuran 16 GB RAM ([INFRASTRUCTURE §4](../09-operations/INFRASTRUCTURE.md#4-topologi-staging-dan-produksi)) |
 | SEC-D5 | Pemeriksaan password bocor eksternal | OFF |
 | SEC-D6 | SMTP untuk reset/notifikasi | Opsional; tanpa SMTP tetap berfungsi |
 | SEC-D7 | Kanal penyerahan kode aktivasi penyedia | Diserahkan langsung oleh petugas pengadaan |
