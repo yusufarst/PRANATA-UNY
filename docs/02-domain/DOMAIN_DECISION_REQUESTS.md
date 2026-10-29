@@ -1,6 +1,6 @@
 # Domain decision requests — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
 Dokumen ini mengelompokkan kebutuhan validasi yang belum tersedia; bukan pengganti [GAP_REGISTER](../00-governance/GAP_REGISTER.md), bukan keputusan Owner baru, dan bukan permintaan memulai fase berikutnya. Semua GAP tetap OPEN. [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) memiliki kelas kontribusi P2 tiap GAP; [BUSINESS_RULES](BUSINESS_RULES.md) memiliki rumusan/status aturan. DR-01–DR-07 adalah locators kebutuhan keputusan, **bukan execution Tasks**.
 
@@ -63,3 +63,23 @@ Tidak ada pertanyaan tambahan yang wajib dijawab untuk merampungkan kandidat sem
 - **Safe default:** catat hanya identitas/konteks minimum yang disyaratkan aturan yang disetujui; jangan mendefinisikan field data pribadi, menghapus/menganonimkan record atau mereproduksi kredensial. Fase pemilik P2/P5/P9/P10; permintaan ini tidak menjawabnya.
 
 GAP-016 workload/capacity adalah kewajiban P4/P6/P8/P9 dan tidak ditanyakan sebagai keputusan domain P2. GAP-020 borrowing tetap FUTURE/di luar V1 yang disetujui (OD-24); tidak membutuhkan re-intake atau penambahan capability P2. Detailed account/retention/security/operations decisions memerlukan fase berotorisasi terpisah. Setiap jawaban kelak harus memiliki source/version/date, actual approval/decision reference dan targeted impact review sebelum mengubah record pemilik/GAP. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Isi yang disetujui APPR-003 tidak diubah; bagian ini menambahkan cakupan DC-080–DC-087, BR-031–BR-035, INV-020–INV-022 dan GAP-026–GAP-029. Tidak ada GAP yang diselesaikan.
+
+### DR-08 — Rezim regulasi, inkonsistensi instrumen dan kanal resmi
+
+- **Keputusan/bukti dibutuhkan:** pemetaan setiap sumber dana UNY ke rezim pengadaan dan tanggal efektifnya; keberlakuan PR 34/2023 dan perubahan Perpres; tafsir tertulis atas GAP-027 huruf a–e; kanal resmi per metode/langkah.
+- **Mengapa:** BR-031 hanya aman bila rezim dan versi kebijakan diketahui; DC-080/081 tidak boleh diisi dari ambang nasional untuk paket rezim UNY.
+- **Terblokir:** GAP-026/027/029; DC-080/081/087; BR-031/034; INV-022.
+- **Bukti tersedia:** SRC-048–SRC-050, SRC-052 (provisional), [REGULATORY_SOURCE_REVIEW](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md).
+- **Safe default:** versi kebijakan DRAFT berlabel simulasi; penetapan metode oleh manusia dengan alasan.
+
+### DR-09 — Anggaran, komitmen dan operasi gudang
+
+- **Keputusan/bukti dibutuhkan:** sumber rujukan anggaran resmi, identifier dan tanggung jawab komitmen (GAP-028); aturan operasional gudang ALP/PSRT untuk permintaan, serah terima, konfirmasi, pengembalian dan pemeriksaan (GAP-025).
+- **Mengapa:** BR-033/035 dan INV-020 memerlukan isi kebijakan yang tervalidasi sebelum aksi resmi di produksi.
+- **Terblokir:** GAP-025/028, terkait GAP-023; DC-082/084–086.
+- **Bukti tersedia:** OD-26/30/31, SRC-058.
+- **Safe default:** catat referensi dan bukti; peringatkan tanpa memblokir berdasarkan saldo keuangan; tidak ada saldo stok negatif.

@@ -1,8 +1,8 @@
 # Kebutuhan keputusan workflow — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
-Dokumen terfokus ini mengelompokkan **sembilan kebutuhan validasi**, WDR-01–WDR-09, bukan keputusan Owner baru atau Tasks. [GAP_REGISTER](../00-governance/GAP_REGISTER.md) memiliki pertanyaan/status kanonik; seluruh GAP-001–GAP-025 tetap OPEN. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md#penilaian-seluruh-gap-dari-perspektif-workflow-p3) memiliki penilaian P3. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) adalah pemilik arti TR yang disebut; rentang di bawah menyebut hanya ID TR yang benar-benar dialokasikan. Referensi ini tidak merumuskan state/transisi kedua.
+Dokumen terfokus ini mengelompokkan **dua belas kebutuhan validasi**, WDR-01–WDR-12, bukan keputusan Owner baru atau Tasks. [GAP_REGISTER](../00-governance/GAP_REGISTER.md) memiliki pertanyaan/status kanonik; seluruh GAP-001–GAP-029 tetap OPEN. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md#penilaian-seluruh-gap-dari-perspektif-workflow-p3) memiliki penilaian P3. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) adalah pemilik arti TR yang disebut; rentang di bawah menyebut hanya ID TR yang benar-benar dialokasikan. Referensi ini tidak merumuskan state/transisi kedua.
 
 Tidak ada jawaban tambahan yang harus dikarang untuk menuntaskan kandidat P3 yang terbatas ini. Safe skeleton dapat direview sekarang; bagian resmi yang memerlukan authority tetap BLOCKED_BY_GAP. Sebelum bagian tersebut diaktifkan pada perencanaan berikutnya, Owner bersama custodian/domain specialist yang relevan perlu memberikan keputusan dengan source/version/date/issuer/applicability dan bukti approval yang dapat ditelusuri. Review agent atau workflow yang terlihat lengkap tidak menggantikan evidence itu.
 
@@ -87,8 +87,39 @@ Tidak ada jawaban tambahan yang harus dikarang untuk menuntaskan kandidat P3 yan
 - **Evidence/resolver:** Owner + custodian institusi mengonfirmasi kewenangan pemeliharaan per keluarga, aturan tanggal efektif/supersession, bukti yang diperlukan dan pelestarian riwayat; instrumen klasifikasi berversi yang disetujui untuk GAP-022.
 - **Aman sampai resolved:** catat permintaan perubahan, hasil validasi dan rujukan keputusan sebagai draf/kandidat; jangan memberlakukan versi tanpa keputusan kewenangan sahih, jangan menimpa versi lama dan jangan menebak aktor pemberi persetujuan.
 
+## WDR-10 — Aturan operasional permintaan, serah terima dan pengembalian gudang (WF-030/031)
+
+- **Keputusan diperlukan:** jenis permintaan dan rantai keputusan per gudang (ALP dan PSRT); bentuk bukti serah terima dan konfirmasi penerima, termasuk penerima tanpa akun; aturan penutupan bila penerima tidak mengonfirmasi; kriteria layak pakai, pemeriksa dan disposisi barang kembali; serta siapa yang menjalankan setiap aksi.
+- **Mengapa:** OD-31 memberi alur digital dan OD-30(7) arah provisional stok; TR-293 dan TR-304 tetap BLOCKED_BY_GAP sampai kewenangan dan bentuk bukti tervalidasi. Alur ATK SRC-058 adalah observasi, bukan SOP current yang disahkan.
+- **Terdampak:** WF-030/031; **TR-291–298, TR-301–306**; RT-033/034; IX-022; GAP-025/023, terkait005/006/014.
+- **Bukti tersedia:** SRC-058 (alur ATK ALP), OD-26/30/31, U-006/U-007; tidak ada aturan gudang resmi bertanggal dalam repository.
+- **Evidence/resolver:** Kepala Gudang ALP/PSRT bersama Kabag ALP dan Owner mengonfirmasi aturan berlaku dengan versi/tanggal, contoh dan kewenangan per aksi.
+- **Aman sampai resolved:** permintaan, keputusan, serah terima dan konfirmasi dapat dibangun dan diuji dengan versi kebijakan DRAFT di lingkungan non-produksi berlabel simulasi; di produksi aksi resmi menunggu versi ACTIVE.
+
+## WDR-11 — Rezim, penetapan metode dan kanal resmi (WF-032)
+
+- **Keputusan diperlukan:** pemetaan sumber dana UNY ke rezim (PR 34/2023 atau Perpres 16/2018 jo. perubahannya), keberlakuan instrumen; tafsir inkonsistensi PR 34/2023 GAP-027(a)–(e); fungsi pejabat penetap metode per rezim dan nilai; kanal resmi per langkah dan langkah yang boleh dijalankan di PRANATA.
+- **Mengapa:** BR-031 mewajibkan penetapan manusia menurut rezim; TR-313/315 tetap BLOCKED_BY_GAP; saran tanpa versi ACTIVE hanya simulasi.
+- **Terdampak:** WF-032, ekstensi metode WF-005–WF-015; **TR-311–316**; RT-035; IX-023; GAP-003/013/026/027/029.
+- **Bukti tersedia:** SRC-048 (PR 34/2023, termasuk Pasal 1 angka 1 dan 15, Pasal 3, 9, 22–30, Lampiran I–III), SRC-049/050 (Perpres), SRC-052 (jawaban provisional Owner GAP-003); [REGULATORY_SOURCE_REVIEW](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md).
+- **Evidence/resolver:** kustodian pengadaan bersama keuangan dan Owner: pemetaan rezim, catatan tafsir bertanggal dan konfirmasi kanal.
+- **Aman sampai resolved:** versi kebijakan rezim disusun sebagai DRAFT dengan rujukan pasal; saran berlabel simulasi; tidak ada ambang nasional yang dipakai untuk paket rezim UNY.
+
+## WDR-12 — Adendum kontrak dan referensi anggaran (WF-033)
+
+- **Keputusan diperlukan:** cara hitung batas perubahan (termasuk perlakuan kumulatif), pemberi persetujuan dan persetujuan pengecualian per rezim, varian dokumen adendum dan penomorannya, serta sumber rujukan anggaran dan lifecycle komitmen internal.
+- **Mengapa:** TR-325 tetap BLOCKED_BY_GAP; BR-035 hanya mencatat dan memperingatkan.
+- **Terdampak:** WF-033, WF-012/013/015/028; **TR-321–327**; RT-036; GAP-017/019/026/027/028.
+- **Bukti tersedia:** SRC-048 Pasal 40, Perpres 16/2018 jo. 46/2025 (lihat REGULATORY_SOURCE_REVIEW), OD-29/30(1).
+- **Evidence/resolver:** kustodian pengadaan dan keuangan bersama Owner.
+- **Aman sampai resolved:** usulan, telaah berlabel simulasi, dokumen draf dan versi kontrak dapat disiapkan; penetapan dan keberlakuan menunggu kewenangan sahih.
+
 ## Kebutuhan yang diserahkan ke fase lain dan lifecycle jawaban
 
 GAP-014 dipakai pada responsibility/representation gate di atas, tetapi final role/permission matrix/enforcement tetap P5. GAP-015 account/provisioning/recovery contracts tetap P5/P9: WF-001 context reference dan WF-007 bukan open registration approval. GAP-016 workload/capacity/timing tetap P4/P6/P8/P9; EP-010 jujur tentang operasi diterima/belum selesai tidak memilih queue/retry/locking. GAP-020 borrowing tetap outside V1/FUTURE; **tidak meminta approval borrowing dalam P3 atau membuat workflow-nya**.
 
 Setiap jawaban perlu: reference sumber/issuer/version/date/applicability; custodian yang menjelaskan; actual Owner/domain decision/approval; exact affected WF/TR/RT/IX/BR/INV; targeted impact pada protected P1/P2; update pemilik canonical yang authorized serta delta review. Status GAP hanya dapat berubah setelah evidence yang diminta register terpenuhi. Klaim official action tetap blocked selama jawaban hanya proposal atau observation. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Menambahkan WDR-10–WDR-12 untuk GAP-023/025/026/027/028/029 dan workflow baru. Kata-kata kontrak yang sudah disetujui di bawah APPR-004 tidak diubah; hanya hitungan, status dan rujukan GAP yang diperbarui. Persetujuan amandemen kelak tidak menutup GAP mana pun.

@@ -1,6 +1,6 @@
 # Product overview — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
+Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
 
 Dokumen ini disusun berdasarkan [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) dan kandidat yang direview disetujui Owner melalui [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002), dengan seluruh hipotesis, usulan dan kewajiban validasinya tetap dipertahankan. Otorisasi perencanaan sendiri bukan persetujuan hasil P1. Arah Owner yang sudah berlaku tetap dimiliki [DECISION_LOG](../00-governance/DECISION_LOG.md); seluruh GAP-001–GAP-025 tetap OPEN dalam [GAP_REGISTER](../00-governance/GAP_REGISTER.md). Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
 
@@ -122,3 +122,16 @@ Ukuran di bawah adalah **target usulan untuk review Owner**, bukan data observas
 | Peluang peminjaman dari sumber dapat memperluas lingkup tanpa keputusan | OD-24 telah tercatat: peminjaman bukan V1 dan FUTURE saja; GAP-020 tetap OPEN hanya untuk prosedur/otoritas resmi bila kelak diaktifkan; tidak ada alur/role/fitur peminjaman wajib dalam V1. |
 
 Tidak ada kesimpulan dalam dokumen ini yang menutup GAP. Kebutuhan MUST yang bergantung pada aturan belum tervalidasi adalah kewajiban rilis yang harus dipenuhi melalui perencanaan dan persetujuan fase terkait, bukan placeholder yang boleh langsung dieksekusi. P1 kini DONE — APPROVED melalui APPR-002; produk belum dinyatakan siap dibangun atau siap dirilis.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Isi yang disetujui APPR-002 tidak diubah. Arah Owner 2026-10-30 memperjelas konteks produk berikut. Tidak ada GAP yang diselesaikan; GAP-001–GAP-029 tetap OPEN.
+
+| Aspek | Arah yang berlaku untuk perencanaan | Sumber |
+|---|---|---|
+| Organisasi pengguna utama | DPSA UNY terdiri atas Aset dan Layanan Pengadaan (ALP, fokus utama sekarang) dan Prasarana, Sarana dan Rumah Tangga (PSRT); kantor pusat mempunyai dua gudang terpisah, Gudang ALP dan Gudang PSRT. Layanan rumah tangga PSRT (fasilitas, ruang, kendaraan, peralatan) tetap FUTURE. | [OD-26](../00-governance/DECISION_LOG.md#od-26) |
+| Pengadaan | Kelima metode PR 34/2023 — Pengadaan Langsung, Quotation, Tender, Penunjukan Langsung dan E-Purchasing — untuk barang, pekerjaan konstruksi, jasa konsultansi dan jasa lainnya; aturan per rezim berdasarkan sumber dana; penetapan oleh pejabat yang ditugaskan; kanal resmi tetap dihormati. | [OD-27](../00-governance/DECISION_LOG.md#od-27) |
+| Peran | Tiga kelompok peran global yang ringkas (Super Admin, Pegawai Internal, Penyedia); kemampuan rinci dari cakupan unit, ruang kerja, gudang dan penugasan proses; isolasi data antar ruang kerja dan antar gudang. | [OD-28](../00-governance/DECISION_LOG.md#od-28) |
+| Gudang | Permintaan, persetujuan, serah terima, konfirmasi penerima dan pengembalian digital menggantikan buku kertas, dengan ledger per gudang. | [OD-31](../00-governance/DECISION_LOG.md#od-31) |
+| Tonggak penerimaan pertama | UAT Pengadaan internal untuk empat jenis pengadaan sampai penyiapan dokumen kontrak, dengan data sintetis dan tanpa pengiriman penawaran penyedia. | [OD-32](../00-governance/DECISION_LOG.md#od-32) |
+| Pengalaman dan identitas visual | Input sekali, tindakan berikut yang jelas, dokumen otomatis, sedikit klik, dashboard per peran, responsif; navy `#172554`, latar `#EFF6FF`, permukaan putih dominan. | [OD-33](../00-governance/DECISION_LOG.md#od-33), [OD-34](../00-governance/DECISION_LOG.md#od-34) |

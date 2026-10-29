@@ -1,6 +1,6 @@
 # Domain lifecycle semantics — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
 Dokumen ini memiliki arti lifecycle/disposisi konseptual. Istilah/definisi konsep dimiliki [DOMAIN_GLOSSARY](DOMAIN_GLOSSARY.md); hubungan, klasifikasi kebenaran dan identitas konseptual dimiliki [DOMAIN_MODEL](DOMAIN_MODEL.md). Rumusan kewajiban riwayat/koreksi/retensi dimiliki [BR-026](BUSINESS_RULES.md#br-026), [INV-017](BUSINESS_RULES.md#inv-017) dan aturan terkait dalam [BUSINESS_RULES](BUSINESS_RULES.md). Kata status di sini adalah label makna kandidat; tidak menetapkan state aplikasi, urutan, transition guards atau izin. P2 DONE — APPROVED under APPR-003 dengan semua kualifikasi disposition tetap berlaku. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
 
@@ -93,3 +93,15 @@ Istilah soft-delete dan hard-delete dicatat untuk kelengkapan keputusan lifecycl
 | Penghapusan/anonymization | Bagian informasi mana boleh dihilangkan atau diubah identitasnya secara sah? | Kewajiban retensi/privasi, konsekuensi bukti dan izin P5/P9/P10. Penghapusan aset secara bisnis (DC-061) berbeda dari penghapusan record. |
 
 [DOMAIN_RESPONSIBILITIES](DOMAIN_RESPONSIBILITIES.md) menjelaskan pelaku/tanggung jawab yang perlu ditelusuri; [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) memiliki dependent GAP dan acceptance. Penentuan tepat kapan, siapa, dengan guards apa, dan bagaimana disposition dilakukan merupakan kewajiban fase berikutnya, belum diotorisasi oleh kandidat ini.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Isi yang disetujui APPR-003 tidak diubah; bagian ini menambahkan cakupan DC-080–DC-087, BR-031–BR-035, INV-020–INV-022 dan GAP-026–GAP-029. Tidak ada GAP yang diselesaikan.
+
+| Konsep (cakupan ID) | Create | Edit | Archive | Restore | Soft-delete | Hard-delete | Anonymize | Batas utama |
+|---|---|---|---|---|---|---|---|---|
+| Rezim dan Penetapan Metode (DC-080/081) | P-bahan | P-versi | P-riwayat | B-pemulihan | B-retensi | B-retensi | B-privasi | GAP-003/026/027; penetapan baru menggantikan, tidak mengedit penetapan lama. |
+| Referensi Anggaran dan Komitmen Internal (DC-082) | P-bahan | P-versi | P-riwayat | B-pemulihan | B-retensi | B-retensi | B-privasi | GAP-028; pelepasan komitmen hanya setelah pembatalan sah dan verifikasi keuangan (BR-035). |
+| Adendum Kontrak (DC-083) | P-bahan | P-versi | P-riwayat | B-pemulihan | B-retensi | B-retensi | B-privasi | GAP-017/026/027; adendum berlaku tidak diedit, perubahan berikutnya adalah adendum baru. |
+| Permintaan, Serah Terima, Pengembalian Gudang (DC-084–086) | P-bahan | P-versi | P-riwayat | B-pemulihan | B-retensi | B-retensi | B-privasi | GAP-025/023; serah terima tercatat tidak diedit, koreksi melalui transaksi penyesuaian/rekonsiliasi. |
+| DPT (DC-087) | P-bahan | P-versi | P-riwayat | B-pemulihan | B-retensi | B-retensi | B-privasi | GAP-014/026; pengeluaran dari DPT adalah keputusan berbukti, bukan penghapusan record. |

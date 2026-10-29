@@ -1,8 +1,8 @@
 # Route and navigation contracts — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
-Dokumen ini memiliki **32 kontrak rute konseptual RT-001–RT-032**, termasuk kesinambungan konteks dan jalur kembali. Key rute adalah nama intent perencanaan, bukan URL, Laravel route, kontrak API atau rancangan halaman. Satu kontrak dapat mempunyai konteks daftar, detail dan tindakan anak; ini tidak menetapkan jumlah halaman atau endpoint. ID konseptual menunjuk objek domain yang perlu dapat dibedakan menurut [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md#identitas-dan-keunikan-konseptual), bukan format identifier atau kunci database.
+Dokumen ini memiliki **36 kontrak rute konseptual RT-001–RT-036**, termasuk kesinambungan konteks dan jalur kembali. Key rute adalah nama intent perencanaan, bukan URL, Laravel route, kontrak API atau rancangan halaman. Satu kontrak dapat mempunyai konteks daftar, detail dan tindakan anak; ini tidak menetapkan jumlah halaman atau endpoint. ID konseptual menunjuk objek domain yang perlu dapat dibedakan menurut [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md#identitas-dan-keunikan-konseptual), bukan format identifier atau kunci database.
 
 [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) memiliki index WF; [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md) memiliki tujuan/proses; [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki wording state/transition; [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) memiliki hasil tindakan IX; [EXCEPTION_REVISION_PATTERNS](EXCEPTION_REVISION_PATTERNS.md) memiliki pola EP. Rute membuka konteks tersebut tanpa menciptakan proses/aturan tandingan. [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) tetap sole owner wording BR/INV.
 
@@ -386,6 +386,50 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Return / empty | Permintaan/bukti/riwayat → record/keluarga yang sama; daftar dengan filter; fallback RT-002. Empty berbeda dari not found. Versi yang sudah digantikan tidak pernah diganti diam-diam dengan versi yang berlaku. |
 | Blocked / handoff | Gate GAP per keluarga (GAP-021/022/025/017/003/013/005/006). WF-029; IX-001/002/003/006/007/009/011/012/013/017; P5 izin, P7 penyajian. |
 
+## RT-033
+
+**Key konseptual:** `inventory.request-context`
+
+| Aspek | Kontrak |
+|---|---|
+| Workspace / intent / target ID | Gudang (konteks, bukan izin): permintaan barang, keputusan, serah terima dan konfirmasi penerima. Gudang beserta ID permintaan/serah terima. |
+| Entry / prerequisite / deep link | Permintaan saya, antrean keputusan, antrean serah terima per gudang, detail permintaan dan konfirmasi penerima. Deep link mempertahankan gudang dan permintaan; entry tidak memberi izin dan tidak membuka data gudang lain. |
+| Return / empty | Konfirmasi/bukti/riwayat → permintaan yang sama; antrean dengan filter asal; fallback RT-002. Empty berbeda dari not found dan dari tidak berwenang. |
+| Blocked / handoff | GAP-025 (rantai keputusan, bentuk bukti, penutupan) dan GAP-023 (identitas penerima). WF-030; IX-001/002/003/005/006/007/009/011/012/013/017/021/022; barang tidak tersedia → RT-003 melalui IX-021. P5 izin per gudang, P7 penyajian. |
+
+## RT-034
+
+**Key konseptual:** `inventory.return-context`
+
+| Aspek | Kontrak |
+|---|---|
+| Workspace / intent / target ID | Gudang (konteks, bukan izin): pengembalian barang dan hasil pemeriksaannya. Gudang beserta ID pengembalian dan serah terima asal bila ada. |
+| Entry / prerequisite / deep link | Dari serah terima asal (RT-033), daftar pengembalian saya, atau antrean penerimaan/pemeriksaan per gudang. Deep link mempertahankan gudang dan pengembalian. |
+| Return / empty | Hasil pemeriksaan/bukti → pengembalian yang sama → serah terima asal bila entry dari sana; fallback daftar pengembalian/RT-002. |
+| Blocked / handoff | GAP-025 (kriteria layak pakai, kewenangan pemeriksa, disposisi). WF-031; IX-001/002/003/006/007/009/011/012/013/017; P5 izin per gudang, P7 penyajian. |
+
+## RT-035
+
+**Key konseptual:** `procurement.method-determination-context`
+
+| Aspek | Kontrak |
+|---|---|
+| Workspace / intent / target ID | Procurement: penetapan metode paket. Paket beserta ID penetapan dan versi kebijakan rezim yang dipakai. |
+| Entry / prerequisite / deep link | Dari paket (RT-005) atau antrean penetapan. Deep link mempertahankan paket dan penetapan; versi kebijakan beserta statusnya (ACTIVE atau simulasi) selalu terlihat; entry tidak memberi kewenangan menetapkan. |
+| Return / empty | Penetapan/riwayat → paket yang sama (RT-005); fallback antrean/RT-002. Penetapan yang digantikan tetap dapat dibuka dari riwayat, tidak diganti diam-diam dengan penetapan terbaru. |
+| Blocked / handoff | GAP-003/026/027/029. WF-032; IX-001/002/003/004/006/011/012/023; P5 penugasan penetap, P7 penyajian saran beserta rujukan aturan. |
+
+## RT-036
+
+**Key konseptual:** `procurement.contract-amendment-context`
+
+| Aspek | Kontrak |
+|---|---|
+| Workspace / intent / target ID | Procurement: adendum kontrak. Kontrak beserta ID adendum dan versi kontrak. |
+| Entry / prerequisite / deep link | Dari kontrak berlaku (RT-012) atau antrean telaah/keputusan. Deep link mempertahankan kontrak, adendum dan versi; dokumen adendum dibuka melalui RT-028 dengan return ke adendum yang sama. |
+| Return / empty | Dokumen/bukti → adendum yang sama → kontrak (RT-012) dengan versi berlaku yang jelas; fallback RT-012/RT-002. |
+| Blocked / handoff | GAP-017/019/026/027/028. WF-033; IX-001–007/009–013; WF-028 dokumen; P5 izin, P7 penyajian sebelum–sesudah. |
+
 ## Kontrak crossing dan child-flow kritis
 
 | Journey | Return/context yang harus dapat diverifikasi kelak |
@@ -398,6 +442,14 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Procurement → Draft Asset/Persediaan/KDP | RT-014/RT-005 → RT-016 → RT-017/RT-023/RT-024 yang applicable dan sah → RT-016/source yang sama. Bila target belum ada/blocked, tetap sumber/handoff; bila akses tujuan tidak ada, tidak switch sebagai bypass. |
 | KDP → Completion Candidate → Draft Asset | RT-024 → RT-016 → RT-017 → RT-024/source sah; belum eligible/authority unknown tetap KDP/kandidat dengan alasan. |
 | Super Admin → Canonical owning context | RT-002 → RT domain pemilik → RT-002/entry asal sah. Kemampuan lintas workspace dari OD-10 tidak menghasilkan salinan record, signer bisnis atau bypass domain rule. |
+| Permintaan gudang → serah terima → konfirmasi | RT-033 permintaan → serah terima → konfirmasi penerima → permintaan yang sama; pengembalian RT-034 kembali ke serah terima asal. Pengguna gudang ALP tidak dibawa ke data gudang PSRT tanpa penugasan. |
+| Barang tidak tersedia → kebutuhan pengadaan | RT-033 → RT-003 melalui IX-021 dengan tautan permintaan asal; return ke permintaan gudang yang sama. Kebutuhan baru tidak otomatis disetujui. |
+| Paket → Penetapan metode → Paket | RT-005 → RT-035 → RT-005 dengan paket dan versi kebijakan yang sama; penetapan yang digantikan tetap dapat dibuka dari riwayat. |
+| Kontrak → Adendum → Dokumen → Kontrak | RT-012 → RT-036 → RT-028 → RT-036 → RT-012 dengan kontrak/adendum/versi yang sama; versi berlaku dan versi sebelumnya dibedakan. |
 | Intake historis → gate domain tujuan → intake | RT-026 → RT-017/RT-023/RT-024 → RT-026 dengan kandidat, sumber dan keputusan yang sama; bila tujuan forbidden/blocked, tetap di konteks intake dengan alasan; penerimaan definitif hanya di gate domain tujuan. |
 
 Setiap crossing membawa jenis/ID konteks, origin return yang sah dan hubungan sumber/hasil; tidak menetapkan transfer ownership resmi. Dua pengguna dengan akses berbeda dapat melihat outcome bersama yang konsisten tanpa melihat rincian terlindungi yang sama. Locale switch juga menjaga parent/workspace/filter/input context sejauh aman; bahasa dokumen resmi tidak diubah otomatis. P7/P8 kelak memverifikasi continuity/accessibility/locale dan nol dead interaction melalui journey kritis, setelah perencanaan serta execution diotorisasi; belum ada browser/runtime verification pada P3 ini.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Menambahkan RT-033 (`inventory.request-context`), RT-034 (`inventory.return-context`), RT-035 (`procurement.method-determination-context`) dan RT-036 (`procurement.contract-amendment-context`) serta empat crossing kritis baru. Kata-kata kontrak yang sudah disetujui di bawah APPR-004 tidak diubah; hanya hitungan, status dan rujukan GAP yang diperbarui. Persetujuan amandemen kelak tidak menutup GAP mana pun.

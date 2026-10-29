@@ -1,6 +1,6 @@
 # Cakupan referensi produk
 
-Status: Approved baseline: published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
+Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
 
 Dokumen ini memiliki pemetaan bukti ke kemampuan produk, bukan aturan pengadaan, kebijakan akuntansi, izin pengguna, atau rancangan antarmuka final. Otorisasi penyusunan P1 tercatat dalam [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004); persetujuan atas kandidat P1 yang direview kini diberikan melalui [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002), tanpa mengubah klasifikasi/kekuatan bukti atau menutup GAP. [V1_SCOPE](V1_SCOPE.md) memiliki definisi dan prioritas CAP-01–CAP-21; [ACCEPTANCE_CRITERIA](ACCEPTANCE_CRITERIA.md) memiliki hasil penerimaannya. Kehadiran sumber dalam tabel tidak dengan sendirinya menambah cakupan V1. Locator bagian U-002 pada dokumen ini adalah provenance; otoritas operatif P1 adalah keputusan Owner yang tercatat di DECISION_INDEX beserta APPR-002 (aturan authority-basis di SOURCE_OF_TRUTH).
 
@@ -142,3 +142,18 @@ Tidak ada raw workbook/CSV/PDF/DOCX/HTML/video, frame, transkrip, kredensial, id
 | GAP-020 | Relevansi peminjaman telah diputuskan OD-24: bukan V1, FUTURE saja. Yang tersisa hanya pertanyaan prosedur/otoritas resmi bila kelak diaktifkan; ini tidak menutup gap atau menyetujui prosedur peminjaman |
 
 Pemetaan P1 yang disetujui tidak memerlukan GAP baru; GAP-021–GAP-025 berasal dari U-005. Seluruh GAP-001–GAP-025 memiliki pertanyaan dan status kanoniknya dalam [GAP_REGISTER](../00-governance/GAP_REGISTER.md). Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Isi yang disetujui APPR-002 tidak diubah. Sumber Starter Kit 2026-10-30 dipetakan ke kemampuan sebagai bukti, bukan otoritas yang otomatis berlaku. Tidak ada GAP yang diselesaikan; GAP-001–GAP-029 tetap OPEN.
+
+| Sumber | Klasifikasi | Kemampuan yang didukung | Batas |
+|---|---|---|---|
+| SRC-048 PR 34/2023 | AUTHORITATIVE_SOURCE candidate untuk rezim dana di luar APBN/APBD | CAP-04/05/07/08/09/23 | Keberlakuan dan nilai hasil OCR GAP-026/027 |
+| SRC-049/050 Perpres 16/2018, Perpres 46/2025 | AUTHORITATIVE_SOURCE untuk APBN/APBD | CAP-05/08/09/23 | Perpres 12/2021 tidak disediakan; keberlakuan atas sumber dana UNY GAP-026 |
+| SRC-052 jawaban provisional Owner | Owner provisional input | Semua CAP yang merujuk GAP | Bukan kebijakan resmi; dicatat per GAP |
+| SRC-053/054 SOP pengadaan dan RUP | OBSERVED_CURRENT_PROCESS candidate | CAP-04/05 | GAP-002/013 |
+| SRC-055/056/059/060 SOP aset, persediaan, referensi barang, rekonsiliasi | OBSERVED_CURRENT_PROCESS candidate | CAP-11/14/17/22 | GAP-005/010/013/025 |
+| SRC-057/061/062 penghapusan BMU/BMN | OBSERVED_CURRENT_PROCESS candidate | CAP-12 | GAP-013 |
+| SRC-058 layanan ATK | OBSERVED_CURRENT_PROCESS candidate | CAP-22 | GAP-025 |
+| SRC-063–SRC-067 layanan rumah tangga PSRT | FUTURE scope evidence | FUT-08 | Tidak menambah kemampuan V1 |

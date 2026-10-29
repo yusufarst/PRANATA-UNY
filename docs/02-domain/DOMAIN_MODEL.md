@@ -1,6 +1,6 @@
 # Domain model — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
 Dokumen ini memiliki **model konseptual, hubungan, kepemilikan makna, klasifikasi kebenaran dan identitas domain**. [DOMAIN_GLOSSARY](DOMAIN_GLOSSARY.md) memiliki definisi **79 konsep DC-001–DC-079**; [BUSINESS_RULES](BUSINESS_RULES.md) memiliki rumusan BR/INV. Rujukan aturan di bawah adalah locator ke pemiliknya, bukan rumusan kedua. [DOMAIN_RESPONSIBILITIES](DOMAIN_RESPONSIBILITIES.md), [DOMAIN_LIFECYCLES](DOMAIN_LIFECYCLES.md) dan [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) memperinci tanggung jawab, riwayat dan alasan sumber. P2 disetujui APPR-003 dengan seluruh kualifikasi tetap berlaku; persetujuan model konseptual ini tidak menetapkan kebijakan kelembagaan atau rancangan implementasi.
 
@@ -274,3 +274,18 @@ Revision/correction, cancellation, supersession, archival dan deletion memiliki 
 Integrasi SiRUP/SPSE/LPSE/Finance/HR/SSO/LDAP/UNY API dan digital signature tetap FUTURE/reference-only menurut P1/OD-12/13; model hubungan referensi/evidence lokal tidak merancang integrasi atau meniadakan kewajiban resmi di kanal eksternal yang berlaku. [BR-027](BUSINESS_RULES.md#br-027) memiliki batasnya.
 
 **Hasil P2 model:** bahasa/hubungan/classification disetujui APPR-003 dengan kualifikasinya; GAP yang memblokir aturan resmi tetap OPEN. Exact next safe action setelah checkpoint terverifikasi: Owner separately authorizes P3 — Workflows, Routes & Interactions. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Isi yang disetujui APPR-003 tidak diubah; bagian ini menambahkan cakupan DC-080–DC-087, BR-031–BR-035, INV-020–INV-022 dan GAP-026–GAP-029. Tidak ada GAP yang diselesaikan.
+
+| Hubungan | Makna konseptual | Rujukan |
+|---|---|---|
+| Paket ↔ Rezim ↔ Referensi Anggaran | Paket (DC-024) tunduk pada satu Rezim Regulasi Pengadaan (DC-080) yang ditentukan dari sumber dana pada Referensi Anggaran (DC-082) dan tanggal acuan; rezim memilih versi kebijakan (DC-020) yang dipakai. | BR-031/035; GAP-026/028 |
+| Paket ↔ Penetapan Metode | Paket mempunyai riwayat Penetapan Metode (DC-081); tepat satu penetapan berlaku pada satu waktu, yang lama digantikan, tidak dihapus. Saran sistem bukan penetapan. | BR-031; INV-021/022 |
+| Kontrak ↔ Adendum | Kontrak/SPK (DC-041) mempunyai nol atau lebih Adendum (DC-083) berurutan; adendum yang berlaku menghasilkan versi kontrak baru, versi sebelumnya tetap. | BR-032/035; GAP-017/026/027 |
+| Penyedia ↔ DPT | Penyedia (DC-028) dapat mempunyai status DPT (DC-087) beserta riwayat pendaftaran, verifikasi, pembaruan, evaluasi dan pengeluaran; partisipasi (DC-032) pada metode tertentu dapat mensyaratkannya menurut rezim. | PR 34/2023 Pasal 15–16, 59; GAP-026 |
+| Gudang ↔ Permintaan ↔ Serah Terima ↔ Transaksi | Permintaan Barang Gudang (DC-084) ditujukan ke tepat satu Gudang (DC-079); satu permintaan dapat mempunyai beberapa Serah Terima (DC-085) parsial; setiap serah terima menghasilkan bahan Transaksi Persediaan pengeluaran (DC-066) pada gudang itu. | BR-030/033; INV-019/020 |
+| Pengembalian ↔ Serah Terima ↔ Transaksi | Pengembalian Barang Gudang (DC-086) merujuk serah terima asal bila ada; hanya hasil pemeriksaan layak pakai yang menghasilkan bahan transaksi penambahan. | BR-033; GAP-025 |
+
+Area konseptual: DC-080–DC-083 dan DC-087 berada pada area Pengadaan dan penyedia; DC-084–DC-086 pada area Aset, persediaan dan KDP (Gudang). Stok fisik per gudang tetap diturunkan dari ledger yang diterima (INV-009/019); permintaan dan konfirmasi tidak menjadi kebenaran stok kedua.

@@ -1,6 +1,6 @@
 # Arah pengalaman produk
 
-Status: APPROVED | Updated: 2026-10-05 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Authorization: [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
+Status: APPROVED (published 0e3f7de) · Amendment candidate: VERIFYING (AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Authorization: [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
 
 Dokumen ini menetapkan arah pengalaman produk dan batas penerimaan **CAP-20** pada [V1_SCOPE](V1_SCOPE.md), berdasarkan mandat P1 [U-002](../00-governance/SOURCE_INVENTORY.md#u-002-p1-owner-request) dan [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004). Dokumen ini bukan desain layar, Design System, kontrak rute, atau izin memulai P7. Kriteria penerimaan produk dimiliki [ACCEPTANCE_CRITERIA](ACCEPTANCE_CRITERIA.md); ruang lingkup dimiliki [V1_SCOPE](V1_SCOPE.md).
 
@@ -85,3 +85,11 @@ P7 harus menghasilkan bukti desain yang dapat ditinjau terhadap referensi dan ar
 | Bahasa dan konsistensi lintas workspace | Default `id-ID`, dukungan `en`, dan language switch jelas; istilah dan aksi sederhana, terjemahan tidak merusak layout. Bahasa visual/interaction conventions konsisten di keempat pengalaman workspace sesuai [ENGINEERING_PRINCIPLES](../00-governance/ENGINEERING_PRINCIPLES.md). |
 
 Tidak ada pemeriksaan browser, accessibility, contrast, responsive, atau performa aplikasi yang dilakukan pada P1 ini karena aplikasi belum ada. Statusnya **NOT VERIFIED**, bukan PASS. P1 kini DONE — APPROVED melalui APPR-002; P2–P11, planning freeze, execution Tasks, dan implementasi tetap belum diotorisasi oleh dokumen ini.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Isi yang disetujui APPR-002 tidak diubah. Arah pengalaman dan identitas visual Owner 2026-10-30 ditambahkan sebagai masukan P7. Tidak ada GAP yang diselesaikan; GAP-001–GAP-029 tetap OPEN.
+
+- [OD-33](../00-governance/DECISION_LOG.md#od-33): perancangan UI/UX oleh Claude Planning dalam batas yang disetujui; prototipe ChatGPT yang ditolak bukan referensi; tanpa tombol mati, navigasi tidak lengkap, interaktivitas palsu, input berulang tanpa alasan bisnis, atau pembatasan yang hanya ditegakkan di frontend.
+- [OD-34](../00-governance/DECISION_LOG.md#od-34): warna utama Deep Navy `#172554`, latar halaman Ice Blue `#EFF6FF`, permukaan konten utama Pure White `#FFFFFF`; aplikasi terasa didominasi putih, bersih, lapang dan profesional; status tidak pernah hanya dibedakan dengan warna.
+- SRC-047/VIS-04 tetap referensi utama dan diterjemahkan tanpa menyalin warnanya. Token, tipografi, komponen dan motion ditetapkan pada [DESIGN_SYSTEM](../07-ux-design/DESIGN_SYSTEM.md) (kandidat P7).

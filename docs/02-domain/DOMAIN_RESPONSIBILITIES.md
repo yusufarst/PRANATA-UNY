@@ -1,6 +1,6 @@
 # Domain responsibilities — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
 Dokumen ini memiliki makna tanggung jawab dan batas pemetaannya. Istilah/definisi konsep DC dimiliki [DOMAIN_GLOSSARY](DOMAIN_GLOSSARY.md); hubungan, klasifikasi kebenaran dan identitas konseptual dimiliki [DOMAIN_MODEL](DOMAIN_MODEL.md). Seluruh rumusan aturan BR/INV dimiliki [BUSINESS_RULES](BUSINESS_RULES.md). P2 disetujui Owner under APPR-003 dengan semua kualifikasi dan kebutuhan validasi tanggung jawab tetap berlaku. Semua GAP yang disebut tetap OPEN dalam [GAP_REGISTER](../00-governance/GAP_REGISTER.md).
 
@@ -57,3 +57,28 @@ Konteks pekerjaan (DC-009) menghubungkan objek terkait, unit asal, status semant
 | Persediaan multi-gudang | Pekerjaan gudang dipetakan ke Operator yang ditugaskan dan Penanggung jawab pekerjaan; selisih ke Penanggung jawab rekonsiliasi; penerima adalah konteks partisipan/penerima, bukan tipe tanggung jawab. | Kustodian/unit pengoperasi gudang resmi; tanda terima pengeluaran dan bentuk penerima; kewenangan transfer; persetujuan penyesuaian. | GAP-025/023; BR-030. |
 
 Semua sumber PROC/ASSET adalah referensi pengamatan dengan batas pada [REFERENCE_COVERAGE](../01-product/REFERENCE_COVERAGE.md) dan [EVIDENCE_POLICY](../00-governance/EVIDENCE_POLICY.md). P1 approval tidak mengesahkan jabatan atau prosedur historis. [DOMAIN_DECISION_REQUESTS](DOMAIN_DECISION_REQUESTS.md) mengelompokkan validasi yang diperlukan; [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) memetakan seluruh kewajiban P1/GAP. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Isi yang disetujui APPR-003 tidak diubah; bagian ini menambahkan cakupan DC-080–DC-087, BR-031–BR-035, INV-020–INV-022 dan GAP-026–GAP-029. Tidak ada GAP yang diselesaikan.
+
+Jabatan atau fungsi resmi bukan role global ([OD-28](../00-governance/DECISION_LOG.md#od-28)); fungsi di bawah dipetakan ke tipe tanggung jawab yang sudah ada sebagai **EVIDENCE_SUPPORTED** dari PR 34/2023 (SRC-048) untuk rezim dana di luar APBN/APBD. Pemetaan aktual per paket diberikan melalui penugasan proses (P5) dan tetap tunduk pada GAP-003/026/027.
+
+| Fungsi menurut PR 34/2023 | Tipe tanggung jawab yang dapat diwakili | Catatan sumber dan batas |
+|---|---|---|
+| PA (dijabat Rektor) / KPA (dijabat Wakil Rektor Bidang Perencanaan dan Keuangan) | Pemberi persetujuan; penetap pemenang di atas ambang tertentu | Pasal 8–9; ambang dan pengecualian menjadi versi kebijakan |
+| PPK | Penanggung jawab pekerjaan; penyusun/penanda tangan kontrak; pemberi persetujuan tindakan tertentu | Pasal 9 ayat (1) huruf g: tidak merangkap PPSPM/Bendahara, Pejabat Pengadaan/Pokja Pemilihan atau PjPHP/PPHP pada paket yang sama (BR-034) |
+| Perencana Pengadaan | Penyusun/preparer rencana | Lampiran II |
+| Pokja Pemilihan / Pejabat Pengadaan | Penelaah/evaluator; penyusun bahan pemilihan; pelaksana pemilihan | Pelaksana Penunjukan Langsung tidak konsisten (GAP-027 huruf d) |
+| Agen Pengadaan | Operator yang ditugaskan | Lingkup penugasan |
+| Penerima Barang; Pengendali Kualitas; PjPHP/PPHP | Pemeriksa/penerima hasil | Pasal 14 dan 46; pemeriksaan berbeda dari penerimaan administratif |
+| Tim Teknis | Penelaah/reviewer teknis | Pendukung, bukan penetap |
+| Penyedia | Aktor penyedia | DPT (DC-087) bila dipersyaratkan rezim |
+
+| Tanggung jawab gudang dan kebijakan | Tipe yang sudah ada | Batas |
+|---|---|---|
+| Pemohon barang gudang | Pihak asal/pengaju | Pegawai berakun atau operator unit; penerima dapat berbeda |
+| Pemberi persetujuan permintaan | Pemberi persetujuan/approver | Rantai per jenis permintaan dapat dikonfigurasi (OD-31); isi resmi GAP-025 |
+| Petugas gudang | Operator yang ditugaskan | Per gudang; tanpa akses gudang lain tanpa penugasan (BR-034) |
+| Pemeriksa pengembalian | Pemeriksa/penerima hasil | Kriteria dan kewenangan GAP-025 |
+| Pengelola dan pengesah versi kebijakan | Pengelola sumber/kebijakan dan Pemberi persetujuan | Dua orang berbeda untuk aktivasi (maker-checker, CAP-23); aktivasi tidak menetapkan isi kebijakan resmi tanpa bukti GAP |

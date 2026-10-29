@@ -1,8 +1,8 @@
 # Workflow contracts — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
-Dokumen ini memiliki **tujuan, batas, pemicu, prasyarat, bukti, penyelesaian dan handoff WF-001–WF-029**. [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) adalah indeks. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki satu-satunya rumusan state dan tindakan/transisi TR; tabel yang ditautkan pada setiap kontrak adalah bagian kontrak tersebut, bukan salinan state machine. [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki tujuan navigasi RT, [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) hasil interaksi IX, dan [EXCEPTION_REVISION_PATTERNS](EXCEPTION_REVISION_PATTERNS.md) pola EP.
+Dokumen ini memiliki **tujuan, batas, pemicu, prasyarat, bukti, penyelesaian dan handoff WF-001–WF-033**. [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) adalah indeks. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki satu-satunya rumusan state dan tindakan/transisi TR; tabel yang ditautkan pada setiap kontrak adalah bagian kontrak tersebut, bukan salinan state machine. [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki tujuan navigasi RT, [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) hasil interaksi IX, dan [EXCEPTION_REVISION_PATTERNS](EXCEPTION_REVISION_PATTERNS.md) pola EP.
 
 Makna DC, tanggung jawab dan aturan tetap dimiliki P2: [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md), [DOMAIN_RESPONSIBILITIES](../02-domain/DOMAIN_RESPONSIBILITIES.md), dan [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md). ID di sini bukan Tasks, enum, route framework atau izin aplikasi. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
 
@@ -482,6 +482,74 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | Selesai / hasil / handoff | Versi efektif berlaku; pendahulu digantikan, tidak ditimpa. Workflow konsumen membaca versi efektif tanpa perubahan retroaktif. Return ke keluarga/record yang sama. |
 | RT / IX / dependencies | RT-032; IX-001–009/011–013/017 sesuai TR; BR-001/002/025/026/030; INV-017/018/019; CAP-02/19/21; AC-04/22/28; GAP-021/022/025/017/003/013/005/006. |
 
+<a id="wf-030"></a>
+
+## WF-030 — Permintaan, persetujuan dan serah terima barang gudang
+
+| Unsur kontrak | Spesifikasi |
+|---|---|
+| Tujuan / lingkup | Menggantikan buku permintaan kertas dengan permintaan barang digital pada satu gudang tertentu (Gudang ALP atau Gudang PSRT, DC-079): penyusunan permintaan, persetujuan, penyiapan, serah terima fisik penuh atau sebagian, konfirmasi penerima dan penutupan. Barang yang tidak tersedia dapat diteruskan sebagai kebutuhan pengadaan. Pengembalian memakai WF-031; transfer antar gudang tetap WF-023. |
+| Authority / dasar | Arah Owner [OD-26](../00-governance/DECISION_LOG.md#od-26), [OD-31](../00-governance/DECISION_LOG.md#od-31) dan OD-30(7) (provisional) melalui kandidat CAP-22/AC-29; alur ATK teramati EVIDENCE_SUPPORTED SRC-058 (disposisi Kabag ALP → Kepala Gudang → tanda terima ditandatangani pengguna → Admin Persediaan; barang tidak tersedia → Pejabat Pengadaan), bukan SOP current tervalidasi; PROPOSED_WORKFLOW untuk rangkaian; rantai persetujuan, bentuk bukti serah terima/konfirmasi dan aturan penutupan BLOCKED_BY_GAP-025; identitas minimum penerima GAP-023. BR-030/032/033/034 dan INV-019/020/022 berlaku. |
+| Pemicu / prasyarat | Kebutuhan barang persediaan oleh pegawai berakun atau operator unit yang ditugaskan; gudang tujuan, barang dari katalog gudang, jumlah, keperluan dan unit pembebanan dinyatakan. Ketersediaan stok ditampilkan sebagai informasi, bukan pemesanan atau reservasi. |
+| DC / tanggung jawab | DC-001/005/016–018/065/066/079/084/085; Pemohon, Pemberi persetujuan (aktor belum dipetakan; rantai per jenis permintaan dapat dikonfigurasi menurut OD-31), Operator yang ditugaskan pada gudang tersebut; penerima adalah konteks partisipan (pegawai berakun, pegawai tanpa akun atau Organization Unit). |
+| State / actions | [WF-030 / TR-291–TR-298](STATE_TRANSITIONS.md#wf-030). |
+| Bukti / owner–waiting–next | Permintaan bernomor, keputusan beserta alasan (termasuk pengurangan jumlah), catatan penyiapan, bukti serah terima (barang, jumlah, waktu, petugas, penerima), konfirmasi penerima dan selisih yang dilaporkan; owner per state. |
+| Revisi / kegagalan / batal | EP-001/002/003/006/007/009/010; jumlah yang diserahkan tidak pernah melebihi stok tercatat gudang (INV-020); persetujuan tidak mengubah stok; selisih konfirmasi tidak mengedit serah terima, melainkan membuka koreksi atau rekonsiliasi. |
+| Selesai / hasil / handoff | Serah terima menghasilkan bahan pengeluaran (keluarga usage/release WF-023) pada gudang itu sejak serah terima fisik; penerimaan ledger mengikuti TR-224 di bawah versi kebijakan gudang yang ACTIVE, dan pemetaan ke kode transaksi institusi tetap GAP-005/006 (INV-010). Barang tidak tersedia → kebutuhan WF-003 melalui IX-021, bukan pengadaan otomatis. Return ke permintaan yang sama. |
+| RT / IX / dependencies | RT-033; IX-001–007/009/011–013/017/021/022 sesuai TR; BR-030/032/033/034; INV-001/010/019/020/022; CAP-14/21/22; AC-17/28/29/31; GAP-005/006/014/023/025. |
+
+<a id="wf-031"></a>
+
+## WF-031 — Pengembalian barang gudang
+
+| Unsur kontrak | Spesifikasi |
+|---|---|
+| Tujuan / lingkup | Pengembalian barang persediaan ke gudang asal: pengajuan, penerimaan fisik untuk pemeriksaan, hasil pemeriksaan layak pakai atau tidak layak pakai, dan penolakan beralasan. Disposisi barang tidak layak pakai (perbaikan, penghapusan, pemusnahan) di luar workflow ini dan menunggu aturan sahih. |
+| Authority / dasar | Arah Owner [OD-31](../00-governance/DECISION_LOG.md#od-31) dan OD-30(7) (provisional: stok bertambah karena pengembalian layak pakai yang diverifikasi); PROPOSED_WORKFLOW; kriteria layak pakai, kewenangan pemeriksa dan disposisi BLOCKED_BY_GAP-025. BR-033/034, INV-019/020/022. |
+| Pemicu / prasyarat | Barang yang pernah diserahkan atau barang milik gudang yang tidak terpakai; gudang tujuan, barang, jumlah, alasan, kondisi yang dinyatakan pengembali dan tautan serah terima asal bila ada. |
+| DC / tanggung jawab | DC-005/016–018/065/066/079/085/086; Pengembali, Operator yang ditugaskan pada gudang, pemeriksa (aktor belum dipetakan). |
+| State / actions | [WF-031 / TR-301–TR-306](STATE_TRANSITIONS.md#wf-031). |
+| Bukti / owner–waiting–next | Pengajuan, tanda terima pengembalian, hasil pemeriksaan beserta alasan, dan tautan ke serah terima asal; owner per state. |
+| Revisi / kegagalan / batal | EP-002/003/007/009; pernyataan kondisi oleh pengembali tidak pernah menambah stok; jumlah fisik berbeda dicatat sebagai selisih. |
+| Selesai / hasil / handoff | Layak pakai → bahan penambahan stok (keluarga receipt/addition WF-023) diterima melalui TR-224 di bawah kebijakan gudang ACTIVE; tidak layak pakai → tercatat tanpa penambahan stok, disposisi menunggu keputusan sahih. Return ke pengembalian/serah terima asal yang sama. |
+| RT / IX / dependencies | RT-034; IX-001/002/003/006/007/009/011–013/017; BR-030/033/034; INV-019/020/022; CAP-21/22; AC-28/29; GAP-005/006/023/025. |
+
+<a id="wf-032"></a>
+
+## WF-032 — Penetapan metode pengadaan
+
+| Unsur kontrak | Spesifikasi |
+|---|---|
+| Tujuan / lingkup | Untuk satu paket (WF-005): mencatat dasar penetapan — sumber dana, tanggal acuan, jenis pengadaan (barang, pekerjaan konstruksi, jasa konsultansi, jasa lainnya), nilai dasar dan kriteria kualitatif yang diklaim beserta bukti — lalu menampilkan saran metode yang memenuhi syarat menurut versi kebijakan rezim yang berlaku, dan mencatat penetapan oleh pejabat yang ditugaskan beserta alasannya. Penetapan membuka ekstensi metode pada WF-005; perubahan penetapan dicatat sebagai penetapan baru. |
+| Authority / dasar | Arah Owner [OD-27](../00-governance/DECISION_LOG.md#od-27) (lima metode, aturan per rezim, penetapan manusia, kanal resmi); kriteria metode dan pemisahan tugas EVIDENCE_SUPPORTED PR 34/2023 Pasal 9 ayat (1) huruf g, Pasal 22–29 dan Lampiran III (SRC-048, rezim dana di luar APBN/APBD) serta Perpres 16/2018 jo. Perpres 46/2025 untuk rezim APBN/APBD (SRC-049/050); keberlakuan rezim atas sumber dana UNY BLOCKED_BY_GAP-026, inkonsistensi ambang BLOCKED_BY_GAP-027, pejabat penetap BLOCKED_BY_GAP-003. BR-031/034, INV-021/022. |
+| Pemicu / prasyarat | Paket dengan kebutuhan/RUP terkait (WF-003/004), referensi anggaran (DC-082) dan nilai dasar yang dapat dijelaskan. |
+| DC / tanggung jawab | DC-021–027/080–082; Penyiap paket (Operator yang ditugaskan), Pejabat penetap (Penanggung jawab pekerjaan; fungsi belum dipetakan), Pengelola sumber/kebijakan untuk versi kebijakan rezim. |
+| State / actions | [WF-032 / TR-311–TR-316](STATE_TRANSITIONS.md#wf-032). |
+| Bukti / owner–waiting–next | Data dasar, versi kebijakan rezim yang dipakai beserta statusnya, saran beserta rujukan pasal/kriteria, alasan penetapan dan bukti kriteria kualitatif; owner per state. |
+| Revisi / kegagalan / batal | EP-002/003/004/005/007; rezim yang tidak dapat ditentukan menahan saran dengan alasan; saran tidak pernah menjadi penetapan; penetapan yang digantikan tetap dalam riwayat beserta pekerjaan metode yang terdampak. |
+| Selesai / hasil / handoff | Metode ditetapkan dan tercatat dengan versi kebijakan; WF-005 membuka langkah metode; kewajiban kanal resmi (SiRUP, LPSE/SPSE, e-katalog/e-marketplace) dicatat sebagai referensi/bukti lokal tanpa integrasi tersembunyi (BR-027, GAP-029). |
+| RT / IX / dependencies | RT-035; IX-001/002/003/004/006/011/012/023; BR-002/027/031/034; INV-002/021/022; CAP-05/23; AC-07/30/32; GAP-003/013/026/027/029. |
+
+<a id="wf-033"></a>
+
+## WF-033 — Adendum kontrak
+
+| Unsur kontrak | Spesifikasi |
+|---|---|
+| Tujuan / lingkup | Perubahan kontrak/SPK yang berlaku (WF-012): usulan dengan jenis perubahan (lingkup/kuantitas, waktu, nilai atau ketentuan lain), alasan, sebelum–sesudah dan dampak; telaah terhadap kebijakan rezim; keputusan yang dipersyaratkan; dokumen adendum melalui WF-028; penandatanganan; versi kontrak baru yang berlaku tanpa menimpa versi sebelumnya. |
+| Authority / dasar | Arah Owner [OD-29](../00-governance/DECISION_LOG.md#od-29) (amandemen sebagai hasil pengadaan) dan OD-27; batas perubahan EVIDENCE_SUPPORTED PR 34/2023 Pasal 40 (rezim di luar APBN/APBD) dan Perpres 16/2018 jo. 46/2025 untuk APBN/APBD; keberlakuan rezim GAP-026, tafsir batas GAP-027, varian dokumen GAP-017, referensi anggaran GAP-028; PROPOSED_WORKFLOW untuk rangkaian. BR-032/035, INV-005/017/022. |
+| Pemicu / prasyarat | Kontrak berlaku dengan kebutuhan perubahan yang dapat dijelaskan dan bukti pendukung. |
+| DC / tanggung jawab | DC-041/043/083, DC-011–018; Penyiap (fungsi kontrak, belum dipetakan), Penelaah/reviewer, Pemberi persetujuan (aktor belum dipetakan), penandatangan para pihak. |
+| State / actions | [WF-033 / TR-321–TR-327](STATE_TRANSITIONS.md#wf-033). |
+| Bukti / owner–waiting–next | Usulan, hasil telaah dengan rujukan aturan dan perhitungan perubahan nilai, keputusan, dokumen adendum dan bukti penandatanganan; owner per state. |
+| Revisi / kegagalan / batal | EP-001/002/003/004/007; kontrak berlaku tidak berubah sebelum adendum sah berlaku; batas yang terlampaui memerlukan keputusan pengecualian yang dipersyaratkan kebijakan, bukan peringatan yang dapat dilewati. |
+| Selesai / hasil / handoff | Adendum berlaku menjadi versi kontrak baru bagi WF-013–WF-015; versi sebelumnya tetap dalam riwayat; referensi anggaran diperbarui menurut BR-035. Return ke kontrak yang sama. |
+| RT / IX / dependencies | RT-036; IX-001–007/009–013; BR-004/009/010/032/035; INV-005/006/017/022; CAP-08/09/23; AC-11/12/32; GAP-017/019/026/027/028. |
+
 ## Batas dan next action kandidat
 
-Seluruh GAP-001–GAP-025 tetap OPEN; GAP-020 tidak mengaktifkan borrowing workflow V1 (OD-24, BR-028). Tidak ada procedure/actor/threshold/formula atau GAP resolution baru. Rangkaian yang tertahan tetap berguna sebagai konteks pekerjaan/bukti dan alasan blocked; tidak memberikan implementasi readiness. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md) memiliki pemetaan lengkap dan [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) kebutuhan validasi terkelompok. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+Seluruh GAP-001–GAP-029 tetap OPEN; GAP-020 tidak mengaktifkan borrowing workflow V1 (OD-24, BR-028). Tidak ada procedure/actor/threshold/formula atau GAP resolution baru. Rangkaian yang tertahan tetap berguna sebagai konteks pekerjaan/bukti dan alasan blocked; tidak memberikan implementasi readiness. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md) memiliki pemetaan lengkap dan [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) kebutuhan validasi terkelompok. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Menambahkan WF-030 (permintaan dan serah terima gudang), WF-031 (pengembalian gudang), WF-032 (penetapan metode) dan WF-033 (adendum kontrak) dari OD-26/27/29/30/31 dan bukti PR 34/2023. Kata-kata kontrak yang sudah disetujui di bawah APPR-004 tidak diubah; hanya hitungan, status dan rujukan GAP yang diperbarui. Persetujuan amandemen kelak tidak menutup GAP mana pun.

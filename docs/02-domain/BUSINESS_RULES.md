@@ -1,8 +1,8 @@
 # Business rules — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
-Dokumen ini memiliki **kata-kata kanonik 30 aturan BR-001–BR-030 dan 19 invariant INV-001–INV-019**. [DOMAIN_GLOSSARY](DOMAIN_GLOSSARY.md) memiliki istilah, [DOMAIN_MODEL](DOMAIN_MODEL.md) konsep/relasi, [DOMAIN_RESPONSIBILITIES](DOMAIN_RESPONSIBILITIES.md) tanggung jawab, [DOMAIN_LIFECYCLES](DOMAIN_LIFECYCLES.md) makna lifecycle, dan [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) pemetaan balik. Dokumen lain merujuk ID ini; tidak membuat salinan aturan yang dapat bersaing.
+Dokumen ini memiliki **kata-kata kanonik 35 aturan BR-001–BR-035 dan 22 invariant INV-001–INV-022**. [DOMAIN_GLOSSARY](DOMAIN_GLOSSARY.md) memiliki istilah, [DOMAIN_MODEL](DOMAIN_MODEL.md) konsep/relasi, [DOMAIN_RESPONSIBILITIES](DOMAIN_RESPONSIBILITIES.md) tanggung jawab, [DOMAIN_LIFECYCLES](DOMAIN_LIFECYCLES.md) makna lifecycle, dan [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) pemetaan balik. Dokumen lain merujuk ID ini; tidak membuat salinan aturan yang dapat bersaing.
 
 Persetujuan P1 [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002) mempertahankan semua kualifikasi hipotesis/usulan dan kewajiban validasinya. P2 ini APPROVED under APPR-003 dengan kualifikasi yang tetap berlaku; persetujuan katalog konseptual tidak mengesahkan kebijakan institusi yang belum tervalidasi. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF. Penyerahan ke fase kelak berarti kewajiban ketika fase itu memperoleh otorisasi terpisah.
 
@@ -19,7 +19,7 @@ Persetujuan P1 [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002) mempert
 
 **Status utama berlaku pada pernyataan dalam entri itu saja.** Dukungan Owner, pengamatan, proposal dan isi yang masih blocked dibedakan pada otoritas/kualifikasi setiap entri. Invariant adalah hal yang harus tetap benar untuk domain PRANATA; tidak otomatis merupakan equality akuntansi. Tidak ada sumber lokal pengadaan/akuntansi yang baru diautentikasi sebagai kebijakan resmi pada P2 ini. Hierarki dan konflik mengikuti [SOURCE_OF_TRUTH](../00-governance/SOURCE_OF_TRUTH.md#authority-hierarchy); original/locator mengikuti [SOURCE_INVENTORY](../00-governance/SOURCE_INVENTORY.md). Nomor § pada AUTH-006 menunjuk bagian instruction Owner P2 [U-003](../00-governance/SOURCE_INVENTORY.md#u-003-p2-owner-request); provenance/fingerprint dan scope durabel berada pada record pemilik tersebut. Nomor § tersebut adalah provenance, bukan otoritas operatif; kata-kata P2 yang disetujui bertumpu pada keputusan Owner yang tercatat dan APPR-003 (aturan authority-basis di SOURCE_OF_TRUTH).
 
-Semua dependency di bawah mengacu pada [GAP_REGISTER](../00-governance/GAP_REGISTER.md): **GAP-001–GAP-025 tetap OPEN**. Tidak adanya GAP pada batas Owner tertentu tidak menjadikan desain lengkap. Sumber/formula/heading historis bukan otoritas untuk nomor, signature, klasifikasi, threshold, debit/kredit, cutoff atau prosedur. Rule ID stabil; koreksi bermakna memerlukan provenance/review melalui [CHANGE_CONTROL](../00-governance/CHANGE_CONTROL.md), bukan penggantian diam-diam.
+Semua dependency di bawah mengacu pada [GAP_REGISTER](../00-governance/GAP_REGISTER.md): **GAP-001–GAP-029 tetap OPEN**. Tidak adanya GAP pada batas Owner tertentu tidak menjadikan desain lengkap. Sumber/formula/heading historis bukan otoritas untuk nomor, signature, klasifikasi, threshold, debit/kredit, cutoff atau prosedur. Rule ID stabil; koreksi bermakna memerlukan provenance/review melalui [CHANGE_CONTROL](../00-governance/CHANGE_CONTROL.md), bukan penggantian diam-diam.
 
 ## Katalog aturan
 
@@ -323,6 +323,56 @@ Semua dependency di bawah mengacu pada [GAP_REGISTER](../00-governance/GAP_REGIS
 - **Cakupan:** [CAP-14/21](../01-product/V1_SCOPE.md#must-ship--hasil-minimum-kapabilitas); [AC-17/28](../01-product/ACCEPTANCE_CRITERIA.md#kriteria-fungsional).
 - **Dependency/penyerahan:** GAP-025/005/006/010/023 OPEN. **Kualifikasi:** Tidak memutuskan posisi in-transit, rak/bin, tipe tanggung jawab atau efek akuntansi; penerima adalah konteks partisipan.
 
+### BR-031
+
+**Judul:** Penetapan metode menurut rezim dan keputusan manusia.
+
+- **Domain:** Procurement Regulatory Regime, Procurement Method dan Method Determination.
+- **Pernyataan:** Metode pengadaan suatu paket ditetapkan oleh pejabat yang ditugaskan, dengan alasan dan jejak audit, berdasarkan rezim regulasi yang berlaku menurut sumber dana dan tanggal berlaku. Saran sistem tentang metode yang memenuhi syarat — dari nilai, jenis pengadaan dan kriteria kualitatif versi kebijakan — tidak pernah menjadi penetapan dengan sendirinya; aturan suatu rezim tidak dipakai untuk paket yang tunduk pada rezim lain.
+- **Otoritas/status:** APPROVED_OWNER_DIRECTION [OD-27](../00-governance/DECISION_LOG.md#od-27); kriteria metode EVIDENCE_SUPPORTED PR 34/2023 Pasal 22–29 (SRC-048, rezim dana di luar APBN/APBD); keberlakuan dan inkonsistensi BLOCKED_BY_GAP.
+- **Cakupan:** CAP-05/23; AC-07/30.
+- **Dependency/penyerahan:** GAP-003/026/027/029; P4 Policy Registry, P6 aturan evaluasi saran, P7 penyajian alasan. **Kualifikasi:** Batas nilai yang tumpang tindih (GAP-027) selalu memerlukan pilihan manusia yang tercatat.
+
+### BR-032
+
+**Judul:** Keadaan prosedural dan keuangan tetap terpisah.
+
+- **Domain:** Pengadaan, dokumen, penerimaan barang, pembayaran, aset, persediaan dan nilai.
+- **Pernyataan:** Pemilihan penyedia, administrasi internal, penyiapan dokumen, penerbitan dan penandatanganan dokumen, penerimaan/BAST, pembayaran, pengakuan aset, stok fisik gudang dan akuntansi/penyusutan adalah klaim berbeda yang masing-masing mempunyai bukti dan penanggung jawab sendiri; satu klaim tidak otomatis menciptakan klaim lain.
+- **Otoritas/status:** APPROVED_OWNER_DIRECTION [OD-27](../00-governance/DECISION_LOG.md#od-27), [OD-30](../00-governance/DECISION_LOG.md#od-30)(2); memperluas BR-012/013 dan INV-012.
+- **Cakupan:** CAP-05/08/09/10/13/14/21/22; AC-12/13/29/30.
+- **Dependency/penyerahan:** GAP-018 untuk peristiwa pemicu downstream. **Kualifikasi:** Keterkaitan dan reuse data tetap dianjurkan (OD-08); yang dilarang adalah pemicu otomatis tanpa dasar.
+
+### BR-033
+
+**Judul:** Peristiwa stok fisik gudang.
+
+- **Domain:** Gudang, Permintaan, Serah Terima, Pengembalian dan Ledger Persediaan.
+- **Pernyataan:** Stok fisik suatu gudang bertambah karena penerimaan fisik yang diverifikasi atau pengembalian layak pakai yang diverifikasi, dan berkurang ketika barang diserahkan secara fisik; persetujuan permintaan tidak mengubah stok; konfirmasi penerima dicatat sesudah serah terima tanpa mengubah stok; koreksi/penyesuaian hanya melalui transaksi penyesuaian yang beralasan dan bukti, bukan penimpaan saldo.
+- **Otoritas/status:** APPROVED_OWNER_DIRECTION [OD-30](../00-governance/DECISION_LOG.md#od-30)(7), [OD-31](../00-governance/DECISION_LOG.md#od-31) (arah provisional); alur teramati SRC-058.
+- **Cakupan:** CAP-14/21/22; AC-17/28/29.
+- **Dependency/penyerahan:** GAP-005/006/025; kode transaksi institusi tidak ditetapkan oleh aturan ini (INV-010 tetap).
+
+### BR-034
+
+**Judul:** Isolasi akses dan pemisahan tugas.
+
+- **Domain:** Access, Workspace, Warehouse, Vendor dan Process Assignment.
+- **Pernyataan:** Akses data mengikuti cakupan unit, ruang kerja, gudang dan penugasan proses yang diberikan, ditegakkan di server, kueri, ekspor, unduhan dan pencarian; pengguna Pengadaan tidak memperoleh data Aset dan sebaliknya tanpa penugasan; petugas satu gudang tidak memperoleh stok gudang lain tanpa penugasan; penyedia hanya memperoleh data partisipasinya. Pemisahan tugas pada paket yang sama mencegah satu orang merangkap fungsi yang dilarang, antara lain PPK dengan Pejabat Pengadaan/Pokja Pemilihan, dengan PjPHP/PPHP, atau dengan PPSPM/Bendahara.
+- **Otoritas/status:** APPROVED_OWNER_DIRECTION [OD-28](../00-governance/DECISION_LOG.md#od-28); pemisahan tugas EVIDENCE_SUPPORTED PR 34/2023 Pasal 9 ayat (1) huruf g (SRC-048).
+- **Cakupan:** CAP-02/07/19/21/22; AC-02/10/31.
+- **Dependency/penyerahan:** GAP-014/026; P5 matriks kapabilitas dan aturan pemisahan.
+
+### BR-035
+
+**Judul:** Referensi anggaran dan komitmen internal.
+
+- **Domain:** Budget Reference and Internal Commitment.
+- **Pernyataan:** Paket dan kontrak merujuk sumber anggaran resmi dengan bukti; komitmen internal mencadangkan nilai untuk pengendalian tanpa menggantikan pembukuan keuangan dan hanya dilepas setelah pembatalan sah dan verifikasi keuangan.
+- **Otoritas/status:** APPROVED_OWNER_DIRECTION [OD-30](../00-governance/DECISION_LOG.md#od-30)(1), provisional.
+- **Cakupan:** CAP-05/09; AC-07/12.
+- **Dependency/penyerahan:** GAP-028. **Kualifikasi:** V1 mencatat dan memperingatkan; tidak memblokir berdasarkan saldo keuangan yang tidak dimiliki PRANATA.
+
 ## Katalog invariant
 
 ### INV-001
@@ -496,6 +546,33 @@ Semua dependency di bawah mengacu pada [GAP_REGISTER](../00-governance/GAP_REGIS
 - **Cakupan:** [CAP-14/21](../01-product/V1_SCOPE.md#must-ship--hasil-minimum-kapabilitas); [AC-28](../01-product/ACCEPTANCE_CRITERIA.md#kriteria-fungsional); [FUT-07](../01-product/V1_SCOPE.md#future--memerlukan-keputusanotorisasi-baru).
 - **Dependency/penyerahan/kualifikasi:** Pemindaian tetap FUTURE (FUT-07) dan bukan dependency V1; pencarian/pemilihan manual adalah jalur V1 yang lengkap. Tidak memilih perangkat, standar barcode atau teknologi.
 
+### INV-020
+
+**Judul:** Penyerahan tidak melebihi stok fisik gudang.
+
+- **Domain/pernyataan:** Gudang — jumlah yang diserahkan atau dikirim dari suatu gudang pada saat pencatatan tidak boleh melebihi stok fisik tercatat gudang tersebut; kekurangan diselesaikan melalui penerimaan atau penyesuaian beralasan, bukan saldo negatif.
+- **Otoritas/status/sumber:** PROPOSED, turunan BR-033 dan OD-30(7) (barang yang tidak ada tidak dapat diserahkan secara fisik).
+- **Cakupan:** CAP-21/22; AC-28/29.
+- **Dependency/penyerahan/kualifikasi:** GAP-025; P6 menegakkan dengan penguncian transaksi.
+
+### INV-021
+
+**Judul:** Super Admin tidak menjadi pengambil keputusan bisnis.
+
+- **Domain/pernyataan:** Access — peran Super Admin tidak pernah dengan sendirinya memberi kewenangan menetapkan metode, pemenang/penyedia, persetujuan, penandatanganan, penerimaan atau pengakuan; tindakan itu memerlukan penugasan proses yang sah. Pembacaan penawaran rahasia oleh Super Admin hanya baca, beralasan dan tercatat audit.
+- **Otoritas/status/sumber:** APPROVED_OWNER_DIRECTION [OD-28](../00-governance/DECISION_LOG.md#od-28); konsisten OD-10 dan INV-002.
+- **Cakupan:** CAP-02/07/19; AC-04/31.
+- **Dependency/penyerahan/kualifikasi:** P5 penegakan dan audit.
+
+### INV-022
+
+**Judul:** Hasil dengan kebijakan belum aktif selalu berlabel simulasi.
+
+- **Domain/pernyataan:** Versioned Policy — angka, saran, dokumen atau laporan yang bergantung pada versi kebijakan yang belum aktif selalu dinyatakan sebagai simulasi pada layar, ekspor dan dokumen, dan tidak dapat diterbitkan sebagai keluaran resmi.
+- **Otoritas/status/sumber:** APPROVED_OWNER_DIRECTION, turunan INV-013 dan OD-30 (validasi sebelum aktivasi).
+- **Cakupan:** CAP-13/17/23; AC-16/32.
+- **Dependency/penyerahan/kualifikasi:** GAP terkait setiap kebijakan; P4/P7 mekanisme label.
+
 ## Konflik, batas validasi dan keputusan yang dibutuhkan
 
 | Konflik/ketidakpastian | Sumber dan klasifikasi | Aturan terkait / dependency OPEN | Aman dalam P2; yang tetap blocked |
@@ -514,3 +591,8 @@ Tidak ada konflik diselesaikan dengan memilih sumber secara diam-diam. Pertanyaa
 P2 review memeriksa konsistensi istilah/relasi, provenance, status rule dan invariant di atas terhadap semua OD/CAP/AC/GAP. Katalog ini tidak mengubah kata-kata OD-01–OD-23, CAP-01–CAP-20 atau AC-01–AC-27. Rule formal blocked memerlukan source custodian/domain specialist dan keputusan yang sesuai sebelum dipakai dalam fase berikutnya; hasil review P2 tidak mengubahnya menjadi official rule.
 
 P3 kelak menentukan urutan/prosedur/status transitions dan tanggung jawab yang sudah tervalidasi; P4 representasi aplikasi/data; P5 izin/segregation/retention/security; P6 calculation/consistency/import/performance contracts; P8–P10 contoh sahih, operating/migration/cutover/acceptance. Tidak ada schema, workflow machine, permission matrix, rumus/threshold resmi, implementation, Task atau planning freeze pada dokumen ini. P2 DONE — APPROVED under APPR-003, seluruh status/authority/dependency aturan tetap berlaku. Setelah checkpoint terverifikasi, Owner separately authorizes P3 — Workflows, Routes & Interactions. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Menambahkan BR-031–BR-035 dan INV-020–INV-022 dari OD-27/28/30/31 dan bukti PR 34/2023. Kata-kata BR-001–BR-030 dan INV-001–INV-019 tidak berubah.
+

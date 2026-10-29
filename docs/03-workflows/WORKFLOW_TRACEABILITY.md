@@ -1,10 +1,10 @@
 # Ketertelusuran workflow — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
 Dokumen ini memiliki **pemetaan P3 dan penilaian dampak workflow seluruh GAP**. [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) adalah indeks; [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md) memiliki tujuan/batas/handoff; [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki keadaan/TR; [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki RT; [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) memiliki IX. Semua ID di sini adalah locator perencanaan, bukan Tasks atau kriteria penerimaan aplikasi yang sudah diuji.
 
-[DECISION_LOG](../00-governance/DECISION_LOG.md) tetap memiliki OD-01–OD-25. [V1_SCOPE](../01-product/V1_SCOPE.md) dan [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md) tetap memiliki 21 CAP, 28 AC dan target NFR usulan. [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md) / [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md) memiliki 79 DC/9 area; [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) adalah satu-satunya pemilik wording/status/authority **30 BR / 19 INV**. P3 tidak mengganti rumusan sumber-sumber approved tersebut. [GAP_REGISTER](../00-governance/GAP_REGISTER.md) tetap memiliki status kanonik: semua 25 OPEN, tidak ada resolution; GAP-021–GAP-025 baru dari U-005.
+[DECISION_LOG](../00-governance/DECISION_LOG.md) tetap memiliki OD-01–OD-34. [V1_SCOPE](../01-product/V1_SCOPE.md) dan [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md) tetap memiliki 23 CAP, 32 AC dan target NFR usulan. [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md) / [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md) memiliki 87 DC; [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) adalah satu-satunya pemilik wording/status/authority **35 BR / 22 INV**. P3 tidak mengganti rumusan sumber-sumber approved tersebut. [GAP_REGISTER](../00-governance/GAP_REGISTER.md) tetap memiliki status kanonik: semua 29 OPEN, tidak ada resolution; GAP-021–GAP-025 dari U-005 dan GAP-026–GAP-029 dari amandemen 2026-10-30. Pemetaan untuk ID baru berada di bagian amandemen di akhir dokumen ini.
 
 ## Sumber yang dipakai dan batas pembuktian
 
@@ -283,3 +283,90 @@ Counts: **25 reviewed; A 0 / B 18 / C 5 / D 2; resolved 0; OPEN 25; new 5 (GAP-0
 Adversarial P3 review must check coverage against these locators and source-authority qualifications, especially WF-008 submission/revision consistency, WF-011 four SPPBJ gates, WF-016 blocked classification, WF-023 raw P01/P02, WF-024 completion, WF-025 signoff and WF-027 time/policy. [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) groups exact unresolved decisions; answers require source/version/date/custodian/actual approval and targeted impact review before any owning specification or GAP changes.
 
 P4 receives conceptual context/identity relationships only; P5 receives authorized-actor/privacy/assignment needs; P6 receives conflict-sensitive/long-operation and consistency needs without mechanisms; P7 receives route/return/action/accessibility/language intent without visual design. P8–P10 later validate critical journeys, policy examples, operating/source trust and acceptance. No later-phase work starts now. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30 — ketertelusuran
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Tabel di atas tetap sebagaimana disetujui APPR-004; bagian ini menambahkan pemetaan untuk WF-030–WF-033, RT-033–RT-036, IX-022–IX-024, DC-080–DC-087, CAP-22/23, AC-29–AC-32, OD-26–OD-34, BR-031–BR-035, INV-020–INV-022 dan GAP-026–GAP-029. Tidak ada GAP yang diselesaikan.
+
+### Jejak utama workflow baru
+
+| WF / RT utama | DC utama | BR yang dinilai | INV yang dijaga | CAP / AC utama | Sumber / GAP yang mengendalikan |
+|---|---|---|---|---|---|
+| WF-030 / RT-033 | DC-001/005/065/066/079/084/085 | BR-030/032/033/034 | INV-001/010/019/020/022 | CAP-14/21/22; AC-17/28/29/31 | OD-26/30/31 (U-006/U-007); SRC-058; GAP-005/006/014/023/025 |
+| WF-031 / RT-034 | DC-065/066/079/085/086 | BR-030/033/034 | INV-019/020/022 | CAP-21/22; AC-28/29 | OD-30(7)/31; GAP-005/006/023/025 |
+| WF-032 / RT-035 | DC-021–027/080–082 | BR-002/027/031/034 | INV-002/021/022 | CAP-05/23; AC-07/30/32 | OD-27; SRC-048/049/050; GAP-003/013/026/027/029 |
+| WF-033 / RT-036 | DC-011–018/041/043/083 | BR-004/009/010/032/035 | INV-005/006/017/022 | CAP-08/09/23; AC-11/12/32 | OD-27/29; SRC-048 Pasal 40; GAP-017/019/026/027/028 |
+
+### Konsep domain baru
+
+| DC | WF dan kontrak | Makna kontribusi P3 |
+|---|---|---|
+| DC-080 Rezim Regulasi Pengadaan | WF-032/033; WF-029 keluarga F4/F9 untuk versi kebijakan per rezim | Rezim dipilih menurut sumber dana dan tanggal acuan; pemetaan sumber dana UNY ke rezim BLOCKED_BY_GAP-026 |
+| DC-081 Penetapan Metode | WF-032 → WF-005 | Saran sistem dibedakan dari penetapan manusia; perubahan dicatat sebagai penetapan baru |
+| DC-082 Referensi Anggaran dan Komitmen Internal | WF-032/033; konteks WF-005/012/015 | Rujukan dan bukti sumber anggaran; komitmen internal tidak menggantikan pembukuan keuangan (BR-035, GAP-028) |
+| DC-083 Adendum Kontrak | WF-033; WF-012/013/028 | Versi kontrak baru tanpa penimpaan versi sebelumnya |
+| DC-084 Permintaan Barang Gudang | WF-030 | Permintaan digital per gudang; persetujuan tidak mengubah stok |
+| DC-085 Serah Terima Barang Gudang dan Konfirmasi Penerima | WF-030/031; WF-023 | Stok berkurang saat serah terima fisik; konfirmasi penerima klaim terpisah |
+| DC-086 Pengembalian Barang Gudang | WF-031; WF-023 | Stok bertambah hanya setelah pemeriksaan layak pakai yang sahih |
+| DC-087 Daftar Penyedia Terpilih (DPT) | WF-007/008 (status DPT sebagai prasyarat partisipasi Quotation, Tender dan Penunjukan Langsung menurut PR 34/2023 Pasal 15), WF-032 | Pendaftaran, verifikasi, pembaruan, evaluasi dan pengeluaran dari DPT (Pasal 16 dan 59, Lampiran I) sebagai bukti; WF-007 tetap pemilik alur profil; keberlakuan GAP-026, kewenangan GAP-003/014 |
+
+### Cakupan balik CAP, AC dan NFR baru
+
+| ID | WF / RT / IX | Batas |
+|---|---|---|
+| CAP-22 | WF-030/031; RT-033/034; IX-001–007/009/011–013/017/021/022 | Rantai keputusan, bentuk bukti, penutupan dan kriteria layak pakai GAP-025; identitas penerima GAP-023 |
+| CAP-23 | WF-029 (F4/F9 sebagai lifecycle versi kebijakan), WF-032/033 dan setiap TR yang bergantung pada versi kebijakan; IX-023 | Aktivasi maker-checker dan mekanisme label simulasi ditetapkan P4/P5; isi kebijakan resmi tetap GAP per keluarga |
+| AC-29 | WF-030/031; RT-033/034; IX-022 | Verifikasi runtime P8; bukan PASS aplikasi |
+| AC-30 | WF-032 dengan ekstensi metode WF-005–WF-015; RT-035; IX-023 | Empat jenis pengadaan dan lima metode diuji dengan data sintetis pada P8/P10 |
+| AC-31 | WF-002, seluruh RT (cakupan), WF-030/031 (isolasi gudang), IX-024 | Penegakan server/kueri/ekspor ditetapkan P5 dan diverifikasi P8 |
+| AC-32 | WF-029/032/033; IX-023 | Label simulasi pada layar, ekspor dan dokumen diverifikasi P8 |
+| NFR-O01/NFR-O02 | — | Bukan kontrak workflow; target desain RTO/RPO dimiliki P9/P10 |
+
+### Arah Owner baru
+
+| Keputusan | Kontrak P3 yang membawa arah itu |
+|---|---|
+| [OD-26](../00-governance/DECISION_LOG.md#od-26) | WF-023/030/031 dengan lingkup Gudang ALP dan Gudang PSRT; WF-029 F7; layanan rumah tangga PSRT tetap FUTURE (tanpa WF) |
+| [OD-27](../00-governance/DECISION_LOG.md#od-27) | WF-032; ekstensi metode WF-005–WF-015; WF-004 dan kanal resmi sebagai referensi/bukti (GAP-029) |
+| [OD-28](../00-governance/DECISION_LOG.md#od-28) | WF-002; cakupan seluruh RT; IX-024; pemisahan tugas pada WF-005/009–014/032 |
+| [OD-29](../00-governance/DECISION_LOG.md#od-29) | WF-028 (dokumen dan paket SPJ), WF-033 (adendum), WF-011–WF-015 |
+| [OD-30](../00-governance/DECISION_LOG.md#od-30) | WF-030/031 (butir 7), WF-023 (butir 6), WF-024 (butir 4), WF-017/022 (butir 3), WF-020 (butir 5), WF-032/033 (butir 1); semua tetap provisional |
+| [OD-31](../00-governance/DECISION_LOG.md#od-31) | WF-030/031 |
+| [OD-32](../00-governance/DECISION_LOG.md#od-32)–[OD-34](../00-governance/DECISION_LOG.md#od-34), GOV-10–GOV-12 | Tidak menambah workflow; dimiliki P4/P6/P7/P8/P9/P10/P11 |
+
+### Aturan dan invariant baru
+
+| ID | Kontrak tempat aturan dinilai |
+|---|---|
+| [BR-031](../02-domain/BUSINESS_RULES.md#br-031) | WF-032 (TR-312/313/315), WF-005 ekstensi metode |
+| [BR-032](../02-domain/BUSINESS_RULES.md#br-032) | WF-010–WF-017, WF-022–WF-024, WF-030 |
+| [BR-033](../02-domain/BUSINESS_RULES.md#br-033) | WF-023/030/031 |
+| [BR-034](../02-domain/BUSINESS_RULES.md#br-034) | WF-002; cakupan seluruh RT; WF-030/031 isolasi gudang; WF-032 pemisahan tugas; IX-024 |
+| [BR-035](../02-domain/BUSINESS_RULES.md#br-035) | WF-005/012/015/032/033 |
+| [INV-020](../02-domain/BUSINESS_RULES.md#inv-020) | WF-030 TR-295; WF-023 |
+| [INV-021](../02-domain/BUSINESS_RULES.md#inv-021) | IX-024; WF-010/032 |
+| [INV-022](../02-domain/BUSINESS_RULES.md#inv-022) | WF-022/027/032/033 dan setiap keluaran berbasis kebijakan |
+
+### GAP baru dari perspektif workflow
+
+| GAP / kelas P3 | WF/RT terdampak dan decision point | Klarifikasi aman | Bukti/resolver yang diperlukan |
+|---|---|---|---|
+| GAP-026 / B | WF-032/033, ekstensi metode WF-005–WF-015; RT-035/036 — **rezim per sumber dana dan keberlakuan instrumen** | Versi kebijakan per rezim disiapkan sebagai DRAFT; saran berlabel simulasi; tidak ada ambang nasional untuk paket rezim UNY | Kustodian pengadaan + keuangan: pemetaan sumber dana UNY ke rezim, instrumen yang berlaku dan tanggal efektif |
+| GAP-027 / B | WF-032/033 — **inkonsistensi internal PR 34/2023** | Setiap aturan terdampak memerlukan pilihan manusia tercatat; tidak pernah diterapkan otomatis | Kustodian pengadaan: catatan tafsir/praktik bertanggal; Owner mengonfirmasi |
+| GAP-028 / B | WF-032/033; konteks WF-005/012/015 — **sumber anggaran dan lifecycle komitmen** | Referensi dan bukti dicatat; peringatan tanpa pemblokiran berbasis saldo | Keuangan: sumber rujukan resmi, identifier, tanggung jawab komitmen/pelepasan |
+| GAP-029 / B | WF-004/005/006/008/032 — **kanal eksternal resmi per langkah** | Default V1 tanpa pengiriman penawaran penyedia di PRANATA; referensi/bukti kanal resmi dicatat lokal | Kustodian pengadaan: kanal resmi per metode/rezim dan langkah yang boleh di PRANATA |
+
+### Bukti regulasi untuk workflow yang sudah ada
+
+Lokasi rinci dan batas pembacaan berada di [REGULATORY_SOURCE_REVIEW](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md). Semua butir EVIDENCE_SUPPORTED untuk rezim masing-masing; keberlakuan atas sumber dana UNY tetap GAP-026.
+
+| WF | Ketentuan PR 34/2023 yang relevan (SRC-048) | Catatan |
+|---|---|---|
+| WF-003/004 | Lampiran II: perencanaan oleh Perencana Pengadaan, penetapan PA/KPA, input dan pengumuman melalui SiRUP | SiRUP tetap kanal resmi; PRANATA menyimpan referensi (BR-027) |
+| WF-005/032 | Pasal 22–29: persiapan pemilihan, lima metode dan kriterianya; Pasal 9 ayat (1) huruf g pemisahan tugas | Ambang dan kriteria menjadi versi kebijakan, bukan kode |
+| WF-006/009 | Lampiran III: penjelasan pekerjaan (BA Penjelasan), pembukaan penawaran (BA Pembukaan), evaluasi (BA Evaluasi), klarifikasi/negosiasi (BA Negosiasi) | Applicability per metode tetap GAP-003 |
+| WF-007/008 | Pasal 15–16 dan Lampiran I: DPT sebagai syarat Quotation/Tender/Penunjukan Langsung; pendaftaran, verifikasi, pembaruan, evaluasi | Pengiriman penawaran di PRANATA mengikuti GAP-029 |
+| WF-010/011 | Pasal 9 ayat (2): PA menetapkan pemenang di atas ambang tertentu; SPPBJ dan jaminan pelaksanaan (Pasal 38) | Inkonsistensi penamaan "Seleksi" GAP-027(e) |
+| WF-012/033 | Pasal 30–33: bentuk bukti perjanjian dan jenis kontrak; Pasal 40: adendum | Bentuk bukti 20–50 juta GAP-027(b) |
+| WF-014 | Pasal 46: serah terima, pemeriksaan oleh Pengendali Kualitas, PHO/FHO dan masa pemeliharaan | Klaim BAST tetap terpisah dari pengakuan aset (BR-032) |
+| WF-015 | Pasal 41: pembayaran (bulanan/termin/sekaligus) setelah potongan | Pelacakan saja, bukan transaksi keuangan |

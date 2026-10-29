@@ -1,6 +1,6 @@
 # Domain traceability — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
 Dokumen ini memiliki pemetaan P2 dan penilaian kontribusi P2 terhadap GAP; tidak memiliki rumusan aturan atau status penutupan GAP. [DOMAIN_MODEL](DOMAIN_MODEL.md) memiliki DC-001–DC-079; [BUSINESS_RULES](BUSINESS_RULES.md) memiliki rumusan, status, authority, sumber dan kualifikasi BR/INV. [V1_SCOPE](../01-product/V1_SCOPE.md) tetap memiliki 21 CAP; [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md) tetap memiliki 28 AC dan 4 target NFR usulan. Semua definisi produk P1 dipertahankan dengan prasyarat validasinya.
 
@@ -154,3 +154,26 @@ Counts: **25 reviewed; A 0; B 17; C 5; D 3; resolved 0; OPEN 25; new gaps 5 (GAP
 | Workbook output/dependency versus trusted structured data | PROC-30 formula/output families + SPJ PL C1267; PROC-31 corresponding headers | Structured/output/source-trust distinctions BR-009/010/024; GAP-019; header match does not resolve value/formula trust. |
 
 Keputusan yang dibutuhkan dikelompokkan dalam [DOMAIN_DECISION_REQUESTS](DOMAIN_DECISION_REQUESTS.md); tidak memerlukan sesi pertanyaan baru untuk menyelesaikan paket semantik P2. P2 disetujui APPR-003 dengan seluruh status/authority/dependency tetap berlaku. Safe next action setelah checkpoint terverifikasi: Owner separately authorizes P3 — Workflows, Routes & Interactions. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Isi yang disetujui APPR-003 tidak diubah; bagian ini menambahkan cakupan DC-080–DC-087, BR-031–BR-035, INV-020–INV-022 dan GAP-026–GAP-029. Tidak ada GAP yang diselesaikan.
+
+| Locator baru | Konsep DC | Rule / invariant | Sumber | GAP dan handoff |
+|---|---|---|---|---|
+| CAP-05 (perluasan lima metode) / AC-30 | DC-024/025/080–082 | BR-031/032/034; INV-021/022 | OD-27; SRC-048/049/050 | GAP-003/026/027/029; P4 Policy Registry, P6 aturan saran |
+| CAP-07 (DPT) | DC-028–035/087 | BR-007/008/034 | OD-27/28; SRC-048 Pasal 15–16, Lampiran I | GAP-014/026/029 |
+| CAP-22 / AC-29 | DC-079/084–086, DC-065/066 | BR-030/033/034; INV-019/020 | OD-26/30/31; SRC-058 | GAP-005/006/023/025 |
+| CAP-23 / AC-32 | DC-020/080 | BR-025/031; INV-013/018/022 | OD-27/30 | GAP per keluarga kebijakan |
+| AC-31 | DC-003/005/007/079 | BR-034; INV-001/004/021 | OD-28 | GAP-014 |
+| [OD-26](../00-governance/DECISION_LOG.md#od-26)–[OD-31](../00-governance/DECISION_LOG.md#od-31) | DC-079–087 | BR-030–035; INV-019–022 | U-006/U-007 | Seperti baris di atas |
+| [OD-32](../00-governance/DECISION_LOG.md#od-32)–[OD-34](../00-governance/DECISION_LOG.md#od-34) | — | — | U-006–U-008 | P4/P6/P7/P8/P9/P10 |
+
+| GAP | Kelas | Kontribusi P2 / tetap terblokir | Source / rule locator | Validasi atau pemilik fase berikutnya |
+|---|---|---|---|---|
+| GAP-026 | B | DC-080 memisahkan rezim; BR-031 melarang pemakaian aturan lintas rezim; pemetaan sumber dana tetap terblokir. | SRC-048 Pasal 1 angka 1 dan 15, Pasal 3; SRC-049/050 | Kustodian pengadaan + keuangan; P4/P6/P10 |
+| GAP-027 | B | BR-031 mensyaratkan pilihan manusia tercatat pada setiap inkonsistensi. | SRC-048 Pasal 1, 9, 12, 21, 26, 27, 30, 35; Lampiran III | Kustodian pengadaan; P6 |
+| GAP-028 | B | DC-082 dan BR-035 memisahkan referensi/komitmen dari pembukuan. | OD-30(1) | Keuangan; P4/P5/P6 |
+| GAP-029 | C | Kanal resmi per langkah adalah keputusan proses di luar P2; BR-027 tetap. | SRC-048 Lampiran II–III, Pasal 29; SRC-053 | Kustodian pengadaan; P5/P6/P7 |
+
+Counts setelah amandemen: **29 reviewed; OPEN 29; resolved 0; new gaps 4 (GAP-026–GAP-029, dari amandemen 2026-10-30)**.

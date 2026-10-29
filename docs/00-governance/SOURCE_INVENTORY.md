@@ -1,6 +1,6 @@
 # Safe source inventory
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 P0–P11 planning) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Authority and coverage
 
@@ -15,6 +15,11 @@ In P0, 45 historical files received bounded content inspection and SRC-033/VIS-0
 | U-003 | Explicit Owner P2 request; original fingerprint in [U-003 provenance](#u-003-p2-owner-request) | AUTH-006, domain semantics/rule authority/safety and phase boundaries | OWNER_APPROVED_DECISION for explicit direction; generated conceptual candidates were VERIFYING during preparation | Exact candidate subsequently approved APPR-003; AUTH-007 source/provenance in APPROVAL_RECORDS, qualifications retained |
 | U-004 | Explicit Owner P3 request and same-scope resume/finalization instruction; original fingerprints in [AUTH-008](APPROVAL_RECORDS.md#auth-008) | P3 workflow/route/interaction planning, authority classifications, safety and review candidate | OWNER_APPROVED_DECISION for explicit direction only; generated P3 artifacts were VERIFYING during preparation | Preparation historical/completed; corrected candidate subsequently approved APPR-004 under AUTH-009, does not authorize P4 or resolve GAPs; original external/unchanged/unpublished |
 | U-005 | Owner P0–P3 remediation decision package; provenance in [U-005](#u-005-p0p3-remediation-owner-decisions) | OD-24, OD-25 (OWNER-NEW-REQ-01), GOV-07–GOV-09, authority-basis, snapshot and amendment-status rules, GAP-020 narrowing, GAP-021–GAP-025 | OWNER_APPROVED_DECISION for the recorded sanitized direction; not approval of the remediation candidate | Candidate approval only by a later explicit Owner approval; the recorded wording is durable truth |
+| U-006 | Owner Starter Kit assignment and initial instruction (2026-10-30); provenance in [U-006–U-010](#u-006u-010-owner-directions-of-2026-10-30) | GOV-10, OD-26–OD-33; P0–P11 completion assignment; product vision | OWNER_APPROVED_DECISION for explicit direction; provisional finance/asset directions stay provisional (OD-30); the kit's context summary is nonbinding | Candidate approval only by explicit Owner approval |
+| U-007 | Owner directive: continue session, P0–P11 completion, autonomous execution architecture (2026-10-30) | AUTH-012, GOV-11, GOV-12 | OWNER_APPROVED_DECISION; preparation authority, not approval or execution authority | AUTH-012 scope/exclusions in APPROVAL_RECORDS |
+| U-008 | Owner design directive: primary color and background (2026-10-30) | OD-34 | OWNER_APPROVED_DECISION; full token system owed by P7 | P7 DESIGN_SYSTEM records the token derivation |
+| U-009 | Owner instruction: this session is the sole planning author; delete the previous session's local branch (2026-10-30) | GOV-10 | OWNER_APPROVED_DECISION | Executed 2026-10-30; working-tree content preserved |
+| U-010 | Owner directives on Git identity and attribution, then explicit identity confirmation (2026-10-30) | GOV-08 application | OWNER_APPROVED_DECISION | Repository-local identity verified before each commit |
 | FW-001 | Unchanged repository AICWDF v4.3 English source | Master operating framework | AUTHORITATIVE_SOURCE for operating rules through Owner adoption; not UNY accounting/procurement authority | Preserved hash and full section map in FRAMEWORK_ADOPTION |
 | STRUCT-001 | GitHub yusufarst/MULTIPLECORP, pinned main a526daf47444d12b4ae5c51e1ae14c9dfe3f4978 | Entry point, adapter, governance/evidence/phase/context/handoff structures | INFERENCE for reusable structural patterns; never PRANATA domain/security/financial truth | Exact inspected paths and excluded content in FRAMEWORK_ADOPTION |
 
@@ -109,6 +114,37 @@ U-004 provenance — the P3 request, its same-scope continuation and the minor-c
 | SRC-044 / ASSET-11 | `Susunan Menu Aplikasi SIMASET.pdf` | Legacy menu reference | Correction/development/reclassification/KDP/report categories | OBSERVED_CURRENT_PROCESS | Bounded content inspection; Complete extracted text pp1-2; no visual/runtime review; menu is not accounting policy | [Asset review](evidence/ASSET_SOURCE_REVIEW.md) |
 | SRC-045 / Procurement review | `Undangan Pengadaan Langsung.pdf` | Historical invitation/workshop artifact | Observed tender/direct-procurement coordination and evidence needs | OBSERVED_CURRENT_PROCESS | Extracted text/structure inspection; Extracted text only; event evidence is not official approval path; names/provider/financial values omitted | [Procurement review](evidence/PROCUREMENT_SOURCE_REVIEW.md) |
 | SRC-046 / ASSET-10 | `User SIMASET.xlsx` | Sensitive historical admin/reference workbook | Credential anti-pattern and capitalization-policy provenance | OBSERVED_CURRENT_PROCESS | Bounded content inspection; Credential values withheld; plaintext pattern confirmed; reference headers/categories only; authority/effective date/comparators require validation | [Asset review](evidence/ASSET_SOURCE_REVIEW.md) |
+
+## U-006–U-010 Owner directions of 2026-10-30
+
+- U-006: the Owner's instruction to the Lead Planning Agent (in-session, 2026-10-30) with the **PRANATA UNY Claude Planning Starter Kit** ZIP (**32,131,093 bytes / SHA-256 `5c4863087bfece296272527569fec7eb8c5ad82d0a7cacd2cd057bb0099ab366`**). Operative prompt `01_PROMPT/CLAUDE_PLANNING_PROMPT_EN.md` (**10,441 bytes / `e869fd6f70971b50f0b095995b28e9bb813555b7de05c00e72a431e91f5ca295`**). The kit's `04_CONTEXT_NONBINDING/OWNER_CONTEXT_SUMMARY_EN.md` (4,852 bytes / `0338ee77…f3f1f0`) is a nonbinding reminder; the kit README (2,277 bytes / `5d951674…c2ec24b`) is delivery guidance. All 24 kit files matched the kit's own FILE_MANIFEST hashes on receipt.
+- U-007: in-session attachment, **44,300 bytes / SHA-256 `8d040fd7e37964d1aaae43627c9fc57cd665ba6b7f7cfe20e13c63bdb5142a6a`** (recorded as AUTH-012).
+- U-008, U-009, U-010: in-session Owner messages of 2026-10-30 (design colors; sole planning author and deletion of the previous session's branch; Git identity directive and explicit confirmation). Their operative content is recorded verbatim in substance in [DECISION_LOG](DECISION_LOG.md) (OD-34, GOV-10, GOV-08 application).
+- Handling: originals are session-delivered and external to the repository; read only; never published; never an execution dependency. The durable truth is the recorded sanitized wording.
+
+## Starter Kit reference originals (2026-10-30)
+
+Delivered with U-006 for planning; kept outside the repository (not in `reference-inputs/`), unchanged and unpublished. Text was extracted locally for reading only; no extraction output is tracked. [REGULATORY_SOURCE_REVIEW](evidence/REGULATORY_SOURCE_REVIEW.md) owns the inspected locators, observations and limits.
+
+| Safe label | Original filename | Bytes / SHA-256 (prefix) | Classification / caveat |
+|---|---|---|---|
+| SRC-048 / REG-01 | `PR_34_2023_PBJ-1-1.pdf` (Peraturan Rektor UNY No. 34/2023, Pedoman Pengadaan Barang/Jasa) | 8,641,201 / `812ee718` | AUTHORITATIVE_SOURCE candidate for UNY procurement funded outside APBN/APBD (Pasal 1 angka 15, Pasal 3). Scanned PDF with OCR text layer, 51 pages; Articles 1–60 and Lampiran I–III read. Currentness and OCR'd values need custodian confirmation (GAP-026, GAP-027). |
+| SRC-049 / REG-02 | `Perpres Nomor 16 Tahun 2018.pdf` | 13,140,431 / `da7d3d1c` | AUTHORITATIVE_SOURCE (national law) for APBN/APBD-funded procurement; amended by Perpres 12/2021 (not supplied) and Perpres 46/2025. Applicability to UNY funding sources per GAP-026. |
+| SRC-050 / REG-03 | `Peraturan Presiden Nomor 46 Tahun 2025.pdf` | 12,120,648 / `92c401ed` | AUTHORITATIVE_SOURCE (second amendment of Perpres 16/2018). Same applicability caveat. |
+| SRC-051 / REG-04 | `Perpres Nomor 109 Tahun 2016.pdf` | 427,732 / `c8d07e15` | Historical; concerns functional allowances, not application roles or procurement procedure. Not used as a requirement. |
+| SRC-052 / OWN-01 | `6714.docx` (25-question GAP answer form) | 28,044 / `ffe74b89` | Owner provisional input, explicitly **not** official UNY policy (kit README). Recorded per GAP in [GAP_REGISTER](GAP_REGISTER.md#owner-provisional-inputs-src-052). |
+| SRC-053 / SOP-01 | `SOP PENGADAAN BARANG ATAU JASA PEMERINTAH.png` | 146,950 / `c63ad222` | OBSERVED_CURRENT_PROCESS candidate (tender lanes Pokja/Penyedia/PPK on LPSE); authority/currentness unverified (GAP-013). |
+| SRC-054 / SOP-02 | `SOP PENYUSUNAN RUP.png` | 47,574 / `61466005` | OBSERVED_CURRENT_PROCESS candidate (unit → planning/finance → PPK → SiRUP operator → KPA). GAP-002/013. |
+| SRC-055 / SOP-03 | `SOP INPUT DATA ASET BMU.png` | 26,193 / `ea954be8` | OBSERVED_CURRENT_PROCESS candidate (source documents → SIMASET input → validator → sub-satker report). GAP-013. |
+| SRC-056 / SOP-04 | `SOP INPUT DATA PERSEDIAAN MASUK.png` | 22,717 / `e37a6a60` | OBSERVED_CURRENT_PROCESS candidate (SP2D documents → persediaan input per account). GAP-005/013/025. |
+| SRC-057 / SOP-05 | `SOP LELANG PENGHAPUSAN BMN.png` | 147,124 / `d1363abb` | OBSERVED_CURRENT_PROCESS candidate (disposal by auction; external KPKNL steps). GAP-013. |
+| SRC-058 / SVC-01 | `Layanan Pemenuhan Kebutuhan ATK.png` | 46,879 / `4e9ef53c` | OBSERVED_CURRENT_PROCESS candidate for ALP warehouse issue (request → Kabag ALP disposition → Kepala Gudang → handover receipt signed by user → Admin Persediaan; unavailable → procurement). GAP-025. |
+| SRC-059 / SVC-02 | `Layanan Tambah Referensi Barang Persediaan.png` | 23,024 / `ce32488e` | OBSERVED_CURRENT_PROCESS candidate (item reference proposal → Koordinator/Operator Aset BMU). GAP-005/025. |
+| SRC-060 / SVC-03 | `Layanan Rekonsiliasi Data Subsatker.png` | 37,372 / `d8bcb726` | OBSERVED_CURRENT_PROCESS candidate (satker vs sub-satker reconciliation with Bagian Akuntansi dan Pelaporan). GAP-010. |
+| SRC-061 / SVC-04 | `Layanan Rekomendasi Penghapusan BMU.png` | 163,341 / `1c950e42` | OBSERVED_CURRENT_PROCESS candidate (disposal recommendation chain Rektor → Direktur PSA → Kabag ALP → Tim Penghapusan → Rektor/MWA). GAP-013. |
+| SRC-062 / SVC-05 | `Layanan Pelaporan Data BMU yang Dihapus.png` | 59,373 / `68b9f44c` | OBSERVED_CURRENT_PROCESS candidate (SK Penghapusan → unit removal → report to Akuntansi). GAP-013. |
+| SRC-063–SRC-067 / PSRT-01–05 | `Layanan Kerumahtanggaan …` (Pengecekan Ketersediaan Fasilitas; Penggunaan Kendaraan; Penggunaan Peralatan; Penggunaan Ruang; Persetujuan Peminjaman Fasilitas) | 14,266–21,604 / `410f1027`, `b89d3e51`, `4c182f8f`, `e8a0976f`, `8825098d` | FUTURE scope evidence only (OD-24, OD-26); informs extension readiness, adds no V1 capability. Not visually reviewed beyond file identity. |
+| FW-001 copy | `AI_First_Complex_WebApp_Task_Framework_v4.3_EN.md` | 76,025 / `bb578ada` | Byte-identical to the tracked FW-001 source; no new authority. |
 
 ## P1 primary visual / interaction / motion original
 

@@ -1,8 +1,8 @@
 # Decision index
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 P0–P11 planning) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
 
-This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and provenance. OD-01–OD-20 derive from U-001; OD-21–OD-23 derive from U-002 on 2026-10-04. They remain OWNER_APPROVED_DECISION with candidate/preferred/unresolved qualifications. Direction alone implies no generated-artifact approval; separate explicit P1 approval is APPR-002. OD-24–OD-25 and GOV-07–GOV-09 derive from U-005 (2026-10-06). Current Owner Decisions: OD-01–OD-25.
+This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and provenance. OD-01–OD-20 derive from U-001; OD-21–OD-23 derive from U-002 on 2026-10-04. They remain OWNER_APPROVED_DECISION with candidate/preferred/unresolved qualifications. Direction alone implies no generated-artifact approval; separate explicit P1 approval is APPR-002. OD-24–OD-25 and GOV-07–GOV-09 derive from U-005 (2026-10-06). OD-26–OD-34 and GOV-10–GOV-12 derive from U-006–U-010 (2026-10-30). Current Owner Decisions: OD-01–OD-34.
 
 | ID | Subject | Canonical record |
 |---|---|---|
@@ -31,6 +31,15 @@ This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and pro
 | OD-23 | Integrated product evaluation, provider reuse, data-once/downstream hypothesis | [OD-23](DECISION_LOG.md#od-23) |
 | OD-24 | Facility borrowing outside V1; FUTURE only | [OD-24](DECISION_LOG.md#od-24) |
 | OD-25 | Multi-warehouse inventory operations, V1 MUST | [OD-25](DECISION_LOG.md#od-25) |
+| OD-26 | DPSA ALP/PSRT scope; two distinct warehouses, one multi-warehouse capability | [OD-26](DECISION_LOG.md#od-26) |
+| OD-27 | Five PR 34/2023 procurement methods; regime-based method rules; human method determination | [OD-27](DECISION_LOG.md#od-27) |
+| OD-28 | Compact role groups; scoped capabilities; workspace/warehouse/vendor isolation; Super Admin limits | [OD-28](DECISION_LOG.md#od-28) |
+| OD-29 | Procurement product outcomes (documents, SPJ packs, progress, HPS, contracts, amendments, BAST) | [OD-29](DECISION_LOG.md#od-29) |
+| OD-30 | Provisional finance/asset/inventory directions (validation before activation) | [OD-30](DECISION_LOG.md#od-30) |
+| OD-31 | Digital warehouse request/approval/handover/confirmation/return | [OD-31](DECISION_LOG.md#od-31) |
+| OD-32 | First Procurement UAT; scale; RTO 4 h / RPO 1 h design objectives | [OD-32](DECISION_LOG.md#od-32) |
+| OD-33 | Claude-owned UX design; low-click, data-once, no dead interactions | [OD-33](DECISION_LOG.md#od-33) |
+| OD-34 | Visual identity: Deep Navy #172554, Ice Blue #EFF6FF, white surfaces | [OD-34](DECISION_LOG.md#od-34) |
 | GOV-01 | Framework / authority / agents | [GOV-01](DECISION_LOG.md#gov-01--framework-and-durable-authority) |
 | GOV-02 | P0-only scope and final state | [GOV-02](DECISION_LOG.md#gov-02--p0-only-authorization-and-terminal-state) |
 | GOV-03 | Source/Git/privacy restrictions | [GOV-03](DECISION_LOG.md#gov-03--source-and-git-safety) |
@@ -40,6 +49,9 @@ This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and pro
 | GOV-07 | Operating agent model | [GOV-07](DECISION_LOG.md#gov-07--operating-agent-model) |
 | GOV-08 | Git identity / no-attribution | [GOV-08](DECISION_LOG.md#gov-08--standing-git-identity-and-no-attribution-policy) |
 | GOV-09 | Byte/EOL preservation / neutral branches | [GOV-09](DECISION_LOG.md#gov-09--byte-preservation-line-endings-and-neutral-branch-convention) |
+| GOV-10 | Sole planning author, agent roles, planning branch/PR write access | [GOV-10](DECISION_LOG.md#gov-10--planning-authorship-agent-roles-and-planning-write-access) |
+| GOV-11 | Consolidated approvals and efficient review | [GOV-11](DECISION_LOG.md#gov-11--consolidated-approvals-and-efficient-review) |
+| GOV-12 | Autonomous execution operating model (design now, activate later) | [GOV-12](DECISION_LOG.md#gov-12--autonomous-execution-operating-model-designed-now-activated-later) |
 | FD-01 | Inherited framework operating defaults | [FD-01](DECISION_LOG.md#fd-01--adopted-operating-defaults) |
 
-Original preparation: [AUTH-001](APPROVAL_RECORDS.md#auth-001). Current state: see [PHASE_STATUS](../PHASE_STATUS.md) and [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation amendment candidate VERIFYING / NOT YET APPROVED; P4–P11 NOT AUTHORIZED; application execution NOT AUTHORIZED. Historical [P3 authorization lifecycle record](DECISION_LOG.md#p3-authorization-lifecycle-record) / AUTH-008 records completed preparation. Current [P3 approval lifecycle record](DECISION_LOG.md#p3-approval-lifecycle-record), [APPR-004](APPROVAL_RECORDS.md#appr-004) and [AUTH-009](APPROVAL_RECORDS.md#auth-009) record exact-candidate approval and bounded checkpoint authority, not a new OD. Current Owner Decisions: OD-01–OD-25; accepted ADRs NONE; GAP resolutions NONE. [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) owns BR/INV wording; [WORKFLOW_CATALOG](../03-workflows/WORKFLOW_CATALOG.md) indexes APPROVED P3 contracts.
+Original preparation: [AUTH-001](APPROVAL_RECORDS.md#auth-001). Current state: see [PHASE_STATUS](../PHASE_STATUS.md) and [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation and P0–P11 planning candidates VERIFYING / NOT YET APPROVED on branch `docs/p0-p11-planning`; P4–P11 preparation authorized by AUTH-012 (not approval); application execution NOT AUTHORIZED. Historical [P3 authorization lifecycle record](DECISION_LOG.md#p3-authorization-lifecycle-record) / AUTH-008 records completed preparation. Current [P3 approval lifecycle record](DECISION_LOG.md#p3-approval-lifecycle-record), [APPR-004](APPROVAL_RECORDS.md#appr-004) and [AUTH-009](APPROVAL_RECORDS.md#auth-009) record exact-candidate approval and bounded checkpoint authority, not a new OD. Current Owner Decisions: OD-01–OD-34; accepted ADRs NONE (P4 ADRs are PROPOSED); GAP resolutions NONE. [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) owns BR/INV wording; [WORKFLOW_CATALOG](../03-workflows/WORKFLOW_CATALOG.md) indexes APPROVED P3 contracts.

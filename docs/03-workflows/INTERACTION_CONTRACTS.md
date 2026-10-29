@@ -1,8 +1,8 @@
 # Interaction contracts — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
-Dokumen ini memiliki **21 kontrak interaksi reusable IX-001–IX-021** pada tingkat intent/hasil produk. Kontrak tidak menentukan komponen, form fields final, layout, API, penegakan izin, mekanisme retry atau state database. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki wording state/transition WF; interaksi di bawah hanya dapat memakai transition yang applicable pada WF terkait. Tidak semua IX berlaku pada semua WF, dan generic review/accept tidak menambah official approval chain.
+Dokumen ini memiliki **24 kontrak interaksi reusable IX-001–IX-024** pada tingkat intent/hasil produk. Kontrak tidak menentukan komponen, form fields final, layout, API, penegakan izin, mekanisme retry atau state database. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki wording state/transition WF; interaksi di bawah hanya dapat memakai transition yang applicable pada WF terkait. Tidak semua IX berlaku pada semua WF, dan generic review/accept tidak menambah official approval chain.
 
 [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki entry/parent/return RT; [EXCEPTION_REVISION_PATTERNS](EXCEPTION_REVISION_PATTERNS.md) memiliki pola EP; [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md) memiliki proses serta gate; [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md) memiliki cakupan balik P1/P2. [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) tetap sole owner wording BR/INV; [DOMAIN_RESPONSIBILITIES](../02-domain/DOMAIN_RESPONSIBILITIES.md) memiliki makna tipe tanggung jawab. Kata berwenang berarti sesuai authority/assignment yang kelak divalidasi P5, bukan izin dari workspace atau label jabatan.
 
@@ -299,6 +299,45 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 | Preserved context / return | Canonical source ↔ RT-016 ↔ target RT-017/023/024 atau cross-process source/case; exact return dua arah bila allowed, fallback owning list/RT-002 bila source access berubah. Super Admin menggunakan canonical owning RT dan kembali origin sah. |
 | Applicability / authority | Berlaku untuk setiap workflow yang secara eksplisit mendeklarasikan IX-021 pada WORKFLOW_CONTRACTS. RT-002/016/domain. PROPOSED_WORKFLOW; approved CAP-02/10/19, BR-013/027, INV-001/006/011/012; GAP-008/009/010/012/014/018 according handoff. |
 
+## IX-022
+
+**Nama / intent:** Konfirmasi penerima atas serah terima barang gudang.
+
+| Aspek | Kontrak |
+|---|---|
+| Context / responsibility | Serah terima tertentu (gudang, permintaan, barang, jumlah, waktu, petugas) dan penerima yang tercatat. Konfirmasi adalah klaim penerima, terpisah dari serah terima oleh petugas dan dari perubahan stok. |
+| Confirmation / validation | Penerima menyatakan sesuai atau melaporkan selisih (jumlah, barang, kondisi) dengan keterangan. Hanya penerima yang tercatat — atau bentuk bukti pengganti bagi penerima tanpa akun menurut GAP-025/023 — yang dapat mengonfirmasi. |
+| Success / history | Konfirmasi tersimpan dengan waktu dan pelaku; selisih membuka telaah pada pemilik selisih tanpa mengubah serah terima atau stok; riwayat menampilkan keduanya. |
+| Failure / retry | Hasil simpan unknown → periksa status serah terima sebelum mengulang; pengulangan tidak menghasilkan konfirmasi kedua (mekanisme P6). EP-003/009/010. |
+| Preserved context / return | RT-033 serah terima → konfirmasi → permintaan atau daftar penerimaan saya yang sama. |
+| Applicability / authority | WF-030 (TR-297). OD-31; BR-033; INV-020 tidak dipengaruhi konfirmasi; GAP-023/025. |
+
+## IX-023
+
+**Nama / intent:** Penetapan metode dengan saran, rujukan aturan dan alasan.
+
+| Aspek | Kontrak |
+|---|---|
+| Context / responsibility | Paket, versi kebijakan rezim yang dipakai beserta statusnya (ACTIVE atau simulasi), jenis pengadaan, nilai dasar, kriteria yang diklaim, metode yang memenuhi syarat beserta rujukan pasal/kriteria, dan metode yang tidak memenuhi beserta alasannya. Pejabat penetap yang ditugaskan memegang aksi. |
+| Confirmation / validation | Penetapan memerlukan konfirmasi eksplisit. Alasan wajib bila metode berbeda dari saran, bila nilai berada pada pita tumpang tindih (GAP-027) atau bila kriteria kualitatif dipakai; bukti kriteria dilampirkan bila dipersyaratkan kebijakan. Saran berlabel simulasi tidak menjadi dasar penetapan resmi di produksi. |
+| Success / history | Penetapan, alasan, versi kebijakan dan pelaku tercatat; paket menampilkan metode yang ditetapkan dan langkah berikut pada WF-005. |
+| Failure / retry | Versi kebijakan berubah sejak saran dihitung → saran dihitung ulang dan pengguna meninjau ulang sebelum menetapkan; tidak berwenang → alasan tanpa membocorkan isi terlindungi. EP-003/004/005. |
+| Preserved context / return | RT-035 → RT-005 paket yang sama. |
+| Applicability / authority | WF-032 (TR-312/313/315). OD-27; BR-031/034; INV-021/022; GAP-003/026/027/029. |
+
+## IX-024
+
+**Nama / intent:** Pembacaan teraudit atas informasi rahasia oleh Super Admin.
+
+| Aspek | Kontrak |
+|---|---|
+| Context / responsibility | Objek rahasia tertentu — misalnya penawaran penyedia — yang tidak termasuk penugasan proses Super Admin, untuk keperluan pengelolaan sistem. Pembacaan tidak memberi kewenangan bisnis apa pun (INV-021). |
+| Confirmation / validation | Alasan tertulis dan konfirmasi eksplisit wajib sebelum isi ditampilkan; hanya baca; ekspor tidak tersedia kecuali kebijakan P5 menetapkannya. |
+| Success / history | Akses tercatat pada jejak audit (pelaku, objek, waktu, alasan) yang dapat ditelaah pihak berwenang; isi ditampilkan read-only. |
+| Failure / retry | Alasan kosong atau ditolak kebijakan → isi tidak ditampilkan; pencatatan audit gagal → isi tidak ditampilkan (fail closed). |
+| Preserved context / return | Konteks pemilik objek → pembacaan → konteks asal. |
+| Applicability / authority | OD-28; BR-034; INV-021. P5 menetapkan objek rahasia, cakupan, retensi dan peninjau audit. |
+
 ## Pending-action dan feedback yang tidak memerlukan kanal eksternal
 
 | Kondisi pekerjaan | Informasi yang harus dapat ditemukan dalam konteks sah |
@@ -313,3 +352,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 Ini adalah visibilitas pekerjaan in-app **APPROVED_PRODUCT_FLOW** OD-19/CAP-03/AC-05/10/20 dengan bentuk penyajian **PROPOSED_WORKFLOW**. Tidak menentukan penerima email/push, kanal notifikasi, delivery, prioritas SLA atau desain dashboard; P7 menentukan presentation, P5 reader scope, P9 channel operations bila kelak diotorisasi. [BR-027](../02-domain/BUSINESS_RULES.md#br-027) dan AC-26 menjaga operabilitas V1 tanpa future institution integrations.
 
 P8 kelak mengikat verification yang bermakna pada setiap IX applicable: intent/context, valid success, invalid prerequisite/evidence, saved-versus-accepted failure, ambiguous outcome recovery, authority gate, history/privacy serta exact parent return. Critical UI journey memerlukan browser E2E saat application/execution tersedia; pada P3 ini hanya spesifikasi diperiksa dan belum ada runtime test atau klaim acceptance aplikasi PASS.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Menambahkan IX-022 (konfirmasi penerima), IX-023 (penetapan metode dengan saran dan alasan) dan IX-024 (pembacaan teraudit oleh Super Admin). Kata-kata kontrak yang sudah disetujui di bawah APPR-004 tidak diubah; hanya hitungan, status dan rujukan GAP yang diperbarui. Persetujuan amandemen kelak tidak menutup GAP mana pun.

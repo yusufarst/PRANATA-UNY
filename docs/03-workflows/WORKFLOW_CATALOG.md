@@ -1,8 +1,8 @@
 # Katalog workflow — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
-Katalog ini adalah **indeks 29 workflow**, bukan urutan resmi UNY, kumpulan Task, atau salinan state machine. **28 workflow mempunyai kontrak perubahan keadaan; WF-001 hanya referensi konteks masuk/akun**, dengan keputusan autentikasi rinci tetap P5. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF. Semua GAP-001–GAP-025 tetap OPEN.
+Katalog ini adalah **indeks 33 workflow**, bukan urutan resmi UNY, kumpulan Task, atau salinan state machine. **32 workflow mempunyai kontrak perubahan keadaan; WF-001 hanya referensi konteks masuk/akun**, dengan keputusan autentikasi rinci tetap P5. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF. Semua GAP-001–GAP-029 tetap OPEN.
 
 ## Pemilik kontrak dan cara membaca
 
@@ -21,7 +21,7 @@ Katalog ini adalah **indeks 29 workflow**, bukan urutan resmi UNY, kumpulan Task
 
 ## Indeks workflow
 
-RT-001–RT-028 mengikuti nomor WF untuk konteks utamanya; RT-029/030/031 adalah pencarian, riwayat dan bukti yang dapat mendukung berbagai workflow. Setiap tautan WF di bawah menuju kontrak lengkap; tautan keadaan menuju pemilik definisi tunggal. Workspace yang disebut adalah konteks kerja, bukan daftar pihak yang diberi izin. RT-032 melayani WF-029 karena RT-029–RT-031 dipakai rute lintas proses.
+RT-001–RT-028 mengikuti nomor WF untuk konteks utamanya; RT-029/030/031 adalah pencarian, riwayat dan bukti yang dapat mendukung berbagai workflow. Setiap tautan WF di bawah menuju kontrak lengkap; tautan keadaan menuju pemilik definisi tunggal. Workspace yang disebut adalah konteks kerja, bukan daftar pihak yang diberi izin. RT-032 melayani WF-029 karena RT-029–RT-031 dipakai rute lintas proses; RT-033–RT-036 melayani WF-030–WF-033 dengan urutan yang sama.
 
 | ID / kontrak lengkap | Tujuan dan batas keluarga | Konteks utama / rute | Authority kandidat / gate utama | Keadaan/transisi |
 |---|---|---|---|---|
@@ -54,6 +54,10 @@ RT-001–RT-028 mengikuti nomor WF untuk konteks utamanya; RT-029/030/031 adalah
 | [WF-027](WORKFLOW_CONTRACTS.md#wf-027) — Pelaporan menurut makna waktu | Menyediakan empat keluarga: posisi/as-of, rentang transaksi, periodik dan rekonsiliasi; input/output mengikuti semantics applicable. | Asset/Procurement; RT-027 | APPROVED_PRODUCT_FLOW; APPROVED_DOMAIN_INVARIANT; PROPOSED_WORKFLOW; format/policy/signoff BLOCKED_BY_GAP-007/008/009/010/013 | [WF-027](STATE_TRANSITIONS.md#wf-027) |
 | [WF-028](WORKFLOW_CONTRACTS.md#wf-028) — Generasi/revisi dokumen dan bukti | Menautkan sumber terstruktur, varian, validasi, draft, perbaikan, final/issued evidence dan versi historis. | Workspace pemilik sumber; RT-028 | APPROVED_PRODUCT_FLOW; APPROVED_DOMAIN_INVARIANT; PROPOSED_WORKFLOW; varian/nomor/signature/trust BLOCKED_BY_GAP-013/017/019 | [WF-028](STATE_TRANSITIONS.md#wf-028) |
 | [WF-029](WORKFLOW_CONTRACTS.md#wf-029) — Pemeliharaan organisasi dan data referensi | Lifecycle F1–F9; bukan akun/izin | Super Admin/owning workspace; RT-032 | PROPOSED_WORKFLOW; APPROVED_DOMAIN_INVARIANT; kewenangan BLOCKED_BY_GAP-021/022/025/017/003/013 per family | [WF-029](STATE_TRANSITIONS.md#wf-029) |
+| [WF-030](WORKFLOW_CONTRACTS.md#wf-030) — Permintaan dan serah terima barang gudang | Permintaan digital per gudang (ALP/PSRT), keputusan, serah terima penuh/sebagian, konfirmasi penerima; barang tidak tersedia diteruskan sebagai kebutuhan. | Gudang; RT-033 | OD-26/30/31; PROPOSED_WORKFLOW; EVIDENCE_SUPPORTED SRC-058; keputusan/bukti/penutupan BLOCKED_BY_GAP-025/023 | [WF-030](STATE_TRANSITIONS.md#wf-030) |
+| [WF-031](WORKFLOW_CONTRACTS.md#wf-031) — Pengembalian barang gudang | Pengajuan, penerimaan fisik, pemeriksaan layak/tidak layak pakai; stok bertambah hanya setelah pemeriksaan sahih. | Gudang; RT-034 | OD-30(7)/31; PROPOSED_WORKFLOW; kriteria/kewenangan BLOCKED_BY_GAP-025 | [WF-031](STATE_TRANSITIONS.md#wf-031) |
+| [WF-032](WORKFLOW_CONTRACTS.md#wf-032) — Penetapan metode pengadaan | Dasar penetapan, saran metode per versi kebijakan rezim beserta rujukan aturan, penetapan manusia beralasan dan perubahan penetapan. | Procurement; RT-035 | OD-27; EVIDENCE_SUPPORTED PR 34/2023 dan Perpres 16/2018 jo. 46/2025; rezim/inkonsistensi/pejabat BLOCKED_BY_GAP-026/027/003 | [WF-032](STATE_TRANSITIONS.md#wf-032) |
+| [WF-033](WORKFLOW_CONTRACTS.md#wf-033) — Adendum kontrak | Usulan perubahan kontrak, telaah batas menurut kebijakan, keputusan, dokumen dan penandatanganan; versi kontrak baru tanpa penimpaan. | Procurement; RT-036 | OD-27/29; EVIDENCE_SUPPORTED PR 34/2023 Pasal 40; keputusan/varian BLOCKED_BY_GAP-017/026/027/028 | [WF-033](STATE_TRANSITIONS.md#wf-033) |
 
 ## Cakupan lintas workflow dan pengecualian lingkup
 
@@ -66,3 +70,7 @@ Peminjaman fasilitas tetap **OUT_OF_SCOPE untuk V1 / OD-24: bukan V1; FUTURE; ak
 ## Batas kandidat dan langkah aman
 
 Definisi ini tidak memilih tabel/kolom/kunci, permission matrix, API/locking/idempotency, mekanisme operasi panjang, visual komponen/token/motion atau rencana cutover. Handoff fase yang tepat dimiliki kontrak dan traceability. Katalog tidak menyatakan acceptance runtime, accounting atau legal sudah PASS. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+
+## Amandemen kompatibilitas 2026-10-30
+
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Menambahkan WF-030–WF-033 ke indeks. Lima metode PR 34/2023 (OD-27) dilayani bersama oleh WF-032 dan ekstensi metode WF-005 — bukan lima workflow terpisah; permintaan dan pengembalian gudang (OD-31) melengkapi tujuh keluarga ledger WF-023 tanpa menggantikannya. Kata-kata kontrak yang sudah disetujui di bawah APPR-004 tidak diubah; hanya hitungan, status dan rujukan GAP yang diperbarui. Persetujuan amandemen kelak tidak menutup GAP mana pun.
