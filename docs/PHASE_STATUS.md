@@ -3,14 +3,14 @@
 Updated: 2026-10-30 (Asia/Jakarta) | Canonical owner of phase progress: this file
 
 - Approved published baseline: P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de3acbed5213c13e22a61fc2728e57ccc77` (`docs: finalize P3 workflows`); approvals APPR-001–APPR-004.
-- Candidates on review branch `docs/p0-p11-planning`, all **VERIFYING / NOT YET APPROVED**: (1) the AUTH-010 P0–P3 remediation amendment (identity: P0_P3_REMEDIATION_ARTIFACT_MANIFEST); (2) the AUTH-012 P0–P3 compatibility amendment; (3) the AUTH-012 P4–P11 planning candidates.
+- Candidates on review branch `docs/p0-p11-planning`, all **VERIFYING / NOT YET APPROVED**: (1) the AUTH-010 P0–P3 remediation amendment (identity: P0_P3_REMEDIATION_ARTIFACT_MANIFEST); (2) the AUTH-012 P0–P3 compatibility amendment; (3) the AUTH-012 P4–P11 planning candidates; (4) the targeted procurement field-findings amendment of 2026-10-30 (U-011; OD-35 several winners by award scope, OD-36 offer evaluation as top priority) across P0–P11.
 - Active authorization: [AUTH-012](00-governance/APPROVAL_RECORDS.md#auth-012) — standing preparation of P4–P11 and bounded planning Git operations (branches, commits, pushes, review PRs). It is not approval and not execution authority. AUTH-002–AUTH-010: HISTORICAL / COMPLETED. APPR-005 and AUTH-011 stay reserved and unrecorded; their consolidation is proposed in the [OWNER_DECISION_PACKAGE](handoff/OWNER_DECISION_PACKAGE.md).
-- P4–P11: DRAFTED — VERIFYING / NOT YET APPROVED. The independent Second Review of `48c2bc5` returned CORRECTIONS_REQUIRED (five P1, one P2 data-integrity findings); targeted corrections are on the branch and await the focused delta check ([DELTA_REVIEW_HANDOFF](handoff/DELTA_REVIEW_HANDOFF.md)).
+- P4–P11: DRAFTED — VERIFYING / NOT YET APPROVED. The independent Second Review of `48c2bc5` returned CORRECTIONS_REQUIRED (five P1, one P2 data-integrity findings); targeted corrections are on the branch (`bfa6501`) and await the focused delta check; the procurement field-findings amendment sits on top and needs a focused review of the procurement area ([DELTA_REVIEW_HANDOFF](handoff/DELTA_REVIEW_HANDOFF.md) parts A and B).
 - Planning Freeze: NOT REACHED. Task backlog: 78 candidate Tasks (TASK-001–TASK-078) in [TASK_PLAN](11-tasks/TASK_PLAN.md), none READY. Task Baseline: NOT READY until P11 approval and Planning Freeze.
 - Application implementation: NONE. Application execution: NOT AUTHORIZED.
 - GAP-001–GAP-029: OPEN (resolved NONE); GAP-020 V1 relevance decided by OD-24.
 - Claude Code: EXECUTION AGENT — WAITING ([EXECUTOR_BOOTSTRAP](11-tasks/EXECUTOR_BOOTSTRAP.md) §2 only).
-- Next safe action: delta check of the corrections at the reported branch head → explicit Owner batch decision → Planning Freeze → standing execution authorization.
+- Next safe action: delta check of the corrections and focused review of the field-findings amendment at the reported branch head → explicit Owner batch decision → Planning Freeze → standing execution authorization.
 
 | Phase | Coverage | Status | Authorization / approval |
 |---|---|---|---|
@@ -19,7 +19,7 @@ Updated: 2026-10-30 (Asia/Jakarta) | Canonical owner of phase progress: this fil
 | P2 | Domain model and business rules | DONE | APPROVED APPR-003; published checkpoint verified; AUTH-007 historical/completed |
 | P3 | Workflows, routes and interactions | DONE | APPROVED APPR-004; Owner-reported initial review 0/0/3/0, delta READY_FOR_OWNER_APPROVAL, REV-01/02/03 RESOLVED, final 0/0/0/0; AUTH-009 checkpoint only, automatic completion after verified publication; published 0e3f7de |
 | P0–P3 remediation | Amendment candidate | VERIFYING | AUTH-010 (completion rule); approval reserved APPR-005 |
-| P0–P3 compatibility | Amendment candidate (OD-26–OD-34, GOV-10–GOV-12) | VERIFYING | AUTH-012; reviewed with the candidate at `48c2bc5` (no finding on the amendment); awaiting delta check and Owner decision |
+| P0–P3 compatibility | Amendment candidate (OD-26–OD-36, GOV-10–GOV-12) | VERIFYING | AUTH-012; OD-26–OD-34 part reviewed with the candidate at `48c2bc5` (no finding on the amendment); OD-35/OD-36 additions (U-011: AC-33–AC-36, DC-088–DC-091, BR-036–BR-039, INV-023/024, RG-07) await focused review and Owner decision |
 | P4 | Database and application architecture | VERIFYING (candidate) | AUTH-012 preparation; [ARCHITECTURE](04-architecture/ARCHITECTURE.md), [DATA_MODEL](04-architecture/DATA_MODEL.md), [POLICY_REGISTRY](04-architecture/POLICY_REGISTRY.md), [DOCUMENT_ENGINE](04-architecture/DOCUMENT_ENGINE.md), ADR-0001–0010 (PROPOSED) |
 | P5 | Security, authentication and authorization | VERIFYING (candidate) | AUTH-012 preparation; [SECURITY_MODEL](05-security/SECURITY_MODEL.md), [ACCESS_CONTROL](05-security/ACCESS_CONTROL.md) |
 | P6 | Concurrency, idempotency, API and performance | VERIFYING (candidate) | AUTH-012 preparation; [COMMAND_AND_API_CONTRACTS](06-api-performance/COMMAND_AND_API_CONTRACTS.md), [CONCURRENCY_AND_INTEGRITY](06-api-performance/CONCURRENCY_AND_INTEGRITY.md), [PERFORMANCE_AND_SCALE](06-api-performance/PERFORMANCE_AND_SCALE.md) |

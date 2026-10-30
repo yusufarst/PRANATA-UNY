@@ -38,7 +38,7 @@ Paket adalah konteks bersama semua langkah pengadaan (CAP-05, BR-035).
 
 ## IN SCOPE
 
-- Tabel `proc_packages`, `proc_package_items`, `proc_package_need_links`, `proc_budget_references`, `proc_commitments`
+- Tabel `proc_packages`, `proc_package_items` (`uq(id, package_id)` sebagai induk FK komposit; kolom `award_scope_id` ditambahkan TASK-032), `proc_package_need_links`, `proc_budget_references`, `proc_commitments`
 - Stepper buat paket dari satu/beberapa usulan dengan salin baris
 - Peringatan komitmen melebihi plafon tercatat (GAP-028)
 - State WF-005 skeleton (TR-041–045) tanpa langkah metode

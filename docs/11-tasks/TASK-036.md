@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Mewujudkan SPPBJ dengan penyusun, pemeriksa, penerbit dan penanda tangan yang terpisah menurut kebijakan, dokumen SPPBJ bernomor, tenggat jaminan pelaksanaan dari hari kerja bila kebijakan menetapkan, dan pembatalan beralasan.
+Mewujudkan SPPBJ per pemenang atas lingkup yang dimenanginya, dengan penyusun, pemeriksa, penerbit dan penanda tangan yang terpisah menurut kebijakan, dokumen SPPBJ bernomor, tenggat jaminan pelaksanaan dari hari kerja bila kebijakan menetapkan, dan pembatalan beralasan.
 
 ## WHY THIS EXISTS
 
@@ -36,7 +36,7 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 
 ## IN SCOPE
 
-- Tabel `proc_sppbj` (FK komposit `(result_id, package_id)`; `package_id` tidak dapat diubah) dan `proc_sppbj_acts` (kontribusi PREPARED/CHECKED/ISSUED/SIGNED terpisah dengan pelaku, penugasan pada paket yang sama — diperiksa constraint trigger — dan bukti)
+- Tabel `proc_sppbj` (per pemenang: FK `(participation_id, package_id)`; `package_id` tidak dapat diubah), `proc_sppbj_scopes` (lingkup yang dimenangi: FK ke peringkat WINNER dan hasil lingkup; satu SPPBJ aktif per lingkup SINGLE; DI-27) dan `proc_sppbj_acts` (kontribusi PREPARED/CHECKED/ISSUED/SIGNED terpisah dengan pelaku, penugasan pada paket yang sama — diperiksa constraint trigger — dan bukti)
 - Urutan antarkontribusi tidak dipaksakan kecuali kebijakan `procurement.authority` menetapkannya (WF-011: TR-102–104 tidak saling menjadi prasyarat universal)
 - State WF-011 (TR-101–TR-106)
 - Perhitungan tenggat jaminan memakai `ref_calendar_days` bila kebijakan menyatakan
@@ -57,11 +57,12 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 ## TRACEABILITY
 
 - CAP: CAP-05, CAP-08
-- AC/NFR: AC-07, AC-11
+- AC/NFR: AC-07, AC-11, AC-34
 - WF/TR: WF-011 (TR-101–TR-106, 6 TR; BLOCKED_BY_GAP: TR-102, TR-103, TR-104, TR-105) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
 - RT: RT-011
 - IX: IX-003, IX-006, IX-007, IX-010
 - GAP: GAP-003, GAP-004, GAP-013, GAP-017
+- Keputusan Owner: OD-35
 
 ## EXPECTED MODULES / FILE AREAS
 
@@ -73,7 +74,9 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 - [BR-009](../02-domain/BUSINESS_RULES.md#br-009)
 - [BR-010](../02-domain/BUSINESS_RULES.md#br-010)
 - [BR-011](../02-domain/BUSINESS_RULES.md#br-011)
+- [BR-037](../02-domain/BUSINESS_RULES.md#br-037)
 - [INV-005](../02-domain/BUSINESS_RULES.md#inv-005)
+- [INV-024](../02-domain/BUSINESS_RULES.md#inv-024)
 
 ## ARCHITECTURE RULES
 
@@ -83,13 +86,14 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 ## SECURITY / PERMISSION REQUIREMENTS
 
 - AUTHZ-42
+- AUTHZ-50
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `proc_sppbj`, `proc_sppbj_acts`
+- Tables: `proc_sppbj`, `proc_sppbj_scopes`, `proc_sppbj_acts`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -202,16 +206,17 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Tanpa urutan dari kebijakan, pemeriksaan, penerbitan dan penandatanganan dapat dicatat dalam urutan apa pun; SPPBJ lengkap bila semua kontribusi wajib tercatat
 - TAC-03 Dokumen SPPBJ DRAF→FINAL bernomor unik
 - TAC-04 Tenggat jaminan dihitung hanya bila kebijakan menetapkannya
-- TAC-05 SPPBJ untuk hasil paket lain dan kontribusi dengan penugasan paket lain ditolak aplikasi dan DB; kolom `package_id` SPPBJ tidak dapat diubah (DI-06, DI-17)
+- TAC-05 SPPBJ untuk partisipasi bukan pemenang atau yang memuat lingkup pemenang lain, dan kontribusi dengan penugasan paket lain, ditolak aplikasi dan DB; kolom `package_id` SPPBJ tidak dapat diubah (DI-06, DI-17)
+- TAC-06 Dua SPPBJ aktif untuk lingkup SINGLE yang sama ditolak, termasuk bila dibuat bersamaan; satu SPPBJ dapat mencakup beberapa lingkup pemenang yang sama (DI-27, AUTHZ-50)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-011; DI-06 (uji negatif langsung DB)
-- Authorization: AUTHZ-42
+- Feature: WF-011; DI-06, DI-27 (uji negatif langsung DB; DI-27 dengan dua koneksi)
+- Authorization: AUTHZ-42, AUTHZ-50
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: J-05
+- Browser E2E: J-05, J-19
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis

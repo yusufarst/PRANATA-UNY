@@ -82,3 +82,12 @@ Jabatan atau fungsi resmi bukan role global ([OD-28](../00-governance/DECISION_L
 | Petugas gudang | Operator yang ditugaskan | Per gudang; tanpa akses gudang lain tanpa penugasan (BR-034) |
 | Pemeriksa pengembalian | Pemeriksa/penerima hasil | Kriteria dan kewenangan GAP-025 |
 | Pengelola dan pengesah versi kebijakan | Pengelola sumber/kebijakan dan Pemberi persetujuan | Dua orang berbeda untuk aktivasi (maker-checker, CAP-23); aktivasi tidak menetapkan isi kebijakan resmi tanpa bukti GAP |
+
+Tambahan 2026-10-30 — temuan lapangan pengadaan ([U-011](../00-governance/SOURCE_INVENTORY.md#u-011-owner-procurement-field-findings-of-2026-10-30); [RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)):
+
+| Tanggung jawab | Tipe yang sudah ada | Sumber dan batas |
+|---|---|---|
+| Penyusun dan pembeku skema evaluasi | Penyusun bahan pemilihan; Penelaah/evaluator | Pokja Pemilihan atau Pejabat Pengadaan menurut metode (Lampiran III B.3.a.1.c, C.4.a.1.c–e); pembekuan sebelum pembukaan (BR-036) |
+| Evaluator penawaran | Penelaah/evaluator | Pokja/Pejabat Pengadaan; Tim Teknis dapat menelaah tanpa memutus; tidak merangkap PPK pada paket yang sama (BR-034) |
+| Penelaah hasil sebelum kontrak | Pemberi persetujuan tindakan tertentu | PPK mereviu hasil Quotation/Tender sebelum menandatangani kontrak (Pasal 9 ayat (2) huruf c angka 3; KPA huruf b angka 4); tindak lanjut bila tidak sependapat GAP-003 |
+| Penilai kinerja penyedia | Pemeriksa/penerima hasil | Penanggung Jawab Pengadaan atas kontrak yang selesai (Pasal 9 ayat (2) huruf b angka 7, huruf c angka 4; Lampiran I E); bukan evaluator penawaran (BR-039) |

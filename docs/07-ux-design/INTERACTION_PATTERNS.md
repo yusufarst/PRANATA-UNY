@@ -101,3 +101,20 @@ Toast singkat untuk hasil perintah (sukses/galat), inbox untuk pekerjaan yang pe
 ## 9. Pintasan keyboard
 
 `Ctrl/⌘ K` palette; `/` fokus pencarian di daftar; `g` lalu `i` ke inbox; `Esc` menutup dialog/panel; `?` daftar pintasan. Pintasan tidak aktif saat fokus berada di input.
+
+## 10. Ruang kerja evaluasi
+
+Pola untuk PG-111/PG-122/PG-123 (OD-36; BR-036; INV-023). Tujuannya: evaluator menyelesaikan evaluasi dengan sedikit klik, setiap keputusan tahap tertelusur ke bukti, dan tidak ada yang tampak resmi sebelum sah.
+
+| Bagian | Perilaku |
+|---|---|
+| Kepala ruang kerja | Paket, pemilihan, metode/varian, status skema (DRAF/BEKU, versi dan dokumen sumbernya), putaran aktif, `SimulationBanner` bila kebijakan `procurement.evaluation` belum aktif, dan strip jumlah: dijajaki, diundang, menawar, memenuhi syarat, dievaluasi. Praktik setempat yang belum disahkan tampil sebagai catatan informatif, bukan peringatan blokir. |
+| Pemilih lingkup | Tab per lingkup penghargaan (lot/item); paket tanpa pembagian tidak menampilkan tab. Lingkup gagal atau sudah dihargakan diberi status teks. |
+| Matriks evaluasi | Baris = peserta yang menawar lingkup itu; kolom = tahap dan kriteria dari skema beku. Sel menampilkan LULUS/TIDAK LULUS/TIDAK BERLAKU/BELUM dengan ikon + teks (bukan warna saja) dan penanda bukti. Tahap gugur yang gagal mengunci kolom berikutnya peserta itu dengan keterangan. Navigasi panah antar sel, `Enter` membuka panel; kolom dan baris dapat dibekukan; kepala tetap terlihat saat gulir. |
+| Panel kriteria | Teks persyaratan dan sumbernya dalam dokumen pengadaan, bukti yang diminta, penampil berkas penawaran baca-saja (berwatermark "Rahasia", pembukaan berkas tercatat audit), penanda halaman/bagian sebagai rujukan bukti, temuan (wajib bila tidak lulus), tautan klarifikasi. Simpan memakai `lock_version`; konflik → `ConflictDialog` dengan nilai terbaru. |
+| Kemajuan dan kekurangan | Penghitung "x dari y kriteria terisi" per lingkup; daftar bukti yang kurang, klarifikasi terbuka dan tahap PENDING; tombol "Selesaikan putaran" hanya bagi penugasan berwenang dan nonaktif dengan alasan selama masih ada yang PENDING. |
+| Perbandingan | Per lingkup: nilai penawaran yang dibacakan, nilai terkoreksi beserta catatan koreksi, selisih terhadap HPS bila ada, skor berbobot atau biaya kepemilikan menurut skema, dan usulan urutan — semuanya berlabel simulasi selama kebijakan belum aktif. Tidak ada aksi "tetapkan pemenang" di ruang kerja ini; penetapan berada di PG-112 oleh fungsi berwenang. |
+| Klarifikasi dan negosiasi | Dibuat dari sel atau peserta; jawaban menjadi kiriman tertaut, bukan perubahan penawaran. Negosiasi per peserta dan lingkup mencatat nilai sebelum/sesudah dan hasil; E-Purchasing menampilkan opsi katalog (harga satuan, ongkos kirim, instalasi/pelatihan, total) dan mengarahkan negosiasi ke opsi termurah lebih dahulu bila kebijakan menyatakan. |
+| Pembukaan (PG-123) | Satu baris per penawaran yang diterima tepat waktu: nama, nilai yang dibacakan, masa berlaku, kelengkapan + catatan. Tidak ada aksi gugur; penawaran terlambat tampil terpisah dengan status ditolak terlambat. BA pembukaan dibuat dari data yang sama. |
+| Skema (PG-122) | Penyusun tahap dan kriteria dengan sumber dari dokumen pengadaan; validasi kelengkapan menurut kebijakan sebelum dibekukan; pembekuan memakai `ConfirmActionDialog` yang menyebut akibatnya (tidak dapat diubah; penggantian hanya melalui adendum sebelum pembukaan). |
+| Ponsel | Matriks menjadi daftar per peserta dengan kartu kriteria; panel kriteria layar penuh; penampil berkas tetap baca-saja. |

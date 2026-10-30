@@ -553,3 +553,18 @@ Seluruh GAP-001–GAP-029 tetap OPEN; GAP-020 tidak mengaktifkan borrowing workf
 ## Amandemen kompatibilitas 2026-10-30
 
 Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Menambahkan WF-030 (permintaan dan serah terima gudang), WF-031 (pengembalian gudang), WF-032 (penetapan metode) dan WF-033 (adendum kontrak) dari OD-26/27/29/30/31 dan bukti PR 34/2023. Kata-kata kontrak yang sudah disetujui di bawah APPR-004 tidak diubah; hanya hitungan, status dan rujukan GAP yang diperbarui. Persetujuan amandemen kelak tidak menutup GAP mana pun.
+
+### Tambahan 2026-10-30 — temuan lapangan pengadaan
+
+Sumber [U-011](../00-governance/SOURCE_INVENTORY.md#u-011-owner-procurement-field-findings-of-2026-10-30); [OD-35](../00-governance/DECISION_LOG.md#od-35), [OD-36](../00-governance/DECISION_LOG.md#od-36); bukti [RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled). **Tidak ada state, TR, RT atau IX baru**, dan kata-kata kontrak yang disetujui tidak berubah. Konsep P2 baru (DC-088–DC-091, BR-036–BR-039, INV-023/024) dibaca di dalam kontrak yang ada; kata "scope" pada WF-008–WF-015 mencakup lingkup penghargaan (lot/item), sehingga satu paket dapat mempunyai beberapa hasil dan pemenang.
+
+| Konsep | Kontrak P3 yang ada | Cara membaca tanpa mengubah kontrak |
+|---|---|---|
+| Pemilihan, lingkup penghargaan, undangan, penjajakan | WF-005 ekstensi metode; WF-006 | Pemilihan adalah konteks ekstensi metode yang applicable; undangan dan penjajakan adalah kegiatan dan bahan WF-006; tidak ada urutan universal. |
+| Penerimaan dan pembukaan penawaran | WF-008 S2, TR-072/074 | Pembukaan mencatat penerimaan dan pembacaan; ia bukan TR-076 (penerimaan/penolakan resmi) dan tidak menggugurkan penawaran (INV-023). |
+| Skema evaluasi yang dibekukan | WF-009 TR-081 ("criterion basis bila known") | Skema dari dokumen pengadaan menjadi dasar kriteria yang diketahui; selama metode evaluasi belum tervalidasi, keadaan WF009-S4 berlaku dan hasil berlabel simulasi. |
+| Hasil per kriteria/tahap, klarifikasi, negosiasi, evaluasi ulang | WF-009 TR-081–TR-085 | Hasil tertelusur per peserta dan lingkup (S3); evaluasi ulang adalah supersession TR-085 dengan riwayat; outcome resmi tetap TR-084 BLOCKED_BY_GAP sampai kebijakan ACTIVE. |
+| Hasil per lingkup, beberapa pemenang, reviu PPK, cadangan | WF-010 TR-091–TR-094 | Satu hasil berlaku per lingkup; penerimaan resmi tetap TR-092 BLOCKED_BY_GAP; aktivasi cadangan adalah TR-094 (validated change result) untuk lingkup itu saja. |
+| SPPBJ dan kontrak per pemenang | WF-011, WF-012 | Scope SPPBJ/kontrak adalah lingkup yang dimenangi penyedia itu; TR-102–TR-104 tetap tanpa urutan universal. |
+| Pemeriksaan, penilaian kinerja, permintaan pembayaran | WF-013–WF-015; WF-007 | Penilaian kinerja dicatat sesudah kontrak selesai sebagai bukti pascapelaksanaan dan masukan evaluasi DPT (WF-007), bukan bagian WF-009. |
+| Rute | RT-008/009/010/013/014/015 | Halaman P7 baru (skema dan lingkup, pembukaan, penilaian kinerja) adalah subkonteks rute yang ada dengan ID objek anak. |

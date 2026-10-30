@@ -152,6 +152,10 @@ Button, Input, Textarea, Select, Combobox (Command + Popover), Checkbox, RadioGr
 | `OperationStatus` | Status operasi panjang: diterima, berjalan (progres/elapsed), selesai, gagal + tindak lanjut |
 | `EmptyState` / `ErrorState` / `ForbiddenState` / `NotFoundState` | Keadaan wajib dengan teks sederhana dan aksi lanjut |
 | `StepperForm` | Formulir bertahap untuk alur panjang (paket, HPS) dengan draf tersimpan |
+| `EvaluationMatrix` | Matriks peserta × tahap/kriteria per lingkup dengan sel berstatus teks + ikon, navigasi keyboard, kolom beku dan penanda bukti ([INTERACTION_PATTERNS §10](INTERACTION_PATTERNS.md#10-ruang-kerja-evaluasi)) |
+| `CriterionPanel` + `OfferViewer` | Persyaratan dan sumbernya, temuan, rujukan bukti; penampil berkas penawaran baca-saja berwatermark dan teraudit |
+| `ScopeTabs` + `SelectionCountsStrip` | Tab lingkup penghargaan dan strip jumlah dijajaki/diundang/menawar/memenuhi syarat/dievaluasi |
+| `AwardScopeCard` | Hasil satu lingkup: peringkat, pemenang, cadangan, kegagalan beralasan, status reviu dan dokumen hilir |
 
 ## 8. Kategori status
 

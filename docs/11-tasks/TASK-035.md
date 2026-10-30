@@ -1,4 +1,4 @@
-# TASK-035 — Hasil dan penetapan pemenang (WF-010)
+# TASK-035 — Hasil per lingkup, beberapa pemenang dan reviu hasil (WF-010)
 
 Status dokumen: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
@@ -12,11 +12,11 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Mewujudkan usulan dan penetapan hasil (pemenang dan cadangan) oleh fungsi yang berwenang menurut nilai pada kebijakan `procurement.authority`, pengumuman (referensi kanal) dan kegagalan pemilihan.
+Mewujudkan hasil per lingkup penghargaan: peringkat, pemenang dan cadangan dari putaran yang selesai; kegagalan beralasan per lingkup atau pemilihan; penetapan oleh fungsi berwenang menurut nilai (`procurement.authority`) untuk satu atau beberapa lingkup sekaligus; pengumuman (referensi kanal); reviu PPK sebelum kontrak bila berlaku; dan aktivasi cadangan sebagai versi hasil baru untuk satu lingkup — mendukung beberapa pemenang dalam satu paket (OD-35).
 
 ## WHY THIS EXISTS
 
-WF-010; kewenangan penetapan bergantung nilai (PR 34 Pasal 9; Perpres Pasal 9/13).
+OD-35, BR-037/BR-038, INV-024; PR 34/2023 Lampiran III B.3.b.8, Pasal 9 ayat (2) huruf a angka 13 dan huruf c angka 3, Pasal 38 ayat (4)–(5).
 
 ## DEPENDS ON
 
@@ -31,19 +31,23 @@ WF-010; kewenangan penetapan bergantung nilai (PR 34 Pasal 9; Perpres Pasal 9/13
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- Keputusan/prasyarat Owner: Jawaban D-26 tentang jumlah pemenang per paket (GAP-003/013/017), atau penerimaan Owner yang tercatat atas asumsi V1 satu pemenang per paket; bila praktik resmi memerlukan beberapa pemenang, perubahan rencana atas TASK-035–TASK-037 lebih dahulu
 - GAP terkait (GAP-003, GAP-013, GAP-017, GAP-027) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
-- Tabel `proc_results`, `proc_result_rankings` dengan FK komposit hasil dan partisipasi pada paket yang sama; satu WINNER dan peringkat unik per hasil (asumsi rancangan V1: satu pemenang per paket, menunggu D-26)
+- Tabel `proc_results` (per pemilihan dan lingkup, berversi), `proc_result_rankings`, `proc_result_reviews` dengan FK komposit ke pemilihan, lingkup, mode penghargaan dan partisipasi; trigger kelayakan peringkat (lulus tahap gugur lingkup itu; E-Purchasing: opsi katalog)
+- Penetapan beberapa lingkup dalam satu tindakan dan satu dokumen penetapan; kegagalan per lingkup dengan alasan; pemilihan gagal bila semua lingkupnya gagal
+- Reviu hasil oleh penugasan `PPK` menurut kebijakan; tindak lanjut NOT_AGREED tetap terblokir (GAP-003)
+- Aktivasi cadangan: versi hasil baru untuk satu lingkup setelah lingkup SPPBJ/kontrak pemenang lama nonaktif (DI-26)
 - State WF-010 (TR-091–094)
 - Evaluator `WinnerAuthority` dari TASK-024
 - PG-112; dokumen surat penetapan/laporan sebagai draf
+- Kolom `package_id`/`selection_id`/`scope_id` hasil tidak dapat diubah setelah insert (DI-17)
 
 ## OUT OF SCOPE
 
 - SPPBJ (TASK-036)
+- Kontrak (TASK-037)
 
 ## REFERENCES
 
@@ -52,17 +56,19 @@ WF-010; kewenangan penetapan bergantung nilai (PR 34 Pasal 9; Perpres Pasal 9/13
 - [STATE_TRANSITIONS WF-010](../03-workflows/STATE_TRANSITIONS.md#wf-010)
 - [RT-010](../03-workflows/ROUTE_CONTRACTS.md#rt-010)
 - [DATA_MODEL §14.3](../04-architecture/DATA_MODEL.md#143-pemilihan)
+- [BR-037](../02-domain/BUSINESS_RULES.md#br-037)
+- [REGULATORY_SOURCE_REVIEW RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)
 - [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
 - CAP: CAP-05
-- AC/NFR: AC-07
+- AC/NFR: AC-07, AC-34
 - WF/TR: WF-010 (TR-091–TR-094, 4 TR; BLOCKED_BY_GAP: TR-092) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
 - RT: RT-010
 - IX: IX-003, IX-006, IX-007, IX-008, IX-009
 - GAP: GAP-003, GAP-013, GAP-017, GAP-027
-- Keputusan Owner: OD-27
+- Keputusan Owner: OD-27, OD-35
 
 ## EXPECTED MODULES / FILE AREAS
 
@@ -72,8 +78,11 @@ WF-010; kewenangan penetapan bergantung nilai (PR 34 Pasal 9; Perpres Pasal 9/13
 ## BUSINESS RULES
 
 - [BR-004](../02-domain/BUSINESS_RULES.md#br-004)
+- [BR-037](../02-domain/BUSINESS_RULES.md#br-037)
+- [BR-038](../02-domain/BUSINESS_RULES.md#br-038)
 - [INV-021](../02-domain/BUSINESS_RULES.md#inv-021)
 - [INV-022](../02-domain/BUSINESS_RULES.md#inv-022)
+- [INV-024](../02-domain/BUSINESS_RULES.md#inv-024)
 
 ## ARCHITECTURE RULES
 
@@ -83,13 +92,14 @@ WF-010; kewenangan penetapan bergantung nilai (PR 34 Pasal 9; Perpres Pasal 9/13
 ## SECURITY / PERMISSION REQUIREMENTS
 
 - AUTHZ-41
+- AUTHZ-49
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `proc_results`, `proc_result_rankings`
+- Tables: `proc_results`, `proc_result_rankings`, `proc_result_reviews`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -163,13 +173,14 @@ WF-010; kewenangan penetapan bergantung nilai (PR 34 Pasal 9; Perpres Pasal 9/13
 - shadcn/ui reuse: primitif shadcn + komposit PRANATA
 - Design reference: SRC-047/VIS-04 melalui DESIGN_SYSTEM; OD-34
 - Halaman: PG-112
-- Primary action: Tetapkan hasil
+- Primary action: Tetapkan hasil per lingkup
 - Secondary actions: dalam menu "Lainnya" atau outline; tanpa duplikasi
 - Destructive actions: ConfirmActionDialog dengan alasan bila wajib
 - Redundancy constraints: satu aksi utama per halaman/panel
 - Loading state: skeleton
 - Empty state: penjelasan + aksi pertama
 - Error state: pesan + request id + langkah aman
+- Catatan: AwardScopeCard per lingkup; status reviu PPK
 
 ## ROUTE IMPACT
 
@@ -192,25 +203,28 @@ WF-010; kewenangan penetapan bergantung nilai (PR 34 Pasal 9; Perpres Pasal 9/13
 - Success destination: Tab Hasil
 - Error behavior: Gerbang kewenangan
 - State preservation: Tidak ada state daftar khusus
-- Mobile behavior: Tabel menjadi kartu; aksi utama tetap terlihat; target sentuh ≥ 44 px
+- Mobile behavior: Kartu per lingkup
 
 ## ACCEPTANCE CRITERIA
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Penetap hasil sesuai ambang nilai kebijakan (uji batas)
-- TAC-02 Pemilihan gagal tercatat dengan alasan dan langkah berikut
-- TAC-03 Satu hasil ditetapkan per paket
-- TAC-04 Peringkat atau pemenang dari partisipasi paket lain, dua WINNER, atau peringkat ganda dalam satu hasil ditolak aplikasi dan DB; kolom `package_id` hasil tidak dapat diubah (DI-05, DI-17)
+- TAC-01 Paket dua lot menghasilkan dua hasil dengan pemenang berbeda; satu penyedia dapat memenangkan beberapa lot; hasil kedua yang berlaku untuk lingkup dan pemilihan yang sama ditolak (DI-26)
+- TAC-02 Peringkat atau pemenang dari partisipasi pemilihan lain, WINNER kedua pada lingkup SINGLE, peringkat ganda atau peserta yang tidak lulus tahap gugur ditolak aplikasi dan DB (DI-05)
+- TAC-03 Penetap hasil sesuai ambang nilai kebijakan (uji batas); kegagalan per lingkup tercatat dengan alasan dan langkah berikut
+- TAC-04 Penunjukan Langsung dengan negosiasi akhir NOT_AGREED tidak dapat menghasilkan WINNER; MULTIPLE_FRAMEWORK tanpa izin kebijakan ditolak (DI-26)
+- TAC-05 Reviu hasil hanya oleh penugasan PPK pada paket itu; NOT_AGREED memerlukan alasan (AUTHZ-49)
+- TAC-06 Aktivasi cadangan ditolak selama SPPBJ/kontrak pemenang lama aktif dan hanya mengubah lingkup itu (DI-26)
+- TAC-07 Kolom `package_id`/`selection_id`/`scope_id` hasil tidak dapat diubah (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-010; DI-05 (uji negatif langsung DB)
-- Authorization: AUTHZ-41
+- Feature: WF-010; DI-05, DI-17, DI-26 (uji negatif langsung DB)
+- Authorization: AUTHZ-41, AUTHZ-49
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: J-03, J-05
+- Browser E2E: J-03, J-05, J-19
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis
@@ -268,7 +282,8 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan menetapkan pemenang otomatis dari peringkat
-- Jangan mengakali beberapa pemenang dalam satu paket di luar model yang disetujui
+- Jangan kembali ke model satu pemenang per paket
+- Jangan mengizinkan beberapa penyedia pada satu lingkup tanpa kebijakan
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

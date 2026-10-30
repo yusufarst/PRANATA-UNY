@@ -60,23 +60,26 @@ Kolom "Kembali" adalah tujuan back kontekstual default; kontrak lengkap di RT te
 | PG-102 | Usulan kebutuhan (daftar/detail/form) | `/procurement/needs` | RT-003 / WF-003 | Ajukan usulan | Daftar usulan |
 | PG-103 | Referensi RUP | `/procurement/rup` | RT-004 / WF-004 | Catat referensi | Daftar/paket asal |
 | PG-104 | Daftar paket | `/procurement/packages` | RT-005 | Buat paket | — |
-| PG-105 | Detail paket (tab: Ringkasan, Item, HPS, Metode, Pemilihan, Hasil, Kontrak, Dokumen, Riwayat) | `/procurement/packages/{p}` | RT-005 / WF-005 | Tindakan berikut sesuai state | Daftar paket (filter terjaga) |
+| PG-105 | Detail paket (tab: Ringkasan, Item & lingkup penghargaan, HPS, Metode, Pemilihan, Evaluasi, Hasil, Kontrak, Dokumen, Riwayat) | `/procurement/packages/{p}` | RT-005 / WF-005 | Tindakan berikut sesuai state | Daftar paket (filter terjaga) |
 | PG-106 | Buat/ubah paket (bertahap) | `/procurement/packages/create`, `…/{p}/edit` | RT-005 | Simpan draf / ajukan | Detail/daftar |
 | PG-107 | Penyusun HPS | `/procurement/packages/{p}/hps` | RT-005 | Simpan/ajukan/tetapkan | Detail paket tab HPS |
 | PG-108 | Penetapan metode | `/procurement/packages/{p}/method` | RT-035 / WF-032 | Minta saran / tetapkan | Detail paket tab Metode |
 | PG-109 | Jadwal kegiatan (kalender + daftar) | `/procurement/activities` | RT-006 / WF-006 | Jadwalkan / catat hasil | Paket atau kalender asal |
-| PG-110 | Partisipasi & kiriman paket | `/procurement/packages/{p}/participants` | RT-008 / WF-008 | Undang / catat kiriman | Detail paket |
-| PG-111 | Evaluasi, klarifikasi, negosiasi | `/procurement/packages/{p}/assessment` | RT-009 / WF-009 | Catat hasil | Detail paket |
-| PG-112 | Hasil/penetapan pemenang | `/procurement/packages/{p}/result` | RT-010 / WF-010 | Usulkan/tetapkan | Detail paket |
+| PG-110 | Pemilihan: undangan, penjajakan, peserta & penerimaan penawaran (strip jumlah dijajaki/diundang/menawar/memenuhi syarat/dievaluasi) | `/procurement/packages/{p}/participants` | RT-008 / WF-006, WF-008 | Undang / catat penjajakan / catat penawaran | Detail paket |
+| PG-111 | Ruang kerja evaluasi per lingkup: matriks peserta × kriteria, panel bukti, klarifikasi, negosiasi, perbandingan, opsi katalog E-Purchasing ([INTERACTION_PATTERNS §10](INTERACTION_PATTERNS.md#10-ruang-kerja-evaluasi)) | `/procurement/packages/{p}/assessment` | RT-009 / WF-009 | Catat hasil kriteria | Detail paket tab Evaluasi |
+| PG-112 | Hasil per lingkup: peringkat, pemenang dan cadangan, kegagalan beralasan, reviu PPK, aktivasi cadangan | `/procurement/packages/{p}/result` | RT-010 / WF-010 | Usulkan/tetapkan per lingkup | Detail paket |
 | PG-113 | SPPBJ | `/procurement/packages/{p}/sppbj` | RT-011 / WF-011 | Catat kontribusi sesuai penugasan (siapkan, periksa, terbitkan, tanda tangan; urutan hanya bila kebijakan menetapkan) | Detail paket |
 | PG-114 | Kontrak (daftar/detail) | `/procurement/contracts`, `/{c}` | RT-012 / WF-012 | Siapkan/catat tanda tangan | Daftar/paket asal |
 | PG-115 | Adendum | `/procurement/contracts/{c}/amendments` | RT-036 / WF-033 | Usulkan/putuskan | Detail kontrak |
 | PG-116 | Pelaksanaan/progres | `/procurement/contracts/{c}/progress` | RT-013 / WF-013 | Catat progres | Detail kontrak |
 | PG-117 | Pemeriksaan & BAST | `/procurement/contracts/{c}/handovers` | RT-014 / WF-014 | Catat pemeriksaan/BAST | Detail kontrak |
-| PG-118 | SPJ & pembayaran | `/procurement/contracts/{c}/accountability` | RT-015 / WF-015 | Lengkapi/catat | Detail kontrak |
+| PG-118 | SPJ & permintaan pembayaran | `/procurement/contracts/{c}/accountability` | RT-015 / WF-015 | Lengkapi/catat permintaan | Detail kontrak |
 | PG-119 | Klasifikasi & handoff hilir | `/procurement/handoffs` | RT-016 / WF-016 | Klasifikasikan / buat draf | BAST asal |
 | PG-120 | Penyedia & DPT (internal) | `/procurement/vendors` | RT-007 / WF-007 | Verifikasi dokumen / putuskan DPT | Daftar penyedia |
 | PG-121 | Laporan pengadaan | `/procurement/reports` | RT-027 / WF-027 | Minta laporan | Dasbor |
+| PG-122 | Skema evaluasi & lingkup penghargaan (tahap, kriteria, bobot/ambang dari dokumen pengadaan, bukti yang diminta; bekukan) | `/procurement/packages/{p}/selections/{s}/scheme` | RT-009 / WF-009 (TR-081) | Susun / bekukan skema | Ruang kerja evaluasi atau detail paket |
+| PG-123 | Pembukaan penawaran (pembacaan dan kelengkapan, tanpa aksi gugur) | `/procurement/packages/{p}/selections/{s}/opening` | RT-008 / WF-008 | Catat pembukaan | PG-110 |
+| PG-124 | Penilaian kinerja penyedia (kontrak selesai) | `/procurement/contracts/{c}/performance` | RT-014 / WF-014, WF-007 | Nilai kinerja | Detail kontrak |
 
 ### 3.3 Gudang
 
@@ -144,7 +147,7 @@ Kolom "Kembali" adalah tujuan back kontekstual default; kontrak lengkap di RT te
 |---|---|
 | Operator usulan unit | Usulan saya per status, perlu perbaikan, permintaan barang saya, paket terkait usulan |
 | Staf pengadaan pusat | Antrean usulan masuk, paket per tahap/metode, tenggat yang tervalidasi, dokumen yang perlu dibuat, kelengkapan dokumen penyedia, SPJ belum lengkap |
-| Pejabat dengan penugasan (PPK, Pokja, Pejabat Pengadaan, penetap metode) | Kartu sorot navy "Perlu keputusan Anda" + daftar pekerjaan menurut penugasan |
+| Pejabat dengan penugasan (PPK, Pokja, Pejabat Pengadaan, penetap metode) | Kartu sorot navy "Perlu keputusan Anda" + daftar pekerjaan menurut penugasan; kartu evaluasi per pemilihan: hasil kriteria belum diisi, bukti kurang, klarifikasi terbuka, putaran siap diselesaikan, hasil menunggu reviu PPK |
 | Petugas/Admin gudang | Permintaan menunggu serah terima, permintaan menunggu keputusan (bila berhak), konfirmasi tertunda, stok di bawah minimum, opname aktif |
 | Operator/Staf aset | Draf penerimaan aset, mutasi menunggu, inventarisasi berjalan, selisih rekonsiliasi, status run penyusutan |
 | Pimpinan | Ringkasan per unit: paket berjalan, nilai kontrak, aset per kondisi, stok kritis — tanpa aksi keputusan kecuali penugasan |

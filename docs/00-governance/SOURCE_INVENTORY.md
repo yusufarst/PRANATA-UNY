@@ -20,6 +20,7 @@ In P0, 45 historical files received bounded content inspection and SRC-033/VIS-0
 | U-008 | Owner design directive: primary color and background (2026-10-30) | OD-34 | OWNER_APPROVED_DECISION; full token system owed by P7 | P7 DESIGN_SYSTEM records the token derivation |
 | U-009 | Owner instruction: this session is the sole planning author; delete the previous session's local branch (2026-10-30) | GOV-10 | OWNER_APPROVED_DECISION | Executed 2026-10-30; working-tree content preserved |
 | U-010 | Owner directives on Git identity and attribution, then explicit identity confirmation (2026-10-30) | GOV-08 application | OWNER_APPROVED_DECISION | Repository-local identity verified before each commit |
+| U-011 | Owner procurement field findings and instruction (2026-10-30); provenance in [U-011](#u-011-owner-procurement-field-findings-of-2026-10-30) | OD-35, OD-36; RG-07; targeted P0–P11 procurement amendment | OWNER_APPROVED_DECISION for the explicit direction (multiple winners by award scope, evaluation priority, amendment instruction); the employees' observations are OBSERVED_CURRENT_PROCESS (practice) and the memorandum is a nonbinding reference | Official rules only from validated sources (GAP-003/013/017/026/027/029); candidate approval only by explicit Owner approval |
 | FW-001 | Unchanged repository AICWDF v4.3 English source | Master operating framework | AUTHORITATIVE_SOURCE for operating rules through Owner adoption; not UNY accounting/procurement authority | Preserved hash and full section map in FRAMEWORK_ADOPTION |
 | STRUCT-001 | GitHub yusufarst/MULTIPLECORP, pinned main a526daf47444d12b4ae5c51e1ae14c9dfe3f4978 | Entry point, adapter, governance/evidence/phase/context/handoff structures | INFERENCE for reusable structural patterns; never PRANATA domain/security/financial truth | Exact inspected paths and excluded content in FRAMEWORK_ADOPTION |
 
@@ -121,6 +122,18 @@ U-004 provenance — the P3 request, its same-scope continuation and the minor-c
 - U-007: in-session attachment, **44,300 bytes / SHA-256 `8d040fd7e37964d1aaae43627c9fc57cd665ba6b7f7cfe20e13c63bdb5142a6a`** (recorded as AUTH-012).
 - U-008, U-009, U-010: in-session Owner messages of 2026-10-30 (design colors; sole planning author and deletion of the previous session's branch; Git identity directive and explicit confirmation). Their operative content is recorded verbatim in substance in [DECISION_LOG](DECISION_LOG.md) (OD-34, GOV-10, GOV-08 application).
 - Handling: originals are session-delivered and external to the repository; read only; never published; never an execution dependency. The durable truth is the recorded sanitized wording.
+
+## U-011 Owner procurement field findings of 2026-10-30
+
+- U-011: the Owner's in-session instruction of 2026-10-30 to the Lead Planning Agent with the ZIP `PRANATA_UNY_NEW_PROCUREMENT_FINDINGS_FOR_CLAUDE_2026-10-30.zip` (**5,835,650 bytes / SHA-256 `f8982629079697808ec798882ce9d551ac9c41d9e058e3df52b43e6584aa5273`**). The Owner reports a consultation with UNY procurement employees on 2026-10-30. Operative direction is recorded in substance in [DECISION_LOG](DECISION_LOG.md) (OD-35, OD-36 and the P0–P11 planning candidate lifecycle record).
+
+| Safe label | File in the ZIP | Bytes / SHA-256 (prefix) | Classification / caveat |
+|---|---|---|---|
+| SRC-068 / OWN-02 | `01_REFERENCE/PRANATA_UNY_PROCUREMENT_FIELD_FINDINGS_CLAUDE_HANDOFF_EN.md` (field-findings memorandum) | 13,374 / `4dfa70b5` | Section A: employees' observations — OBSERVED_CURRENT_PROCESS (practice), not official rules; item A.7 records the Owner's earlier confirmation of several winners per package (OD-35). Sections B–D: an independent reviewer's interpretation and suggested checks — nonbinding reference, re-verified against SRC-048 in [REGULATORY_SOURCE_REVIEW RG-07](evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled). The memorandum states that it is not an SOP, a baseline or a design. |
+| U-011 prompt | `02_PROMPT/PRANATA_UNY_CLAUDE_PROCUREMENT_PROMPT_EN.txt` | 2,747 / `d3257cdc` | Owner instruction text; operative direction recorded in OD-35/OD-36. |
+| SRC-048 copy | `03_OFFICIAL_SOURCE/PR_34_2023_PBJ-1-1.pdf` | 8,641,201 / `812ee718` | Byte-identical to SRC-048 / REG-01; no new source or authority. |
+
+- Handling: originals are session-delivered and external to the repository; read only; never published; never an execution dependency. Text was extracted locally for reading only; no extraction output is tracked. No personal name or transaction data is reproduced.
 
 ## Starter Kit reference originals (2026-10-30)
 

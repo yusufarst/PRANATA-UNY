@@ -758,7 +758,7 @@ Di luar WF-029: lifecycle pengguna/akun (WF-001, P5) dan desain izin (P5). Penar
 
 **33 WF / 32 stateful workflows / 183 TR**. TR blocks intentionally leave unused identifiers reserved; hanya baris `TR-xxx` di atas adalah transition/action definitions. Tidak ada extra implicit universal approve/reject/cancel transition. Interaksi yang available harus menunjuk TR applicable/guard-nya; blocked official actions mengikuti IX/EP/RT yang menjelaskan alasan dan next action validasi. Context-only entry bukan kontrak auth implementation.
 
-State/TR baru tidak meredefinisi 87 DC, 35 BR, 22 INV atau responsibility model P2. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md) memetakan coverage, [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) mengelompokkan evidence yang diperlukan; GAP_REGISTER tetap pemilik status OPEN. Tidak ada schema/permission matrix/API/idempotency/design specification/Task. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
+State/TR baru tidak meredefinisi 91 DC, 39 BR, 24 INV atau responsibility model P2. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md) memetakan coverage, [WORKFLOW_DECISION_REQUESTS](WORKFLOW_DECISION_REQUESTS.md) mengelompokkan evidence yang diperlukan; GAP_REGISTER tetap pemilik status OPEN. Tidak ada schema/permission matrix/API/idempotency/design specification/Task. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
 
 ## Amandemen kompatibilitas 2026-10-30
 

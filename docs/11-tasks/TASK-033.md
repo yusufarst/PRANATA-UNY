@@ -1,4 +1,4 @@
-# TASK-033 — Partisipasi, pencatatan kiriman dan pembacaan teraudit (WF-008, IX-024)
+# TASK-033 — Partisipasi, penawaran imutabel, pembukaan dan pembacaan teraudit (WF-008, IX-024)
 
 Status dokumen: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
@@ -12,11 +12,11 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Mewujudkan partisipasi penyedia per paket, pencatatan kiriman yang diterima melalui kanal resmi (default `EXTERNAL_RECORDED`), revisi, penerimaan kelengkapan, klasifikasi rahasia penawaran, dan pembacaan teraudit oleh Super Admin (IX-024).
+Mewujudkan partisipasi per pemilihan, pencatatan penawaran yang diterima melalui kanal resmi (default `EXTERNAL_RECORDED`) sebagai rekaman imutabel per lingkup dengan rincian harga dan sidik jari berkas, penolakan penawaran terlambat, pembukaan tanpa aksi gugur, klasifikasi rahasia, dan pembacaan teraudit oleh Super Admin (IX-024).
 
 ## WHY THIS EXISTS
 
-CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
+INV-023/BR-036: isi penawaran tidak boleh diubah dan pembukaan tidak menggugurkan (PR 34/2023 Lampiran III B.3.b.5–6); OD-28: penawaran rahasia, Super Admin hanya baca teraudit.
 
 ## DEPENDS ON
 
@@ -37,15 +37,19 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 
 ## IN SCOPE
 
-- Tabel `proc_participations` (`uq(id, package_id)` sebagai induk FK komposit; `package_id` tidak dapat diubah), `proc_submissions`; pemeriksaan DPT saat partisipasi
+- Tabel `proc_participations` (per pemilihan; `uq(id, selection_id)`, `uq(id, package_id)`, `uq(id, company_id)`), `proc_submissions`, `proc_submission_scopes`, `proc_submission_lines`, `proc_opening_records`, `proc_opening_entries`; pemeriksaan DPT saat partisipasi
+- Imutabilitas: hak kolom `UPDATE (status, opened_at)`, trigger `forbid_offer_change()`, lingkup/rincian/entri pembukaan append-only, tautan berkas OFFER tidak dapat dilepas (DI-23)
+- Pembukaan per sampul tanpa kolom atau aksi gugur; penawaran terlambat REJECTED_LATE (DI-24); penggantian skema sesudah pembukaan ditolak di bawah kunci pemilihan (DI-22)
 - State WF-008 (TR-071–077)
-- PG-110; berkas penawaran CONFIDENTIAL
+- PG-110 (penerimaan penawaran) dan PG-123 (pembukaan); berkas penawaran CONFIDENTIAL
 - Alur IX-024: alasan wajib, audit gagal tertutup, read-only, tanpa ekspor
 - Gerbang kebijakan kanal: kiriman di PRANATA nonaktif secara default (GAP-029)
+- Kolom `package_id`/`selection_id` tidak dapat diubah setelah insert (DI-17)
 
 ## OUT OF SCOPE
 
 - Kiriman dari portal (TASK-043)
+- Evaluasi (TASK-034)
 
 ## REFERENCES
 
@@ -54,30 +58,37 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 - [STATE_TRANSITIONS WF-008](../03-workflows/STATE_TRANSITIONS.md#wf-008)
 - [RT-008](../03-workflows/ROUTE_CONTRACTS.md#rt-008)
 - [IX-024](../03-workflows/INTERACTION_CONTRACTS.md#ix-024)
+- [DATA_MODEL §14.3](../04-architecture/DATA_MODEL.md#143-pemilihan)
+- [INV-023](../02-domain/BUSINESS_RULES.md#inv-023)
+- [REGULATORY_SOURCE_REVIEW RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
-- CAP: CAP-07
-- AC/NFR: AC-09, AC-10, AC-31
+- CAP: CAP-05, CAP-07
+- AC/NFR: AC-09, AC-10, AC-31, AC-33
 - WF/TR: WF-008 (TR-071–TR-077, 7 TR; BLOCKED_BY_GAP: TR-076) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
 - RT: RT-008
 - IX: IX-003, IX-004, IX-005, IX-011, IX-012, IX-024
 - GAP: GAP-003, GAP-014, GAP-017, GAP-029
-- Keputusan Owner: OD-28
+- Keputusan Owner: OD-28, OD-36
 
 ## EXPECTED MODULES / FILE AREAS
 
-- `app/Modules/Procurement (Participation)`
+- `app/Modules/Procurement (Participation, Offers, Opening)`
 - `resources/js/pages/procurement/participants`
+- `resources/js/pages/procurement/opening`
 
 ## BUSINESS RULES
 
 - [BR-007](../02-domain/BUSINESS_RULES.md#br-007)
 - [BR-008](../02-domain/BUSINESS_RULES.md#br-008)
 - [BR-034](../02-domain/BUSINESS_RULES.md#br-034)
+- [BR-036](../02-domain/BUSINESS_RULES.md#br-036)
 - [INV-003](../02-domain/BUSINESS_RULES.md#inv-003)
 - [INV-004](../02-domain/BUSINESS_RULES.md#inv-004)
 - [INV-021](../02-domain/BUSINESS_RULES.md#inv-021)
+- [INV-023](../02-domain/BUSINESS_RULES.md#inv-023)
 
 ## ARCHITECTURE RULES
 
@@ -86,21 +97,21 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
-- AUTHZ-31, AUTHZ-32 (AUTHZ-30/33 di TASK-043)
+- AUTHZ-31, AUTHZ-32, AUTHZ-46 (AUTHZ-30/33/48 di TASK-043)
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `proc_participations`, `proc_submissions`
+- Tables: `proc_participations`, `proc_submissions`, `proc_submission_scopes`, `proc_submission_lines`, `proc_opening_records`, `proc_opening_entries`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
 
 ## MODULARITY / EXTENSIBILITY
 
-- Module boundary affected: app/Modules/Procurement (Participation)
+- Module boundary affected: app/Modules/Procurement (Participation, Offers, Opening)
 - Stable core kept provider-neutral: YES
 - External/vendor-specific code isolated: N/A
 - Replaceable adapter/contract required: NO
@@ -145,7 +156,7 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 
 - Graph freshness: N/A bila Graphify tidak tersedia
 - Pre-change questions: modul/tabel/rute/izin mana yang disentuh; uji mana yang terdampak
-- Expected affected areas: app/Modules/Procurement (Participation), resources/js/pages/procurement/participants
+- Expected affected areas: app/Modules/Procurement (Participation, Offers, Opening), resources/js/pages/procurement/participants, resources/js/pages/procurement/opening
 
 ## CONTEXT7
 
@@ -166,15 +177,15 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 - Comfortable density: REQUIRED
 - shadcn/ui reuse: primitif shadcn + komposit PRANATA
 - Design reference: SRC-047/VIS-04 melalui DESIGN_SYSTEM; OD-34
-- Halaman: PG-110
-- Primary action: Catat kiriman
+- Halaman: PG-110, PG-123
+- Primary action: Catat penawaran / Catat pembukaan
 - Secondary actions: dalam menu "Lainnya" atau outline; tanpa duplikasi
 - Destructive actions: ConfirmActionDialog dengan alasan bila wajib
 - Redundancy constraints: satu aksi utama per halaman/panel
 - Loading state: skeleton
 - Empty state: penjelasan + aksi pertama
 - Error state: pesan + request id + langkah aman
-- Catatan: Panel akses rahasia
+- Catatan: Panel akses rahasia; pembukaan tanpa tombol gugur
 
 ## ROUTE IMPACT
 
@@ -204,20 +215,22 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Kiriman eksternal tercatat dengan tanda terima, waktu dan berkas rahasia
-- TAC-02 Petugas tanpa penugasan tidak dapat membuka penawaran; isolasi antar-penyedia diuji di TASK-043 setelah akun penyedia ada
-- TAC-03 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
-- TAC-04 Revisi tertaut ke kiriman asal
-- TAC-05 Kolom `package_id` partisipasi tidak dapat diubah setelah insert (DI-17)
+- TAC-01 Penawaran eksternal tercatat dengan tanda terima, waktu, kanal, lingkup yang ditawar, rincian harga dan sidik jari berkas; penawaran terlambat tercatat REJECTED_LATE dan tidak dapat dibuka atau dievaluasi (DI-23)
+- TAC-02 UPDATE isi penawaran, lingkup atau rinciannya dan pelepasan berkas penawaran ditolak hak kolom dan trigger, termasuk lewat koneksi `pranata_app` langsung (DI-23)
+- TAC-03 Pembukaan mencatat nilai yang dibacakan dan kelengkapan; penawaran tidak lengkap tetap berstatus sama dan tidak ada aksi gugur (DI-24); penggantian skema sesudah pembukaan ditolak dan pembukaan bersamaan pembekuan diserialkan (DI-22)
+- TAC-04 Petugas tanpa penugasan tidak dapat membuka penawaran dan tidak seorang pun dapat mengubah penawaran asli (AUTHZ-46); isolasi antar-penyedia diuji di TASK-043
+- TAC-05 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
+- TAC-06 Jawaban klarifikasi dan revisi sebelum batas akhir tertaut ke penawaran asal tanpa mengubahnya
+- TAC-07 Kolom `package_id`/`selection_id` partisipasi dan penawaran tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-008, IX-024; DI-17
-- Authorization: AUTHZ-31, AUTHZ-32
+- Feature: WF-008, IX-024; DI-17, DI-22, DI-23, DI-24 (uji negatif langsung DB; DI-22 dengan dua koneksi)
+- Authorization: AUTHZ-31, AUTHZ-32, AUTHZ-46
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: J-16 bagian baca teraudit
+- Browser E2E: J-16 bagian baca teraudit; J-19 bagian pembukaan
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis
@@ -275,6 +288,8 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan mengaktifkan kiriman penawaran di PRANATA tanpa kebijakan kanal ACTIVE
+- Jangan menyediakan aksi gugur pada pembukaan
+- Jangan menyimpan koreksi aritmetik pada rekaman penawaran
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

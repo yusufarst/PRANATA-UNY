@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Mewujudkan pemeriksaan hasil (mutu, administratif, PHO/FHO), serah terima dan BAST sebagai klaim terpisah dengan baris yang dapat diklasifikasikan untuk hilir, masa pemeliharaan, dan dokumen terkait.
+Mewujudkan pemeriksaan hasil (mutu oleh Pengendali Kualitas dengan BA pemeriksaan, administratif, PHO/FHO), serah terima dan BAST sebagai klaim terpisah dengan baris yang dapat diklasifikasikan untuk hilir, masa pemeliharaan, dokumen terkait, dan penilaian kinerja penyedia sesudah kontrak selesai — terpisah dari evaluasi penawaran.
 
 ## WHY THIS EXISTS
 
@@ -21,6 +21,7 @@ CAP-09/10, BR-012/013/032: BAST tidak otomatis menjadi pengakuan aset atau stok.
 ## DEPENDS ON
 
 - TASK-044
+- TASK-042
 
 ## BLOCKS
 
@@ -41,6 +42,8 @@ CAP-09/10, BR-012/013/032: BAST tidak otomatis menjadi pengakuan aset atau stok.
 - State WF-014 (TR-131–136)
 - PG-117
 - Penanda status hilir PENDING
+- Pemeriksa dari penugasan kontrak (misalnya `QUALITY_CONTROLLER`, PR 34/2023 Pasal 14) dan tautan pemeriksaan ke serah terima
+- Penilaian kinerja CONTRACT_COMPLETION oleh penugasan PPK pada kontrak COMPLETED, memakai `vendor_performance_reviews` dari TASK-042 dan kriteria `vendor.performance` (DI-29); PG-124
 
 ## OUT OF SCOPE
 
@@ -57,12 +60,12 @@ CAP-09/10, BR-012/013/032: BAST tidak otomatis menjadi pengakuan aset atau stok.
 ## TRACEABILITY
 
 - CAP: CAP-09, CAP-10
-- AC/NFR: AC-12, AC-13
+- AC/NFR: AC-12, AC-13, AC-36
 - WF/TR: WF-014 (TR-131–TR-136, 6 TR; BLOCKED_BY_GAP: TR-132, TR-133, TR-135) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
 - RT: RT-014
 - IX: IX-003, IX-006, IX-007, IX-010, IX-011
 - GAP: GAP-003, GAP-017, GAP-018
-- Keputusan Owner: OD-30
+- Keputusan Owner: OD-30, OD-36
 
 ## EXPECTED MODULES / FILE AREAS
 
@@ -74,6 +77,7 @@ CAP-09/10, BR-012/013/032: BAST tidak otomatis menjadi pengakuan aset atau stok.
 - [BR-012](../02-domain/BUSINESS_RULES.md#br-012)
 - [BR-013](../02-domain/BUSINESS_RULES.md#br-013)
 - [BR-032](../02-domain/BUSINESS_RULES.md#br-032)
+- [BR-039](../02-domain/BUSINESS_RULES.md#br-039)
 - [INV-011](../02-domain/BUSINESS_RULES.md#inv-011)
 - [INV-012](../02-domain/BUSINESS_RULES.md#inv-012)
 
@@ -85,6 +89,7 @@ CAP-09/10, BR-012/013/032: BAST tidak otomatis menjadi pengakuan aset atau stok.
 ## SECURITY / PERMISSION REQUIREMENTS
 
 - Penugasan pemeriksa/penerima
+- AUTHZ-51
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
@@ -164,7 +169,7 @@ CAP-09/10, BR-012/013/032: BAST tidak otomatis menjadi pengakuan aset atau stok.
 - Comfortable density: REQUIRED
 - shadcn/ui reuse: primitif shadcn + komposit PRANATA
 - Design reference: SRC-047/VIS-04 melalui DESIGN_SYSTEM; OD-34
-- Halaman: PG-117
+- Halaman: PG-117, PG-124
 - Primary action: Catat pemeriksaan / BAST
 - Secondary actions: dalam menu "Lainnya" atau outline; tanpa duplikasi
 - Destructive actions: ConfirmActionDialog dengan alasan bila wajib
@@ -172,6 +177,7 @@ CAP-09/10, BR-012/013/032: BAST tidak otomatis menjadi pengakuan aset atau stok.
 - Loading state: skeleton
 - Empty state: penjelasan + aksi pertama
 - Error state: pesan + request id + langkah aman
+- Catatan: Penilaian kinerja tersedia setelah kontrak selesai
 
 ## ROUTE IMPACT
 
@@ -205,15 +211,16 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Baris BAST siap diklasifikasikan
 - TAC-04 Baris BAST yang menunjuk baris kontrak dari kontrak lain ditolak aplikasi dan DB; kolom `contract_id` serah terima dan barisnya tidak dapat diubah (DI-17, DI-19)
 - TAC-05 Ubah/hapus baris BAST setelah SIGNED ditolak kecuali kolom klasifikasi dan rujukan hilir (DI-15)
+- TAC-06 Penilaian kinerja ditolak sebelum kontrak COMPLETED, untuk perusahaan selain penyedia kontrak, atau oleh pihak tanpa penugasan; penilaian FINAL tidak dapat diubah (DI-29, AUTHZ-51)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-014; DI-15, DI-19 (uji negatif langsung DB)
-- Authorization: Uji izin positif dan negatif untuk setiap aksi baru
+- Feature: WF-014; DI-15, DI-19, DI-29 (uji negatif langsung DB)
+- Authorization: AUTHZ-51
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: Bagian J-08
+- Browser E2E: Bagian J-08, J-20
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis

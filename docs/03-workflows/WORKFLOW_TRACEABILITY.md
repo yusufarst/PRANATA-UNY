@@ -4,7 +4,7 @@ Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: 
 
 Dokumen ini memiliki **pemetaan P3 dan penilaian dampak workflow seluruh GAP**. [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) adalah indeks; [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md) memiliki tujuan/batas/handoff; [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki keadaan/TR; [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki RT; [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) memiliki IX. Semua ID di sini adalah locator perencanaan, bukan Tasks atau kriteria penerimaan aplikasi yang sudah diuji.
 
-[DECISION_LOG](../00-governance/DECISION_LOG.md) tetap memiliki OD-01–OD-34. [V1_SCOPE](../01-product/V1_SCOPE.md) dan [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md) tetap memiliki 23 CAP, 32 AC dan target NFR usulan. [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md) / [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md) memiliki 87 DC; [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) adalah satu-satunya pemilik wording/status/authority **35 BR / 22 INV**. P3 tidak mengganti rumusan sumber-sumber approved tersebut. [GAP_REGISTER](../00-governance/GAP_REGISTER.md) tetap memiliki status kanonik: semua 29 OPEN, tidak ada resolution; GAP-021–GAP-025 dari U-005 dan GAP-026–GAP-029 dari amandemen 2026-10-30. Pemetaan untuk ID baru berada di bagian amandemen di akhir dokumen ini.
+[DECISION_LOG](../00-governance/DECISION_LOG.md) tetap memiliki OD-01–OD-36. [V1_SCOPE](../01-product/V1_SCOPE.md) dan [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md) tetap memiliki 23 CAP, 36 AC dan target NFR usulan. [DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md) / [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md) memiliki 91 DC; [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md) adalah satu-satunya pemilik wording/status/authority **39 BR / 24 INV**. P3 tidak mengganti rumusan sumber-sumber approved tersebut. [GAP_REGISTER](../00-governance/GAP_REGISTER.md) tetap memiliki status kanonik: semua 29 OPEN, tidak ada resolution; GAP-021–GAP-025 dari U-005 dan GAP-026–GAP-029 dari amandemen 2026-10-30. Pemetaan untuk ID baru berada di bagian amandemen di akhir dokumen ini.
 
 ## Sumber yang dipakai dan batas pembuktian
 
@@ -370,3 +370,15 @@ Lokasi rinci dan batas pembacaan berada di [REGULATORY_SOURCE_REVIEW](../00-gove
 | WF-012/033 | Pasal 30–33: bentuk bukti perjanjian dan jenis kontrak; Pasal 40: adendum | Bentuk bukti 20–50 juta GAP-027(b) |
 | WF-014 | Pasal 46: serah terima, pemeriksaan oleh Pengendali Kualitas, PHO/FHO dan masa pemeliharaan | Klaim BAST tetap terpisah dari pengakuan aset (BR-032) |
 | WF-015 | Pasal 41: pembayaran (bulanan/termin/sekaligus) setelah potongan | Pelacakan saja, bukan transaksi keuangan |
+
+### Tambahan 2026-10-30 — temuan lapangan pengadaan
+
+Sumber [U-011](../00-governance/SOURCE_INVENTORY.md#u-011-owner-procurement-field-findings-of-2026-10-30); tidak ada WF/TR/RT/IX baru. Pemetaan ID baru ke kontrak yang ada:
+
+| ID | WF / TR / RT | Batas |
+|---|---|---|
+| AC-33, DC-089, BR-036, INV-023 | WF-008 (TR-072/074), WF-009 (TR-081–085); RT-008/009; IX-004/006–008/011/013/024 | Outcome evaluasi resmi tetap TR-084 BLOCKED_BY_GAP; skema dari dokumen pengadaan, bukan bobot buatan |
+| AC-34, DC-088, BR-037, INV-024 | WF-010 (TR-091–094), WF-011, WF-012, WF-014, WF-015; RT-010–RT-015 | Satu hasil berlaku per lingkup; aktivasi cadangan TR-094; batas per metode GAP-003/017/027 |
+| AC-35, DC-090, BR-038 | WF-005 ekstensi metode, WF-006, WF-032; RT-005/006/035 | Minimum hanya dari aturan; praktik setempat informatif; kanal GAP-029 |
+| AC-36, DC-091, BR-039 | WF-007, WF-013–WF-015; RT-007/013–015 | Penilaian kinerja sesudah kontrak selesai; pembayaran hanya pelacakan |
+| [OD-35](../00-governance/DECISION_LOG.md#od-35), [OD-36](../00-governance/DECISION_LOG.md#od-36) | WF-005–WF-015, WF-032 | Dibawa oleh kontrak di atas; P4–P11 menetapkan representasi |

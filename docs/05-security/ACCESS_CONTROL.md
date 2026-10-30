@@ -75,10 +75,16 @@ Cakupan yang diizinkan: G = GLOBAL, U = ORG_UNIT, S = ORG_UNIT_SUBTREE, W = WARE
 | `procurement.method.suggest` | S, G | Meminta saran (TR-312) |
 | `procurement.method.determine` | Penugasan `METHOD_DETERMINER` | TR-313/315 |
 | `procurement.activity.manage` | S, G / penugasan | Aktivitas, undangan |
+| `procurement.selection.manage` | Penugasan pemilihan (`POKJA_CHAIR`, `PEJABAT_PENGADAAN`, `PLANNER` untuk persiapan) | Pemilihan, lingkup penghargaan, undangan, penjajakan (OD-35) |
+| `procurement.evaluation_scheme.manage` / `.freeze` | Penugasan pemilihan (`POKJA_CHAIR`, `PEJABAT_PENGADAAN`) | Menyusun skema dari dokumen pengadaan dan membekukannya sebelum pembukaan (BR-036) |
+| `procurement.opening.record` | Penugasan pemilihan | Pembukaan tanpa aksi gugur (INV-023) |
 | `procurement.submission.record` | Penugasan pemilihan | Mencatat kiriman eksternal |
 | `procurement.submission.view_confidential` | Penugasan pemilihan | Penawaran rahasia |
-| `procurement.evaluation.record` | Penugasan `POKJA_MEMBER`/`PEJABAT_PENGADAAN` | |
-| `procurement.result.propose` / `.determine` | Penugasan sesuai `procurement.authority` | Penetapan pemenang menurut nilai |
+| `procurement.evaluation.record` | Penugasan `POKJA_MEMBER`/`PEJABAT_PENGADAAN`; `TECHNICAL_REVIEWER` hanya telaah tanpa keputusan tahap | Hasil per kriteria dan tahap per lingkup dengan alasan dan bukti |
+| `procurement.evaluation.complete` | Penugasan `POKJA_CHAIR`/`PEJABAT_PENGADAAN` | Menyelesaikan putaran, evaluasi ulang beralasan |
+| `procurement.clarification.manage` / `procurement.negotiation.record` | Penugasan pemilihan; E-Purchasing: `PPK`/`PEJABAT_PENGADAAN` | Klarifikasi dan negosiasi per peserta dan lingkup |
+| `procurement.result.propose` / `.determine` | Penugasan sesuai `procurement.authority` | Penetapan pemenang per lingkup menurut nilai |
+| `procurement.result.review` | Penugasan `PPK` pada paket (atau fungsi lain menurut kebijakan) | Reviu hasil sebelum kontrak (PR 34/2023 Pasal 9 ayat (2) huruf c angka 3) |
 | `procurement.sppbj.prepare` / `.check` / `.issue` | Penugasan masing-masing | Empat tanggung jawab (GAP-004) |
 | `procurement.contract.prepare` / `.approve` / `.record_signature` | Penugasan | WF-012 |
 | `procurement.amendment.propose` / `.review` / `.decide` | Penugasan | WF-033 |
@@ -94,7 +100,7 @@ Cakupan yang diizinkan: G = GLOBAL, U = ORG_UNIT, S = ORG_UNIT_SUBTREE, W = WARE
 | `vendor.company.manage` | G | Data perusahaan oleh petugas |
 | `vendor.documents.verify` | G | Verifikasi dokumen |
 | `vendor.dpt.decide` | G / penugasan | Keputusan DPT menurut kebijakan |
-| `vendor.performance.review` | G | Evaluasi kinerja |
+| `vendor.performance.review` | Penugasan `PPK` pada kontrak untuk penilaian pascapelaksanaan; G untuk evaluasi DPT berkala | Penilaian kinerja penyedia (BR-039); bukan evaluasi penawaran |
 | `portal.profile.manage` | Perusahaan sendiri | VENDOR |
 | `portal.documents.upload` | Perusahaan sendiri | VENDOR |
 | `portal.participation.view` | Perusahaan sendiri | VENDOR |
@@ -151,6 +157,7 @@ Cakupan yang diizinkan: G = GLOBAL, U = ORG_UNIT, S = ORG_UNIT_SUBTREE, W = WARE
 | `SPPBJ_PREPARER`, `SPPBJ_CHECKER`, `SPPBJ_ISSUER`, `SPPBJ_SIGNER` | Paket | GAP-004 |
 | `CONTRACT_SIGNER`, `AMENDMENT_DECIDER` | Kontrak | Menurut kebijakan |
 | `GOODS_RECEIVER`, `QUALITY_CONTROLLER`, `PJPHP`, `PPHP`, `TECHNICAL_TEAM` | Kontrak | Penerima Barang, Pengendali Kualitas, PjPHP/PPHP, Tim Teknis |
+| `TECHNICAL_REVIEWER` | Paket/pemilihan | Tim teknis atau tenaga ahli pendukung evaluasi (PR 34/2023 Pasal 9 ayat (4)); mencatat telaah, tidak memutus hasil tahap |
 | `REQUEST_APPROVER` | Permintaan gudang | Rantai `warehouse.operations` (mis. pimpinan unit pemohon, Kabag ALP — teramati SRC-058, belum disahkan) |
 | `RETURN_INSPECTOR` | Pengembalian | `warehouse.operations` |
 | `ASSET_DECIDER` | Mutasi/perubahan/penghapusan | `asset.lifecycle` |
@@ -178,9 +185,9 @@ Aturan SOD-01–03 berasal dari kebijakan rezim sehingga dapat berbeda untuk rez
 
 | Modul | Aturan baca |
 |---|---|
-| Pengadaan | Paket terlihat bila grant `procurement.package.view` mencakup unit pemilik paket, atau pengguna memiliki penugasan pada paket. Unit pemohon melihat status usulannya dan ringkasan paket terkait tanpa dokumen rahasia. |
+| Pengadaan | Paket terlihat bila grant `procurement.package.view` mencakup unit pemilik paket, atau pengguna memiliki penugasan pada paket. Unit pemohon melihat status usulannya dan ringkasan paket terkait tanpa dokumen rahasia. Isi penawaran, hasil per kriteria dan perbandingan hanya bagi penugasan pemilihan yang berhak (dan PPK untuk reviu hasil); pengguna lain melihat status, jumlah dan hasil yang diumumkan. |
 | Penyedia (internal) | Petugas dengan `vendor.*` melihat data perusahaan; dokumen RESTRICTED disamarkan kecuali kebutuhan verifikasi. |
-| Portal Penyedia | Hanya perusahaan tertaut, partisipasi, undangan, dokumen yang dibagikan dan status/hasil yang diumumkan; tidak pernah penawaran/evaluasi penyedia lain. |
+| Portal Penyedia | Hanya perusahaan tertaut, partisipasi, undangan, dokumen yang dibagikan dan status/hasil yang diumumkan per lingkup; tanda terima penawarannya sendiri; alasan gugur penawarannya sendiri hanya setelah pengumuman atau melalui debriefing menurut kebijakan; tidak pernah penawaran, skor atau evaluasi penyedia lain. |
 | Gudang | Stok, ledger dan antrean hanya untuk gudang dalam grant `W`; pemohon melihat permintaannya; penerima melihat serah terima untuknya. Petugas Gudang ALP tidak melihat Gudang PSRT tanpa grant terpisah (OD-28). |
 | Aset | Register dalam subtree unit grant; kustodian melihat aset yang dipegangnya; pengguna Pengadaan tanpa grant aset tidak melihat data aset dan sebaliknya (OD-28). |
 | Rekonsiliasi | Menurut cakupan kasus; sumber terlarang ditampilkan sebagai ringkasan yang sah (RT kontrak crossing). |
@@ -237,5 +244,11 @@ Profil yang memuat `admin.*` atau cakupan GLOBAL atas kapabilitas keputusan dita
 | AUTHZ-43 | Ekspor laporan tidak memuat baris di luar scope pengguna |
 | AUTHZ-44 | Unduhan berkas melalui `public_id` berkas milik subjek lain ditolak |
 | AUTHZ-45 | Perubahan cakupan grant tercermin konsisten di daftar, detail, pencarian, ekspor dan dashboard |
+| AUTHZ-46 | Hasil evaluasi hanya dicatat penugasan pemilihan pada paket itu; Super Admin, PPK dan petugas tanpa penugasan ditolak; tidak seorang pun dapat mengubah penawaran asli (UPDATE ditolak hak kolom dan trigger) |
+| AUTHZ-47 | Skema evaluasi hanya dibekukan oleh `POKJA_CHAIR`/`PEJABAT_PENGADAAN`; skema FROZEN tidak dapat diubah siapa pun; penggantian sesudah pembukaan ditolak |
+| AUTHZ-48 | Penyedia hanya melihat tanda terima, hasil yang diumumkan dan alasan gugur penawarannya sendiri menurut kebijakan; tebakan ID penawaran, skor atau hasil kriteria penyedia lain → 404 |
+| AUTHZ-49 | Reviu hasil sebelum kontrak hanya oleh penugasan `PPK` pada paket itu; PPK yang juga tercatat sebagai evaluator paket yang sama ditolak (SOD-01) |
+| AUTHZ-50 | SPPBJ, kontrak, baris kontrak atau serah terima yang memuat lingkup pemenang lain ditolak di server dan basis data (INV-024) |
+| AUTHZ-51 | Penilaian kinerja kontrak hanya oleh penugasan `PPK` (atau fungsi kebijakan) pada kontrak COMPLETED; kapabilitas evaluasi penawaran tidak memberinya |
 
 Matriks pengujian lengkap dibangkitkan dari katalog kapabilitas × profil × cakupan pada P8.

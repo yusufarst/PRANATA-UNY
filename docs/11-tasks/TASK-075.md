@@ -12,7 +12,7 @@ PARALLEL SAFE: YES
 
 ## OBJECTIVE
 
-Menjalankan gerbang konsistensi UI AICWDF §27 pada semua halaman, audit aksesibilitas (axe + keyboard + pembaca layar sampel), uji zero dead interactions (crawler tautan/aksi), serta melengkapi E2E J-01–J-18 di Chromium dan WebKit dalam dua bahasa dan dua viewport.
+Menjalankan gerbang konsistensi UI AICWDF §27 pada semua halaman, audit aksesibilitas (axe + keyboard + pembaca layar sampel), uji zero dead interactions (crawler tautan/aksi), serta melengkapi E2E J-01–J-20 di Chromium dan WebKit dalam dua bahasa dan dua viewport.
 
 ## WHY THIS EXISTS
 
@@ -181,7 +181,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 - TAC-01 ORPHAN UI ACTIONS, BROKEN ROUTES, DEAD BUTTONS, UNEXPECTED 404/405/500 = 0
 - TAC-02 axe tanpa pelanggaran serius/kritis pada semua halaman
-- TAC-03 E2E J-01–J-18 lulus dua browser, dua bahasa, dua viewport
+- TAC-03 E2E J-01–J-20 lulus dua browser, dua bahasa, dua viewport
 
 ## TEST REQUIREMENTS
 
@@ -189,7 +189,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Typecheck: Larastan + tsc
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Crawler
-- Browser E2E: J-01–J-18
+- Browser E2E: J-01–J-20
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: Dua viewport
 - Accessibility: axe + manual

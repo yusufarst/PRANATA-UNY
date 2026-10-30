@@ -44,6 +44,7 @@ CAP-09/AC-12.
 ## OUT OF SCOPE
 
 - BAST (TASK-046)
+- Pembatalan SPPBJ dan aktivasi cadangan bila jaminan pelaksanaan tidak diserahkan (TASK-036, TASK-035; PR 34/2023 Pasal 38 ayat (4)–(5))
 
 ## REFERENCES
 

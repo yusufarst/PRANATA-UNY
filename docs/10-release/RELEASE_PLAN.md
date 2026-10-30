@@ -24,7 +24,7 @@ Fitur yang bergantung pada kebijakan hanya aktif resmi di produksi bila versi ke
 
 - [ ] Semua Task dalam cakupan rilis DONE dengan bukti; tidak ada Task HIGH dengan temuan P0/P1 terbuka.
 - [ ] `ci-fast`, `ci-e2e` dan `ci-nightly` hijau pada SHA rilis.
-- [ ] Staging memakai SHA yang sama; E2E kritis J-01–J-18 yang relevan lulus di Chromium dan WebKit; verifikasi dua bahasa.
+- [ ] Staging memakai SHA yang sama; E2E kritis J-01–J-20 yang relevan lulus di Chromium dan WebKit; verifikasi dua bahasa.
 - [ ] Regresi penuh (AICWDF §28 lapisan 3) lulus; uji performa PB-* lulus pada data sintetis skala.
 - [ ] UAT yang dipersyaratkan disetujui penandatangan.
 - [ ] Latihan restore terakhir sukses dan tercatat; cadangan produksi siap.

@@ -1,4 +1,4 @@
-# TASK-034 — Evaluasi, klarifikasi dan negosiasi (WF-009)
+# TASK-034 — Ruang kerja evaluasi: putaran, hasil kriteria dan tahap, klarifikasi, negosiasi dan opsi katalog (WF-009)
 
 Status dokumen: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
@@ -12,11 +12,11 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Mewujudkan pencatatan evaluasi per tahap, klarifikasi, negosiasi berputaran dan peringkat oleh penugasan pemilihan, tanpa mesin skoring universal, dengan dokumen BA terkait sebagai draf.
+Mewujudkan ruang kerja evaluasi yang menjadi prioritas Owner (OD-36): putaran evaluasi atas skema yang dibekukan; hasil per kriteria dan per tahap untuk setiap peserta dan lingkup dengan temuan dan rujukan bukti; klarifikasi dan negosiasi tertaut; opsi katalog E-Purchasing; perbandingan per lingkup menurut skema (terhadap HPS, harga terkoreksi, skor berbobot atau biaya kepemilikan) berlabel simulasi; penyelesaian putaran dan evaluasi ulang beralasan — tanpa sistem menetapkan pemenang.
 
 ## WHY THIS EXISTS
 
-CAP-05/WF-009; aturan evaluasi resmi tetap kebijakan.
+BR-036/INV-023 dan PR 34/2023 Lampiran III B.3.b.6–7, C.4.b.1.g–h, D.2.b.5–6: evaluasi menurut kriteria yang ditetapkan, isi penawaran tidak berubah, ketidaklulusan beralasan; staf pengadaan menyebut evaluasi sebagai bagian tersulit pekerjaannya.
 
 ## DEPENDS ON
 
@@ -32,18 +32,23 @@ CAP-05/WF-009; aturan evaluasi resmi tetap kebijakan.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-019) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-019, GAP-026) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
-- Tabel `proc_evaluations`, `proc_negotiations` dengan FK komposit `(participation_id, package_id)`; putaran negosiasi unik per partisipasi
+- Tabel `proc_evaluation_rounds`, `proc_evaluation_criterion_results`, `proc_evaluation_stage_results`, `proc_clarifications`, `proc_negotiations`, `proc_catalog_options` dengan FK komposit ke pemilihan, skema, peserta dan lingkup (DI-07)
+- Layanan evaluasi: hasil tahap diturunkan dari hasil kriteria VALID menurut skema beku; tahap gugur menghentikan tahap berikutnya; tanpa penimpaan manual; koreksi = VOIDED + hasil baru; penyelesaian dan evaluasi ulang beralasan (DI-25)
+- Perbandingan per lingkup dari kebijakan `procurement.evaluation` (pembanding HPS, koreksi aritmetik, skor berbobot, biaya kepemilikan) berlabel simulasi bila DRAFT; tanpa aksi tetapkan pemenang
+- Negosiasi per peserta dan lingkup; opsi katalog E-Purchasing dan urutan negosiasi termurah lebih dahulu dari kebijakan (DI-28)
 - State WF-009 (TR-081–085)
-- PG-111; perbandingan penawaran untuk penugasan yang berhak
-- Koreksi aritmetika tercatat sebagai `corrected_amount`
+- PG-111 ruang kerja (INTERACTION_PATTERNS §10): matriks, panel kriteria dengan penampil penawaran baca-saja teraudit, kemajuan dan kekurangan, perbandingan, klarifikasi, negosiasi
+- Kolom `selection_id` putaran dan hasil tidak dapat diubah setelah insert (DI-17)
 
 ## OUT OF SCOPE
 
-- Skoring otomatis
+- Hasil dan penetapan pemenang (TASK-035)
+- Template berita acara (TASK-038)
+- Bobot atau metode evaluasi di luar dokumen pengadaan dan kebijakan
 
 ## REFERENCES
 
@@ -51,43 +56,55 @@ CAP-05/WF-009; aturan evaluasi resmi tetap kebijakan.
 - [WF-009](../03-workflows/WORKFLOW_CONTRACTS.md#wf-009)
 - [STATE_TRANSITIONS WF-009](../03-workflows/STATE_TRANSITIONS.md#wf-009)
 - [RT-009](../03-workflows/ROUTE_CONTRACTS.md#rt-009)
+- [DATA_MODEL §14.3](../04-architecture/DATA_MODEL.md#143-pemilihan)
+- [BR-036](../02-domain/BUSINESS_RULES.md#br-036)
+- [POLICY_REGISTRY §1](../04-architecture/POLICY_REGISTRY.md#1-keluarga-kebijakan)
+- [INTERACTION_PATTERNS §10](../07-ux-design/INTERACTION_PATTERNS.md#10-ruang-kerja-evaluasi)
+- [REGULATORY_SOURCE_REVIEW RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)
 - [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
-- CAP: CAP-05
-- AC/NFR: AC-07
+- CAP: CAP-05, CAP-08
+- AC/NFR: AC-07, AC-33, AC-35
 - WF/TR: WF-009 (TR-081–TR-085, 5 TR; BLOCKED_BY_GAP: TR-084) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
 - RT: RT-009
-- IX: IX-006, IX-007, IX-008, IX-011, IX-013
-- GAP: GAP-003, GAP-013, GAP-017, GAP-019
+- IX: IX-004, IX-006, IX-007, IX-008, IX-011, IX-013
+- GAP: GAP-003, GAP-013, GAP-017, GAP-019, GAP-026
+- Keputusan Owner: OD-36
 
 ## EXPECTED MODULES / FILE AREAS
 
 - `app/Modules/Procurement (Assessment)`
 - `resources/js/pages/procurement/assessment`
+- `resources/js/features/procurement/EvaluationMatrix.tsx`
 
 ## BUSINESS RULES
 
 - [BR-004](../02-domain/BUSINESS_RULES.md#br-004)
 - [BR-006](../02-domain/BUSINESS_RULES.md#br-006)
+- [BR-036](../02-domain/BUSINESS_RULES.md#br-036)
+- [BR-038](../02-domain/BUSINESS_RULES.md#br-038)
 - [INV-022](../02-domain/BUSINESS_RULES.md#inv-022)
+- [INV-023](../02-domain/BUSINESS_RULES.md#inv-023)
 
 ## ARCHITECTURE RULES
 
+- Perhitungan desimal presisi; label simulasi dari PolicyHandle
 - Ikuti aturan dependensi modul ([ARCHITECTURE §5](../04-architecture/ARCHITECTURE.md#5-aturan-dependensi-antar-modul)) dan pola lapisan §6
 - Satu perintah = satu Action bertransaksi; efek samping setelah commit
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
-- Hanya penugasan pemilihan
+- AUTHZ-46
+- Hanya penugasan pemilihan; pembukaan berkas penawaran teraudit
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `proc_evaluations`, `proc_negotiations`
+- Tables: `proc_evaluation_rounds`, `proc_evaluation_criterion_results`, `proc_evaluation_stage_results`, `proc_clarifications`, `proc_negotiations`, `proc_catalog_options`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -139,7 +156,7 @@ CAP-05/WF-009; aturan evaluasi resmi tetap kebijakan.
 
 - Graph freshness: N/A bila Graphify tidak tersedia
 - Pre-change questions: modul/tabel/rute/izin mana yang disentuh; uji mana yang terdampak
-- Expected affected areas: app/Modules/Procurement (Assessment), resources/js/pages/procurement/assessment
+- Expected affected areas: app/Modules/Procurement (Assessment), resources/js/pages/procurement/assessment, resources/js/features/procurement/EvaluationMatrix.tsx
 
 ## CONTEXT7
 
@@ -161,13 +178,14 @@ CAP-05/WF-009; aturan evaluasi resmi tetap kebijakan.
 - shadcn/ui reuse: primitif shadcn + komposit PRANATA
 - Design reference: SRC-047/VIS-04 melalui DESIGN_SYSTEM; OD-34
 - Halaman: PG-111
-- Primary action: Catat hasil evaluasi
+- Primary action: Catat hasil kriteria
 - Secondary actions: dalam menu "Lainnya" atau outline; tanpa duplikasi
 - Destructive actions: ConfirmActionDialog dengan alasan bila wajib
 - Redundancy constraints: satu aksi utama per halaman/panel
 - Loading state: skeleton
 - Empty state: penjelasan + aksi pertama
 - Error state: pesan + request id + langkah aman
+- Catatan: Matriks dengan alternatif daftar di ponsel; tanpa aksi tetapkan pemenang
 
 ## ROUTE IMPACT
 
@@ -175,6 +193,7 @@ CAP-05/WF-009; aturan evaluasi resmi tetap kebijakan.
 
 ## INTERACTION CONTRACTS
 
+- IX-004
 - IX-006
 - IX-007
 - IX-008
@@ -183,36 +202,42 @@ CAP-05/WF-009; aturan evaluasi resmi tetap kebijakan.
 
 ## NAVIGATION CONTRACT
 
-- Parent: Detail paket
-- Entry: Tab Pemilihan
+- Parent: Detail paket tab Evaluasi
+- Entry: Tab Evaluasi / kartu dasbor evaluasi
 - Back action: Detail paket
 - Cancel: Detail paket
-- Success destination: Tab Pemilihan
+- Success destination: Tab Evaluasi
 - Error behavior: Galat ditampilkan di tempat dengan request id; input dan konteks dipertahankan
-- State preservation: Tidak ada state daftar khusus
+- State preservation: Lingkup dan sel aktif di URL
 - Mobile behavior: Kartu per peserta
 
 ## ACCEPTANCE CRITERIA
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Hasil per tahap per peserta tercatat dengan alasan
-- TAC-02 Negosiasi mencatat nilai sebelum/sesudah per putaran
-- TAC-03 Pengguna tanpa penugasan tidak melihat nilai penawaran
-- TAC-04 Evaluasi atau negosiasi untuk partisipasi paket lain ditolak aplikasi dan DB (DI-07)
+- TAC-01 Hasil per kriteria dan per tahap tercatat untuk setiap peserta dan lingkup; FAIL tanpa temuan atau alasan ditolak; dua hasil VALID untuk kriteria yang sama ditolak, termasuk dua evaluator bersamaan (DI-25)
+- TAC-02 Tahap gugur yang gagal membuat tahap berikutnya NOT_EVALUATED; hasil tahap tidak dapat ditimpa manual
+- TAC-03 Penyelesaian putaran ditolak selama ada tahap PENDING; evaluasi ulang membuat putaran baru beralasan dan putaran lama tetap terbaca (DI-25)
+- TAC-04 Klarifikasi dan negosiasi tertaut tanpa mengubah penawaran; koreksi aritmetik tersimpan pada hasil tahap beserta catatannya
+- TAC-05 Perbandingan terhadap HPS, harga terkoreksi dan skor berbobot hanya menurut skema beku dan berlabel simulasi bila kebijakan DRAFT; tidak ada aksi menetapkan pemenang di ruang kerja
+- TAC-06 Opsi katalog E-Purchasing dan negosiasinya mengikuti kebijakan; lingkup di luar pemilihan ditolak (DI-28)
+- TAC-07 Pengguna tanpa penugasan tidak melihat nilai atau isi penawaran (AUTHZ-46)
+- TAC-08 Hasil, klarifikasi atau negosiasi untuk partisipasi atau lingkup pemilihan lain, atau untuk kriteria skema lain, ditolak aplikasi dan DB (DI-07); kolom `selection_id` tidak dapat diubah (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-009; DI-07 (uji negatif langsung DB)
-- Authorization: Penugasan pemilihan
+- Unit: Derivasi hasil tahap, skor berbobot dan perbandingan (desimal)
+- Feature: WF-009; DI-07, DI-17, DI-25, DI-28 (uji negatif langsung DB; DI-25 dengan dua koneksi)
+- Authorization: AUTHZ-46
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: Bagian J-03
+- Browser E2E: J-19 bagian evaluasi; bagian J-03, J-06
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
-- Accessibility: axe tanpa pelanggaran serius/kritis
+- Accessibility: axe dan navigasi keyboard matriks PG-111
 - Production build: npm run build
+- Performance: PB-12 pada data representatif
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
 
 ## TEST CHECKLIST
@@ -265,7 +290,9 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## DO NOT DO
 
+- Jangan menetapkan pemenang otomatis atau dari ruang kerja evaluasi
 - Jangan membuat negosiasi wajib untuk semua metode
+- Jangan mengubah penawaran asli untuk koreksi apa pun
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Menyediakan provider dan template DRAFT untuk adendum, BA pemeriksaan, BAST, PHO/FHO dan lembar indeks SPJ, dengan uji template emas.
+Menyediakan provider dan template DRAFT untuk adendum, BA pemeriksaan, BAST, PHO/FHO, lembar penilaian kinerja penyedia, surat permintaan pembayaran dan lembar indeks SPJ, dengan uji template emas.
 
 ## WHY THIS EXISTS
 
@@ -54,7 +54,7 @@ Melengkapi CAP-08 untuk pelaksanaan kontrak.
 ## TRACEABILITY
 
 - CAP: CAP-08
-- AC/NFR: AC-11
+- AC/NFR: AC-11, AC-36
 - WF/TR: WF-028 (TR-271–TR-276, 6 TR; BLOCKED_BY_GAP: TR-274)
 - RT: RT-028
 - IX: IX-010

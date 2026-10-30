@@ -81,10 +81,10 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 - [ ] [TASK-029](TASK-029.md) — HPS
 - [ ] [TASK-030](TASK-030.md) — Penetapan metode (WF-032)
 - [ ] [TASK-031](TASK-031.md) — Data penyedia inti: perusahaan, PIC, dokumen dan catatan DPT
-- [ ] [TASK-032](TASK-032.md) — Kegiatan paket, jadwal dan undangan (WF-006)
-- [ ] [TASK-033](TASK-033.md) — Partisipasi, pencatatan kiriman dan pembacaan teraudit (WF-008, IX-024)
-- [ ] [TASK-034](TASK-034.md) — Evaluasi, klarifikasi dan negosiasi (WF-009)
-- [ ] [TASK-035](TASK-035.md) — Hasil dan penetapan pemenang (WF-010)
+- [ ] [TASK-032](TASK-032.md) — Pemilihan, lingkup penghargaan, skema evaluasi, kegiatan dan undangan (WF-006)
+- [ ] [TASK-033](TASK-033.md) — Partisipasi, penawaran imutabel, pembukaan dan pembacaan teraudit (WF-008, IX-024)
+- [ ] [TASK-034](TASK-034.md) — Ruang kerja evaluasi: putaran, hasil kriteria dan tahap, klarifikasi, negosiasi dan opsi katalog (WF-009)
+- [ ] [TASK-035](TASK-035.md) — Hasil per lingkup, beberapa pemenang dan reviu hasil (WF-010)
 - [ ] [TASK-036](TASK-036.md) — SPPBJ dengan empat tanggung jawab (WF-011)
 - [ ] [TASK-037](TASK-037.md) — Kontrak/SPK dan versi kontrak (WF-012)
 - [ ] [TASK-038](TASK-038.md) — Template dan provider dokumen pengadaan set awal
@@ -164,10 +164,10 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-029](TASK-029.md) | HPS | TODO | HIGH | M3 | TASK-027, TASK-028 | NO | PROPOSED | YES |
 | [TASK-030](TASK-030.md) | Penetapan metode (WF-032) | TODO | HIGH | M3 | TASK-029, TASK-028 | NO | PROPOSED | YES |
 | [TASK-031](TASK-031.md) | Data penyedia inti: perusahaan, PIC, dokumen dan catatan DPT | TODO | HIGH | M3 | TASK-016, TASK-024 | YES | PROPOSED | YES |
-| [TASK-032](TASK-032.md) | Kegiatan paket, jadwal dan undangan (WF-006) | TODO | STANDARD | M3 | TASK-030, TASK-026, TASK-021, TASK-031 | YES | PROPOSED | YES |
-| [TASK-033](TASK-033.md) | Partisipasi, pencatatan kiriman dan pembacaan teraudit (WF-008, IX-024) | TODO | HIGH | M3 | TASK-032, TASK-031 | NO | PROPOSED | YES |
-| [TASK-034](TASK-034.md) | Evaluasi, klarifikasi dan negosiasi (WF-009) | TODO | HIGH | M3 | TASK-033, TASK-021 | NO | PROPOSED | YES |
-| [TASK-035](TASK-035.md) | Hasil dan penetapan pemenang (WF-010) | TODO | HIGH | M3 | TASK-034 | NO | PROPOSED | YES |
+| [TASK-032](TASK-032.md) | Pemilihan, lingkup penghargaan, skema evaluasi, kegiatan dan undangan (WF-006) | TODO | HIGH | M3 | TASK-030, TASK-026, TASK-021, TASK-031 | YES | PROPOSED | YES |
+| [TASK-033](TASK-033.md) | Partisipasi, penawaran imutabel, pembukaan dan pembacaan teraudit (WF-008, IX-024) | TODO | HIGH | M3 | TASK-032, TASK-031 | NO | PROPOSED | YES |
+| [TASK-034](TASK-034.md) | Ruang kerja evaluasi: putaran, hasil kriteria dan tahap, klarifikasi, negosiasi dan opsi katalog (WF-009) | TODO | HIGH | M3 | TASK-033, TASK-021 | NO | PROPOSED | YES |
+| [TASK-035](TASK-035.md) | Hasil per lingkup, beberapa pemenang dan reviu hasil (WF-010) | TODO | HIGH | M3 | TASK-034 | NO | PROPOSED | YES |
 | [TASK-036](TASK-036.md) | SPPBJ dengan empat tanggung jawab (WF-011) | TODO | HIGH | M3 | TASK-035, TASK-021 | NO | PROPOSED | YES |
 | [TASK-037](TASK-037.md) | Kontrak/SPK dan versi kontrak (WF-012) | TODO | HIGH | M3 | TASK-036 | NO | PROPOSED | YES |
 | [TASK-038](TASK-038.md) | Template dan provider dokumen pengadaan set awal | TODO | STANDARD | M3 | TASK-021, TASK-037 | NO | NONE | YES |
@@ -178,7 +178,7 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-043](TASK-043.md) | Portal Penyedia | TODO | HIGH | M4 | TASK-042, TASK-033 | NO | PROPOSED | YES |
 | [TASK-044](TASK-044.md) | Pelaksanaan kontrak, jaminan dan denda (WF-013) | TODO | HIGH | M4 | TASK-037 | YES | PROPOSED | YES |
 | [TASK-045](TASK-045.md) | Adendum kontrak (WF-033) | TODO | HIGH | M4 | TASK-037, TASK-021 | YES | PROPOSED | YES |
-| [TASK-046](TASK-046.md) | Pemeriksaan, serah terima dan BAST (WF-014) | TODO | STANDARD | M4 | TASK-044 | NO | PROPOSED | YES |
+| [TASK-046](TASK-046.md) | Pemeriksaan, serah terima dan BAST (WF-014) | TODO | STANDARD | M4 | TASK-044, TASK-042 | NO | PROPOSED | YES |
 | [TASK-047](TASK-047.md) | SPJ, paket dokumen dan pelacakan pembayaran (WF-015) | TODO | STANDARD | M4 | TASK-046 | YES | PROPOSED | YES |
 | [TASK-048](TASK-048.md) | Dokumen pengadaan set lanjutan | TODO | STANDARD | M4 | TASK-045, TASK-046, TASK-047 | NO | NONE | YES |
 | [TASK-049](TASK-049.md) | Gudang, katalog barang dan paket kebijakan gudang DRAFT | TODO | STANDARD | M5 | TASK-018, TASK-017, TASK-014 | YES | PROPOSED | YES |
@@ -391,6 +391,7 @@ flowchart LR
   TASK037 --> TASK045
   TASK021 --> TASK045
   TASK044 --> TASK046
+  TASK042 --> TASK046
   TASK046 --> TASK047
   TASK045 --> TASK048
   TASK046 --> TASK048

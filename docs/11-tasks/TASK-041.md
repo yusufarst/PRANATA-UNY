@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Menyiapkan UAT-1 (OD-32): ScenarioSeeder pengadaan lengkap untuk empat jenis × metode, E2E J-02–J-07 lulus di staging, panduan singkat UAT bahasa Indonesia, akun UAT per peran, dan formulir berita acara.
+Menyiapkan UAT-1 (OD-32): ScenarioSeeder pengadaan lengkap untuk empat jenis × metode, E2E J-02–J-07 dan J-19 lulus di staging, panduan singkat UAT bahasa Indonesia, akun UAT per peran, dan formulir berita acara.
 
 ## WHY THIS EXISTS
 
@@ -38,8 +38,8 @@ Tonggak penerimaan pertama yang ditetapkan Owner.
 
 ## IN SCOPE
 
-- Data skenario UAT-P01–P12
-- E2E J-02–J-07 hijau di Chromium/WebKit pada staging
+- Data skenario UAT-P01–P14, termasuk penawaran sintetis yang dicatat petugas untuk evaluasi dan paket dua lot
+- E2E J-02–J-07 dan J-19 hijau di Chromium/WebKit pada staging
 - Panduan UAT dan daftar periksa
 - Laporan kesiapan UAT
 
@@ -56,9 +56,9 @@ Tonggak penerimaan pertama yang ditetapkan Owner.
 ## TRACEABILITY
 
 - CAP: CAP-04, CAP-05, CAP-06, CAP-08
-- AC/NFR: AC-30, NFR-P04
+- AC/NFR: AC-30, AC-33, AC-34, AC-35, NFR-P04
 - RT: RT-003, RT-004, RT-005, RT-006, RT-008, RT-009, RT-010, RT-011, RT-012, RT-035
-- Keputusan Owner: OD-32
+- Keputusan Owner: OD-32, OD-35, OD-36
 
 ## EXPECTED MODULES / FILE AREAS
 
@@ -193,7 +193,7 @@ Tonggak penerimaan pertama yang ditetapkan Owner.
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Semua skenario wajib UAT-1 dapat dijalankan di staging
-- TAC-02 E2E J-02–J-07 lulus dua browser, dua bahasa, dua viewport
+- TAC-02 E2E J-02–J-07 dan J-19 lulus dua browser, dua bahasa, dua viewport
 - TAC-03 Tidak ada cacat kritis/tinggi yang diketahui terbuka
 
 ## TEST REQUIREMENTS
@@ -202,7 +202,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Typecheck: Larastan + tsc
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: J-02–J-07 di staging
+- Browser E2E: J-02–J-07 dan J-19 di staging
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe halaman pengadaan

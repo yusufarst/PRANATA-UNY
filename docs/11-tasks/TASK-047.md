@@ -12,7 +12,7 @@ PARALLEL SAFE: YES
 
 ## OBJECTIVE
 
-Mewujudkan pelacakan kelengkapan SPJ melalui paket dokumen berdasarkan persyaratan kebijakan, perakitan PDF gabungan, dan pelacakan termin pembayaran (tagihan, potongan, rujukan pembayaran) tanpa transaksi keuangan.
+Mewujudkan pelacakan kelengkapan SPJ melalui paket dokumen berdasarkan persyaratan kebijakan, perakitan PDF gabungan, dan permintaan serta pelacakan pembayaran (jenis permintaan, dasar serah terima/pemeriksaan, potongan, rujukan keuangan dan pembayaran) tanpa transaksi keuangan.
 
 ## WHY THIS EXISTS
 
@@ -35,7 +35,7 @@ CAP-09/AC-12; OD-29 paket SPJ.
 
 ## IN SCOPE
 
-- Tabel `proc_payments`; pemakaian `document_packs`
+- Tabel `proc_payments` sebagai permintaan dan pelacakan pembayaran (dasar serah terima/pemeriksaan dengan FK komposit kontrak yang sama, komponen potongan konsisten, rujukan pembayaran wajib saat tercatat; DI-30); pemakaian `document_packs`
 - State WF-015 (TR-141–145)
 - PG-118
 
@@ -53,7 +53,7 @@ CAP-09/AC-12; OD-29 paket SPJ.
 ## TRACEABILITY
 
 - CAP: CAP-08, CAP-09
-- AC/NFR: AC-11, AC-12
+- AC/NFR: AC-11, AC-12, AC-36
 - WF/TR: WF-015 (TR-141–TR-145, 5 TR; BLOCKED_BY_GAP: TR-144) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
 - RT: RT-015
 - IX: IX-003, IX-010, IX-011, IX-015
@@ -69,6 +69,7 @@ CAP-09/AC-12; OD-29 paket SPJ.
 
 - [BR-012](../02-domain/BUSINESS_RULES.md#br-012)
 - [BR-032](../02-domain/BUSINESS_RULES.md#br-032)
+- [BR-039](../02-domain/BUSINESS_RULES.md#br-039)
 
 ## ARCHITECTURE RULES
 
@@ -195,16 +196,17 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Kelengkapan SPJ menunjukkan item wajib ada/kurang menurut kebijakan
 - TAC-02 Paket dapat dirakit menjadi PDF gabungan
 - TAC-03 Status pembayaran hanya pelacakan dengan rujukan
+- TAC-04 Permintaan pembayaran dengan komponen tidak konsisten, dasar dari kontrak lain atau PAYMENT_RECORDED tanpa rujukan ditolak aplikasi dan DB (DI-30)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-015
+- Feature: WF-015; DI-30 (uji negatif langsung DB)
 - Integration: Merge PDF (nightly)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)
+- Browser E2E: Bagian J-20
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis

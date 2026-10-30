@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Menyusun skema dan isi DRAFT untuk keluarga `procurement.regime`, `procurement.methods`, `procurement.authority`, `procurement.documents`, `procurement.contract`, `procurement.hps`, `procurement.budget`, `vendor.dpt` dan `numbering` untuk rezim PR 34/2023 dan Perpres 16/2018 jo. 46/2025, lengkap dengan rujukan pasal dan kasus uji emas — semuanya berstatus DRAFT.
+Menyusun skema dan isi DRAFT untuk keluarga `procurement.regime`, `procurement.methods`, `procurement.authority`, `procurement.documents`, `procurement.contract`, `procurement.hps`, `procurement.budget`, `procurement.evaluation`, `vendor.dpt`, `vendor.performance` dan `numbering` untuk rezim PR 34/2023 dan Perpres 16/2018 jo. 46/2025, lengkap dengan rujukan pasal dan kasus uji emas — semuanya berstatus DRAFT.
 
 ## WHY THIS EXISTS
 
@@ -41,6 +41,8 @@ Fitur pengadaan harus dapat diuji end-to-end tanpa mengarang aturan; nilai regul
 - Seeder idempoten paket DRAFT dengan `source_refs` ke SRC-048/049/050 dan `gap_refs`
 - Evaluator `MethodSuggestion` (pita inklusif/eksklusif, kriteria kualitatif, tumpang tindih, syarat DPT, kanal)
 - Evaluator `WinnerAuthority`, `ContractForm`, `GuaranteeRequirement`, `AmendmentLimit`, `LatePenalty`, `HpsRequirement`
+- Evaluator `EvaluationRules`: metode evaluasi yang diizinkan per metode/varian/jenis, minimum undangan atau kualifikasi yang bersumber aturan, praktik setempat informatif (tiga penawaran Pengadaan Langsung, `PENDING_VALIDATION`), mode penghargaan lingkup, urutan negosiasi E-Purchasing, kegagalan Penunjukan Langsung, penerapan reviu hasil; kriteria `vendor.performance` (kualitas, kuantitas, waktu)
+- Matriks penerapan langkah dan dokumen `procurement.documents` per metode × varian × jenis × pita nilai dengan `PENDING_VALIDATION` bila belum bersumber
 - Kasus uji emas dari REGULATORY_SOURCE_REVIEW untuk kedua rezim (termasuk batas 700 juta, 2 miliar, konsultansi 300–400 juta, e-purchasing ≤ 15 miliar, PL Perpres 200/400/100 juta)
 - Penanda GAP-027 (a)–(e) sebagai wajib-pilih manusia
 
@@ -56,15 +58,16 @@ Fitur pengadaan harus dapat diuji end-to-end tanpa mengarang aturan; nilai regul
 - [REGULATORY_SOURCE_REVIEW](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md)
 - [GAP_REGISTER GAP-026–029](../00-governance/GAP_REGISTER.md)
 - [BR-031](../02-domain/BUSINESS_RULES.md#br-031)
+- [REGULATORY_SOURCE_REVIEW RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)
 
 ## TRACEABILITY
 
 - CAP: CAP-05, CAP-23
-- AC/NFR: AC-07, AC-30, AC-32
+- AC/NFR: AC-07, AC-30, AC-32, AC-33, AC-35
 - WF/TR: WF-005 (TR-041–TR-045, 5 TR; BLOCKED_BY_GAP: TR-044); WF-032 (TR-311–TR-316, 6 TR; BLOCKED_BY_GAP: TR-313, TR-315)
 - RT: RT-032
 - GAP: GAP-003, GAP-004, GAP-017, GAP-019, GAP-026, GAP-027, GAP-028, GAP-029
-- Keputusan Owner: OD-27
+- Keputusan Owner: OD-27, OD-35, OD-36
 
 ## EXPECTED MODULES / FILE AREAS
 
@@ -76,6 +79,9 @@ Fitur pengadaan harus dapat diuji end-to-end tanpa mengarang aturan; nilai regul
 
 - [BR-031](../02-domain/BUSINESS_RULES.md#br-031)
 - [BR-034](../02-domain/BUSINESS_RULES.md#br-034)
+- [BR-036](../02-domain/BUSINESS_RULES.md#br-036)
+- [BR-037](../02-domain/BUSINESS_RULES.md#br-037)
+- [BR-038](../02-domain/BUSINESS_RULES.md#br-038)
 - [INV-022](../02-domain/BUSINESS_RULES.md#inv-022)
 
 ## ARCHITECTURE RULES
@@ -177,6 +183,8 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Tumpang tindih konsultansi PR 34/2023 menghasilkan penanda wajib-pilih
 - TAC-04 Tidak ada nilai rezim yang dipakai untuk rezim lain (uji)
 - TAC-05 Nilai yang meragukan dari OCR ditandai untuk konfirmasi di `notes` versi
+- TAC-06 Kasus emas evaluasi: Quotation dengan < 3 DPT diundang → peringatan; tender terbatas dengan 2 peserta lulus kualifikasi → gagal; pembukaan tidak pernah menggugurkan; Pengadaan Langsung dengan 2 penawaran tidak diblokir (praktik tiga penawaran informatif); E-Purchasing dengan dua penyedia → negosiasi termurah lebih dahulu; MULTIPLE_FRAMEWORK hanya untuk kontrak payung
+- TAC-07 Kombinasi metode × jenis × nilai tanpa aturan dokumen menghasilkan `PENDING_VALIDATION`, bukan wajib atau tidak berlaku
 
 ## TEST REQUIREMENTS
 

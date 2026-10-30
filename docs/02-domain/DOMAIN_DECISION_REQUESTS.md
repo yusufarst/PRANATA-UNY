@@ -83,3 +83,11 @@ Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); stat
 - **Terblokir:** GAP-025/028, terkait GAP-023; DC-082/084–086.
 - **Bukti tersedia:** OD-26/30/31, SRC-058.
 - **Safe default:** catat referensi dan bukti; peringatkan tanpa memblokir berdasarkan saldo keuangan; tidak ada saldo stok negatif.
+
+### DR-10 — Evaluasi, lingkup penghargaan dan pascapenghargaan
+
+- **Keputusan/bukti dibutuhkan:** metode evaluasi yang diizinkan dan bawaan per metode/jenis, aturan koreksi aritmetik dan pembanding HPS, ambang lulus, jumlah pemenang cadangan, masa sanggah/debriefing dan penanda tangan berita acara; metode/jenis yang mengizinkan penghargaan per lot atau item dan cara pengumuman, SPPBJ serta kontraknya; daftar dokumen per metode × jenis × nilai (termasuk arti RKS/SDP); fungsi pbj.uny.ac.id; skala penilaian kinerja penyedia dan dokumen permintaan pembayaran.
+- **Mengapa:** BR-036–BR-039 dan INV-023/024 aman sebagai kapabilitas, tetapi aksi resmi memerlukan aturan per metode yang tervalidasi; Owner sudah menetapkan bahwa beberapa pemenang per paket harus didukung (OD-35).
+- **Terblokir:** GAP-003/013/017/018/026/027/029; DC-036/039/088–091.
+- **Bukti tersedia:** SRC-048 ([RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)), SRC-068 (temuan lapangan, praktik), SRC-052 (provisional).
+- **Safe default:** skema dari dokumen pengadaan dibekukan; perhitungan berlabel simulasi; praktik setempat hanya informatif; tidak ada penetapan pemenang otomatis.

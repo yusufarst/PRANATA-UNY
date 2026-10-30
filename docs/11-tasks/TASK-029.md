@@ -203,7 +203,8 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Hanya penetap yang ditugaskan dapat menetapkan; satu HPS SET per paket
 - TAC-03 Versi baru tidak menimpa versi lama
 - TAC-04 Label simulasi tampil bila kebijakan HPS DRAFT
-- TAC-05 Ubah/hapus baris HPS setelah SET ditolak aplikasi dan DB; revisi membuat versi HPS baru (DI-15)
+- TAC-05 Langkah HPS tampil tidak berlaku beserta alasan bila kebijakan menyatakan pengecualian (misalnya e-marketplace atau barang sampai batas Pasal 21), bukan diwajibkan untuk semua paket
+- TAC-06 Ubah/hapus baris HPS setelah SET ditolak aplikasi dan DB; revisi membuat versi HPS baru (DI-15)
 
 ## TEST REQUIREMENTS
 

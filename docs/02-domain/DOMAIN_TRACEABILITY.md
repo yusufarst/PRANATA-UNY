@@ -168,6 +168,11 @@ Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); stat
 | AC-31 | DC-003/005/007/079 | BR-034; INV-001/004/021 | OD-28 | GAP-014 |
 | [OD-26](../00-governance/DECISION_LOG.md#od-26)–[OD-31](../00-governance/DECISION_LOG.md#od-31) | DC-079–087 | BR-030–035; INV-019–022 | U-006/U-007 | Seperti baris di atas |
 | [OD-32](../00-governance/DECISION_LOG.md#od-32)–[OD-34](../00-governance/DECISION_LOG.md#od-34) | — | — | U-006–U-008 | P4/P6/P7/P8/P9/P10 |
+| AC-33 (evaluasi penawaran) | DC-032/033/036–038/089/090 | BR-036; INV-022/023 | OD-36; SRC-048 Lampiran III B–D | GAP-003/013/017/026/029; P4–P8 |
+| AC-34 (beberapa pemenang per lingkup) | DC-024/039–041/045/088/090 | BR-037; INV-024 | OD-35; SRC-048 Pasal 31 ayat (7), Pasal 38 | GAP-003/004/017/027 |
+| AC-35 (langkah dan dokumen per metode, jumlah penyedia) | DC-025/027/080/081/090 | BR-004/031/038 | OD-27/36; SRC-048 Pasal 21, 24–30, Lampiran III | GAP-017/026/027/029 |
+| AC-36 (pascapenghargaan) | DC-043/044/048/087/091 | BR-012/039 | OD-36; SRC-048 Pasal 9, 14, 41, Lampiran I E | GAP-003/018/019/028 |
+| [OD-35](../00-governance/DECISION_LOG.md#od-35)–[OD-36](../00-governance/DECISION_LOG.md#od-36) | DC-088–091 | BR-036–039; INV-023/024 | U-011 | Seperti baris di atas |
 
 | GAP | Kelas | Kontribusi P2 / tetap terblokir | Source / rule locator | Validasi atau pemilik fase berikutnya |
 |---|---|---|---|---|
@@ -176,4 +181,4 @@ Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); stat
 | GAP-028 | B | DC-082 dan BR-035 memisahkan referensi/komitmen dari pembukuan. | OD-30(1) | Keuangan; P4/P5/P6 |
 | GAP-029 | C | Kanal resmi per langkah adalah keputusan proses di luar P2; BR-027 tetap. | SRC-048 Lampiran II–III, Pasal 29; SRC-053 | Kustodian pengadaan; P5/P6/P7 |
 
-Counts setelah amandemen: **29 reviewed; OPEN 29; resolved 0; new gaps 4 (GAP-026–GAP-029, dari amandemen 2026-10-30)**.
+Counts setelah amandemen: **29 reviewed; OPEN 29; resolved 0; new gaps 4 (GAP-026–GAP-029, dari amandemen 2026-10-30)**. Temuan lapangan pengadaan U-011 tidak menambah GAP; pertanyaan validasinya dicatat pada GAP yang ada ([GAP_REGISTER](../00-governance/GAP_REGISTER.md#procurement-field-findings-u-011)).

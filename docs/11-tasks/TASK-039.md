@@ -37,7 +37,8 @@ OD-19/29: pengguna melihat tanggung jawab, kemajuan, bukti yang kurang dan lapor
 
 ## IN SCOPE
 
-- PG-101 kartu dasbor
+- PG-101 kartu dasbor, termasuk kartu evaluasi per pemilihan (hasil belum diisi, bukti kurang, klarifikasi terbuka, putaran siap diselesaikan, reviu menunggu)
+- Laporan jumlah penyedia per pemilihan (dijajaki, diundang, menawar, memenuhi syarat, dievaluasi)
 - Laporan PG-121 (definisi laporan pengadaan awal)
 - Penyedia pencarian pengadaan untuk palette
 
@@ -54,7 +55,7 @@ OD-19/29: pengguna melihat tanggung jawab, kemajuan, bukti yang kurang dan lapor
 ## TRACEABILITY
 
 - CAP: CAP-03, CAP-17, CAP-18
-- AC/NFR: AC-05, AC-20, AC-21
+- AC/NFR: AC-05, AC-20, AC-21, AC-33
 - WF/TR: WF-027 (TR-261–TR-265, 5 TR; BLOCKED_BY_GAP: TR-262)
 - RT: RT-002, RT-027
 - IX: IX-017, IX-018

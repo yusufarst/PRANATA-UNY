@@ -26,6 +26,7 @@ PR 34/2023 Pasal 15–16, 59 dan Lampiran I menjadikan DPT syarat metode tertent
 ## BLOCKS
 
 - TASK-043
+- TASK-046
 
 ## PREREQUISITES (READY GATE)
 
@@ -39,7 +40,7 @@ PR 34/2023 Pasal 15–16, 59 dan Lampiran I menjadikan DPT syarat metode tertent
 - State WF-007 (TR-061–066)
 - Katalog dokumen per bentuk usaha dari kebijakan
 - Peringatan dokumen kedaluwarsa (`valid_until`)
-- `vendor_performance_reviews` berbasis kriteria kebijakan
+- `vendor_performance_reviews` (jenis CONTRACT_COMPLETION dan PERIODIC_DPT; FK `(contract_id, company_id)`; satu FINAL per kontrak; kriteria dari `vendor.performance`) dengan alur evaluasi DPT berkala; penilaian pascapelaksanaan kontrak diwujudkan TASK-046
 - Keputusan DPT oleh penugasan/kapabilitas `vendor.dpt.decide`
 
 ## OUT OF SCOPE
@@ -57,7 +58,7 @@ PR 34/2023 Pasal 15–16, 59 dan Lampiran I menjadikan DPT syarat metode tertent
 ## TRACEABILITY
 
 - CAP: CAP-07
-- AC/NFR: AC-09
+- AC/NFR: AC-09, AC-36
 - WF/TR: WF-007 (TR-061–TR-066, 6 TR; BLOCKED_BY_GAP: TR-064) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
 - RT: RT-007
 - IX: IX-004, IX-005, IX-006, IX-007, IX-008, IX-011, IX-012
@@ -74,6 +75,7 @@ PR 34/2023 Pasal 15–16, 59 dan Lampiran I menjadikan DPT syarat metode tertent
 - [BR-007](../02-domain/BUSINESS_RULES.md#br-007)
 - [BR-008](../02-domain/BUSINESS_RULES.md#br-008)
 - [BR-034](../02-domain/BUSINESS_RULES.md#br-034)
+- [BR-039](../02-domain/BUSINESS_RULES.md#br-039)
 - [INV-022](../02-domain/BUSINESS_RULES.md#inv-022)
 
 ## ARCHITECTURE RULES
@@ -204,12 +206,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Kelengkapan dokumen dicek terhadap katalog kebijakan per bentuk usaha
 - TAC-02 Keputusan DPT dan pengeluaran tercatat sebagai peristiwa dengan rujukan
 - TAC-03 Dokumen kedaluwarsa memunculkan pekerjaan pembaruan
+- TAC-04 Penilaian untuk perusahaan selain penyedia kontrak atau penilaian FINAL kedua untuk kontrak yang sama ditolak; penilaian FINAL tidak dapat diubah (DI-29)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-007
+- Feature: WF-007; DI-29 (uji negatif langsung DB)
 - Authorization: vendor.dpt.decide
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Bagian J-15

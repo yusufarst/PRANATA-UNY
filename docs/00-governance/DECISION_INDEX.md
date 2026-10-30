@@ -2,7 +2,7 @@
 
 Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 P0–P11 planning) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
 
-This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and provenance. OD-01–OD-20 derive from U-001; OD-21–OD-23 derive from U-002 on 2026-10-04. They remain OWNER_APPROVED_DECISION with candidate/preferred/unresolved qualifications. Direction alone implies no generated-artifact approval; separate explicit P1 approval is APPR-002. OD-24–OD-25 and GOV-07–GOV-09 derive from U-005 (2026-10-06). OD-26–OD-34 and GOV-10–GOV-12 derive from U-006–U-010 (2026-10-30). Current Owner Decisions: OD-01–OD-34.
+This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and provenance. OD-01–OD-20 derive from U-001; OD-21–OD-23 derive from U-002 on 2026-10-04. They remain OWNER_APPROVED_DECISION with candidate/preferred/unresolved qualifications. Direction alone implies no generated-artifact approval; separate explicit P1 approval is APPR-002. OD-24–OD-25 and GOV-07–GOV-09 derive from U-005 (2026-10-06). OD-26–OD-34 and GOV-10–GOV-12 derive from U-006–U-010 (2026-10-30); OD-35–OD-36 derive from U-011 (2026-10-30). Current Owner Decisions: OD-01–OD-36.
 
 | ID | Subject | Canonical record |
 |---|---|---|
@@ -40,6 +40,8 @@ This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and pro
 | OD-32 | First Procurement UAT; scale; RTO 4 h / RPO 1 h design objectives | [OD-32](DECISION_LOG.md#od-32) |
 | OD-33 | Claude-owned UX design; low-click, data-once, no dead interactions | [OD-33](DECISION_LOG.md#od-33) |
 | OD-34 | Visual identity: Deep Navy #172554, Ice Blue #EFF6FF, white surfaces | [OD-34](DECISION_LOG.md#od-34) |
+| OD-35 | Several winners per package by award scope (item/lot) where permitted | [OD-35](DECISION_LOG.md#od-35) |
+| OD-36 | Offer evaluation as top procurement priority; method/type/value-aware steps and documents | [OD-36](DECISION_LOG.md#od-36) |
 | GOV-01 | Framework / authority / agents | [GOV-01](DECISION_LOG.md#gov-01--framework-and-durable-authority) |
 | GOV-02 | P0-only scope and final state | [GOV-02](DECISION_LOG.md#gov-02--p0-only-authorization-and-terminal-state) |
 | GOV-03 | Source/Git/privacy restrictions | [GOV-03](DECISION_LOG.md#gov-03--source-and-git-safety) |

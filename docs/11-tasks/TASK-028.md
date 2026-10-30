@@ -40,7 +40,7 @@ Ekstensi metode WF-005 tidak boleh memaksakan satu urutan; langkah yang applicab
 - Panel penugasan paket memakai TASK-015 + aturan SOD-01–03 dari `procurement.authority`
 - Model `proc_package_step_plans` (dibangkitkan; `reference_date`, `generation_reason`; `policy_version_id` keluarga utama `procurement.documents` dan semua versi penyumbang — `procurement.methods`, serta `procurement.authority` bila dipakai — di `policy_version_uses`)
 - Pemicu regenerasi: perubahan metode/jenis/rezim paket, atau — setelah aktivasi versi salah satu keluarga penyumbang — job menemukan rencana aktif yang versi berlakunya pada `reference_date` berbeda dari yang tercatat; rencana versi baru dibuat, langkah terdampak ditandai untuk ditelaah, rencana lama beserta rujukan versinya tetap
-- Tampilan langkah: wajib/opsional/tidak berlaku/bersyarat, dengan status dan dokumen terkait
+- Tampilan langkah dan dokumen: wajib/opsional/bersyarat/tidak berlaku/menunggu validasi, dengan alasan, sumber, status dan dokumen terkait; kunci penerapan rezim × metode × varian × jenis × pita nilai; pita nilai dan varian ikut memicu regenerasi
 - Label simulasi bila kebijakan DRAFT
 
 ## OUT OF SCOPE
@@ -60,12 +60,12 @@ Ekstensi metode WF-005 tidak boleh memaksakan satu urutan; langkah yang applicab
 ## TRACEABILITY
 
 - CAP: CAP-05, CAP-06
-- AC/NFR: AC-07, AC-30
+- AC/NFR: AC-07, AC-30, AC-35
 - WF/TR: WF-005 (TR-041–TR-045, 5 TR; BLOCKED_BY_GAP: TR-044)
 - RT: RT-005
 - IX: IX-001, IX-021
 - GAP: GAP-003, GAP-004, GAP-014
-- Keputusan Owner: OD-27, OD-28
+- Keputusan Owner: OD-27, OD-28, OD-36
 
 ## EXPECTED MODULES / FILE AREAS
 
@@ -203,8 +203,10 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 - TAC-01 PPK tidak dapat sekaligus Pokja/Pejabat Pengadaan pada paket sama (kebijakan PR 34/2023 DRAFT)
 - TAC-02 Rencana langkah berbeda untuk PL dan Tender sesuai kebijakan
-- TAC-03 Perubahan metode membangkitkan ulang rencana dan menandai langkah terdampak
-- TAC-04 Versi baru `procurement.documents` atau `procurement.methods` yang berlaku pada tanggal acuan paket menghasilkan rencana versi baru; rencana lama mempertahankan rujukan semua versi penyumbangnya (DI-16)
+- TAC-03 Paket pekerjaan konstruksi menampilkan dokumen teknis tambahan menurut matriks (atau menunggu validasi beserta alasan), paket barang tidak; kombinasi tanpa aturan tampil menunggu validasi, tidak diam-diam wajib atau tidak berlaku
+- TAC-04 Perubahan pita nilai (misalnya HPS ditetapkan) atau varian tender membangkitkan rencana versi baru
+- TAC-05 Perubahan metode membangkitkan ulang rencana dan menandai langkah terdampak
+- TAC-06 Versi baru `procurement.documents` atau `procurement.methods` yang berlaku pada tanggal acuan paket menghasilkan rencana versi baru; rencana lama mempertahankan rujukan semua versi penyumbangnya (DI-16)
 
 ## TEST REQUIREMENTS
 

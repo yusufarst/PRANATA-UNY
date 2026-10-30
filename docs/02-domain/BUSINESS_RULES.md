@@ -2,7 +2,7 @@
 
 Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
-Dokumen ini memiliki **kata-kata kanonik 35 aturan BR-001–BR-035 dan 22 invariant INV-001–INV-022**. [DOMAIN_GLOSSARY](DOMAIN_GLOSSARY.md) memiliki istilah, [DOMAIN_MODEL](DOMAIN_MODEL.md) konsep/relasi, [DOMAIN_RESPONSIBILITIES](DOMAIN_RESPONSIBILITIES.md) tanggung jawab, [DOMAIN_LIFECYCLES](DOMAIN_LIFECYCLES.md) makna lifecycle, dan [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) pemetaan balik. Dokumen lain merujuk ID ini; tidak membuat salinan aturan yang dapat bersaing.
+Dokumen ini memiliki **kata-kata kanonik 39 aturan BR-001–BR-039 dan 24 invariant INV-001–INV-024**. [DOMAIN_GLOSSARY](DOMAIN_GLOSSARY.md) memiliki istilah, [DOMAIN_MODEL](DOMAIN_MODEL.md) konsep/relasi, [DOMAIN_RESPONSIBILITIES](DOMAIN_RESPONSIBILITIES.md) tanggung jawab, [DOMAIN_LIFECYCLES](DOMAIN_LIFECYCLES.md) makna lifecycle, dan [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) pemetaan balik. Dokumen lain merujuk ID ini; tidak membuat salinan aturan yang dapat bersaing.
 
 Persetujuan P1 [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002) mempertahankan semua kualifikasi hipotesis/usulan dan kewajiban validasinya. P2 ini APPROVED under APPR-003 dengan kualifikasi yang tetap berlaku; persetujuan katalog konseptual tidak mengesahkan kebijakan institusi yang belum tervalidasi. Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF. Penyerahan ke fase kelak berarti kewajiban ketika fase itu memperoleh otorisasi terpisah.
 
@@ -373,6 +373,46 @@ Semua dependency di bawah mengacu pada [GAP_REGISTER](../00-governance/GAP_REGIS
 - **Cakupan:** CAP-05/09; AC-07/12.
 - **Dependency/penyerahan:** GAP-028. **Kualifikasi:** V1 mencatat dan memperingatkan; tidak memblokir berdasarkan saldo keuangan yang tidak dimiliki PRANATA.
 
+### BR-036
+
+**Judul:** Evaluasi penawaran menurut skema yang dibekukan.
+
+- **Domain:** Pemilihan Penyedia, Skema Evaluasi, Penawaran, Evaluasi, Klarifikasi dan Negosiasi.
+- **Pernyataan:** Penawaran dievaluasi terhadap metode, persyaratan, kriteria dan tahapan yang ditetapkan dalam dokumen pengadaan pemilihan itu dan dibekukan sebelum penawaran dibuka. Evaluator maupun penyedia tidak menambah, mengurangi, mengganti atau mengubah isi penawaran; klarifikasi, koreksi aritmetik dan negosiasi dicatat terpisah dan tertaut ke penawaran asli. Hasil setiap tahap per peserta dan per lingkup penghargaan menyatakan lulus atau tidak lulus dengan alasan dan rujukan bukti; tahap gugur menghentikan penilaian tahap berikutnya bagi peserta itu pada lingkup itu. Evaluasi ulang membuat putaran baru beralasan tanpa menghapus putaran sebelumnya. Sistem menghitung dan membandingkan hanya menurut skema yang dibekukan dan tidak menetapkan pemenang.
+- **Otoritas/status:** EVIDENCE_SUPPORTED PR 34/2023 Lampiran III B.3.a.1.c, B.3.a.3, B.3.b.6–7, C.4.a.1.c–e, C.4.b.1.g–h, D.2.b.5–6 (SRC-048, [RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)); prioritas APPROVED_OWNER_DIRECTION [OD-36](../00-governance/DECISION_LOG.md#od-36); metode evaluasi yang diizinkan, aturan koreksi dan ambang per metode BLOCKED_BY_GAP.
+- **Cakupan:** CAP-05/08; AC-07/33.
+- **Dependency/penyerahan:** GAP-003/013/017/026; P4 kebijakan `procurement.evaluation` dan model data, P5 penugasan evaluator, P6 integritas, P7 ruang kerja evaluasi. **Kualifikasi:** Bobot, ambang dan metode berasal dari dokumen pengadaan yang ditetapkan pejabat, bukan dari aplikasi; perhitungan dengan kebijakan belum aktif berlabel simulasi (INV-022).
+
+### BR-037
+
+**Judul:** Lingkup penghargaan dan beberapa pemenang.
+
+- **Domain:** Paket, Lingkup Penghargaan, Hasil, SPPBJ, Kontrak, Serah Terima dan Pelacakan Pembayaran.
+- **Pernyataan:** Satu paket dapat dibagi menjadi beberapa lingkup penghargaan (lot atau item) yang ditetapkan dalam dokumen pengadaan sebelum penawaran dibuka; setiap item berada pada tepat satu lingkup. Setiap lingkup ditawar, dievaluasi, diperingkat dan dihasilkan tersendiri, sehingga satu paket dapat mempunyai lebih dari satu pemenang dan satu penyedia dapat memenangkan beberapa lingkup. Satu lingkup tidak dihargakan kepada dua penyedia kecuali kebijakan yang berlaku mengizinkan beberapa penyedia untuk bentuk perjanjian tertentu (misalnya kontrak payung). SPPBJ bila berlaku, kontrak, baris kontrak, serah terima dan pembayaran hanya mencakup lingkup penyedia yang bersangkutan; aktivasi cadangan pada satu lingkup tidak mengubah lingkup lain.
+- **Otoritas/status:** APPROVED_OWNER_DIRECTION [OD-35](../00-governance/DECISION_LOG.md#od-35); kontrak payung dengan satu atau lebih penyedia dan pemanggilan calon pemenang kedua/ketiga EVIDENCE_SUPPORTED PR 34/2023 Pasal 31 ayat (7), Pasal 38 ayat (4)–(5) (SRC-048); metode/jenis yang mengizinkan lot atau item BLOCKED_BY_GAP.
+- **Cakupan:** CAP-05/09; AC-07/12/34.
+- **Dependency/penyerahan:** GAP-003/017/027; P4 lingkup penghargaan dan FK lingkup, P6 eksklusivitas, P7 hasil per lingkup. **Kualifikasi:** Paket satu lingkup tetap berperilaku seperti satu pemenang per paket; pembagian lot tidak dibuat sesudah penawaran dibuka.
+
+### BR-038
+
+**Judul:** Jumlah penyedia dan kegagalan pemilihan tanpa penawaran fiktif.
+
+- **Domain:** Pemilihan Penyedia, Undangan, Partisipasi dan Hasil.
+- **Pernyataan:** Jumlah penyedia yang dijajaki, diundang, menyampaikan penawaran, penawaran yang memenuhi syarat dan yang dievaluasi adalah besaran berbeda yang dicatat terpisah. Jumlah minimum hanya ditegakkan bila bersumber pada aturan yang berlaku — misalnya undangan sekurang-kurangnya tiga penyedia DPT untuk Quotation, atau tender terbatas/dua tahap yang gagal bila peserta lulus kualifikasi kurang dari tiga — sedangkan praktik setempat, seperti tiga penawaran pada Pengadaan Langsung, ditampilkan sebagai praktik yang belum disahkan. Pemilihan atau lingkup dinyatakan gagal hanya dengan alasan dan dasar yang tercatat, misalnya tidak ada penawaran yang memenuhi syarat atau negosiasi Penunjukan Langsung tidak mencapai kesepakatan; tidak ada penawaran atau peserta fiktif untuk memenuhi angka.
+- **Otoritas/status:** EVIDENCE_SUPPORTED PR 34/2023 Lampiran III B.3.b.1, B.3.b.7, C.4.b.2.d, D.2.b.5–6 (SRC-048); praktik tiga penawaran OBSERVED_CURRENT_PROCESS [U-011](../00-governance/SOURCE_INVENTORY.md#u-011-owner-procurement-field-findings-of-2026-10-30); penerapan per metode BLOCKED_BY_GAP.
+- **Cakupan:** CAP-05/06; AC-08/35.
+- **Dependency/penyerahan:** GAP-003/017/029; P4 kebijakan, P7 tampilan jumlah. **Kualifikasi:** Undangan yang memenuhi minimum tidak menjamin jumlah penawaran; satu atau dua penawaran tetap dievaluasi menurut aturan yang berlaku.
+
+### BR-039
+
+**Judul:** Penilaian kinerja dan pascapenghargaan terpisah dari evaluasi penawaran.
+
+- **Domain:** Pemeriksaan, Penilaian Kinerja Penyedia, Permintaan dan Pelacakan Pembayaran.
+- **Pernyataan:** Pemeriksaan hasil pekerjaan, penilaian kinerja penyedia dan permintaan pembayaran adalah catatan pascapenghargaan yang terhubung ke kontrak dan lingkupnya, terpisah dari evaluasi penawaran. Penilaian kinerja dibuat oleh fungsi yang berwenang atas kontrak yang telah selesai berdasarkan kualitas, kuantitas dan waktu sesuai kontrak, dan dapat menjadi masukan evaluasi DPT; ia tidak mengubah hasil pemilihan yang telah lalu.
+- **Otoritas/status:** EVIDENCE_SUPPORTED PR 34/2023 Pasal 9 ayat (2) huruf b angka 7 dan huruf c angka 4, Pasal 14 ayat (2), Pasal 41, Lampiran I E (SRC-048); APPROVED_OWNER_DIRECTION [OD-36](../00-governance/DECISION_LOG.md#od-36).
+- **Cakupan:** CAP-07/09; AC-12/36.
+- **Dependency/penyerahan:** GAP-003/018/026/028; P4/P5/P7. **Kualifikasi:** Skala penilaian dan publikasinya ke profil DPT menunggu validasi; BR-012 tetap: pelacakan pembayaran bukan transfer dana.
+
 ## Katalog invariant
 
 ### INV-001
@@ -573,6 +613,24 @@ Semua dependency di bawah mengacu pada [GAP_REGISTER](../00-governance/GAP_REGIS
 - **Cakupan:** CAP-13/17/23; AC-16/32.
 - **Dependency/penyerahan/kualifikasi:** GAP terkait setiap kebijakan; P4/P7 mekanisme label.
 
+### INV-023
+
+**Judul:** Pembukaan tidak menggugurkan dan penawaran asli tidak berubah.
+
+- **Domain/pernyataan:** Penawaran — pencatatan pembukaan hanya membacakan dan mencatat kelengkapan; ia tidak meluluskan atau menggugurkan penawaran. Isi penawaran yang diterima (waktu terima, nilai yang dibacakan, berkas dan rincian harga) tidak dapat diubah atau dihapus; perbaikan, klarifikasi dan koreksi menjadi catatan baru yang tertaut.
+- **Otoritas/status/sumber:** EVIDENCE_SUPPORTED PR 34/2023 Lampiran III B.3.b.5.e, B.3.b.6.b, C.4.b.1.f–g (SRC-048).
+- **Cakupan:** CAP-05/07; AC-09/33.
+- **Dependency/penyerahan/kualifikasi:** GAP-029 (kanal penerimaan); P4/P6 menegakkan dengan hak kolom dan trigger.
+
+### INV-024
+
+**Judul:** Lingkup penghargaan eksklusif sampai dokumen hilir.
+
+- **Domain/pernyataan:** Lingkup Penghargaan — setiap item paket berada pada tepat satu lingkup; satu lingkup tunggal mempunyai paling banyak satu pemenang pada hasil yang berlaku; SPPBJ, kontrak, baris kontrak dan serah terima seorang pemenang hanya mencakup lingkup yang dimenanginya dan tidak pernah lingkup pemenang lain.
+- **Otoritas/status/sumber:** APPROVED_OWNER_DIRECTION [OD-35](../00-governance/DECISION_LOG.md#od-35); PROPOSED sebagai invariant turunan BR-037.
+- **Cakupan:** CAP-05/09; AC-34.
+- **Dependency/penyerahan/kualifikasi:** GAP-003/017/027; P4/P6 FK lingkup dan indeks unik parsial; lingkup dengan beberapa penyedia hanya bila kebijakan mengizinkan.
+
 ## Konflik, batas validasi dan keputusan yang dibutuhkan
 
 | Konflik/ketidakpastian | Sumber dan klasifikasi | Aturan terkait / dependency OPEN | Aman dalam P2; yang tetap blocked |
@@ -594,5 +652,5 @@ P3 kelak menentukan urutan/prosedur/status transitions dan tanggung jawab yang s
 
 ## Amandemen kompatibilitas 2026-10-30
 
-Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Menambahkan BR-031–BR-035 dan INV-020–INV-022 dari OD-27/28/30/31 dan bukti PR 34/2023. Kata-kata BR-001–BR-030 dan INV-001–INV-019 tidak berubah.
+Disusun di bawah [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012); status **VERIFYING / belum disetujui**. Menambahkan BR-031–BR-035 dan INV-020–INV-022 dari OD-27/28/30/31 dan bukti PR 34/2023. Tambahan 2026-10-30 — temuan lapangan pengadaan ([U-011](../00-governance/SOURCE_INVENTORY.md#u-011-owner-procurement-field-findings-of-2026-10-30)): BR-036–BR-039 dan INV-023–INV-024 dari [OD-35](../00-governance/DECISION_LOG.md#od-35)/[OD-36](../00-governance/DECISION_LOG.md#od-36) dan bukti PR 34/2023 ([RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)); aturan yang ada tidak berubah. Kata-kata BR-001–BR-030 dan INV-001–INV-019 tidak berubah.
 

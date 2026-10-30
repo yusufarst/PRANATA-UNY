@@ -18,7 +18,7 @@ Dokumen ini memiliki **batas transaksi, urutan kunci, invarian yang ditegakkan b
 
 Untuk mencegah deadlock, Action mengambil kunci baris dalam urutan global berikut dan, di dalam satu tingkat, menurut kunci terurut naik:
 
-1. Kontainer bisnis: `proc_packages` → `proc_contracts` → `inv_requests`/`inv_returns`/`inv_transfers`/`inv_counts` → `asset_assets` (menurut `id` naik).
+1. Kontainer bisnis: `proc_packages` → `proc_selections` → `proc_contracts` → `inv_requests`/`inv_returns`/`inv_transfers`/`inv_counts` → `asset_assets` (menurut `id` naik).
 2. Penomoran: `numbering_counters` (menurut `scheme_id`, `scope_key`).
 3. Saldo stok: `inv_stock_balances` menurut `(warehouse_id, item_id)` naik.
 4. Proyeksi lain (`asset_assets` kolom proyeksi bila belum dikunci di tingkat 1).
@@ -35,16 +35,20 @@ Contoh serah terima (TR-295): kunci `inv_requests` baris permintaan → kunci sa
 | Nomor dokumen unik (OD-29) | `UNIQUE(document_type, number_text)` (lintas skema) dan `UNIQUE(scheme_id, scope_key, sequence_value)`; satu skema ACTIVE per jenis dokumen |
 | Satu penetapan metode berlaku per paket | Unique parsial `WHERE status = 'DETERMINED'` |
 | Satu HPS ditetapkan per paket | Unique parsial `WHERE status = 'SET'` |
-| Satu hasil ditetapkan per paket | Unique parsial `WHERE status IN ('DETERMINED','ANNOUNCED')` |
+| Satu hasil berlaku per lingkup penghargaan pada satu pemilihan | Unique parsial `(selection_id, scope_id) WHERE status IN ('DETERMINED','ANNOUNCED')`; paling banyak satu pemilihan ACTIVE per paket; satu lingkup pada paling banyak satu pemilihan ACTIVE (constraint trigger) |
+| Satu skema evaluasi beku per pemilihan dan tidak berubah | Unique parsial `WHERE status = 'FROZEN'`; trigger menolak perubahan skema FROZEN beserta tahap/kriteria dan penggantian sesudah pembukaan pertama |
+| Penawaran asli imutabel; pembukaan tidak menggugurkan (INV-023) | Hak kolom `UPDATE (status, opened_at)` + trigger `forbid_offer_change()`; lingkup, rincian harga dan entri pembukaan append-only; entri pembukaan tidak memiliki kolom hasil |
+| Lingkup penghargaan eksklusif (INV-024) | Item → tepat satu lingkup (`award_scope_id`); `uq(result_id) WHERE role='WINNER' AND award_mode='SINGLE'`; `uq(scope_id) WHERE is_active AND award_mode='SINGLE'` pada lingkup SPPBJ dan kontrak; FK `(package_item_id, scope_id)` pada baris penawaran dan baris kontrak; FK ke peringkat dengan `role = 'WINNER'`; perusahaan kontrak = perusahaan partisipasi pemenang melalui FK `(participation_id, company_id)` |
+| Ketidaklulusan dan kegagalan beralasan | `CHECK` alasan pada hasil kriteria/tahap FAIL, pemilihan FAILED, hasil FAILED/SUPERSEDED dan reviu NOT_AGREED |
 | Satu versi berlaku per kunci dan tanggal | `EXCLUDE USING gist` atas jendela versi ACTIVE/SUPERSEDED untuk kebijakan, template dokumen dan klasifikasi aset; aktivasi menutup jendela versi sebelumnya secara atomik di bawah kunci baris induk; tanpa tanggal mundur (`effective_from` ≥ tanggal aktivasi) |
-| Konsistensi induk lintas record | FK komposit `(rujukan, lingkup)`: peringkat/evaluasi/negosiasi ↔ partisipasi paket yang sama, hasil ↔ paket, SPPBJ ↔ hasil paket yang sama, kontrak ↔ SPPBJ paket yang sama, baris BAST ↔ baris kontrak yang sama, serah terima gudang ↔ permintaan dan gudangnya, baris serah terima ↔ baris permintaan dan barangnya; kolom lingkup tidak dapat diubah (`forbid_scope_change()`); perusahaan kontrak = pemenang dan penugasan kontribusi SPPBJ = paket yang sama diperiksa constraint trigger |
+| Konsistensi induk lintas record | FK komposit `(rujukan, lingkup)`: pemilihan/lingkup ↔ paket, skema/putaran/kriteria ↔ pemilihan dan skema yang sama, hasil kriteria/tahap/klarifikasi/negosiasi ↔ partisipasi dan lingkup pemilihan yang sama, hasil ↔ lingkup pemilihan, peringkat ↔ hasil dan partisipasi pemilihan yang sama, SPPBJ/kontrak ↔ partisipasi pemenang dan lingkupnya, kontrak ↔ SPPBJ pemenang yang sama, baris BAST ↔ baris kontrak yang sama, serah terima gudang ↔ permintaan dan gudangnya, baris serah terima ↔ baris permintaan dan barangnya; kolom lingkup tidak dapat diubah (`forbid_scope_change()`); perusahaan kontrak = pemenang dan penugasan kontribusi SPPBJ = paket yang sama diperiksa constraint trigger |
 | Satu peristiwa fisik satu posting | Unique identitas sumber `(source_type, source_id, source_line_id, movement_type)` pada `inv_stock_movements` dan pola yang sama pada `asset_transactions`; berlaku walaupun kunci idempotensi berbeda; kecocokan gerakan dengan baris sumbernya diperiksa constraint trigger per jenis sumber |
 | Pembalikan tunggal dan cocok | `uq(reversal_of_id)` + trigger `check_stock_reversal()`/`check_asset_reversal()` (entitas, jumlah, arah; bukan pembalikan atas pembalikan; stok: membawa sumber koreksi dan alasan; aset: hanya transaksi terakhir aset yang belum dibalik) |
-| Baris final beku | `forbid_change_when_parent_final()` pada baris HPS setelah SET, baris penerimaan setelah POSTED, baris opname setelah CLOSED, baris transfer setelah DISPATCHED, baris serah terima gudang sejak diposting dan baris BAST setelah SIGNED (kecuali klasifikasi/rujukan hilir); `proc_contract_lines` append-only per versi kontrak dengan FK `(contract_id, version_no)` dan `uq(contract_id, version_no, line_no)` |
+| Baris final beku | `forbid_change_when_parent_final()` pada baris HPS setelah SET, baris penerimaan setelah POSTED, baris opname setelah CLOSED, baris transfer setelah DISPATCHED, baris serah terima gudang sejak diposting dan baris BAST setelah SIGNED (kecuali klasifikasi/rujukan hilir); `proc_contract_lines` append-only per versi kontrak dengan FK `(contract_id, version_no)` dan `uq(contract_id, version_no, line_no)`; tahap dan kriteria skema evaluasi setelah FROZEN, hasil putaran setelah COMPLETED dan peringkat setelah hasil DETERMINED |
 | Satu run penyusutan resmi per periode | Unique parsial untuk status QUEUED/RUNNING/FAILED/COMPLETED; unique baris resmi `(asset_id, period)`; penjaga proyeksi `last_depreciation_period < period` (bagian 6.1) |
 | Maker-checker (tidak lolos bila kosong) | Kebijakan: `CHECK (status <> 'ACTIVE' OR activated_by IS NOT NULL)` + `CHECK (activated_by IS NULL OR (activated_by <> created_by AND activated_by IS DISTINCT FROM submitted_by))`; template: pola yang sama; grant istimewa: `CHECK (status <> 'ACTIVE' OR NOT requires_approval OR approved_by IS NOT NULL)` + `CHECK (approved_by IS NULL OR approved_by <> granted_by)` ([DATA_MODEL](../04-architecture/DATA_MODEL.md)) |
 | Kuantitas serah terima ≤ disetujui | `CHECK` pada `inv_request_lines` |
-| Partisipasi unik per penyedia per paket | `UNIQUE(package_id, company_id)` |
+| Partisipasi unik per penyedia per pemilihan | `UNIQUE(selection_id, company_id)`; undangan unik per pemilihan |
 | Transfer bukan ke gudang sama | `CHECK (to_warehouse_id <> from_warehouse_id)` |
 
 Invarian yang memerlukan konteks (pemisahan tugas, kebijakan ACTIVE, guard TR) ditegakkan Action dan diuji; bila memungkinkan didukung constraint tambahan.
@@ -68,6 +72,12 @@ Invarian yang memerlukan konteks (pemisahan tugas, kebijakan ACTIVE, guard TR) d
 | Dua posting untuk baris sumber yang sama (serah terima, penerimaan, pengembalian, transfer, opname) | Unique identitas sumber; posting kedua → 409 "sudah diposting" tanpa efek parsial, apa pun kunci idempotensinya |
 | Dua pembalikan atas gerakan/transaksi yang sama | `uq(reversal_of_id)`; yang kedua → 409 |
 | Dua aktivasi versi template atau kebijakan bersamaan | Kunci baris induk (template/paket kebijakan) + `EXCLUDE`; yang kedua → 409 dengan versi yang kini berlaku |
+| Pembekuan skema bersamaan dengan pencatatan pembukaan | Kunci baris `proc_selections`; pembukaan mensyaratkan skema FROZEN dan penggantian skema mensyaratkan belum ada pembukaan, keduanya diperiksa di bawah kunci yang sama |
+| Dua evaluator menyimpan hasil kriteria yang sama | `uq(round_id, participation_id, criterion_id, scope) WHERE status = 'VALID'` + `lock_version`; yang kedua → 409 dengan nilai terbaru, tanpa penimpaan |
+| Penyelesaian putaran saat evaluator masih menulis | Kunci baris putaran `FOR UPDATE`; penulisan hasil memeriksa putaran OPEN di bawah kunci yang sama; penyelesaian menolak bila masih ada hasil tahap PENDING |
+| Penetapan hasil bersamaan dengan evaluasi ulang | Kunci baris pemilihan; hasil merujuk putaran COMPLETED, evaluasi ulang menandai putaran SUPERSEDED dan hasil yang belum DETERMINED dibatalkan dalam transaksi yang sama |
+| Dua SPPBJ atau kontrak untuk lingkup yang sama dibuat bersamaan | Unique parsial lingkup aktif; yang kedua → 409 "lingkup sudah dihargakan" |
+| Aktivasi cadangan saat kontrak pemenang lama sedang disiapkan | Kunci pemilihan lalu kontrak; versi hasil baru hanya setelah lingkup SPPBJ/kontrak lama nonaktif; penyiapan kontrak memeriksa hasil masih berlaku |
 
 ## 5. Konkurensi job dan impor
 

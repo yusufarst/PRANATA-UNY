@@ -39,6 +39,7 @@ OD-27/BR-031: lima metode per rezim dengan keputusan manusia yang terlacak.
 - Tabel `proc_method_determinations`; satu DETERMINED per paket; versi `procurement.methods` (utama) dan `procurement.regime` dicatat di `policy_version_uses`
 - State WF-032 (TR-311–316); TR-313/315 hanya dengan kebijakan ACTIVE di produksi
 - Kartu saran IX-023 (memenuhi/tidak memenuhi beserta alasan, tumpang tindih)
+- Varian tender (terbuka/terbatas/dua tahap) wajib untuk Tender; Penunjukan Langsung mensyaratkan dasar keadaan tertentu/kriteria khusus dan bukti persetujuan permintaan oleh Penanggung Jawab Pengadaan saat DETERMINED (CHECK)
 - Nota penetapan metode (dokumen draf) via provider
 - PG-108; kapabilitas `procurement.method.*`
 
@@ -59,7 +60,7 @@ OD-27/BR-031: lima metode per rezim dengan keputusan manusia yang terlacak.
 ## TRACEABILITY
 
 - CAP: CAP-05, CAP-23
-- AC/NFR: AC-07, AC-30, AC-32
+- AC/NFR: AC-07, AC-30, AC-32, AC-35
 - WF/TR: WF-032 (TR-311–TR-316, 6 TR; BLOCKED_BY_GAP: TR-313, TR-315) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
 - RT: RT-035
 - IX: IX-001, IX-003, IX-004, IX-023
@@ -207,7 +208,8 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-04 Perubahan kebijakan sejak saran memaksa tinjau ulang
 - TAC-05 Penetapan baru menggantikan lama dan menandai langkah terdampak
 - TAC-06 Di konfigurasi produksi tanpa kebijakan ACTIVE, tombol tetapkan nonaktif dengan alasan
-- TAC-07 Saran dan penetapan mencatat versi `procurement.methods` dan `procurement.regime` yang dipakai; versi baru salah satunya yang berlaku pada tanggal acuan memaksa tinjau ulang (DI-16)
+- TAC-07 Penetapan Penunjukan Langsung tanpa dasar dan bukti persetujuan permintaan, atau Tender tanpa varian, ditolak aplikasi dan DB
+- TAC-08 Saran dan penetapan mencatat versi `procurement.methods` dan `procurement.regime` yang dipakai; versi baru salah satunya yang berlaku pada tanggal acuan memaksa tinjau ulang (DI-16)
 
 ## TEST REQUIREMENTS
 

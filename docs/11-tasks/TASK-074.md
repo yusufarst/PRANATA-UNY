@@ -167,7 +167,7 @@ SECURITY_MODEL dan ACCESS_CONTROL; AC-31.
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Semua SEC-* dan AUTHZ-* lulus
+- TAC-01 Semua SEC-* dan AUTHZ-* lulus, termasuk AUTHZ-46–AUTHZ-51 untuk evaluasi dan penghargaan per lingkup
 - TAC-02 Tidak ada temuan kritis/tinggi dependensi terbuka
 - TAC-03 Tidak ada rute objek tanpa uji IDOR
 

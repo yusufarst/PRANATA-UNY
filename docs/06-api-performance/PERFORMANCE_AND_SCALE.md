@@ -33,6 +33,7 @@ Dokumen ini memiliki **model beban, anggaran performa, strategi indeks/kueri, sk
 | PB-09 | Run penyusutan 1 juta aset satu periode | ≤ 30 menit, chunk 5.000, tanpa mengunci pengguna lain |
 | PB-10 | Generasi dokumen 1–10 halaman | ≤ 10 detik termasuk PDF |
 | PB-11 | Dashboard per peran | ≤ 1,5 detik (agregat dari indeks/tabel ringkasan) |
+| PB-12 | Ruang kerja evaluasi: matriks 30 peserta × 40 kriteria × 10 lingkup, simpan satu hasil kriteria dan pembaruan ringkasan tahap | Muat ≤ 2 detik; simpan ≤ 700 ms (PB-04); tanpa memuat berkas penawaran ke browser kecuali dibuka |
 
 Anggaran ini adalah target uji. Bila pengukuran gagal, eksekutor mencatat temuan dan mengajukan perbaikan atau penyesuaian anggaran melalui TASK PLAN CHANGE; anggaran tidak dilonggarkan diam-diam.
 

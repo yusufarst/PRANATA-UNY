@@ -65,6 +65,8 @@ Dibutuhkan sebelum TASK-040 (staging), TASK-076 (produksi) dan TASK-077 (cadanga
 | D-23 | Pemeriksa uptime eksternal | Gratis/self-hosted pada host terpisah milik klien | INFRASTRUCTURE |
 | D-24 | Penandatangan UAT per tahap (jabatan, bukan nama) | UAT-1: pimpinan Pengadaan yang ditunjuk dengan pemeriksaan PPK, bisnis dan Keuangan (OD-32); UAT-2: kepala Gudang ALP dan PSRT; UAT-3: pimpinan Aset bersama Keuangan; UAT-4: Owner | [UAT_PLAN](../10-release/UAT_PLAN.md) |
 
+Catatan tafsir (bukan keputusan baru): UAT-1 tetap tanpa pengiriman penawaran oleh penyedia (OD-32), tetapi mencakup evaluasi atas penawaran sintetis yang dicatat petugas dan hasil per lingkup (UAT-P13/P14), karena penyiapan dokumen kontrak memerlukan hasil pemilihan dan evaluasi adalah prioritas Owner (OD-36). Bila Owner menghendaki lain, sebutkan bersama jawaban D-24.
+
 ## F. Penyelesaian GAP
 
 Tidak ada GAP yang diselesaikan oleh perencanaan. Fitur dibangun dengan kebijakan DRAFT berlabel simulasi; aksi resmi di produksi menunggu jawaban resmi ([TRACEABILITY_MATRIX — Perlakuan GAP](../11-tasks/TRACEABILITY_MATRIX.md#perlakuan-gap)). Urutan penyelesaian setiap aturan: Owner memperoleh jawaban resmi → GAP dicatat RESOLVED dengan bukti → steward menyusun versi kebijakan → pemeriksa yang berbeda mengaktifkannya ([POLICY_REGISTRY](../04-architecture/POLICY_REGISTRY.md)).
@@ -97,7 +99,11 @@ GAP-020 tidak relevan untuk V1 (OD-24).
 | GAP-029 | Untuk setiap metode, kanal resmi mana yang dipakai dan apakah penawaran/klarifikasi/pengumuman boleh dilakukan di PRANATA? | Kanal per metode; di PRANATA: tidak / sebagian / ya | Konfirmasi tertulis pengelola pengadaan |
 | GAP-003/004 | Siapa penyusun, pemeriksa, penerbit dan penanda tangan SPPBJ per metode; siapa menetapkan metode dan HPS? | Peran per langkah (default dari masukan Owner SRC-052) | Prosedur resmi terkini |
 | GAP-017 | Varian dokumen dan penomoran per metode yang berlaku sekarang | Daftar varian + skema nomor | Templat resmi terkini |
-| GAP-003/013/017 (hasil pemilihan) | Apakah ada metode atau jenis pengadaan di UNY yang menetapkan **lebih dari satu pemenang dalam satu paket** (misalnya per item atau per lot)? Bila ada, bagaimana hasil, SPPBJ dan kontrak dicatat? | Tidak ada — satu pemenang per paket / Ada, untuk metode … dengan aturan … | Prosedur resmi atau contoh dokumen hasil terkini |
+| GAP-003/017/027 (lot/item) | Owner telah menetapkan bahwa satu paket dapat mempunyai beberapa pemenang per item atau lot ([OD-35](../00-governance/DECISION_LOG.md#od-35)); yang perlu disahkan kustodian adalah **batas prosedurnya**: metode dan jenis mana yang mengizinkan penghargaan per lot/item, bagaimana lot ditetapkan dalam dokumen pengadaan, apakah satu penyedia boleh memenangkan beberapa lot, partisipasi minimum per lot, apakah pengumuman, SPPBJ dan kontrak diterbitkan per pemenang atau per lot, dan kapan satu lot boleh mempunyai beberapa penyedia | Aturan per metode/jenis | Prosedur resmi, dokumen pemilihan atau contoh hasil terkini |
+| GAP-003/013/017 (evaluasi) | Metode evaluasi yang diizinkan dan bawaan per metode/jenis; aturan koreksi aritmetik dan pembanding HPS; ambang lulus dan pemutus nilai sama; jumlah pemenang cadangan; masa sanggah/debriefing; penanda tangan berita acara; tindak lanjut bila reviu PPK sebelum kontrak tidak sependapat | Aturan per metode | Prosedur atau dokumen pemilihan resmi terkini |
+| GAP-017 (dokumen per metode dan jenis) | Dokumen wajib per metode × jenis × pita nilai, termasuk paket pekerjaan konstruksi (gambar kerja, RKS, BoQ/RAB, spesifikasi teknis, SDP) dibanding non-konstruksi; apakah SPPBJ, pembukaan dan BA evaluasi berlaku untuk Pengadaan Langsung; apakah "tiga penawaran" pada Pengadaan Langsung diwajibkan instrumen resmi atau hanya praktik | Daftar per kombinasi; wajib/praktik | Instrumen atau templat resmi terkini |
+| GAP-029 (pbj.uny.ac.id) | Fungsi pbj.uny.ac.id saat ini (undangan saja, atau juga pemasukan dan pengumuman) dan apakah PRANATA boleh mencatat atau menerima penawaran | Fungsi per langkah | Konfirmasi tertulis pengelola pengadaan |
+| GAP-003/026 (kinerja penyedia) | Skala dan kriteria rinci penilaian kinerja penyedia, fungsi penilai menurut nilai, dan publikasinya pada profil DPT | Skala + peran | Prosedur resmi |
 | GAP-028 | Sumber anggaran resmi untuk pemeriksaan internal (RBA/RKA, aplikasi anggaran, DIPA) dan siapa memverifikasi/melepas komitmen | Sumber + peran | Konfirmasi Keuangan |
 | GAP-024 | Apa kepanjangan, definisi dan bentuk laporan BMU, dan siapa yang mewajibkannya? | Definisi + contoh format resmi | Instrumen/format resmi |
 | GAP-025 | Daftar resmi gudang, rantai persetujuan permintaan per jenis, bukti serah terima/konfirmasi, kewenangan transfer dan penyesuaian opname | Aturan per gudang ALP/PSRT | Prosedur gudang resmi |
@@ -106,7 +112,7 @@ GAP-020 tidak relevan untuk V1 (OD-24).
 
 Pertanyaan lengkap dan bukti per GAP ada di [GAP_REGISTER](../00-governance/GAP_REGISTER.md).
 
-Rancangan V1 memakai **asumsi satu pemenang per paket** ([DATA_MODEL §14.3](../04-architecture/DATA_MODEL.md#143-pemilihan)); asumsi ini bukan aturan pengadaan. TASK-035 baru dapat READY setelah pertanyaan hasil pemilihan di atas dijawab, atau setelah Owner mencatat penerimaan asumsi tersebut; bila jawabannya beberapa pemenang, TASK-035–TASK-037 diubah lebih dahulu melalui perubahan rencana.
+Pertanyaan jumlah pemenang per paket yang sebelumnya ada di butir ini **telah dijawab Owner** ([OD-35](../00-governance/DECISION_LOG.md#od-35), temuan lapangan 2026-10-30): rancangan kini mencatat hasil, SPPBJ, kontrak dan serah terima per lingkup penghargaan ([DATA_MODEL §14.3](../04-architecture/DATA_MODEL.md#143-pemilihan)), dan TASK-035 tidak lagi mempunyai prasyarat keputusan Owner. Baris lot/item, evaluasi, dokumen, pbj.uny.ac.id dan kinerja penyedia di atas adalah pertanyaan validasi untuk kustodian UNY (kelompok G-1 pada D-25), bukan pertanyaan ya/tidak kepada Owner; praktik yang dilaporkan staf tetap praktik sampai sumber resmi mengesahkannya ([REGULATORY_SOURCE_REVIEW RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)).
 
 ## G. Ringkasan dampak bila belum dijawab
 
@@ -117,6 +123,6 @@ Rancangan V1 memakai **asumsi satu pemenang per paket** ([DATA_MODEL §14.3](../
 | D-05 | TASK-006 (AppShell) dan Task UI Gudang hanya dapat mengikuti IA kandidat |
 | D-19–D-23 | TASK-040, TASK-076, TASK-077; UAT di staging |
 | D-24 | Pelaksanaan UAT |
-| D-25/D-26 | Aktivasi resmi aturan di produksi; penerimaan V1 untuk AC-16 (GAP-024); READY TASK-035 (jumlah pemenang per paket atau penerimaan asumsi V1) |
+| D-25/D-26 | Aktivasi resmi aturan di produksi (termasuk evaluasi, lot/item dan matriks dokumen per metode); penerimaan V1 untuk AC-16 (GAP-024) |
 | D-27 | Mode otonom (eksekusi terawasi tetap mungkin) |
 | D-28 | Task yang aksi resminya bergantung pada GAP gerbang aktivasi; Task tanpa GAP atau hanya dengan GAP gerbang rilis — TASK-001–TASK-012, TASK-016, TASK-022, TASK-023 dan Task operasi/rilis — tidak tertahan |

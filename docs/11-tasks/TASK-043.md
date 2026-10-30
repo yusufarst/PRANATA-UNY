@@ -42,6 +42,7 @@ CAP-07/AC-09/10 dengan isolasi penyedia (OD-28).
 - Pembaruan profil sebagai permintaan perubahan yang diverifikasi
 - Gerbang `portal.submission.create` dari kebijakan kanal (default OFF)
 - Isolasi: uji IDOR antar-penyedia
+- Penyedia melihat tanda terima penawarannya, hasil yang diumumkan per lingkup dan — menurut kebijakan — alasan gugur penawarannya sendiri; tidak pernah skor atau penawaran penyedia lain (AUTHZ-48)
 
 ## OUT OF SCOPE
 
@@ -85,7 +86,7 @@ CAP-07/AC-09/10 dengan isolasi penyedia (OD-28).
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
-- AUTHZ-30, AUTHZ-33
+- AUTHZ-30, AUTHZ-33, AUTHZ-48
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
@@ -214,7 +215,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Feature: Portal
-- Authorization: AUTHZ-30, AUTHZ-33
+- Authorization: AUTHZ-30, AUTHZ-33, AUTHZ-48
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-15
 - Localization/language switch: Dua bahasa; kunci hilang = 0

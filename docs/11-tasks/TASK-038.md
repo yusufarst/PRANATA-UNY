@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Menyediakan provider data dan template DRAFT untuk dokumen pengadaan set awal: spesifikasi, rincian HPS, nota penetapan metode, undangan, BA penjelasan/pembukaan/evaluasi/negosiasi, BA hasil PL, laporan hasil pemilihan, surat penetapan pemenang, SPPBJ, SPK, kontrak, surat pesanan.
+Menyediakan provider data dan template DRAFT untuk dokumen pengadaan set awal: spesifikasi, rincian HPS, nota penetapan metode, undangan, BA penjelasan/pembukaan/evaluasi/negosiasi, BA evaluasi-klarifikasi-negosiasi Penunjukan Langsung, BA hasil PL, lembar skema evaluasi, lembar evaluasi per lingkup, laporan hasil pemilihan dan surat penetapan pemenang per lingkup, SPPBJ dan kontrak per pemenang, SPK, surat pesanan.
 
 ## WHY THIS EXISTS
 
@@ -40,6 +40,7 @@ OD-29: dokumen terkait dalam beberapa klik dari data yang sama.
 - Provider per jenis dokumen dengan DTO dan skema placeholder
 - Template DOCX DRAFT generik (tanpa nama/nomor/nilai historis) dengan `${status_banner}`
 - Pemetaan template ke rezim/metode/jenis via kebijakan `procurement.documents`
+- Dokumen pemilihan memuat hasil per lingkup dan dapat mencakup beberapa lingkup; dokumen kontrak memuat lingkup pemenangnya
 - Uji template emas per dokumen
 
 ## OUT OF SCOPE
@@ -55,7 +56,7 @@ OD-29: dokumen terkait dalam beberapa klik dari data yang sama.
 ## TRACEABILITY
 
 - CAP: CAP-08
-- AC/NFR: AC-11
+- AC/NFR: AC-11, AC-33
 - WF/TR: WF-028 (TR-271–TR-276, 6 TR; BLOCKED_BY_GAP: TR-274)
 - RT: RT-028
 - IX: IX-010, IX-013
@@ -197,6 +198,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Setiap jenis dokumen set awal dapat dibuat dari data paket tanpa input ulang
 - TAC-02 Banner DRAF/SIMULASI muncul sesuai status
 - TAC-03 Placeholder lengkap terisi (uji emas)
+- TAC-04 BA evaluasi memuat nama seluruh penawar, metode dan unsur evaluasi, lulus/tidak lulus per tahap beserta alasan, tanggal dan pernyataan gagal bila tidak ada penawaran yang memenuhi syarat — dari data putaran yang sama
 
 ## TEST REQUIREMENTS
 

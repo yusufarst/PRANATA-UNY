@@ -11,6 +11,7 @@ Status: VERIFYING — AUTH-012 planning candidate, not approved | Custodian: Pla
 | SRC-051 / REG-04 — Perpres 109/2016 | Identified only. | Concerns functional allowances; not used as a requirement. |
 | SRC-052 / OWN-01 — Owner provisional answers | Read in full; recorded per GAP in [GAP_REGISTER](../GAP_REGISTER.md#owner-provisional-inputs-src-052). | Explicitly not official UNY policy. |
 | SRC-053–SRC-062 — SOP and service diagrams | Images inspected visually. | Observations of process candidates; issuer, version and currentness unverified (GAP-013). |
+| SRC-068 / OWN-02 — procurement field-findings memorandum (U-011) | Read in full; every regulatory statement re-checked against the SRC-048 text layer (RG-07). | Employees' observations are practice, not rules; the memorandum's interpretation is nonbinding. |
 
 No raw source is tracked. Only article locators, short labels and the values needed for configuration are recorded; regulation text is not reproduced at length. Personal names, signatures and transaction data are excluded.
 
@@ -86,11 +87,47 @@ Procurement types: PR 34/2023 uses *barang, pekerjaan konstruksi, jasa non konsu
 4. Official external channels (SiRUP, LPSE/SPSE, e-catalogues, pbj.uny.ac.id, e-market.uny.ac.id) remain authoritative; PRANATA stores references and evidence and does not integrate in V1 (BR-027, GAP-029).
 5. Both regimes' four procurement types are supported; the first Procurement UAT exercises them with synthetic data up to contract-document preparation (OD-32).
 
+## RG-07 Selection, evaluation and award: field findings reconciled
+
+Added 2026-10-30 after the Owner's field findings (U-011, SRC-068). Locators follow the numbering of Lampiran III part I; for example III.B.3.b.5.e means Lampiran III, I huruf B angka 3 huruf b butir 5) huruf e). Every value and statement was re-checked against the SRC-048 text layer.
+
+| Topic | PR 34/2023 (SRC-048) | Planning consequence |
+|---|---|---|
+| Information and offers in Pengadaan Langsung | Specification and price information by telephone, chat, fax, email, official website or store visit; ordering from the provider with the best specification and price; negotiation possible; transaction evidence (III.A.2.a–c). No minimum number of offers is stated. | Market inquiries recorded as researched providers; offers per policy; no minimum enforced (BR-038). |
+| Evaluation criteria fixed in advance | Quotation: lowest price meeting minimum requirements, or *Sistem Nilai* — technical scoring excluding cost, winner by highest technical score and negotiated price (III.B.3.a.1.c); one envelope (III.B.3.a.2). Tender: lowest price, weighted score including cost, *Sistem Nilai*, or total cost of ownership (III.C.4.a.1.c); prequalification or postqualification (III.C.4.a.1.d); one envelope, two envelopes or two stages (III.C.4.a.1.e). Procurement documents contain the requirements, procedures and evaluation stages, HPS, bill of quantities and drawings where any (III.B.3.a.4; III.C.4.a.1.g; III.D.2.a.4). | Evaluation scheme recorded from the procurement documents and frozen before opening (DC-089, BR-036); methods allowed per procurement method in `procurement.evaluation`. |
+| Invitations and channels | Quotation: at least three DPT providers invited through pbj.uny.ac.id (III.B.3.b.1). Open tender: announcement on the UNY website, registration of non-DPT providers for qualification, invitation of all eligible DPT participants (III.C.4.b.1.a–c). Penunjukan Langsung: invitation by letter, fax or email (III.D.2.b.2). Offers reach the Pokja directly or by post before the deadline; late offers are rejected (III.B.3.b.4; III.C.4.b.1.e; III.D.2.b.4). | The invitation minimum is a rule for Quotation only; invited and submitted counts stay distinct; offers recorded by staff unless GAP-029 allows otherwise. |
+| Opening | Same day after the deadline; provider name, offer letter with validity and price (not for two envelopes or two stages) and completeness are read out; minutes with the number of offers, prices, complete and incomplete offers and signatures of the Pokja and provider witnesses; **the Pokja does not disqualify offers at opening** (III.B.3.b.5; III.C.4.b.1.f). | Opening record without any pass/fail effect (INV-023). |
+| Evaluation integrity | Evaluation follows the criteria, requirements and stages fixed in the procurement documents; neither the Pokja nor the provider may add to, reduce, replace or change offer contents; unclear matters are clarified and the clarification result is the basis to accept or reject the offer (III.B.3.b.6; III.C.4.b.1.g; III.D.2.b.5). A Pokja error found after debriefing may lead to re-evaluation or re-tender (III.B.3.a.3). | Immutable offers; clarifications and corrections recorded separately; re-evaluation as a new round (BR-036, INV-023). |
+| Evaluation minutes | Names of all bidders; evaluation method and evaluated elements; pass or fail per stage with reasons; other notes; date; statement that the selection failed when no offer qualifies (III.B.3.b.7; III.C.4.b.1.h). Penunjukan Langsung: minutes of evaluation, clarification and negotiation, with failure when negotiation reaches no agreement (III.D.2.b.6). | Stage results per participant and award scope with mandatory reasons; failure recorded with reason (BR-038). |
+| Award and announcement | The winner is determined from the evaluation minutes in order of rank, naming the package, total cost, provider and offer price; winner **and reserve winner** are announced on the UNY website and official board; debriefing on written request (III.B.3.b.8–9; III.C.4.b.1.i–j). The PA determines the winner above Rp100.000.000.000 (Pasal 9 ayat (2) huruf a angka 13) and declares a tender failed (angka 12). | Ranking with winner and reserves per award scope; deciding function by value from `procurement.authority`. |
+| Tender subtypes | Open, limited and two-stage tender with their criteria (III.C.3); a limited or two-stage tender fails when fewer than three providers pass qualification (III.C.4.b.2.d.2). | Tender variant recorded on the selection; the minimum applies to that subtype only. |
+| Penunjukan Langsung | Special grounds (Pasal 28); request approved by the Penanggung Jawab Pengadaan, with technical review by a competent expert where needed (III.D.2.a.1.a); one envelope; field review where needed; evaluation, clarification (possibly a presentation) and negotiation on technical and cost aspects; no agreement means failure (III.D.2.b.5). | Grounds and approval evidence required for the determination; one provider; failure on no agreement. |
+| E-Purchasing | Order on e-market.uny.ac.id by the PPK or Pejabat Pengadaan; provider response; technical and price negotiation on unit prices considering quantity, shipping and installation or training; with two or more capable providers, negotiation with the cheapest including those costs; agreement; *Surat Pesanan*; ceiling Rp15.000.000.000 (III.E.1–7). | Catalogue options and negotiation, without fictitious offers or opening; negotiation is not disabled. |
+| Review before contract | The PPK reviews the tender or quotation result of the Pokja before signing the contract (Pasal 9 ayat (2) huruf c angka 3; KPA: huruf b angka 4). | Result review recorded; handling of disagreement unvalidated (GAP-003). |
+| Guarantee and reserve | Performance guarantee within 14 working days after the SPPBJ; contract signed after it; on failure the Penanggung Jawab Pengadaan may cancel the SPPBJ and remove the provider from the DPT, then invites the second or third candidate for clarification and negotiation (Pasal 38 ayat (2)–(5)). | Reserve activation as a superseding result for that award scope after cancellation; DPT removal only through a WF-007 decision. |
+| Several providers | No lot or item award provision was found; announcements name the package; a framework agreement is an agreement with one or more providers (Pasal 31 ayat (7) jo. Pasal 30 ayat (4) huruf g). | Several winners by award scope from OD-35; method limits validated under GAP-003/017/027. |
+| After award | The Pengendali Kualitas inspects results, may test them, reports and signs the inspection minutes (Pasal 14 ayat (2)); providers that completed work are assessed by the Penanggung Jawab Pengadaan on quality, quantity and time under the contract (Lampiran I E.1–3; Pasal 9 ayat (2) huruf b angka 7 and huruf c angka 4); payment monthly, per term or lump sum, net of retention, penalties and tax (Pasal 41). | Inspection, performance assessment (DC-091) and payment-request tracking kept separate from offer evaluation (BR-039). |
+
+Field observations compared with official provisions:
+
+| U-011 observation | Provision found in SRC-048 | Classification | Planning treatment |
+|---|---|---|---|
+| Pengadaan Langsung: three bidders or quotations | None in Lampiran III A | OBSERVED_CURRENT_PROCESS (practice) | Informative flag pending validation; never blocks (GAP-017) |
+| Construction Pengadaan Langsung: extensive preparation; non-construction lighter | HPS rules (Pasal 21); agreement evidence by value (Pasal 30; III.A.2.d–f); minimum procurement documents listed for Quotation, Tender and Penunjukan Langsung only | Practice, partly EVIDENCE_SUPPORTED | Applicability matrix with `PENDING_VALIDATION` where unevidenced (GAP-017) |
+| Quotation through pbj.uny.ac.id | Invitations through pbj.uny.ac.id; offers to the Pokja directly or by post | EVIDENCE_SUPPORTED for invitations; other portal functions unknown | Channel references (GAP-029) |
+| Tender open to as many qualified bidders as allowed | Open tender only; limited and two-stage tender use prequalification and fail below three qualified | EVIDENCE_SUPPORTED with subtype distinction | Tender variant on the selection |
+| Penunjukan Langsung: one supplier with justification | Pasal 28; III.D | EVIDENCE_SUPPORTED | Grounds and approval evidence |
+| E-Purchasing: catalogue, order, delivery, handover and inspection, payment | III.E.1–7 for order, negotiation and *Surat Pesanan*; delivery, handover and payment follow the contract provisions | EVIDENCE_SUPPORTED and practice | Catalogue flow; post-award like other agreements |
+| Evaluation is the hardest part of the work | — | Owner priority (OD-36) | Evaluation workspace |
+| Several winners per package by item or lot | No explicit provision; framework agreements with one or more providers | OWNER_APPROVED_DECISION (OD-35); limits unvalidated | Award scopes (GAP-003/017/027) |
+
 ## Items not verified
 
 - The currentness of PR 34/2023 and whether a later Rector regulation amends it.
 - Perpres 12/2021 text and LKPP implementing regulations.
 - Exact spelling of the e-catalogue URL (OCR shows `unyy`).
+- Current functions of pbj.uny.ac.id (invitation only, or also submission and announcement) and of the UNY e-market.
+- Whether a current UNY instrument defines lot or item award, or a minimum number of quotations for Pengadaan Langsung.
 - The legal mapping of UNY funding sources to regimes.
 
-These items stay with GAP-026/027/029; no planning document treats them as settled.
+These items stay with GAP-003/017/026/027/029; no planning document treats them as settled.

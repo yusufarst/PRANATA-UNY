@@ -160,7 +160,7 @@ OD-16/22/32; NFR-P01–P04; GAP-016.
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 PB-01–PB-11 diukur, termasuk PB-01 (daftar aset) dan PB-09 (run penyusutan) pada 1 juta aset; setiap PB terpenuhi atau temuan dicatat dan diajukan ke Planning Agent
+- TAC-01 PB-01–PB-12 diukur, termasuk PB-01 (daftar aset) dan PB-09 (run penyusutan) pada 1 juta aset serta PB-12 (ruang kerja evaluasi); setiap PB terpenuhi atau temuan dicatat dan diajukan ke Planning Agent
 - TAC-02 Generator deterministik dan dapat diulang
 - TAC-03 Bukti EXPLAIN dan hasil k6 tersimpan
 

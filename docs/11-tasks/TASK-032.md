@@ -1,22 +1,22 @@
-# TASK-032 — Kegiatan paket, jadwal dan undangan (WF-006)
+# TASK-032 — Pemilihan, lingkup penghargaan, skema evaluasi, kegiatan dan undangan (WF-006)
 
 Status dokumen: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
 STATUS: TODO
 EXECUTION STAGE: —
-RISK CLASS: STANDARD
+RISK CLASS: HIGH
 MILESTONE: M3 — Pengadaan inti (R1 / UAT-1)
 PARALLEL SAFE: YES
 ```
 
 ## OBJECTIVE
 
-Mewujudkan kegiatan paket (penjelasan, pembukaan, evaluasi, klarifikasi, negosiasi, survei lapangan, pengumuman), jadwal kalender, peserta, undangan penyedia beserta kanal resmi dan pencatatan hasil terpisah dari jadwal.
+Mewujudkan persiapan pemilihan: pemilihan per penetapan metode, lingkup penghargaan (paket/lot/item) dengan penempatan item, skema evaluasi dari dokumen pengadaan (tahap, kriteria, bobot/ambang, bukti yang diminta) yang dibekukan sebelum pembukaan, kegiatan dan jadwal, undangan dengan kanal resmi, penjajakan Pengadaan Langsung, dan strip jumlah penyedia.
 
 ## WHY THIS EXISTS
 
-CAP-06/AC-08 dan IX-020.
+OD-35/OD-36, BR-036–BR-038, CAP-06/AC-08/AC-33–AC-35: evaluasi yang andal dimulai dari lingkup dan kriteria yang ditetapkan sebelum penawaran dibuka (PR 34/2023 Lampiran III B.3.a.1.c, C.4.a.1.c–e).
 
 ## DEPENDS ON
 
@@ -34,18 +34,22 @@ CAP-06/AC-08 dan IX-020.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-027, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
-- Tabel `proc_activities`, `proc_activity_participants`, `proc_invitations`
-- State WF-006 (TR-051–055)
-- PG-109 kalender minggu/bulan + daftar; panel detail
-- Undangan dengan pemeriksaan jumlah minimum dan DPT dari kebijakan (mis. Quotation ≥ 3 DPT)
-- Notulen sebagai dokumen draf
+- Tabel `proc_award_scopes`, kolom `proc_package_items.award_scope_id` (migrasi pemilik tabel tujuan, DATA_MODEL §19 aturan 5), `proc_selections`, `proc_selection_scopes`, `proc_evaluation_schemes`, `proc_evaluation_stages`, `proc_evaluation_criteria`, `proc_activities` (dengan `selection_id`), `proc_activity_participants`, `proc_invitations` (per pemilihan), `proc_market_inquiries`
+- Lingkup PACKAGE bawaan; pembagian lot/item sebelum skema dibekukan; trigger eksklusivitas lingkup dan penolakan perubahan sesudah FROZEN (DI-21)
+- Skema: metode evaluasi yang diizinkan dari `procurement.evaluation`, tahap dan kriteria dari dokumen pengadaan beserta sumbernya, validasi kelengkapan, pembekuan oleh `POKJA_CHAIR`/`PEJABAT_PENGADAAN`, penggantian hanya dengan rujukan adendum sebelum pembukaan (DI-22)
+- State WF-006 (TR-051–055); undangan dengan pemeriksaan minimum yang bersumber aturan (Quotation ≥ 3 DPT) dan praktik setempat yang informatif
+- PG-109 kalender + daftar, PG-110 (undangan, penjajakan, strip jumlah), PG-122 (skema dan lingkup)
+- Kolom lingkup `package_id`/`selection_id` tidak dapat diubah setelah insert (DI-17)
+- Notulen kegiatan sebagai dokumen draf
 
 ## OUT OF SCOPE
 
+- Penerimaan dan pembukaan penawaran (TASK-033)
+- Hasil evaluasi (TASK-034)
 - Integrasi kalender eksternal
 
 ## REFERENCES
@@ -55,34 +59,47 @@ CAP-06/AC-08 dan IX-020.
 - [STATE_TRANSITIONS WF-006](../03-workflows/STATE_TRANSITIONS.md#wf-006)
 - [RT-006](../03-workflows/ROUTE_CONTRACTS.md#rt-006)
 - [IX-020](../03-workflows/INTERACTION_CONTRACTS.md#ix-020)
+- [DATA_MODEL §14.3](../04-architecture/DATA_MODEL.md#143-pemilihan)
+- [BR-036](../02-domain/BUSINESS_RULES.md#br-036)
+- [BR-037](../02-domain/BUSINESS_RULES.md#br-037)
+- [REGULATORY_SOURCE_REVIEW RG-07](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-07-selection-evaluation-and-award-field-findings-reconciled)
+- [INTERACTION_PATTERNS §10](../07-ux-design/INTERACTION_PATTERNS.md#10-ruang-kerja-evaluasi)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
-- CAP: CAP-06
-- AC/NFR: AC-08
-- WF/TR: WF-006 (TR-051–TR-055, 5 TR) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
-- RT: RT-006
-- IX: IX-001, IX-002, IX-009, IX-011, IX-020
-- GAP: GAP-003, GAP-013, GAP-017, GAP-029
-- Keputusan Owner: OD-07
+- CAP: CAP-05, CAP-06
+- AC/NFR: AC-08, AC-33, AC-34, AC-35
+- WF/TR: WF-006 (TR-051–TR-055, 5 TR); WF-009 (TR-081–TR-085, 5 TR; BLOCKED_BY_GAP: TR-084) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
+- RT: RT-006, RT-008, RT-009
+- IX: IX-001, IX-002, IX-003, IX-009, IX-011, IX-020
+- GAP: GAP-003, GAP-013, GAP-017, GAP-027, GAP-029
+- Keputusan Owner: OD-07, OD-35, OD-36
 
 ## EXPECTED MODULES / FILE AREAS
 
-- `app/Modules/Procurement (Activities)`
+- `app/Modules/Procurement (Selection, Activities)`
+- `resources/js/pages/procurement/selection`
 - `resources/js/pages/procurement/activities`
 
 ## BUSINESS RULES
 
 - [BR-006](../02-domain/BUSINESS_RULES.md#br-006)
+- [BR-036](../02-domain/BUSINESS_RULES.md#br-036)
+- [BR-037](../02-domain/BUSINESS_RULES.md#br-037)
+- [BR-038](../02-domain/BUSINESS_RULES.md#br-038)
 - [INV-002](../02-domain/BUSINESS_RULES.md#inv-002)
+- [INV-024](../02-domain/BUSINESS_RULES.md#inv-024)
 
 ## ARCHITECTURE RULES
 
+- Skema evaluasi adalah data dari dokumen pengadaan; tanpa bobot atau ambang bawaan aplikasi
 - Ikuti aturan dependensi modul ([ARCHITECTURE §5](../04-architecture/ARCHITECTURE.md#5-aturan-dependensi-antar-modul)) dan pola lapisan §6
 - Satu perintah = satu Action bertransaksi; efek samping setelah commit
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
+- AUTHZ-47
 - Peserta penyedia tidak melihat peserta lain bila kebijakan merahasiakan
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
@@ -90,19 +107,19 @@ CAP-06/AC-08 dan IX-020.
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `proc_activities`, `proc_activity_participants`, `proc_invitations`
+- Tables: `proc_award_scopes`, proc_package_items (kolom award_scope_id), `proc_selections`, `proc_selection_scopes`, `proc_evaluation_schemes`, `proc_evaluation_stages`, `proc_evaluation_criteria`, `proc_activities`, `proc_activity_participants`, `proc_invitations`, `proc_market_inquiries`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
 
 ## MODULARITY / EXTENSIBILITY
 
-- Module boundary affected: app/Modules/Procurement (Activities)
+- Module boundary affected: app/Modules/Procurement (Selection, Activities)
 - Stable core kept provider-neutral: YES
 - External/vendor-specific code isolated: N/A
 - Replaceable adapter/contract required: NO
 - Provider lock-in risk: NONE
-- Future extension impact: LOW
+- Future extension impact: MEDIUM
 - Speculative abstraction avoided: YES
 
 ## AUTH IMPACT
@@ -142,7 +159,7 @@ CAP-06/AC-08 dan IX-020.
 
 - Graph freshness: N/A bila Graphify tidak tersedia
 - Pre-change questions: modul/tabel/rute/izin mana yang disentuh; uji mana yang terdampak
-- Expected affected areas: app/Modules/Procurement (Activities), resources/js/pages/procurement/activities
+- Expected affected areas: app/Modules/Procurement (Selection, Activities), resources/js/pages/procurement/selection, resources/js/pages/procurement/activities
 
 ## CONTEXT7
 
@@ -163,24 +180,27 @@ CAP-06/AC-08 dan IX-020.
 - Comfortable density: REQUIRED
 - shadcn/ui reuse: primitif shadcn + komposit PRANATA
 - Design reference: SRC-047/VIS-04 melalui DESIGN_SYSTEM; OD-34
-- Halaman: PG-109
-- Primary action: Jadwalkan kegiatan
+- Halaman: PG-109, PG-110, PG-122
+- Primary action: Bekukan skema / Jadwalkan kegiatan
 - Secondary actions: dalam menu "Lainnya" atau outline; tanpa duplikasi
 - Destructive actions: ConfirmActionDialog dengan alasan bila wajib
 - Redundancy constraints: satu aksi utama per halaman/panel
 - Loading state: skeleton
 - Empty state: penjelasan + aksi pertama
 - Error state: pesan + request id + langkah aman
-- Catatan: Kalender dengan alternatif daftar yang aksesibel
+- Catatan: Kalender dengan alternatif daftar yang aksesibel; strip jumlah penyedia; pembekuan dengan dialog akibat
 
 ## ROUTE IMPACT
 
 - RT-006
+- RT-008
+- RT-009
 
 ## INTERACTION CONTRACTS
 
 - IX-001
 - IX-002
+- IX-003
 - IX-009
 - IX-011
 - IX-020
@@ -191,30 +211,33 @@ CAP-06/AC-08 dan IX-020.
 - Entry: Tab Pemilihan atau menu Jadwal
 - Back action: Asal (paket/kalender dengan rentang)
 - Cancel: Kembali ke halaman asal tanpa menyimpan; konfirmasi bila ada perubahan belum tersimpan
-- Success destination: Detail kegiatan
+- Success destination: Detail pemilihan
 - Error behavior: Galat validasi per field + ringkasan di atas form; input dipertahankan
-- State preservation: Rentang kalender di URL
-- Mobile behavior: Daftar harian
+- State preservation: Rentang kalender dan lingkup aktif di URL
+- Mobile behavior: Daftar harian; skema sebagai daftar tahap
 
 ## ACCEPTANCE CRITERIA
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Kegiatan terjadwal dan hasilnya tercatat terpisah
-- TAC-02 Undangan Quotation memperingatkan bila < 3 penyedia DPT (kebijakan DRAFT)
-- TAC-03 Kalender dan daftar konsisten; dapat diakses keyboard
+- TAC-01 Paket tanpa pembagian memiliki satu lingkup PACKAGE; paket dua lot menempatkan setiap item pada tepat satu lot; perubahan lingkup atau penempatan item sesudah skema FROZEN ditolak aplikasi dan DB (DI-21)
+- TAC-02 Skema hanya dapat dibekukan dengan dokumen sumber dan kriteria lengkap; skema FROZEN beserta tahap dan kriterianya tidak dapat diubah (DI-22)
+- TAC-03 Undangan Quotation memperingatkan bila < 3 penyedia DPT (kebijakan DRAFT); praktik tiga penawaran Pengadaan Langsung tampil informatif tanpa memblokir
+- TAC-04 Strip jumlah dijajaki/diundang/menawar/memenuhi syarat/dievaluasi dihitung server dan konsisten dengan daftar
+- TAC-05 Kegiatan terjadwal dan hasilnya tercatat terpisah; kalender dan daftar konsisten; dapat diakses keyboard
+- TAC-06 Kolom `package_id`/`selection_id` pemilihan, lingkup dan undangan tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-006
-- Authorization: Uji izin positif dan negatif untuk setiap aksi baru
+- Feature: WF-006; DI-17, DI-21, DI-22 (uji negatif langsung DB)
+- Authorization: AUTHZ-47
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: Bagian J-04
+- Browser E2E: Bagian J-04, J-19
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
-- Accessibility: Kalender
+- Accessibility: Kalender, PG-122
 - Production build: npm run build
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
 
@@ -238,12 +261,12 @@ Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
 ## REVIEW REQUIREMENT
 
-STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tidak ada temuan P0/P1 terbuka ([QUALITY_GATES §3](../08-testing/QUALITY_GATES.md#3-gerbang-review-berbasis-risiko))
+HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen kedua; lulus bila tidak ada temuan P0/P1 terbuka ([QUALITY_GATES §3](../08-testing/QUALITY_GATES.md#3-gerbang-review-berbasis-risiko))
 
 ## DEFINITION OF DONE
 
 - Semua ACCEPTANCE CRITERIA terbukti dengan bukti tercatat
-- Definition of Done [QUALITY_GATES §2](../08-testing/QUALITY_GATES.md#2-definition-of-done) untuk semua Task + §2.2 UI
+- Definition of Done [QUALITY_GATES §2](../08-testing/QUALITY_GATES.md#2-definition-of-done) untuk semua Task + §2.2 UI + §2.3 HIGH
 - PR ke `main` lulus `ci-gate` pada HEAD terakhir dan review sesuai REVIEW REQUIREMENT, di-merge, lalu `main` remote diverifikasi memuat merge tersebut ([EXECUTOR_OPERATING_MODEL §8](EXECUTOR_OPERATING_MODEL.md#8-merge-dan-rekonsiliasi-done))
 - TASK_PLAN dan CURRENT_HANDOFF diperbarui; checklist dicentang hanya bila DONE
 
@@ -269,6 +292,8 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 ## DO NOT DO
 
 - Jangan mewajibkan negosiasi/kegiatan untuk semua metode
+- Jangan membuat bobot, ambang atau kriteria yang tidak ada dalam dokumen pengadaan
+- Jangan menjadikan praktik tiga penawaran sebagai syarat
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Mewujudkan penyiapan kontrak/SPK/surat pesanan/bukti pembelian sesuai bentuk dari kebijakan nilai, baris kontrak dari hasil, jenis kontrak, jaminan yang diharapkan, telaah/persetujuan yang applicable, pencatatan tanda tangan dan versi kontrak ORIGINAL.
+Mewujudkan penyiapan kontrak/SPK/surat pesanan/bukti pembelian per pemenang atas lingkup yang dimenanginya sesuai bentuk dari kebijakan nilai, baris kontrak dari hasil, jenis kontrak, jaminan yang diharapkan, telaah/persetujuan yang applicable, pencatatan tanda tangan dan versi kontrak ORIGINAL.
 
 ## WHY THIS EXISTS
 
@@ -39,7 +39,7 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 
 ## IN SCOPE
 
-- Tabel `proc_contracts` (`draft_terms` sebagai rancangan sebelum SIGNED; FK komposit `(sppbj_id, package_id)`; perusahaan = pemenang hasil yang dirujuk, diperiksa constraint trigger), `proc_contract_versions` dan `proc_contract_lines` (keduanya append-only; FK `(contract_id, version_no)`; baris unik per versi), `proc_guarantees`
+- Tabel `proc_contracts` (per pemenang: `participation_id`, FK `(participation_id, company_id)` sehingga perusahaan = pemenang, FK `(sppbj_id, participation_id)`; `draft_terms` sebagai rancangan sebelum SIGNED), `proc_contract_scopes` (satu kontrak aktif per lingkup SINGLE), `proc_contract_versions` dan `proc_contract_lines` (keduanya append-only; FK `(contract_id, version_no)`; baris unik per versi; `scope_id` dengan FK ke lingkup kontrak dan ke item lingkup), `proc_guarantees`
 - Versi ORIGINAL beserta barisnya dibuat dari `draft_terms` dalam transaksi penandatanganan; `current_version_no`/`current_value` adalah proyeksi versi terakhir
 - State WF-012 (TR-111–TR-115)
 - Evaluator `ContractForm`/`GuaranteeRequirement` (simulasi bila DRAFT)
@@ -63,12 +63,12 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 ## TRACEABILITY
 
 - CAP: CAP-09
-- AC/NFR: AC-12
+- AC/NFR: AC-12, AC-34
 - WF/TR: WF-012 (TR-111–TR-115, 5 TR; BLOCKED_BY_GAP: TR-112, TR-114) — rentang adalah seluruh WF; transisi yang dikerjakan Task ini tercantum di IN SCOPE
 - RT: RT-012
 - IX: IX-001, IX-002, IX-003, IX-006, IX-007, IX-010, IX-011
 - GAP: GAP-003, GAP-017, GAP-019, GAP-027
-- Keputusan Owner: OD-29
+- Keputusan Owner: OD-29, OD-35
 
 ## EXPECTED MODULES / FILE AREAS
 
@@ -80,8 +80,10 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 - [BR-009](../02-domain/BUSINESS_RULES.md#br-009)
 - [BR-010](../02-domain/BUSINESS_RULES.md#br-010)
 - [BR-032](../02-domain/BUSINESS_RULES.md#br-032)
+- [BR-037](../02-domain/BUSINESS_RULES.md#br-037)
 - [INV-005](../02-domain/BUSINESS_RULES.md#inv-005)
 - [INV-022](../02-domain/BUSINESS_RULES.md#inv-022)
+- [INV-024](../02-domain/BUSINESS_RULES.md#inv-024)
 
 ## ARCHITECTURE RULES
 
@@ -91,13 +93,14 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 ## SECURITY / PERMISSION REQUIREMENTS
 
 - Kontrak terlihat menurut cakupan paket/penugasan
+- AUTHZ-50
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `proc_contracts`, `proc_contract_versions`, `proc_contract_lines`, `proc_guarantees`
+- Tables: `proc_contracts`, `proc_contract_scopes`, `proc_contract_versions`, `proc_contract_lines`, `proc_guarantees`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -212,17 +215,18 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Versi ORIGINAL tercatat saat tanda tangan; nilai berjalan = nilai versi terakhir
 - TAC-03 Jaminan pelaksanaan diharapkan bila kebijakan menetapkan ambang; selama GAP-027(c) terbuka dasar perhitungan (HPS atau pagu) dipilih manusia dengan alasan
 - TAC-04 Baris kontrak hanya dibuat bersama versinya; UPDATE/DELETE baris versi ditolak hak peran dan trigger; baris tanpa versi yang cocok ditolak (DI-14)
-- TAC-05 Kontrak untuk SPPBJ paket lain atau dengan perusahaan selain pemenang ditolak aplikasi dan DB; kolom `package_id` kontrak tidak dapat diubah (DI-06, DI-17)
+- TAC-05 Kontrak untuk SPPBJ pemenang lain, untuk partisipasi bukan pemenang, atau dengan perusahaan selain perusahaan partisipasi pemenang ditolak aplikasi dan DB; kolom `package_id` kontrak tidak dapat diubah (DI-06, DI-17)
+- TAC-06 Dua kontrak aktif untuk lingkup SINGLE yang sama ditolak, termasuk bila dibuat bersamaan; baris kontrak dengan item lingkup lain ditolak FK (DI-27, AUTHZ-50)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: Evaluator bentuk/jaminan: nilai jelas di luar pita GAP-027 dan pita yang mewajibkan pilihan manusia
-- Feature: WF-012; DI-06, DI-14 (uji negatif langsung DB)
-- Authorization: Uji izin positif dan negatif untuk setiap aksi baru
+- Feature: WF-012; DI-06, DI-14, DI-27 (uji negatif langsung DB; DI-27 dengan dua koneksi)
+- Authorization: AUTHZ-50
 - Route integrity: Rute baru terdaftar di uji integritas rute
-- Browser E2E: J-03, J-05, J-06
+- Browser E2E: J-03, J-05, J-06, J-19
 - Localization/language switch: Dua bahasa; kunci hilang = 0
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis
