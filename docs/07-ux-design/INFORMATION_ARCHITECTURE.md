@@ -154,7 +154,7 @@ Kolom "Kembali" adalah tujuan back kontekstual default; kontrak lengkap di RT te
 | Penyedia | Undangan aktif, dokumen kedaluwarsa/perlu diperbarui, status DPT, partisipasi dan hasil yang diumumkan |
 | Super Admin | Kesehatan sistem, antrean/job gagal, grant menunggu persetujuan, keberlakuan kebijakan (draf, terjadwal, berlaku, berakhir), peristiwa keamanan |
 
-Semua angka dasbor dihitung server dalam cakupan pengguna; kartu kosong menjelaskan alasannya (tidak ada data vs belum berhak vs kebijakan belum aktif).
+Semua angka dasbor dihitung server dalam cakupan pengguna; kartu kosong menjelaskan alasannya (tidak ada data vs belum berhak vs belum ada versi kebijakan yang berlaku resmi).
 
 ## 5. Pencarian global
 

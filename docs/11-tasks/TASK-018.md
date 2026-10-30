@@ -41,7 +41,7 @@ Semua aturan resmi yang masih OPEN dipegang sebagai data berversi (ADR-0003, CAP
 
 ## IN SCOPE
 
-- Tabel `policy_packs`, `policy_versions` (EXCLUDE atas jendela ACTIVE/SUPERSEDED, CHECK maker-checker), `policy_test_cases`, `policy_version_uses` (append-only)
+- Tabel `policy_packs`, `policy_versions` (EXCLUDE atas jendela ACTIVE/SUPERSEDED, CHECK maker-checker dan pengesah untuk ACTIVE/SUPERSEDED, trigger `guard_version_transition()` yang dipakai juga versi template dan klasifikasi), `policy_test_cases`, `policy_version_uses` (append-only)
 - Helper jendela berlaku bersama: aktivasi menutup jendela versi sebelumnya dan menandainya SUPERSEDED secara atomik di bawah kunci induk, tanpa tanggal mundur, keadaan WF-029 S4/S5/S6 diturunkan dari status dan jendela, job harian yang mencatat transisi keberlakuan dan penggantian WF-029 saat tanggal efektif tercapai; dipakai ulang oleh template (TASK-021) dan klasifikasi aset (TASK-058)
 - Kontrak pencatatan `policy_version_uses` untuk record yang bergantung pada beberapa keluarga kebijakan
 - Registry keluarga + validasi JSON Schema
@@ -224,8 +224,9 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-05 Di konfigurasi produksi, aksi resmi tanpa versi yang berlaku resmi pada tanggal acuannya tidak tersedia, sedangkan aksi bertanggal acuan di dalam jendela versi SUPERSEDED tetap tersedia; tidak ada kode yang memutuskan ketersediaan aksi atau memilih versi dari kolom status saja (uji arsitektur, DI-32)
 - TAC-06 Record yang memakai kebijakan menyimpan policy_version_id dan is_simulation (uji kontrak)
 - TAC-07 Record yang bergantung pada beberapa keluarga mencatat setiap versi penyumbang di `policy_version_uses`; UPDATE/DELETE ditolak (DI-16)
-- TAC-08 Versi ACTIVE tanpa pengesah, atau dengan pengesah sama dengan pembuat/pengaju, ditolak constraint DB
-- TAC-09 Pengesah hanya dapat mengaktifkan versi keluarga dalam cakupan grant-nya (AUTHZ-25)
+- TAC-08 Versi ACTIVE atau SUPERSEDED tanpa pengesah, atau dengan pengesah sama dengan pembuat/pengaju, ditolak constraint DB; transisi siklus hidup yang tidak sah (mis. UPDATE langsung DRAFT → SUPERSEDED) ditolak `guard_version_transition()` (DI-20)
+- TAC-09 Tanggal acuan sesudah tanggal commit tidak dipakai untuk aksi resmi kecuali kontrak Action mengizinkannya, sehingga versi terjadwal tidak dapat dipakai lebih awal lewat tanggal acuan masa depan (DI-32)
+- TAC-10 Pengesah hanya dapat mengaktifkan versi keluarga dalam cakupan grant-nya (AUTHZ-25)
 
 ## TEST REQUIREMENTS
 

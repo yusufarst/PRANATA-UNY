@@ -35,7 +35,7 @@ OD-29: nomor disarankan, diperiksa petugas berwenang dan tidak pernah bertabraka
 
 ## IN SCOPE
 
-- Tabel `numbering_schemes` (paling banyak satu skema per jenis dokumen untuk setiap versi kebijakan `numbering`; dipilih menurut versi yang berlaku resmi pada tanggal finalisasi, DI-32), `numbering_counters`, `document_numbers` (nomor unik per jenis dokumen lintas skema)
+- Tabel `numbering_schemes` (paling banyak satu skema per jenis dokumen untuk setiap versi kebijakan `numbering`; dipilih menurut versi yang berlaku resmi pada tanggal finalisasi, DI-32), `numbering_counters` (berkunci `document_type`, `sequence_key`, `scope_key`; tidak di-reset saat versi kebijakan berganti), `document_numbers` (nomor unik per jenis dokumen lintas skema)
 - Formatter pola (`{seq:n}`, `{unit}`, `{doc}`, `{year}`, `{month_roman}`)
 - Alokasi `FOR UPDATE`, reservasi, konfirmasi, override manual tervalidasi unik, void
 - Uji konkurensi dua proses
@@ -190,7 +190,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Override manual yang bertabrakan ditolak dengan saran nomor berikut
 - TAC-03 Nomor VOIDED tetap tercatat dan tidak dipakai ulang kecuali kebijakan gapless menyatakan lain
 - TAC-04 Tanpa skema dari versi kebijakan `numbering` yang berlaku resmi pada tanggal finalisasi, finalisasi resmi tidak tersedia di produksi; skema versi terjadwal tidak dipakai sebelum tanggal berlakunya dan skema pendahulu tetap dipakai sampai tanggal itu (DI-32)
-- TAC-05 Dua skema ACTIVE untuk jenis dokumen yang sama pada versi kebijakan yang sama dan teks nomor kembar lintas skema untuk jenis dokumen yang sama ditolak DB (DI-13)
+- TAC-05 Dua skema ACTIVE untuk jenis dokumen yang sama pada versi kebijakan yang sama dan teks nomor kembar lintas skema untuk jenis dokumen yang sama ditolak DB; skema penerus dengan `sequence_key` sama melanjutkan nomor urut tanpa reset di tengah tahun (DI-13)
 
 ## TEST REQUIREMENTS
 

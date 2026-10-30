@@ -39,7 +39,7 @@ INV-023/BR-036: isi penawaran tidak boleh diubah dan pembukaan tidak menggugurka
 
 - Tabel `proc_participations` (per pemilihan; `uq(id, selection_id)`, `uq(id, package_id)`, `uq(id, company_id)`), `proc_submissions`, `proc_submission_scopes`, `proc_submission_lines`, `proc_opening_records`, `proc_opening_entries`; pemeriksaan DPT saat partisipasi
 - Imutabilitas: hak kolom `UPDATE (status, opened_at, withdrawn_at, withdrawal_evidence_file_id)`, trigger `forbid_offer_change()`, lingkup/rincian/entri pembukaan append-only, tautan berkas OFFER tidak dapat dilepas (DI-23)
-- Pembukaan atau penutupan penerimaan per sampul tanpa kolom atau aksi gugur (DI-24), hanya sesudah batas akhir versi tertinggi; waktu terima dari jam basis data (kanal PRANATA) atau bukti terima (kanal eksternal); keterlambatan dihitung dari batas akhir tanpa kolom penanda; entri hanya untuk kiriman tepat waktu; constraint trigger tertunda `check_opening_consistency()` menyelaraskan status (DI-31); penggantian skema sesudah pembukaan ditolak di bawah kunci pemilihan (DI-22)
+- Pembukaan atau penutupan penerimaan per sampul tanpa kolom atau aksi gugur (DI-24), hanya sesudah batas akhir versi tertinggi; waktu terima dari jam basis data (kanal PRANATA) atau bukti terima (kanal eksternal); keterlambatan dihitung dari batas akhir tanpa kolom penanda; entri hanya untuk kiriman tepat waktu; `opened = false` hanya untuk sampul harga peserta yang gugur lebih dahulu (DI-24); constraint trigger tertunda `check_opening_consistency()` menyelaraskan status (DI-31); penggantian skema sesudah pembukaan ditolak di bawah kunci pemilihan (DI-22)
 - State WF-008 (TR-071–077)
 - PG-110 (penerimaan penawaran) dan PG-123 (pembukaan); berkas penawaran CONFIDENTIAL
 - Alur IX-024: alasan wajib, audit gagal tertutup, read-only, tanpa ekspor
@@ -217,12 +217,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 - TAC-01 Penawaran eksternal tercatat dengan bukti terima, waktu terima, kanal, lingkup yang ditawar, rincian harga dan sidik jari berkas (DI-23)
 - TAC-02 Penawaran terlambat yang disisipkan langsung ke basis data berstatus RECEIVED tidak dapat diberi entri pembukaan atau menjadi OPENED, dan pembukaan yang tidak menandainya REJECTED_LATE ditolak saat commit; penawaran tepat waktu tidak dapat dikecualikan dari pembukaan; pembukaan sebelum batas akhir atau dengan versi batas yang bukan tertinggi ditolak DB; kanal PRANATA memakai jam basis data (DI-31)
-- TAC-03 UPDATE isi penawaran, lingkup atau rinciannya dan pelepasan berkas penawaran ditolak hak kolom dan trigger, termasuk lewat koneksi `pranata_app` langsung (DI-23)
-- TAC-04 Pembukaan mencatat nilai yang dibacakan dan kelengkapan; penawaran tidak lengkap tetap berstatus sama dan tidak ada aksi gugur (DI-24); penggantian skema sesudah pembukaan ditolak dan pembukaan bersamaan pembekuan diserialkan (DI-22)
-- TAC-05 Petugas tanpa penugasan tidak dapat membuka penawaran dan tidak seorang pun dapat mengubah penawaran asli (AUTHZ-46); isolasi antar-penyedia diuji di TASK-043
-- TAC-06 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
-- TAC-07 Jawaban klarifikasi dan revisi sebelum batas akhir tertaut ke penawaran asal tanpa mengubahnya
-- TAC-08 Kolom `package_id`/`selection_id` partisipasi dan penawaran tidak dapat diubah setelah insert (DI-17)
+- TAC-03 Kiriman berbatas sebelum versi 1 batas akhirnya tercatat atau yang disisipkan langsung berstatus OPENED ditolak; kiriman tepat waktu kedua dari peserta yang sama untuk sampul yang sama tanpa `supersedes_id` ditolak; penarikan kanal PRANATA memakai jam basis data dan tidak pernah sebelum waktu terima (DI-31)
+- TAC-04 UPDATE isi penawaran, lingkup atau rinciannya dan pelepasan berkas penawaran ditolak hak kolom dan trigger, termasuk lewat koneksi `pranata_app` langsung (DI-23)
+- TAC-05 Pembukaan mencatat nilai yang dibacakan dan kelengkapan; penawaran tidak lengkap tetap berstatus sama dan tidak ada aksi gugur; entri tidak dibuka hanya untuk sampul harga peserta yang gugur lebih dahulu dan selalu beralasan (DI-24); penggantian skema sesudah pembukaan ditolak dan pembukaan bersamaan pembekuan diserialkan (DI-22)
+- TAC-06 Petugas tanpa penugasan tidak dapat membuka penawaran dan tidak seorang pun dapat mengubah penawaran asli (AUTHZ-46); isolasi antar-penyedia diuji di TASK-043
+- TAC-07 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
+- TAC-08 Jawaban klarifikasi dan revisi sebelum batas akhir tertaut ke penawaran asal tanpa mengubahnya
+- TAC-09 Kolom `package_id`/`selection_id` partisipasi dan penawaran tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS
 

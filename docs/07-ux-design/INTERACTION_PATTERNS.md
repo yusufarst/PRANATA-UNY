@@ -36,7 +36,7 @@ Dokumen ini memiliki **pola halaman, hierarki aksi, perwujudan IX-001–IX-024, 
 | IX-007 Terima/setujui | Dialog konfirmasi dengan akibat; untuk jumlah sebagian, kolom jumlah per baris + alasan |
 | IX-008 Tolak | Dialog alasan wajib; status dan riwayat terlihat |
 | IX-009 Batal/gantikan | Dialog alasan + dampak pada pekerjaan terkait |
-| IX-010 Generate dokumen | `DocumentCard` → pilih template versi aktif → pratinjau data → generate (operasi) → unduh DOCX/PDF; banner DRAF/SIMULASI |
+| IX-010 Generate dokumen | `DocumentCard` → template dan versi yang berlaku resmi pada tanggal generasi dipilih deterministik dan ditampilkan ([DOCUMENT_ENGINE](../04-architecture/DOCUMENT_ENGINE.md)) → pratinjau data → generate (operasi) → unduh DOCX/PDF; banner DRAF/SIMULASI |
 | IX-011 Lampirkan bukti | `FileDropzone` dengan validasi tipe/ukuran, label tujuan, progres unggah |
 | IX-012 Lihat riwayat | Tab/panel `StateTimeline` + perubahan field |
 | IX-013 Bandingkan | Tampilan dua kolom sebelum–sesudah (versi dokumen, adendum, versi kebijakan) |

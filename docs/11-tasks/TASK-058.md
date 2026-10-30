@@ -201,6 +201,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Pembuat versi tidak dapat mengaktifkannya
 - TAC-03 Jendela versi tumpang tindih dan aktivasi bertanggal mundur ditolak; aktivasi menutup jendela versi sebelumnya secara atomik (DI-18)
 - TAC-04 Aksi memakai versi klasifikasi yang berlaku resmi pada tanggal acuannya; pendahulu SUPERSEDED tetap dipakai sampai penerusnya berlaku (DI-32)
+- TAC-05 UPDATE langsung DRAFT → ACTIVE/SUPERSEDED tanpa pengesah ditolak DB (DI-18)
 
 ## TEST REQUIREMENTS
 
