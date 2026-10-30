@@ -143,7 +143,7 @@ Button, Input, Textarea, Select, Combobox (Command + Popover), Checkbox, RadioGr
 | `FilterBar` + `SavedViews` | Filter dengan chip, simpan tampilan per pengguna |
 | `MoneyCell` / `QuantityCell` / `CodeCell` | Format Indonesia, rata kanan, angka tabular, monospace untuk kode |
 | `KeyValueList` | Atribut ringkas pada panel detail |
-| `EvidenceList` + `FileDropzone` | Bukti terkait, unggah dengan validasi, pratinjau aman |
+| `EvidenceList` + `FileDropzone` | Bukti terkait, unggah dengan validasi, pratinjau aman; aksi lepas hanya untuk tautan tidak bersegel yang diizinkan modul pemilik — lampiran kiriman penawaran ditampilkan terkunci tanpa aksi lepas atau ganti |
 | `DocumentCard` | Status dokumen (draf/final/terbit/bertanda tangan/simulasi), aksi generate/unduh/unggah tanda tangan |
 | `ConfirmActionDialog` | Konfirmasi aksi material dengan ringkasan akibat dan kolom alasan bila wajib |
 | `ConflictDialog` | Konflik versi: tampilkan perubahan terbaru, pilih muat ulang |

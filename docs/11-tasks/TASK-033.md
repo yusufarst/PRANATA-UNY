@@ -38,10 +38,11 @@ INV-023/BR-036: isi penawaran tidak boleh diubah dan pembukaan tidak menggugurka
 ## IN SCOPE
 
 - Tabel `proc_participations` (per pemilihan; `uq(id, selection_id)`, `uq(id, package_id)`, `uq(id, company_id)`), `proc_submissions`, `proc_submission_scopes`, `proc_submission_lines`, `proc_opening_records`, `proc_opening_entries`; pemeriksaan DPT saat partisipasi
-- Imutabilitas: hak kolom `UPDATE (status, opened_at, withdrawn_at, withdrawal_evidence_file_id)`, trigger `forbid_offer_change()`, lingkup/rincian/entri pembukaan append-only, tautan berkas OFFER tidak dapat dilepas (DI-23)
+- Imutabilitas: hak kolom `UPDATE (status, opened_at, withdrawn_at, withdrawal_evidence_file_id)`, trigger `forbid_offer_change()`, lingkup/rincian/entri pembukaan append-only; `withdrawal_evidence_file_id` hanya diisi bersama transisi penarikan; pendaftaran `proc_submissions` di `file_sealed_owner_types` lewat migrasi sehingga `guard_file_link_change()` TASK-016 menolak setiap perubahan, pelepasan, pengalihan dan penghapusan tautan berkas kiriman (DI-23)
 - Pembukaan atau penutupan penerimaan per sampul tanpa kolom atau aksi gugur (DI-24), hanya sesudah batas akhir versi tertinggi; waktu terima dari jam basis data (kanal PRANATA) atau bukti terima (kanal eksternal); keterlambatan dihitung dari batas akhir tanpa kolom penanda; entri hanya untuk kiriman tepat waktu; `opened = false` hanya untuk sampul harga peserta yang gugur lebih dahulu (DI-24); constraint trigger tertunda `check_opening_consistency()` menyelaraskan status (DI-31); penggantian skema sesudah pembukaan ditolak di bawah kunci pemilihan (DI-22)
-- Segel tangkapan kiriman dan pembukaan: `capture_manifest_sha256` pada `proc_submissions` dan `proc_opening_records`, fungsi `capture_manifest_submission()`/`capture_manifest_opening()` dan pemasangan `verify_capture_manifest()` pada lingkup, rincian harga, entri pembukaan serta `file_links` bertujuan OFFER; pencatatan banyak baris dalam satu transaksi (DI-23, DI-24)
+- Segel tangkapan kiriman dan pembukaan: `capture_manifest_sha256` pada `proc_submissions` dan `proc_opening_records`, fungsi `capture_manifest_submission()`/`capture_manifest_opening()` dan pemasangan `verify_capture_manifest()` pada lingkup, rincian harga, entri pembukaan serta `file_links` kiriman (sidik jari kiriman memuat `id`, `file_id`, `purpose`, `sha256` dan `size_bytes` setiap tautan); pencatatan banyak baris dalam satu transaksi (DI-23, DI-24)
 - Koreksi pencatatan kanal eksternal sebagai kiriman pengganti (`corrects_id`, status CORRECTED) dengan peserta, sampul dan waktu terima yang sama serta alasan; sesudah penerimaan tertutup hanya bersama penggantian catatan pembukaan sebelum ada hasil evaluasi (DI-23)
+- Job harian: hitung ulang sidik jari tangkapan kiriman dan pembukaan, serta verifikasi byte lampiran, bukti terima dan bukti penarikan kiriman dengan layanan integritas berkas TASK-016 (CONCURRENCY_AND_INTEGRITY §7 (d), (e))
 - State WF-008 (TR-071–077)
 - PG-110 (penerimaan penawaran) dan PG-123 (pembukaan); berkas penawaran CONFIDENTIAL
 - Alur IX-024: alasan wajib, audit gagal tertutup, read-only, tanpa ekspor
@@ -226,8 +227,10 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-07 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
 - TAC-08 Sisipan lingkup, rincian harga atau tautan berkas OFFER ke kiriman yang sudah tercatat, dan entri ke catatan pembukaan yang sudah tercatat (RECORDED atau SUPERSEDED), ditolak saat commit lewat koneksi `pranata_app` langsung dan dari koneksi kedua selama pencatatan; pencatatan kiriman banyak baris dalam satu transaksi berhasil (DI-23, DI-24)
 - TAC-09 Kesalahan pencatatan kanal eksternal hanya diperbaiki dengan kiriman pengganti beralasan yang peserta, sampul dan waktu terimanya sama; kiriman CORRECTED tidak dapat dibuka atau dievaluasi (DI-23)
-- TAC-10 Jawaban klarifikasi dan revisi sebelum batas akhir tertaut ke penawaran asal tanpa mengubahnya
-- TAC-11 Kolom `package_id`/`selection_id` partisipasi dan penawaran tidak dapat diubah setelah insert (DI-17)
+- TAC-10 Sesudah kiriman tercatat, lewat koneksi `pranata_app` langsung: pelepasan, perubahan label, pengalihan (`file_id`, `owner_id`, `owner_type`, `purpose`) dan penghapusan tautan berkas kiriman, perubahan identitas isi berkas yang dirujuk kiriman (termasuk bukti terima) dan perubahan bukti penarikan di luar transisi penarikan ditolak seketika; percobaan dari koneksi kedua selama pencatatan tidak mengubah apa pun dan ditolak sesudah commit; pembaruan status pemindaian tidak mengubah sidik jari (DI-23)
+- TAC-11 Unduhan lampiran penawaran memverifikasi SHA-256 sebelum dikirim; lampiran yang byte-nya diubah di disk gagal tertutup dan selisihnya dilaporkan job harian (DI-23)
+- TAC-12 Jawaban klarifikasi dan revisi sebelum batas akhir tertaut ke penawaran asal tanpa mengubahnya
+- TAC-13 Kolom `package_id`/`selection_id` partisipasi dan penawaran tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS
 
@@ -299,6 +302,7 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 - Jangan menyediakan aksi gugur pada pembukaan
 - Jangan menyimpan koreksi aritmetik pada rekaman penawaran
 - Jangan menambah lingkup, baris, berkas atau entri pada kiriman atau pembukaan yang sudah tercatat; perbaikan hanya melalui record pengganti
+- Jangan menyediakan aksi lepas atau ganti untuk lampiran kiriman
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

@@ -15,7 +15,7 @@ Bukti, dokumen bertanda tangan, dokumen penyedia dan penawaran bersifat internal
 
 ## Keputusan dan alasan
 
-Berkas di luar webroot (`storage/app/private`), nama acak, SHA-256, metadata di `file_objects`; unggahan divalidasi MIME/ekstensi/ukuran; unduhan hanya melalui controller yang memeriksa izin subjek dan mencatat audit untuk berkas rahasia; dicadangkan bersama basis data ke lokasi offsite pilihan Owner (P9).
+Berkas di luar webroot (`storage/app/private`), nama acak, ditulis sekali tanpa timpa, SHA-256 dan ukuran dihitung server, metadata di `file_objects` dengan identitas isi yang tidak dapat diubah (tautan ke pemilik bersegel juga tidak dapat diubah atau dilepas); unggahan divalidasi MIME/ekstensi/ukuran; unduhan hanya melalui controller yang memeriksa izin subjek, memverifikasi SHA-256 sebelum mengirim dan mencatat audit untuk berkas rahasia; dicadangkan bersama basis data ke lokasi offsite pilihan Owner (P9).
 
 ## Risiko
 
@@ -28,7 +28,7 @@ Kapasitas disk server/offsite yang dibiayai klien.
 
 ## Dampak kompatibilitas dan data
 
-Tabel `file_objects`, `file_links`.
+Tabel `file_objects`, `file_links`, `file_sealed_owner_types`.
 
 ## Migrasi dan rollback
 

@@ -12,7 +12,7 @@ PARALLEL SAFE: YES
 
 ## OBJECTIVE
 
-Mewujudkan `file_objects`/`file_links`, unggah tervalidasi (ekstensi+MIME+ukuran), penyimpanan privat dengan SHA-256, unduhan/pratinjau terotorisasi melalui subjek, audit unduhan rahasia, dan komponen FileDropzone/EvidenceList.
+Mewujudkan `file_objects`/`file_links`, unggah tervalidasi (ekstensi+MIME+ukuran), penyimpanan privat tulis-sekali dengan SHA-256 dan identitas isi yang tidak dapat diubah, tautan dengan pelepasan sekali serta tautan bersegel yang tidak dapat diubah, unduhan/pratinjau terotorisasi melalui subjek yang memverifikasi SHA-256, audit unduhan rahasia, dan komponen FileDropzone/EvidenceList.
 
 ## WHY THIS EXISTS
 
@@ -41,13 +41,15 @@ Bukti dan dokumen adalah inti CAP-19 dan sumber risiko kebocoran (T-09).
 
 ## IN SCOPE
 
-- Tabel dan service penyimpanan privat
+- Tabel `file_objects`, `file_links`, `file_sealed_owner_types` dan service penyimpanan privat tulis-sekali: path acak baru dengan pembuatan eksklusif, SHA-256 dan ukuran dihitung server dari byte yang disimpan, tanpa operasi timpa, pindah atau hapus berkas tersimpan (DI-33)
+- Hak kolom `pranata_app`: `file_objects` hanya `UPDATE (classification, scan_status)`, `file_links` hanya `UPDATE (label, unlinked_by, unlinked_at)`, `file_sealed_owner_types` hanya `SELECT`; trigger `guard_file_object_change()` (identitas isi tetap, klasifikasi hanya naik, transisi status pemindaian terbatas) dan `guard_file_link_change()` (tautan dibuat aktif; berkas, pemilik dan tujuan tetap; pelepasan sekali dengan jam basis data; setiap UPDATE/DELETE tautan ke jenis pemilik terdaftar bersegel ditolak) (DI-33)
 - Validasi allowlist dan ukuran per tujuan; penolakan ekstensi ganda
-- Rute unduh `/files/{public_id}` dengan pemeriksaan subjek
+- Rute unduh `/files/{public_id}` dengan pemeriksaan subjek dan verifikasi ukuran serta SHA-256 atas salinan yang akan dikirim sebelum byte pertama; ketidakcocokan atau berkas hilang gagal tertutup dengan peristiwa audit `file.integrity_failed` dan peringatan operasi (DI-33)
+- Layanan integritas berkas yang dipakai unduhan dan job harian verifikasi ulang byte berkas bertaut ke pemilik bersegel (CONCURRENCY_AND_INTEGRITY §7 (e))
 - Pratinjau inline hanya PDF/PNG/JPG
 - Audit unduhan CONFIDENTIAL/RESTRICTED
 - Status pemindaian `NOT_SCANNED` (ClamAV opsional kelak)
-- Komponen UI unggah/daftar bukti
+- Komponen UI unggah/daftar bukti; aksi lepas hanya untuk tautan tidak bersegel yang diizinkan modul pemilik
 - Migrasi menambah `evidence_file_id` (FK `file_objects`) pada `org_appointments` dan `process_assignments`, serta lampiran bukti SK pada panel penunjukan dan penugasan
 
 ## OUT OF SCOPE
@@ -83,12 +85,14 @@ Bukti dan dokumen adalah inti CAP-19 dan sumber risiko kebocoran (T-09).
 ## ARCHITECTURE RULES
 
 - Unggah selalu dalam konteks subjek modul pemilik
+- Isi berkas berbeda selalu menjadi `file_objects` baru
 - Ikuti aturan dependensi modul ([ARCHITECTURE §5](../04-architecture/ARCHITECTURE.md#5-aturan-dependensi-antar-modul)) dan pola lapisan §6
 - Satu perintah = satu Action bertransaksi; efek samping setelah commit
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
 - SEC-10–13
+- SEC-22
 - AUTHZ-44
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
@@ -96,7 +100,7 @@ Bukti dan dokumen adalah inti CAP-19 dan sumber risiko kebocoran (T-09).
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `file_objects`, `file_links`
+- Tables: `file_objects`, `file_links`, `file_sealed_owner_types`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -198,13 +202,16 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Berkas tidak dapat diakses lewat URL statis
 - TAC-02 Unduhan tanpa izin subjek ditolak; unduhan rahasia tercatat
 - TAC-03 Validasi menolak tipe/ukuran tidak sah dengan pesan terlokalisasi
-- TAC-04 SHA-256 tersimpan dan diverifikasi saat unduh opsional
+- TAC-04 SHA-256 dan ukuran dihitung server dari byte yang disimpan dan diverifikasi pada setiap unduhan dan pratinjau sebelum byte pertama dikirim; berkas yang byte-nya diubah atau hilang di disk menghasilkan galat terlokalisasi tanpa isi berkas dan tercatat sebagai insiden integritas (DI-33, SEC-22)
+- TAC-05 Dengan koneksi `pranata_app` langsung, perubahan identitas isi `file_objects`, penurunan klasifikasi dan transisi status pemindaian yang tidak sah ditolak, sedangkan transisi pemindaian yang sah berhasil; trigger tetap menolak dengan peran berhak tabel penuh di basis data uji (DI-33)
+- TAC-06 Berkas, pemilik dan tujuan tautan tidak dapat dialihkan; pelepasan tautan tidak bersegel berhasil sekali tanpa menautkan ulang; pada jenis pemilik uji yang terdaftar bersegel, pelepasan, perubahan label, pengalihan dan penghapusan tautan ditolak, termasuk dari koneksi kedua yang menunggu transaksi penautan (DI-33)
+- TAC-07 Unggahan tidak pernah menimpa berkas yang ada (DI-33)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Unggah/unduh/otorisasi
+- Feature: Unggah/unduh/otorisasi; DI-33 (uji negatif langsung DB dengan dua koneksi)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Unggah bukti
@@ -212,7 +219,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Responsive: 390×844 dan 1440×900
 - Accessibility: axe tanpa pelanggaran serius/kritis
 - Production build: npm run build
-- Security: SEC-10–13, AUTHZ-44
+- Security: SEC-10–13, SEC-22, AUTHZ-44
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
 
 ## TEST CHECKLIST
@@ -267,6 +274,7 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan menyimpan berkas di public/
+- Jangan menimpa, memindah atau mengganti isi berkas tersimpan; isi berbeda selalu menjadi berkas baru
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

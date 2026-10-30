@@ -41,7 +41,7 @@ Periksa status pgBackRest (`info`), umur WAL terakhir < 10 menit, snapshot resti
 2. Siapkan server/instance tujuan (staging untuk latihan).
 3. Restore basis data dengan pgBackRest ke titik waktu; restore berkas dengan restic.
 4. Pasang `.env` dan `APP_KEY` dari cadangan konfigurasi terenkripsi.
-5. Jalankan pemeriksaan integritas (jumlah baris kunci, verifikasi saldo ledger, checksum berkas sampel).
+5. Jalankan pemeriksaan integritas (jumlah baris kunci, verifikasi saldo ledger, checksum berkas sampel) serta job verifikasi integritas [CONCURRENCY_AND_INTEGRITY §7](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#7-verifikasi-integritas-berkala) untuk sidik jari tangkapan dan seluruh berkas bersegel.
 6. Catat waktu mulai–selesai terhadap RTO dan selisih data terhadap RPO; simpan catatan latihan.
 
 ## RB-08 Reset password dibantu admin
