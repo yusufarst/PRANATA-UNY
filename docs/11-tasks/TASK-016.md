@@ -42,10 +42,11 @@ Bukti dan dokumen adalah inti CAP-19 dan sumber risiko kebocoran (T-09).
 ## IN SCOPE
 
 - Tabel `file_objects`, `file_links`, `file_sealed_owner_types` dan service penyimpanan privat tulis-sekali: path acak baru dengan pembuatan eksklusif, SHA-256 dan ukuran dihitung server dari byte yang disimpan, tanpa operasi timpa, pindah atau hapus berkas tersimpan (DI-33)
-- Hak kolom `pranata_app`: `file_objects` hanya `UPDATE (classification, scan_status)`, `file_links` hanya `UPDATE (label, unlinked_by, unlinked_at)`, `file_sealed_owner_types` hanya `SELECT`; trigger `guard_file_object_change()` (identitas isi tetap, klasifikasi hanya naik, transisi status pemindaian terbatas) dan `guard_file_link_change()` (tautan dibuat aktif; berkas, pemilik dan tujuan tetap; pelepasan sekali dengan jam basis data; setiap UPDATE/DELETE tautan ke jenis pemilik terdaftar bersegel ditolak) (DI-33)
+- Hak kolom `pranata_app`: `file_objects` hanya `UPDATE (classification, scan_status)`, `file_links` hanya `UPDATE (label, unlinked_by, unlinked_at)`, `file_sealed_owner_types` hanya `SELECT`; trigger `guard_file_object_change()` (identitas isi tetap, klasifikasi hanya naik, status pemindaian tidak kembali ke NOT_SCANNED) dan `guard_file_link_change()` (tautan dibuat aktif; `owner_type` berupa nama tabel sesuai morph map yang dipaksakan; berkas, pemilik dan tujuan tetap; pelepasan sekali dengan jam basis data; sisipan ke pemilik terdaftar bersegel mengunci baris pemilik `FOR KEY SHARE` dan ditolak bila belum terlihat; setiap UPDATE/DELETE tautan ke jenis pemilik terdaftar bersegel ditolak) (DI-33)
+- Pemasangan `verify_capture_manifest()` sekali pada `file_links` dengan dispatch ke `file_sealed_owner_types.seal_function`, diuji dengan jenis pemilik dan fungsi sidik jari uji (DI-33)
 - Validasi allowlist dan ukuran per tujuan; penolakan ekstensi ganda
 - Rute unduh `/files/{public_id}` dengan pemeriksaan subjek dan verifikasi ukuran serta SHA-256 atas salinan yang akan dikirim sebelum byte pertama; ketidakcocokan atau berkas hilang gagal tertutup dengan peristiwa audit `file.integrity_failed` dan peringatan operasi (DI-33)
-- Layanan integritas berkas yang dipakai unduhan dan job harian verifikasi ulang byte berkas bertaut ke pemilik bersegel (CONCURRENCY_AND_INTEGRITY §7 (e))
+- Layanan integritas berkas sebagai satu-satunya jalur baca byte tersimpan (unduhan, pratinjau, perakitan paket dokumen, konversi) dan job harian verifikasi ulang byte berkas bertaut ke pemilik bersegel (CONCURRENCY_AND_INTEGRITY §7 (e)) (DI-33)
 - Pratinjau inline hanya PDF/PNG/JPG
 - Audit unduhan CONFIDENTIAL/RESTRICTED
 - Status pemindaian `NOT_SCANNED` (ClamAV opsional kelak)
@@ -204,8 +205,8 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Validasi menolak tipe/ukuran tidak sah dengan pesan terlokalisasi
 - TAC-04 SHA-256 dan ukuran dihitung server dari byte yang disimpan dan diverifikasi pada setiap unduhan dan pratinjau sebelum byte pertama dikirim; berkas yang byte-nya diubah atau hilang di disk menghasilkan galat terlokalisasi tanpa isi berkas dan tercatat sebagai insiden integritas (DI-33, SEC-22)
 - TAC-05 Dengan koneksi `pranata_app` langsung, perubahan identitas isi `file_objects`, penurunan klasifikasi dan transisi status pemindaian yang tidak sah ditolak, sedangkan transisi pemindaian yang sah berhasil; trigger tetap menolak dengan peran berhak tabel penuh di basis data uji (DI-33)
-- TAC-06 Berkas, pemilik dan tujuan tautan tidak dapat dialihkan; pelepasan tautan tidak bersegel berhasil sekali tanpa menautkan ulang; pada jenis pemilik uji yang terdaftar bersegel, pelepasan, perubahan label, pengalihan dan penghapusan tautan ditolak, termasuk dari koneksi kedua yang menunggu transaksi penautan (DI-33)
-- TAC-07 Unggahan tidak pernah menimpa berkas yang ada (DI-33)
+- TAC-06 Berkas, pemilik dan tujuan tautan tidak dapat dialihkan; pelepasan tautan tidak bersegel berhasil sekali tanpa menautkan ulang; pada jenis pemilik uji yang terdaftar bersegel, pelepasan, perubahan label, pengalihan dan penghapusan tautan ditolak, termasuk dari koneksi kedua selama transaksi penautan belum commit dan sesudahnya, sisipan ke baris pemilik yang tidak ada ditolak, dan `owner_type` yang bukan nama tabel ditolak (DI-33)
+- TAC-07 Unggahan tidak pernah menimpa berkas yang ada dan mengabaikan sidik jari atau ukuran dari klien; pembacaan sisi server (perakitan paket uji) atas berkas rusak gagal tertutup; job harian melaporkan berkas bersegel uji yang byte-nya berubah sebagai insiden integritas tanpa memperbaikinya (DI-33)
 
 ## TEST REQUIREMENTS
 

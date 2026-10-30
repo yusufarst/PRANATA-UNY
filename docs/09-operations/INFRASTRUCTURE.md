@@ -88,7 +88,7 @@ flowchart TB
 
 Target desain **RTO ≤ 4 jam, RPO ≤ 1 jam** (OD-32, NFR-O01/O02). Dengan WAL setiap ≤ 5 menit ke repositori lokal dan sinkronisasi offsite ≤ 15 menit, RPO teoretis jauh di bawah 1 jam; klaim hanya sah setelah uji restore nyata:
 
-- **Latihan restore bulanan** ke staging (basis data PITR ke waktu tertentu + berkas), mengukur durasi dan memverifikasi integritas (jumlah baris kunci, verifikasi saldo ledger, checksum berkas sampel).
+- **Latihan restore bulanan** ke staging (basis data PITR ke waktu tertentu + berkas), mengukur durasi dan memverifikasi integritas (jumlah baris kunci, verifikasi saldo ledger, checksum berkas sampel, serta job verifikasi integritas untuk sidik jari tangkapan dan seluruh berkas bersegel sesuai RB-07).
 - **Latihan pemulihan bencana triwulanan** dari offsite ke server bersih mengikuti runbook, mencatat waktu aktual terhadap RTO.
 - Hasil dicatat sebagai bukti operasi; kegagalan memicu tindakan korektif sebelum rilis berikutnya.
 

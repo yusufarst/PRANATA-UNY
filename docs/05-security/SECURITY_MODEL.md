@@ -87,7 +87,7 @@ Kanal resmi penyerahan kode aktivasi/password sementara kepada penyedia tetap GA
 - Berkas disimpan di disk privat dengan path acak; unduhan melalui rute terotorisasi yang memeriksa izin subjek; header `Content-Disposition: attachment`, `X-Content-Type-Options: nosniff`.
 - Unduhan berkas CONFIDENTIAL/RESTRICTED dan semua ekspor tercatat di audit (pengguna, filter, jumlah baris).
 - Identitas isi berkas tetap: SHA-256 dan ukuran dihitung server saat unggah, berkas ditulis sekali tanpa timpa, dan basis data menolak perubahan identitas isi (`file_objects`) serta setiap perubahan, pelepasan atau penghapusan tautan ke pemilik bersegel seperti kiriman penawaran ([DATA_MODEL §12](../04-architecture/DATA_MODEL.md#12-files-documents-dan-audit)); yang dapat diperbarui hanya klasifikasi (naik) dan status pemindaian.
-- Setiap unduhan dan pratinjau memverifikasi ukuran dan SHA-256 sebelum byte pertama dikirim; ketidakcocokan gagal tertutup sebagai insiden integritas tercatat ([COMMAND_AND_API_CONTRACTS §7](../06-api-performance/COMMAND_AND_API_CONTRACTS.md#7-unggah-dan-unduh)). Job harian memverifikasi ulang byte berkas bersegel ([CONCURRENCY_AND_INTEGRITY §7](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#7-verifikasi-integritas-berkala)).
+- Setiap unduhan, pratinjau dan pembacaan byte tersimpan oleh aplikasi (mis. perakitan paket dokumen) memverifikasi ukuran dan SHA-256 lebih dahulu — untuk unduhan sebelum byte pertama dikirim; ketidakcocokan gagal tertutup sebagai insiden integritas tercatat ([COMMAND_AND_API_CONTRACTS §7](../06-api-performance/COMMAND_AND_API_CONTRACTS.md#7-unggah-dan-unduh)). Job harian memverifikasi ulang byte berkas bersegel ([CONCURRENCY_AND_INTEGRITY §7](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#7-verifikasi-integritas-berkala)).
 - Pemindaian antivirus (ClamAV self-hosted) usulan **opsional** karena memakai RAM ±1–2 GB **[KEPUTUSAN OWNER — opsional]**; bila tidak diaktifkan, status `NOT_SCANNED` ditampilkan.
 
 ## 7. Transport dan header
@@ -134,7 +134,7 @@ Peristiwa yang dicatat di `audit_events`: login berhasil/gagal, penguncian, rese
 | SEC-19 | CI gagal bila `composer audit`/`npm audit` menemukan kerentanan tinggi/kritis tanpa pengecualian tercatat |
 | SEC-20 | Reset dibantu admin: password sementara sekali pakai, kedaluwarsa, wajib ganti, tercatat, notifikasi ke pengguna |
 | SEC-21 | Admin tidak dapat sendirian mereset password atau TOTP pemegang penugasan keputusan aktif; setelah reset dibantu, aksi keputusan ditolak sampai pengguna mengganti password dan memverifikasi TOTP |
-| SEC-22 | Berkas yang byte-nya diubah atau hilang di penyimpanan tidak terkirim: unduhan dan pratinjau gagal tertutup tanpa isi berkas dan tercatat sebagai insiden integritas; identitas isi berkas dan tautan ke pemilik bersegel tidak dapat diubah lewat koneksi `pranata_app` |
+| SEC-22 | Berkas yang byte-nya diubah atau hilang di penyimpanan tidak terkirim: unduhan, pratinjau dan pembacaan sisi server (mis. perakitan paket dokumen) gagal tertutup tanpa isi berkas dan tercatat sebagai insiden integritas; identitas isi berkas dan tautan ke pemilik bersegel tidak dapat diubah lewat koneksi `pranata_app` |
 
 Skenario otorisasi AUTHZ-* dimiliki ACCESS_CONTROL; strategi pengujian di [TEST_STRATEGY](../08-testing/TEST_STRATEGY.md).
 

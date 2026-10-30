@@ -34,7 +34,7 @@ flowchart LR
 | Revisi | Koreksi menghasilkan revisi baru; revisi lama menjadi SUPERSEDED dan tetap dapat dibuka. Dokumen FINAL — termasuk yang sudah diterbitkan atau ditandatangani — tidak pernah ditimpa; pembatalan memerlukan alasan (VOIDED). Perlakuan nomor pada revisi mengikuti kebijakan (GAP-017). |
 | Penerbitan dan tanda tangan | Tindakan terpisah atas dokumen FINAL. Wajib/tidaknya dan urutannya per jenis dokumen berasal dari kebijakan `procurement.documents`; tanpa urutan dari kebijakan, keduanya independen dan dapat dicatat dalam urutan apa pun (STATE_TRANSITIONS WF-028 TR-274 dan WF-011 TR-102–104 tidak menetapkan urutan). Status tampilan diturunkan dari tindakan yang tercatat. |
 | Bukti tanda tangan | V1 mencatat bukti tanda tangan basah (pindaian) atau PDF bertanda tangan yang diunggah, beserta snapshot nama/jabatan penanda tangan dari penunjukan. Tanda tangan digital adalah ekstensi masa depan (`SignatureEvidence`). |
-| Paket SPJ | `document_packs` menyusun daftar persyaratan dari kebijakan `procurement.documents`, menandai yang ada/kurang, dan dapat dirakit menjadi satu PDF gabungan (Gotenberg merge) beserta lembar indeks, atau ZIP. |
+| Paket SPJ | `document_packs` menyusun daftar persyaratan dari kebijakan `procurement.documents`, menandai yang ada/kurang, dan dapat dirakit menjadi satu PDF gabungan (Gotenberg merge) beserta lembar indeks, atau ZIP. Berkas sumber dibaca melalui layanan integritas berkas; berkas yang gagal verifikasi menggagalkan perakitan ([COMMAND_AND_API_CONTRACTS §7](../06-api-performance/COMMAND_AND_API_CONTRACTS.md#7-unggah-dan-unduh)). |
 
 ## 2. Format bahasa Indonesia
 
