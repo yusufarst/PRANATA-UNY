@@ -39,7 +39,7 @@ Kepercayaan riwayat (INV-017, CAP-19) dan hak minimum DB (ADR-0010) menjadi dasa
 
 - Migrasi pembuatan peran (dev/test) dan dokumentasi pembuatan peran di server
 - Koneksi `migrator` di konfigurasi; aplikasi memakai `pranata_app`
-- Fungsi trigger generik `forbid_update_delete()`, `forbid_scope_change()` dan `forbid_change_when_parent_final()` beserta helper migrasi untuk memasangnya; pemasangan pada tabel domain oleh Task pemilik tabel (DATA_MODEL §19 aturan 6)
+- Fungsi trigger generik `forbid_update_delete()`, `forbid_scope_change()`, `forbid_change_when_parent_final()` (INSERT/UPDATE/DELETE dengan kunci baris induk `FOR SHARE`) dan kerangka constraint trigger tertunda `verify_capture_manifest()` untuk segel tangkapan, beserta helper migrasi untuk memasangnya; pemasangan pada tabel domain oleh Task pemilik tabel (DATA_MODEL §19 aturan 6)
 - `audit_events` berpartisi + partisi default + command pembuat partisi 3 bulan ke depan
 - `AuditLogger` (actor, action, subject, changes tanpa rahasia, request_id, ip, reason) dan uji
 - Uji hak: `pranata_app` tidak dapat UPDATE/DELETE audit
@@ -177,6 +177,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Partisi bulan berjalan + 3 bulan ke depan ada; sisipan di luar rentang masuk partisi default
 - TAC-04 AuditLogger mencatat field yang diwajibkan dan menolak memuat field rahasia
 - TAC-05 Pada tabel uji, `forbid_scope_change()` menolak perubahan kolom lingkup dan `forbid_change_when_parent_final()` menolak ubah/hapus baris anak dari induk final, termasuk perintah langsung memakai peran app (DI-17)
+- TAC-06 Pada tabel uji, `forbid_change_when_parent_final()` juga menolak sisipan baris anak ke induk final, termasuk sisipan dari koneksi kedua yang bersamaan dengan finalisasi, dan `verify_capture_manifest()` menolak saat commit sisipan anak sesudah transaksi pencatatan induk serta sidik jari yang tidak cocok
 
 ## TEST REQUIREMENTS
 

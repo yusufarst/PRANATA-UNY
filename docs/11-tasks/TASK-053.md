@@ -205,7 +205,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Serah terima parsial lalu sisa: status dan sisa benar
 - TAC-03 Konfirmasi tidak mengubah stok; selisih membuat pekerjaan telaah
 - TAC-04 Barang tidak tersedia dapat diteruskan menjadi kebutuhan pengadaan tanpa persetujuan otomatis
-- TAC-05 Serah terima atau baris yang tidak cocok dengan permintaan, gudang atau barangnya ditolak aplikasi dan DB (DI-08); posting ganda baris serah terima ditolak (DI-09); baris tidak berubah setelah diposting (DI-15); kolom permintaan/gudang serah terima tidak dapat diubah (DI-17)
+- TAC-05 Serah terima atau baris yang tidak cocok dengan permintaan, gudang atau barangnya ditolak aplikasi dan DB (DI-08); posting ganda baris serah terima ditolak (DI-09); baris tidak bertambah atau berubah setelah diposting (DI-15); kolom permintaan/gudang serah terima tidak dapat diubah (DI-17)
 
 ## TEST REQUIREMENTS
 

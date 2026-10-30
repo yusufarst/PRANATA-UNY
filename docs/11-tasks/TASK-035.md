@@ -210,7 +210,7 @@ OD-35, BR-037/BR-038, INV-024; PR 34/2023 Lampiran III B.3.b.8, Pasal 9 ayat (2)
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Paket dua lot menghasilkan dua hasil dengan pemenang berbeda; satu penyedia dapat memenangkan beberapa lot; hasil kedua yang berlaku untuk lingkup dan pemilihan yang sama ditolak (DI-26)
-- TAC-02 Peringkat atau pemenang dari partisipasi pemilihan lain, WINNER kedua pada lingkup SINGLE, peringkat ganda, atau peserta tanpa penawaran OPENED yang mencakup lingkup hasil, tanpa hasil tahap lengkap untuk lingkup itu, atau tanpa PASS pada setiap tahap gugur yang berlaku baginya ditolak aplikasi dan DB, termasuk lewat sisipan langsung (DI-05)
+- TAC-02 Peringkat atau pemenang dari partisipasi pemilihan lain, WINNER kedua pada lingkup SINGLE, peringkat ganda, atau peserta tanpa penawaran OPENED yang mencakup lingkup hasil, tanpa hasil tahap lengkap untuk lingkup itu, atau tanpa PASS pada setiap tahap gugur yang berlaku baginya ditolak aplikasi dan DB, termasuk lewat sisipan langsung; peringkat baru untuk hasil yang sudah DETERMINED ditolak (DI-05)
 - TAC-03 Penetap hasil sesuai ambang nilai kebijakan (uji batas); kegagalan per lingkup tercatat dengan alasan dan langkah berikut
 - TAC-04 Penunjukan Langsung dengan negosiasi akhir NOT_AGREED tidak dapat menghasilkan WINNER; MULTIPLE_FRAMEWORK tanpa izin kebijakan ditolak (DI-26)
 - TAC-05 Reviu hasil hanya oleh penugasan PPK pada paket itu; NOT_AGREED memerlukan alasan (AUTHZ-49)

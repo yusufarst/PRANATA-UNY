@@ -208,7 +208,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 - TAC-01 Kenaikan di atas batas kebijakan menuntut keputusan pengecualian yang tidak dapat dilewati
 - TAC-02 Kontrak berlaku tidak berubah sebelum adendum ditandatangani
-- TAC-03 Versi kontrak baru beserta set baris lengkap tercatat saat adendum berlaku; versi dan baris lama tidak berubah; satu versi per adendum (DI-14)
+- TAC-03 Versi kontrak baru beserta set baris lengkap tercatat dalam satu transaksi saat adendum berlaku; versi dan baris lama tidak berubah atau bertambah; satu versi per adendum (DI-14)
 
 ## TEST REQUIREMENTS
 

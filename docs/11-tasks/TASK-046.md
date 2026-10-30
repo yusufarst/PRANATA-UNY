@@ -210,7 +210,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 BAST tidak membuat aset/stok otomatis
 - TAC-03 Baris BAST siap diklasifikasikan
 - TAC-04 Baris BAST yang menunjuk baris kontrak dari kontrak lain ditolak aplikasi dan DB; kolom `contract_id` serah terima dan barisnya tidak dapat diubah (DI-17, DI-19)
-- TAC-05 Ubah/hapus baris BAST setelah SIGNED ditolak kecuali kolom klasifikasi dan rujukan hilir (DI-15)
+- TAC-05 Tambah/ubah/hapus baris BAST setelah SIGNED ditolak kecuali pengisian kolom klasifikasi dan rujukan hilir (DI-15)
 - TAC-06 Penilaian kinerja ditolak sebelum kontrak COMPLETED, untuk perusahaan selain penyedia kontrak, atau oleh pihak tanpa penugasan; penilaian FINAL tidak dapat diubah (DI-29, AUTHZ-51)
 
 ## TEST REQUIREMENTS

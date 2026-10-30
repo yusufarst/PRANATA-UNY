@@ -197,7 +197,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Selisih tercatat tanpa mengubah stok sampai penyesuaian diputuskan
 - TAC-02 Penyesuaian diposting sebagai movement beralasan
 - TAC-03 Selisih dapat dibuka sebagai kasus rekonsiliasi
-- TAC-04 Penyesuaian ganda untuk baris opname yang sama ditolak (DI-09); ubah/hapus baris setelah CLOSED ditolak DB (DI-15)
+- TAC-04 Penyesuaian ganda untuk baris opname yang sama ditolak (DI-09); tambah/ubah/hapus baris setelah CLOSED ditolak DB (DI-15)
 
 ## TEST REQUIREMENTS
 

@@ -202,7 +202,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Stok bertambah hanya saat penerimaan diposting setelah verifikasi
 - TAC-02 Draf dari handoff tidak menambah stok sebelum diverifikasi
 - TAC-03 Saldo awal memerlukan bukti dan alasan
-- TAC-04 Posting ulang baris penerimaan yang sama ditolak identitas sumber (DI-09); ubah/hapus baris setelah POSTED ditolak DB (DI-15)
+- TAC-04 Posting ulang baris penerimaan yang sama ditolak identitas sumber (DI-09); tambah/ubah/hapus baris setelah POSTED ditolak DB (DI-15)
 
 ## TEST REQUIREMENTS
 

@@ -195,7 +195,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Kaki dispatch dan receipt tercatat di gudang masing-masing
 - TAC-02 Selisih jumlah membuka kasus
 - TAC-03 Petugas tanpa grant gudang tujuan tidak dapat menerima
-- TAC-04 Posting ganda kaki transfer dan kaki di gudang yang salah ditolak (DI-09); ubah baris setelah DISPATCHED selain `qty_received` ditolak DB (DI-15)
+- TAC-04 Posting ganda kaki transfer dan kaki di gudang yang salah ditolak (DI-09); tambah baris atau ubah baris setelah DISPATCHED selain `qty_received` ditolak DB (DI-15)
 
 ## TEST REQUIREMENTS
 

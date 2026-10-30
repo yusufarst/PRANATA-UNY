@@ -40,6 +40,8 @@ INV-023/BR-036: isi penawaran tidak boleh diubah dan pembukaan tidak menggugurka
 - Tabel `proc_participations` (per pemilihan; `uq(id, selection_id)`, `uq(id, package_id)`, `uq(id, company_id)`), `proc_submissions`, `proc_submission_scopes`, `proc_submission_lines`, `proc_opening_records`, `proc_opening_entries`; pemeriksaan DPT saat partisipasi
 - Imutabilitas: hak kolom `UPDATE (status, opened_at, withdrawn_at, withdrawal_evidence_file_id)`, trigger `forbid_offer_change()`, lingkup/rincian/entri pembukaan append-only, tautan berkas OFFER tidak dapat dilepas (DI-23)
 - Pembukaan atau penutupan penerimaan per sampul tanpa kolom atau aksi gugur (DI-24), hanya sesudah batas akhir versi tertinggi; waktu terima dari jam basis data (kanal PRANATA) atau bukti terima (kanal eksternal); keterlambatan dihitung dari batas akhir tanpa kolom penanda; entri hanya untuk kiriman tepat waktu; `opened = false` hanya untuk sampul harga peserta yang gugur lebih dahulu (DI-24); constraint trigger tertunda `check_opening_consistency()` menyelaraskan status (DI-31); penggantian skema sesudah pembukaan ditolak di bawah kunci pemilihan (DI-22)
+- Segel tangkapan kiriman dan pembukaan: `capture_manifest_sha256` pada `proc_submissions` dan `proc_opening_records`, fungsi `capture_manifest_submission()`/`capture_manifest_opening()` dan pemasangan `verify_capture_manifest()` pada lingkup, rincian harga, entri pembukaan serta `file_links` bertujuan OFFER; pencatatan banyak baris dalam satu transaksi (DI-23, DI-24)
+- Koreksi pencatatan kanal eksternal sebagai kiriman pengganti (`corrects_id`, status CORRECTED) dengan peserta, sampul dan waktu terima yang sama serta alasan; sesudah penerimaan tertutup hanya bersama penggantian catatan pembukaan sebelum ada hasil evaluasi (DI-23)
 - State WF-008 (TR-071–077)
 - PG-110 (penerimaan penawaran) dan PG-123 (pembukaan); berkas penawaran CONFIDENTIAL
 - Alur IX-024: alasan wajib, audit gagal tertutup, read-only, tanpa ekspor
@@ -222,14 +224,17 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-05 Pembukaan mencatat nilai yang dibacakan dan kelengkapan; penawaran tidak lengkap tetap berstatus sama dan tidak ada aksi gugur; entri tidak dibuka hanya untuk sampul harga peserta yang gugur lebih dahulu dan selalu beralasan (DI-24); penggantian skema sesudah pembukaan ditolak dan pembukaan bersamaan pembekuan diserialkan (DI-22)
 - TAC-06 Petugas tanpa penugasan tidak dapat membuka penawaran dan tidak seorang pun dapat mengubah penawaran asli (AUTHZ-46); isolasi antar-penyedia diuji di TASK-043
 - TAC-07 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
-- TAC-08 Jawaban klarifikasi dan revisi sebelum batas akhir tertaut ke penawaran asal tanpa mengubahnya
-- TAC-09 Kolom `package_id`/`selection_id` partisipasi dan penawaran tidak dapat diubah setelah insert (DI-17)
+- TAC-08 Sisipan lingkup, rincian harga atau tautan berkas OFFER ke kiriman yang sudah tercatat, dan entri ke catatan pembukaan yang sudah tercatat (RECORDED atau SUPERSEDED), ditolak saat commit lewat koneksi `pranata_app` langsung dan dari koneksi kedua selama pencatatan; pencatatan kiriman banyak baris dalam satu transaksi berhasil (DI-23, DI-24)
+- TAC-09 Kesalahan pencatatan kanal eksternal hanya diperbaiki dengan kiriman pengganti beralasan yang peserta, sampul dan waktu terimanya sama; kiriman CORRECTED tidak dapat dibuka atau dievaluasi (DI-23)
+- TAC-10 Jawaban klarifikasi dan revisi sebelum batas akhir tertaut ke penawaran asal tanpa mengubahnya
+- TAC-11 Kolom `package_id`/`selection_id` partisipasi dan penawaran tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-008, IX-024; DI-17, DI-22, DI-23, DI-24, DI-31 (uji negatif langsung DB; DI-22 dan DI-31 dengan dua koneksi)
+- Unit: Paritas format sidik jari tangkapan antara aplikasi dan fungsi basis data
+- Feature: WF-008, IX-024; DI-17, DI-22, DI-23, DI-24, DI-31 (uji negatif langsung DB; DI-22, DI-23, DI-24 dan DI-31 dengan dua koneksi)
 - Authorization: AUTHZ-31, AUTHZ-32, AUTHZ-46
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-16 bagian baca teraudit; J-19 bagian pembukaan
@@ -293,6 +298,7 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 - Jangan menyimpan atau mengubah penanda keterlambatan; pengecualian hanya berupa keputusan perpanjangan tercatat
 - Jangan menyediakan aksi gugur pada pembukaan
 - Jangan menyimpan koreksi aritmetik pada rekaman penawaran
+- Jangan menambah lingkup, baris, berkas atau entri pada kiriman atau pembukaan yang sudah tercatat; perbaikan hanya melalui record pengganti
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

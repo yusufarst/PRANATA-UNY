@@ -39,7 +39,7 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 
 ## IN SCOPE
 
-- Tabel `proc_contracts` (per pemenang: `participation_id`, FK `(participation_id, company_id)` sehingga perusahaan = pemenang, FK `(sppbj_id, participation_id)`; `draft_terms` sebagai rancangan sebelum SIGNED), `proc_contract_scopes` (satu kontrak aktif per lingkup SINGLE), `proc_contract_versions` dan `proc_contract_lines` (keduanya append-only; FK `(contract_id, version_no)`; baris unik per versi; `scope_id` dengan FK ke lingkup kontrak dan ke item lingkup), `proc_guarantees`
+- Tabel `proc_contracts` (per pemenang: `participation_id`, FK `(participation_id, company_id)` sehingga perusahaan = pemenang, FK `(sppbj_id, participation_id)`; `draft_terms` sebagai rancangan sebelum SIGNED), `proc_contract_scopes` (satu kontrak aktif per lingkup SINGLE), `proc_contract_versions` dan `proc_contract_lines` (keduanya append-only; FK `(contract_id, version_no)`; baris unik per versi; segel tangkapan per versi dengan `capture_manifest_sha256` dan fungsi `capture_manifest_contract_version()`; `scope_id` dengan FK ke lingkup kontrak dan ke item lingkup), `proc_guarantees`
 - Versi ORIGINAL beserta barisnya dibuat dari `draft_terms` dalam transaksi penandatanganan; `current_version_no`/`current_value` adalah proyeksi versi terakhir
 - State WF-012 (TR-111–TR-115)
 - Evaluator `ContractForm`/`GuaranteeRequirement` (simulasi bila DRAFT)
@@ -214,7 +214,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Bentuk bukti perjanjian disarankan sesuai nilai dan rezim pada kebijakan DRAFT; pada pita yang belum diputus (GAP-027(b): di atas Rp20 juta s.d. Rp50 juta) sistem tidak memilih otomatis dan mewajibkan pilihan manusia beralasan
 - TAC-02 Versi ORIGINAL tercatat saat tanda tangan; nilai berjalan = nilai versi terakhir
 - TAC-03 Jaminan pelaksanaan diharapkan bila kebijakan menetapkan ambang; selama GAP-027(c) terbuka dasar perhitungan (HPS atau pagu) dipilih manusia dengan alasan
-- TAC-04 Baris kontrak hanya dibuat bersama versinya; UPDATE/DELETE baris versi ditolak hak peran dan trigger; baris tanpa versi yang cocok ditolak (DI-14)
+- TAC-04 Baris kontrak hanya dibuat dalam transaksi pembuatan versinya (sisipan sesudahnya ditolak saat commit oleh segel tangkapan); UPDATE/DELETE baris versi ditolak hak peran dan trigger; baris tanpa versi yang cocok ditolak (DI-14)
 - TAC-05 Kontrak untuk SPPBJ pemenang lain, untuk partisipasi bukan pemenang, atau dengan perusahaan selain perusahaan partisipasi pemenang ditolak aplikasi dan DB; kolom `package_id` kontrak tidak dapat diubah (DI-06, DI-17)
 - TAC-06 Dua kontrak aktif untuk lingkup SINGLE yang sama ditolak, termasuk bila dibuat bersamaan; baris kontrak dengan item lingkup lain ditolak FK (DI-27, AUTHZ-50)
 
