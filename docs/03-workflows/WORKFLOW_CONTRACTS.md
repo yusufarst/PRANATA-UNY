@@ -495,7 +495,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | State / actions | [WF-030 / TR-291–TR-298](STATE_TRANSITIONS.md#wf-030). |
 | Bukti / owner–waiting–next | Permintaan bernomor, keputusan beserta alasan (termasuk pengurangan jumlah), catatan penyiapan, bukti serah terima (barang, jumlah, waktu, petugas, penerima), konfirmasi penerima dan selisih yang dilaporkan; owner per state. |
 | Revisi / kegagalan / batal | EP-001/002/003/006/007/009/010; jumlah yang diserahkan tidak pernah melebihi stok tercatat gudang (INV-020); persetujuan tidak mengubah stok; selisih konfirmasi tidak mengedit serah terima, melainkan membuka koreksi atau rekonsiliasi. |
-| Selesai / hasil / handoff | Serah terima menghasilkan bahan pengeluaran (keluarga usage/release WF-023) pada gudang itu sejak serah terima fisik; penerimaan ledger mengikuti TR-224 di bawah versi kebijakan gudang yang ACTIVE, dan pemetaan ke kode transaksi institusi tetap GAP-005/006 (INV-010). Barang tidak tersedia → kebutuhan WF-003 melalui IX-021, bukan pengadaan otomatis. Return ke permintaan yang sama. |
+| Selesai / hasil / handoff | Serah terima menghasilkan bahan pengeluaran (keluarga usage/release WF-023) pada gudang itu sejak serah terima fisik; penerimaan ledger mengikuti TR-224 di bawah versi kebijakan gudang yang berlaku resmi, dan pemetaan ke kode transaksi institusi tetap GAP-005/006 (INV-010). Barang tidak tersedia → kebutuhan WF-003 melalui IX-021, bukan pengadaan otomatis. Return ke permintaan yang sama. |
 | RT / IX / dependencies | RT-033; IX-001–007/009/011–013/017/021/022 sesuai TR; BR-030/032/033/034; INV-001/010/019/020/022; CAP-14/21/22; AC-17/28/29/31; GAP-005/006/014/023/025. |
 
 <a id="wf-031"></a>
@@ -511,7 +511,7 @@ Handoff fase yang berlaku pada **setiap WF**: P4 merepresentasikan identitas, hu
 | State / actions | [WF-031 / TR-301–TR-306](STATE_TRANSITIONS.md#wf-031). |
 | Bukti / owner–waiting–next | Pengajuan, tanda terima pengembalian, hasil pemeriksaan beserta alasan, dan tautan ke serah terima asal; owner per state. |
 | Revisi / kegagalan / batal | EP-002/003/007/009; pernyataan kondisi oleh pengembali tidak pernah menambah stok; jumlah fisik berbeda dicatat sebagai selisih. |
-| Selesai / hasil / handoff | Layak pakai → bahan penambahan stok (keluarga receipt/addition WF-023) diterima melalui TR-224 di bawah kebijakan gudang ACTIVE; tidak layak pakai → tercatat tanpa penambahan stok, disposisi menunggu keputusan sahih. Return ke pengembalian/serah terima asal yang sama. |
+| Selesai / hasil / handoff | Layak pakai → bahan penambahan stok (keluarga receipt/addition WF-023) diterima melalui TR-224 di bawah versi kebijakan gudang yang berlaku resmi; tidak layak pakai → tercatat tanpa penambahan stok, disposisi menunggu keputusan sahih. Return ke pengembalian/serah terima asal yang sama. |
 | RT / IX / dependencies | RT-034; IX-001/002/003/006/007/009/011–013/017; BR-030/033/034; INV-019/020/022; CAP-21/22; AC-28/29; GAP-005/006/023/025. |
 
 <a id="wf-032"></a>
@@ -563,7 +563,7 @@ Sumber [U-011](../00-governance/SOURCE_INVENTORY.md#u-011-owner-procurement-fiel
 | Pemilihan, lingkup penghargaan, undangan, penjajakan | WF-005 ekstensi metode; WF-006 | Pemilihan adalah konteks ekstensi metode yang applicable; undangan dan penjajakan adalah kegiatan dan bahan WF-006; tidak ada urutan universal. |
 | Penerimaan dan pembukaan penawaran | WF-008 S2, TR-072/074 | Pembukaan mencatat penerimaan dan pembacaan; ia bukan TR-076 (penerimaan/penolakan resmi) dan tidak menggugurkan penawaran (INV-023). |
 | Skema evaluasi yang dibekukan | WF-009 TR-081 ("criterion basis bila known") | Skema dari dokumen pengadaan menjadi dasar kriteria yang diketahui; selama metode evaluasi belum tervalidasi, keadaan WF009-S4 berlaku dan hasil berlabel simulasi. |
-| Hasil per kriteria/tahap, klarifikasi, negosiasi, evaluasi ulang | WF-009 TR-081–TR-085 | Hasil tertelusur per peserta dan lingkup (S3); evaluasi ulang adalah supersession TR-085 dengan riwayat; outcome resmi tetap TR-084 BLOCKED_BY_GAP sampai kebijakan ACTIVE. |
+| Hasil per kriteria/tahap, klarifikasi, negosiasi, evaluasi ulang | WF-009 TR-081–TR-085 | Hasil tertelusur per peserta dan lingkup (S3); evaluasi ulang adalah supersession TR-085 dengan riwayat; outcome resmi tetap TR-084 BLOCKED_BY_GAP sampai ada versi kebijakan yang berlaku resmi. |
 | Hasil per lingkup, beberapa pemenang, reviu PPK, cadangan | WF-010 TR-091–TR-094 | Satu hasil berlaku per lingkup; penerimaan resmi tetap TR-092 BLOCKED_BY_GAP; aktivasi cadangan adalah TR-094 (validated change result) untuk lingkup itu saja. |
 | SPPBJ dan kontrak per pemenang | WF-011, WF-012 | Scope SPPBJ/kontrak adalah lingkup yang dimenangi penyedia itu; TR-102–TR-104 tetap tanpa urutan universal. |
 | Pemeriksaan, penilaian kinerja, permintaan pembayaran | WF-013–WF-015; WF-007 | Penilaian kinerja dicatat sesudah kontrak selesai sebagai bukti pascapelaksanaan dan masukan evaluasi DPT (WF-007), bukan bagian WF-009. |

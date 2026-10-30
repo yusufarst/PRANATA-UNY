@@ -35,7 +35,7 @@ INV-009/019/020 dan ADR-0004.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-005, GAP-006, GAP-025) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-005, GAP-006, GAP-025) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
@@ -211,7 +211,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Saldo = jumlah ledger (job verifikasi); selisih membuat insiden
 - TAC-04 Kartu stok diurutkan `(occurred_at, id)` dengan saldo berjalan dihitung saat kueri; `balance_after` mengikuti urutan posting untuk pemeriksaan integritas
 - TAC-05 Pencatatan terlambat yang membuat saldo per tanggal negatif ditolak
-- TAC-06 Gerakan di bawah kebijakan non-ACTIVE bertanda simulasi
+- TAC-06 Gerakan berdasar versi kebijakan yang tidak berlaku resmi bertanda simulasi
 - TAC-07 Posting kedua untuk identitas sumber yang sama ditolak walaupun kunci idempotensi berbeda (DI-09)
 - TAC-08 Pembalikan ganda, tidak cocok, tanpa sumber koreksi atau alasan, atas pembalikan, atau yang membuat saldo negatif ditolak (DI-10)
 

@@ -2,7 +2,7 @@
 
 Status: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
 
-Matriks ini dibangkitkan dari kontrak Task dan diperiksa otomatis: setiap CAP-01–CAP-23, AC-01–AC-36, NFR-P01–P04/NFR-O01–O02, WF-001–WF-033, RT-001–RT-036 dan IX-001–IX-024 dipetakan ke minimal satu Task. Skenario integritas data DI-01–DI-30 ([TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)) dipetakan ke Task yang kriteria penerimaan atau ujinya memuatnya.
+Matriks ini dibangkitkan dari kontrak Task dan diperiksa otomatis: setiap CAP-01–CAP-23, AC-01–AC-36, NFR-P01–P04/NFR-O01–O02, WF-001–WF-033, RT-001–RT-036 dan IX-001–IX-024 dipetakan ke minimal satu Task. Skenario integritas data DI-01–DI-32 ([TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)) dipetakan ke Task yang kriteria penerimaan atau ujinya memuatnya.
 
 ## Kapabilitas (CAP)
 
@@ -259,10 +259,12 @@ Matriks ini dibangkitkan dari kontrak Task dan diperiksa otomatis: setiap CAP-01
 | [DI-28](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-034](TASK-034.md) |
 | [DI-29](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-042](TASK-042.md), [TASK-046](TASK-046.md) |
 | [DI-30](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-047](TASK-047.md) |
+| [DI-31](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-032](TASK-032.md), [TASK-033](TASK-033.md), [TASK-034](TASK-034.md) |
+| [DI-32](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-018](TASK-018.md), [TASK-020](TASK-020.md), [TASK-021](TASK-021.md), [TASK-058](TASK-058.md) |
 
 ## Perlakuan GAP
 
-Gerbang aktivasi: fitur dibangun dan diuji dengan kebijakan DRAFT berlabel simulasi; aksi resmi di produksi hanya setelah versi kebijakan ACTIVE dengan bukti resolusi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register)). Gerbang rilis/cutover dan penerimaan V1 diperiksa pada TASK-078 dan [RELEASE_PLAN](../10-release/RELEASE_PLAN.md). Menurut model usulan ini tidak ada GAP yang menghalangi implementasi Task; model dan daftar gerbang go-live menunggu keputusan Owner D-28. Tidak ada GAP yang diselesaikan oleh rencana ini.
+Gerbang aktivasi: fitur dibangun dan diuji dengan kebijakan DRAFT berlabel simulasi; aksi resmi di produksi hanya dengan versi kebijakan yang disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi)). Gerbang rilis/cutover dan penerimaan V1 diperiksa pada TASK-078 dan [RELEASE_PLAN](../10-release/RELEASE_PLAN.md). Menurut model usulan ini tidak ada GAP yang menghalangi implementasi Task; model dan daftar gerbang go-live menunggu keputusan Owner D-28. Tidak ada GAP yang diselesaikan oleh rencana ini.
 
 | GAP | Perlakuan | Kebijakan / gerbang | Task |
 |---|---|---|---|

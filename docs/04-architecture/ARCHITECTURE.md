@@ -141,24 +141,24 @@ Handoff Procurement → Asset/Inventory (WF-016) berjalan melalui kontrak modul 
 | Model | Eloquent dengan `$table` eksplisit berprefiks, cast enum/decimal, tanpa logika lintas modul; `preventLazyLoading` aktif di luar produksi. |
 | Halaman React | Menerima props bertipe; aksi tampil hanya bila server mengirim izin `can.*` untuk objek itu; tidak ada penegakan yang hanya di frontend (OD-33). |
 
-Mesin transisi: setiap workflow P3 diimplementasikan sebagai peta transisi eksplisit di modul pemiliknya (`Enums/<Workflow>State`, `Enums/<Workflow>Transition`), dengan kode TR P3 sebagai identitas transisi. TR berstatus BLOCKED_BY_GAP hanya dapat dijalankan bila kebijakan yang menjadi gerbangnya ACTIVE (bagian 8.1).
+Mesin transisi: setiap workflow P3 diimplementasikan sebagai peta transisi eksplisit di modul pemiliknya (`Enums/<Workflow>State`, `Enums/<Workflow>Transition`), dengan kode TR P3 sebagai identitas transisi. TR berstatus BLOCKED_BY_GAP hanya dapat dijalankan sebagai aksi resmi bila versi kebijakan yang menjadi gerbangnya berlaku resmi pada tanggal acuan aksi (bagian 8.1; [POLICY_REGISTRY §3.1](POLICY_REGISTRY.md#31-keberlakuan-resmi)).
 
 ## 7. Komponen lintas modul
 
 | Komponen | Kontrak inti |
 |---|---|
-| Policy Registry | Lihat [POLICY_REGISTRY](POLICY_REGISTRY.md): keluarga kebijakan, versi DRAFT→IN_REVIEW→ACTIVE→SUPERSEDED/RETIRED, aktivasi maker-checker berbukti, resolusi menurut rezim/tanggal/cakupan, label simulasi. |
+| Policy Registry | Lihat [POLICY_REGISTRY](POLICY_REGISTRY.md): keluarga kebijakan, versi DRAFT→IN_REVIEW→ACTIVE→SUPERSEDED/RETIRED, aktivasi maker-checker berbukti, resolusi menurut rezim/tanggal/cakupan, keberlakuan resmi per tanggal acuan yang terpisah dari status siklus hidup ([§3.1](POLICY_REGISTRY.md#31-keberlakuan-resmi)), label simulasi. |
 | Item pekerjaan | `work_items` dipelihara Action modul: subjek, jenis, penanggung jawab (user atau fungsi/penugasan), pihak ditunggu, tindakan berikut, bukti yang kurang, tenggat hanya bila tervalidasi. Inbox, dashboard dan kartu Next-Action membaca tabel ini. |
 | Penomoran | Skema per jenis dokumen/unit/tahun dari kebijakan; saran nomor dialokasikan dengan kunci baris; konfirmasi/override oleh petugas berwenang; unik per skema; status RESERVED/USED/VOIDED; tidak pernah bertabrakan diam-diam (OD-29). |
 | Dokumen | Lihat [DOCUMENT_ENGINE](DOCUMENT_ENGINE.md): snapshot data → template DOCX berversi → DOCX/PDF; tanda air DRAF/SIMULASI; versi; bukti tanda tangan; paket SPJ. |
 | Berkas | Disk privat di luar webroot; SHA-256; validasi MIME/ekstensi/ukuran; unduhan via controller terotorisasi dengan `Content-Disposition: attachment`; berkas rahasia teraudit. |
 | Audit | `audit_events` untuk setiap perubahan material, keputusan, aktivasi kebijakan, perubahan akses, pembacaan rahasia (IX-024) dan login/keamanan. |
 | Pencarian | Penyedia pencarian per modul (`SearchProvider`) yang menerapkan scope akses; pencarian global menggabungkan hasil per modul; indeks `pg_trgm`/`tsvector`. |
-| Laporan & ekspor | Permintaan laporan disimpan, dijalankan di antrean `exports`, ditulis streaming (OpenSpout) ke berkas privat; isi ekspor = filter yang terlihat (Filter-First); label simulasi bila bergantung kebijakan non-ACTIVE. |
+| Laporan & ekspor | Permintaan laporan disimpan, dijalankan di antrean `exports`, ditulis streaming (OpenSpout) ke berkas privat; isi ekspor = filter yang terlihat (Filter-First); label simulasi bila bergantung versi kebijakan yang tidak berlaku resmi pada tanggal acuannya. |
 | Intake | Berkas sumber → staging `intake_rows` → validasi struktur/makna → isu → keputusan → penerimaan melalui kontrak modul tujuan; tidak ada impor langsung ke tabel final. |
 | Antrean & jadwal | Driver database; antrean `default`, `documents`, `exports`, `imports`, `maintenance`; worker dikelola supervisor/systemd; scheduler untuk partisi audit, pembersihan idempotensi, pengingat, cadangan terverifikasi. |
 | Lokalisasi | UI `id-ID` default dan `en`; dokumen resmi berbahasa Indonesia apa pun bahasa UI; format angka/tanggal Indonesia; detail di [LOCALIZATION](../07-ux-design/LOCALIZATION.md). |
-| Gerbang aktivasi fitur | Setiap kapabilitas yang bergantung pada kebijakan memeriksa status kebijakan. Di produksi, aksi resmi tanpa versi ACTIVE tidak tersedia dan dijelaskan alasannya; perhitungan saran boleh tampil berlabel simulasi. |
+| Gerbang aktivasi fitur | Setiap kapabilitas yang bergantung pada kebijakan memeriksa keberlakuan resmi versi kebijakan pada tanggal acuan aksinya melalui `PolicyHandle.official`, tidak pernah kolom `status` ([POLICY_REGISTRY §3.1](POLICY_REGISTRY.md#31-keberlakuan-resmi)). Di produksi, aksi resmi tanpa versi yang berlaku resmi tidak tersedia dan dijelaskan alasannya (termasuk tanggal mulai berlaku versi terjadwal); perhitungan saran boleh tampil berlabel simulasi. |
 
 ## 8. Keputusan perilaku penting
 
@@ -168,7 +168,8 @@ Model ini adalah usulan perencanaan atas pernyataan GAP_REGISTER yang disetujui 
 
 | Situasi | Lingkungan non-produksi (dev/CI/staging/UAT) | Produksi |
 |---|---|---|
-| Kebijakan ACTIVE | Normal | Normal |
+| Ada versi yang berlaku resmi pada tanggal acuan (ACTIVE, atau SUPERSEDED yang jendelanya masih memuat tanggal itu) | Normal | Normal |
+| Hanya versi disahkan yang belum berlaku pada tanggal acuan (terjadwal) | Seperti baris berikut bila ada DRAFT/IN_REVIEW; selain itu aksi tidak tersedia ("Kebijakan berlaku mulai <tanggal>") | Aksi resmi tidak tersedia ("Kebijakan berlaku mulai <tanggal>"); versi terjadwal tidak pernah dipakai lebih awal |
 | Hanya DRAFT/IN_REVIEW | Dapat dipakai bila `PRANATA_ALLOW_DRAFT_POLICIES=true`; semua keluaran dan dokumen bertanda SIMULASI | Aksi resmi yang bergantung tidak tersedia ("Menunggu pengesahan kebijakan"); perhitungan saran/pratinjau boleh tampil berlabel SIMULASI tanpa menghasilkan record resmi |
 | Tidak ada kebijakan | Aksi tidak tersedia, alasan + GAP ditampilkan | Sama |
 

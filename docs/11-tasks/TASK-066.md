@@ -32,7 +32,7 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Resolusi GAP-007 sebelum run resmi di produksi
-- GAP terkait (GAP-007, GAP-008, GAP-009, GAP-013) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-007, GAP-008, GAP-009, GAP-013) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 

@@ -77,8 +77,8 @@ Kolom "Kembali" adalah tujuan back kontekstual default; kontrak lengkap di RT te
 | PG-119 | Klasifikasi & handoff hilir | `/procurement/handoffs` | RT-016 / WF-016 | Klasifikasikan / buat draf | BAST asal |
 | PG-120 | Penyedia & DPT (internal) | `/procurement/vendors` | RT-007 / WF-007 | Verifikasi dokumen / putuskan DPT | Daftar penyedia |
 | PG-121 | Laporan pengadaan | `/procurement/reports` | RT-027 / WF-027 | Minta laporan | Dasbor |
-| PG-122 | Skema evaluasi & lingkup penghargaan (tahap, kriteria, bobot/ambang dari dokumen pengadaan, bukti yang diminta; bekukan) | `/procurement/packages/{p}/selections/{s}/scheme` | RT-009 / WF-009 (TR-081) | Susun / bekukan skema | Ruang kerja evaluasi atau detail paket |
-| PG-123 | Pembukaan penawaran (pembacaan dan kelengkapan, tanpa aksi gugur) | `/procurement/packages/{p}/selections/{s}/opening` | RT-008 / WF-008 | Catat pembukaan | PG-110 |
+| PG-122 | Skema evaluasi & lingkup penghargaan (tahap per peserta/per lingkup, kriteria beserta lingkup penerapannya, bobot/ambang dari dokumen pengadaan, bukti yang diminta, batas akhir pemasukan per sampul; bekukan) | `/procurement/packages/{p}/selections/{s}/scheme` | RT-009 / WF-009 (TR-081) | Susun / bekukan skema | Ruang kerja evaluasi atau detail paket |
+| PG-123 | Pembukaan penawaran atau penutupan penerimaan (batas akhir yang berlaku, pembacaan dan kelengkapan, penawaran terlambat terpisah, tanpa aksi gugur) | `/procurement/packages/{p}/selections/{s}/opening` | RT-008 / WF-008 | Catat pembukaan | PG-110 |
 | PG-124 | Penilaian kinerja penyedia (kontrak selesai) | `/procurement/contracts/{c}/performance` | RT-014 / WF-014, WF-007 | Nilai kinerja | Detail kontrak |
 
 ### 3.3 Gudang
@@ -152,7 +152,7 @@ Kolom "Kembali" adalah tujuan back kontekstual default; kontrak lengkap di RT te
 | Operator/Staf aset | Draf penerimaan aset, mutasi menunggu, inventarisasi berjalan, selisih rekonsiliasi, status run penyusutan |
 | Pimpinan | Ringkasan per unit: paket berjalan, nilai kontrak, aset per kondisi, stok kritis — tanpa aksi keputusan kecuali penugasan |
 | Penyedia | Undangan aktif, dokumen kedaluwarsa/perlu diperbarui, status DPT, partisipasi dan hasil yang diumumkan |
-| Super Admin | Kesehatan sistem, antrean/job gagal, grant menunggu persetujuan, kebijakan DRAFT vs ACTIVE, peristiwa keamanan |
+| Super Admin | Kesehatan sistem, antrean/job gagal, grant menunggu persetujuan, keberlakuan kebijakan (draf, terjadwal, berlaku, berakhir), peristiwa keamanan |
 
 Semua angka dasbor dihitung server dalam cakupan pengguna; kartu kosong menjelaskan alasannya (tidak ada data vs belum berhak vs kebijakan belum aktif).
 

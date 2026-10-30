@@ -18,7 +18,7 @@ Isi increment ditentukan oleh Task beserta dependensinya di [TASK_PLAN](../11-ta
 
 Menurut V1_SCOPE yang disetujui, V1 diterima hanya bila seluruh hasil minimum CAP terbukti. Karena itu default rencana adalah **satu go-live produksi setelah R4**. Rilis produksi bertahap (misalnya R1 Pengadaan lebih dahulu) adalah perubahan batas rilis P1 yang memerlukan **keputusan Owner** ([OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)); bila disetujui, increment produksi tetap memenuhi gerbang bagian 2 dan V1 tetap baru dinyatakan diterima setelah seluruh CAP terbukti.
 
-Fitur yang bergantung pada kebijakan hanya aktif resmi di produksi bila versi kebijakannya ACTIVE (GAP terselesaikan); bila belum, fitur tampil dengan penjelasan "menunggu pengesahan kebijakan" dan tidak menghasilkan record resmi. **GAP mana yang wajib selesai sebelum go-live dan sebelum penerimaan V1 adalah keputusan Owner (D-28)**; usulan perencanaan: semua GAP yang menggerbangi aksi resmi kapabilitas V1 MUST yang akan dipakai sejak go-live, ditambah gerbang rilis/cutover dan GAP-024 untuk AC-16 ([TRACEABILITY_MATRIX — Perlakuan GAP](../11-tasks/TRACEABILITY_MATRIX.md#perlakuan-gap)). Go-live dengan GAP lain yang masih terbuka hanya terjadi bila Owner menerimanya secara eksplisit beserta daftar keterbatasan, dan V1 tidak dinyatakan diterima selama CAP terkait belum terbukti.
+Fitur yang bergantung pada kebijakan hanya aktif resmi di produksi bila ada versi kebijakan yang disahkan dengan bukti resolusi GAP dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi)); bila belum, fitur tampil dengan penjelasan "menunggu pengesahan kebijakan" dan tidak menghasilkan record resmi. **GAP mana yang wajib selesai sebelum go-live dan sebelum penerimaan V1 adalah keputusan Owner (D-28)**; usulan perencanaan: semua GAP yang menggerbangi aksi resmi kapabilitas V1 MUST yang akan dipakai sejak go-live, ditambah gerbang rilis/cutover dan GAP-024 untuk AC-16 ([TRACEABILITY_MATRIX — Perlakuan GAP](../11-tasks/TRACEABILITY_MATRIX.md#perlakuan-gap)). Go-live dengan GAP lain yang masih terbuka hanya terjadi bila Owner menerimanya secara eksplisit beserta daftar keterbatasan, dan V1 tidak dinyatakan diterima selama CAP terkait belum terbukti.
 
 ## 2. Gerbang rilis produksi
 
@@ -39,7 +39,7 @@ RELEASE: vYYYY.MM.N (tag Git)
 SCOPE: increment + daftar TASK
 DB CHANGE: NONE / APPROVED CONTROLLED MIGRATION (daftar migrasi, reversibilitas, cadangan)
 ADDITIONAL RECURRING COST CHANGE: NONE / APPROVED EXCEPTION (rujukan)
-POLICY STATE: daftar paket kebijakan ACTIVE / DRAFT yang memengaruhi fitur rilis
+POLICY STATE: per paket kebijakan yang memengaruhi fitur rilis — versi yang berlaku resmi pada tanggal rilis, versi terjadwal beserta tanggal berlakunya, dan DRAFT
 ROLLBACK TARGET: tag sebelumnya / titik PITR
 UAT: rujukan berita acara
 APPROVAL: rujukan persetujuan Owner

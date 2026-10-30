@@ -33,11 +33,12 @@ DC-078, GAP-022: klasifikasi berversi tanpa penimpaan retroaktif.
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Penyediaan instrumen klasifikasi resmi (GAP-022)
-- GAP terkait (GAP-022) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-022) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
 - Tabel `asset_classification_versions` (EXCLUDE jendela ACTIVE/SUPERSEDED; aktivasi atomik memakai helper jendela TASK-018; tanpa tanggal mundur), `asset_classification_nodes`
+- Pemilihan versi klasifikasi menurut keberlakuan resmi pada tanggal acuan memakai helper TASK-018 (DI-32)
 - Impor node klasifikasi dari berkas terstruktur yang disetujui (tanpa data riil di repo)
 - Lokasi `ref_locations` hierarkis
 - UI administrasi klasifikasi dan lokasi
@@ -199,12 +200,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Versi baru tidak mengubah klasifikasi aset lama
 - TAC-02 Pembuat versi tidak dapat mengaktifkannya
 - TAC-03 Jendela versi tumpang tindih dan aktivasi bertanggal mundur ditolak; aktivasi menutup jendela versi sebelumnya secara atomik (DI-18)
+- TAC-04 Aksi memakai versi klasifikasi yang berlaku resmi pada tanggal acuannya; pendahulu SUPERSEDED tetap dipakai sampai penerusnya berlaku (DI-32)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Versi dan aktivasi; DI-18 (uji negatif langsung DB)
+- Feature: Versi dan aktivasi; DI-18 (uji negatif langsung DB), DI-32
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)

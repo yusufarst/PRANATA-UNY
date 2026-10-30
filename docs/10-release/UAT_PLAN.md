@@ -37,7 +37,7 @@ UAT-1 diterima oleh **pimpinan Pengadaan yang ditunjuk** dengan pemeriksaan PPK,
 | UAT-P10 | Isolasi: staf pengadaan tanpa grant aset tidak dapat melihat aset | AUTHZ-03 |
 | UAT-P11 | Dasbor dan inbox menunjukkan pemilik tindakan, pihak ditunggu, tindakan berikut | J-03 |
 | UAT-P12 | Kedua bahasa dan penggunaan di ponsel untuk melihat status paket | J-01 |
-| UAT-P13 | Evaluasi Quotation dua lot: skema beku dari dokumen pengadaan, tiga DPT diundang dan dua menawar, pembukaan tanpa menggugurkan, evaluasi per kriteria/tahap per lot dengan bukti dan alasan, klarifikasi, hasil dengan dua pemenang berbeda dan cadangan, reviu PPK, SPPBJ dan kontrak per pemenang; penilai menyatakan alur evaluasi jelas dan lebih efisien daripada cara saat ini | J-19 |
+| UAT-P13 | Evaluasi Quotation dua lot: skema beku dari dokumen pengadaan, tiga DPT diundang, dua menawar tepat waktu dan satu terlambat, pembukaan sesudah batas akhir tanpa menggugurkan dengan penawaran terlambat ditolak tanpa dibuka, evaluasi per kriteria/tahap per lot dengan bukti dan alasan (kriteria khusus satu lot hanya pada lot itu), klarifikasi, hasil dengan dua pemenang berbeda dan cadangan, reviu PPK, SPPBJ dan kontrak per pemenang; penilai menyatakan alur evaluasi jelas dan lebih efisien daripada cara saat ini | J-19 |
 | UAT-P14 | Langkah dan dokumen menurut metode dan jenis: Pengadaan Langsung pekerjaan konstruksi dibandingkan barang (dokumen teknis tambahan tampil sesuai matriks atau sebagai menunggu validasi), praktik tiga penawaran tampil informatif, E-Purchasing dengan opsi katalog dan negosiasi tanpa penawaran fiktif | J-03, J-06 |
 
 Skenario UAT-2–UAT-4 diturunkan dari J-08–J-18 dan J-20 (pascapenghargaan pada UAT-4) dan disusun sebelum masing-masing tahap dimulai.

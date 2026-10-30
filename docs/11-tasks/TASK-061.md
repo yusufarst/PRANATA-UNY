@@ -33,7 +33,7 @@ CAP-10/AC-13; IX-014/021.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-008, GAP-009, GAP-018) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-008, GAP-009, GAP-018) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
@@ -196,7 +196,7 @@ CAP-10/AC-13; IX-014/021.
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Draf hilir dibuat hanya melalui kontrak modul tujuan
-- TAC-02 Tanpa kebijakan ACTIVE, klasifikasi resmi tidak tersedia di produksi
+- TAC-02 Tanpa versi kebijakan yang berlaku resmi pada tanggal acuan, klasifikasi resmi tidak tersedia di produksi
 - TAC-03 Tautan sumber ↔ draf dapat ditelusuri dua arah
 
 ## TEST REQUIREMENTS

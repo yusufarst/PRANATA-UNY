@@ -12,7 +12,7 @@ PARALLEL SAFE: YES
 
 ## OBJECTIVE
 
-Mewujudkan katalog laporan V1 menurut empat makna waktu (posisi per tanggal, rentang transaksi, periodik, rekonsiliasi) untuk aset, gudang dan pengadaan, dengan parameter yang menjelaskan makna waktu, label simulasi bila bergantung kebijakan non-ACTIVE, dan format resmi hanya bila kebijakan `reporting.formats` ACTIVE.
+Mewujudkan katalog laporan V1 menurut empat makna waktu (posisi per tanggal, rentang transaksi, periodik, rekonsiliasi) untuk aset, gudang dan pengadaan, dengan parameter yang menjelaskan makna waktu, label simulasi bila bergantung versi kebijakan yang tidak berlaku resmi, dan format resmi hanya bila versi `reporting.formats` berlaku resmi pada tanggal acuan laporan.
 
 ## WHY THIS EXISTS
 
@@ -36,7 +36,7 @@ CAP-13/17/18, AC-16/17/20.
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Format laporan resmi bila tersedia
-- GAP terkait (GAP-007, GAP-008, GAP-009, GAP-010, GAP-013, GAP-016, GAP-024) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-007, GAP-008, GAP-009, GAP-010, GAP-013, GAP-016, GAP-024) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
@@ -48,7 +48,7 @@ CAP-13/17/18, AC-16/17/20.
 ## OUT OF SCOPE
 
 - Isi laporan BMU sebelum definisi dan bentuknya diketahui (GAP-024)
-- Neraca/laporan akuntansi resmi tanpa kebijakan ACTIVE (GAP-007–010/013)
+- Neraca/laporan akuntansi resmi tanpa versi kebijakan yang berlaku resmi (GAP-007–010/013)
 
 ## REFERENCES
 

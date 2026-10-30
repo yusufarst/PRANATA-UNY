@@ -50,7 +50,7 @@ Admin memverifikasi identitas sesuai prosedur (tatap muka/kartu pegawai/surat re
 
 ## RB-09 Aktivasi kebijakan
 
-Pengelola kebijakan menyusun versi sesuai keputusan resmi yang sudah tercatat di repositori (GAP RESOLVED), melampirkan bukti, menjalankan kasus uji; pengesah yang berbeda memeriksa diff, bukti dan hasil uji lalu mengaktifkan dengan tanggal berlaku. Setelah aktivasi: periksa label simulasi hilang pada fitur terkait dan catat di log operasi.
+Pengelola kebijakan menyusun versi sesuai keputusan resmi yang sudah tercatat di repositori (GAP RESOLVED), melampirkan bukti, menjalankan kasus uji; pengesah yang berbeda memeriksa diff, bukti dan hasil uji lalu mengaktifkan dengan tanggal berlaku. Setelah aktivasi: bila tanggal berlakunya sudah tercapai, periksa label simulasi hilang pada fitur terkait; bila tanggalnya di masa depan, periksa halaman kebijakan menampilkan "Terjadwal — berlaku mulai <tanggal>", versi pendahulu tetap dipakai sampai tanggal itu, dan ulangi pemeriksaan pada tanggal berlaku ([POLICY_REGISTRY §3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi)). Catat di log operasi.
 
 ## RB-10 Disk penuh atau mendekati penuh
 

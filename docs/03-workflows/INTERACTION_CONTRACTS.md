@@ -318,7 +318,7 @@ Wording alur reusable adalah **PROPOSED_WORKFLOW**. Hasil reuse/action/return/ac
 
 | Aspek | Kontrak |
 |---|---|
-| Context / responsibility | Paket, versi kebijakan rezim yang dipakai beserta statusnya (ACTIVE atau simulasi), jenis pengadaan, nilai dasar, kriteria yang diklaim, metode yang memenuhi syarat beserta rujukan pasal/kriteria, dan metode yang tidak memenuhi beserta alasannya. Pejabat penetap yang ditugaskan memegang aksi. |
+| Context / responsibility | Paket, versi kebijakan rezim yang dipakai beserta keberlakuannya (berlaku resmi pada tanggal acuan, atau simulasi), jenis pengadaan, nilai dasar, kriteria yang diklaim, metode yang memenuhi syarat beserta rujukan pasal/kriteria, dan metode yang tidak memenuhi beserta alasannya. Pejabat penetap yang ditugaskan memegang aksi. |
 | Confirmation / validation | Penetapan memerlukan konfirmasi eksplisit. Alasan wajib bila metode berbeda dari saran, bila nilai berada pada pita tumpang tindih (GAP-027) atau bila kriteria kualitatif dipakai; bukti kriteria dilampirkan bila dipersyaratkan kebijakan. Saran berlabel simulasi tidak menjadi dasar penetapan resmi di produksi. |
 | Success / history | Penetapan, alasan, versi kebijakan dan pelaku tercatat; paket menampilkan metode yang ditetapkan dan langkah berikut pada WF-005. |
 | Failure / retry | Versi kebijakan berubah sejak saran dihitung → saran dihitung ulang dan pengguna meninjau ulang sebelum menetapkan; tidak berwenang → alasan tanpa membocorkan isi terlindungi. EP-003/004/005. |

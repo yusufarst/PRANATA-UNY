@@ -415,7 +415,7 @@ Key rute dan bentuk alur anak di bawah berklasifikasi **PROPOSED_WORKFLOW**. Keb
 | Aspek | Kontrak |
 |---|---|
 | Workspace / intent / target ID | Procurement: penetapan metode paket. Paket beserta ID penetapan dan versi kebijakan rezim yang dipakai. |
-| Entry / prerequisite / deep link | Dari paket (RT-005) atau antrean penetapan. Deep link mempertahankan paket dan penetapan; versi kebijakan beserta statusnya (ACTIVE atau simulasi) selalu terlihat; entry tidak memberi kewenangan menetapkan. |
+| Entry / prerequisite / deep link | Dari paket (RT-005) atau antrean penetapan. Deep link mempertahankan paket dan penetapan; versi kebijakan beserta keberlakuannya (berlaku resmi pada tanggal acuan, atau simulasi) selalu terlihat; entry tidak memberi kewenangan menetapkan. |
 | Return / empty | Penetapan/riwayat → paket yang sama (RT-005); fallback antrean/RT-002. Penetapan yang digantikan tetap dapat dibuka dari riwayat, tidak diganti diam-diam dengan penetapan terbaru. |
 | Blocked / handoff | GAP-003/026/027/029. WF-032; IX-001/002/003/004/006/011/012/023; P5 penugasan penetap, P7 penyajian saran beserta rujukan aturan. |
 

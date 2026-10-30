@@ -31,7 +31,7 @@ OD-35, BR-037/BR-038, INV-024; PR 34/2023 Lampiran III B.3.b.8, Pasal 9 ayat (2)
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-027) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-027) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
@@ -210,7 +210,7 @@ OD-35, BR-037/BR-038, INV-024; PR 34/2023 Lampiran III B.3.b.8, Pasal 9 ayat (2)
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Paket dua lot menghasilkan dua hasil dengan pemenang berbeda; satu penyedia dapat memenangkan beberapa lot; hasil kedua yang berlaku untuk lingkup dan pemilihan yang sama ditolak (DI-26)
-- TAC-02 Peringkat atau pemenang dari partisipasi pemilihan lain, WINNER kedua pada lingkup SINGLE, peringkat ganda atau peserta yang tidak lulus tahap gugur ditolak aplikasi dan DB (DI-05)
+- TAC-02 Peringkat atau pemenang dari partisipasi pemilihan lain, WINNER kedua pada lingkup SINGLE, peringkat ganda atau peserta tanpa hasil PASS pada setiap tahap gugur yang berlaku baginya (per peserta dan per lingkup hasil) ditolak aplikasi dan DB (DI-05)
 - TAC-03 Penetap hasil sesuai ambang nilai kebijakan (uji batas); kegagalan per lingkup tercatat dengan alasan dan langkah berikut
 - TAC-04 Penunjukan Langsung dengan negosiasi akhir NOT_AGREED tidak dapat menghasilkan WINNER; MULTIPLE_FRAMEWORK tanpa izin kebijakan ditolak (DI-26)
 - TAC-05 Reviu hasil hanya oleh penugasan PPK pada paket itu; NOT_AGREED memerlukan alasan (AUTHZ-49)

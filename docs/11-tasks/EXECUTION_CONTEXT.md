@@ -49,7 +49,7 @@ Pemilik: [SECURITY_MODEL](../05-security/SECURITY_MODEL.md), [ACCESS_CONTROL](..
 | Interaksi | Satu aksi utama; tanpa tombol mati; kembali/batal kontekstual; keadaan memuat/kosong/galat/terlarang | [INTERACTION_PATTERNS](../07-ux-design/INTERACTION_PATTERNS.md), RT/IX P3 |
 | Responsif | Mobile-first; 390×844 dan 1440×900 wajib diperiksa | [INTERACTION_PATTERNS §7](../07-ux-design/INTERACTION_PATTERNS.md#7-responsif) |
 | Akses | Grup peran SUPER_ADMIN/INTERNAL/VENDOR + grant berscope + penugasan proses; penegakan server/kueri/unduhan | [ACCESS_CONTROL](../05-security/ACCESS_CONTROL.md) |
-| Aturan resmi | Nilai resmi hanya dari kebijakan berversi; non-ACTIVE = simulasi berlabel; GAP tidak diselesaikan agen | [POLICY_REGISTRY](../04-architecture/POLICY_REGISTRY.md), [GAP_REGISTER](../00-governance/GAP_REGISTER.md) |
+| Aturan resmi | Nilai resmi hanya dari versi kebijakan yang berlaku resmi pada tanggal acuan (disahkan dan jendela memuat tanggal itu, bukan kolom status); lainnya simulasi berlabel; GAP tidak diselesaikan agen | [POLICY_REGISTRY](../04-architecture/POLICY_REGISTRY.md), [GAP_REGISTER](../00-governance/GAP_REGISTER.md) |
 | Data | Tanpa hapus record bisnis; tabel append-only; uang `numeric`; waktu `timestamptz` UTC | [DATA_MODEL §1](../04-architecture/DATA_MODEL.md#1-konvensi) |
 | Konkurensi | Idempotency key, `lock_version`, urutan kunci tetap | [CONCURRENCY_AND_INTEGRITY](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md) |
 | Biaya | Tambahan biaya produksi berulang ≈ 0 di luar infrastruktur yang dibiayai klien; layanan berbayar perlu persetujuan Owner | [COST_POLICY](../00-governance/COST_POLICY.md) |

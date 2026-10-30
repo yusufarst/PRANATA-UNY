@@ -33,13 +33,13 @@ Cakupan akses, asal usulan dan penanda tangan bergantung pada organisasi (OD-04/
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-001, GAP-014, GAP-021) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-001, GAP-014, GAP-021) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
 - `org_units` + `org_unit_history` + `org_positions` + `org_appointments` (kolom `evidence_file_id` ditambahkan TASK-016)
 - Perhitungan path ltree saat simpan/pindah induk
-- Permintaan perubahan F1/F2 dengan state WF-029 (TR-281–288); TR-285 hanya bila kebijakan `organization.maintenance` ACTIVE
+- Permintaan perubahan F1/F2 dengan state WF-029 (TR-281–288); TR-285 hanya bila versi kebijakan `organization.maintenance` berlaku resmi pada tanggal acuan (POLICY_REGISTRY §3.1)
 - PG-505 Administrasi → Organisasi (pohon, detail, riwayat, penunjukan)
 - Seeder organisasi sintetis untuk dev/test
 
@@ -203,7 +203,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Pohon unit multi-level dengan pencarian; perpindahan induk memperbarui subtree secara konsisten
 - TAC-02 Riwayat perubahan tidak menimpa versi lama
 - TAC-03 Penunjukan berjangka dengan rujukan SK; penunjukan tidak memberi izin
-- TAC-04 Keputusan berlaku (TR-285) tidak tersedia di produksi tanpa kebijakan ACTIVE
+- TAC-04 Keputusan berlaku (TR-285) tidak tersedia di produksi tanpa versi kebijakan `organization.maintenance` yang berlaku resmi pada tanggal acuan
 
 ## TEST REQUIREMENTS
 

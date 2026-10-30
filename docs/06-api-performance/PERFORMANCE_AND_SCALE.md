@@ -53,7 +53,7 @@ Anggaran ini adalah target uji. Bila pengukuran gagal, eksekutor mencatat temuan
 ## 4. Cache
 
 - Konfigurasi/rute/view dicache saat deploy (`optimize`).
-- Data referensi kecil (satuan, kategori, gudang, versi kebijakan ACTIVE) dicache singkat (≤ 10 menit) dan diinvalidasi saat berubah.
+- Data referensi kecil (satuan, kategori, gudang, hasil resolusi kebijakan berkunci keluarga, konteks dan tanggal acuan) dicache singkat (≤ 10 menit) dan diinvalidasi saat berubah; tidak ada cache "versi kebijakan saat ini" tanpa tanggal acuan ([POLICY_REGISTRY §3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi)).
 - **Izin dan scope akses tidak dicache lintas permintaan.**
 - Tidak ada cache halaman penuh untuk konten terautentikasi.
 

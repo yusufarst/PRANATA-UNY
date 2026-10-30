@@ -37,13 +37,14 @@ Ditolak kebijakan/izin: 403 (atau 404 bila subjek rahasia) + reason_key
 | Kontrak keluaran | Redirect ke konteks pemilik (RT) dan flash berkode terjemahan; tidak mengembalikan objek domain mentah. |
 | Kode transisi | Setiap perintah perubahan state memetakan ke satu TR P3 yang dicatat di `workflow_transitions`. |
 | Alasan | Perintah material (tolak, kembalikan, batalkan, tarik, override, penetapan yang menyimpang dari saran) mewajibkan alasan. |
+| Tanggal acuan kebijakan | Perintah yang bergantung kebijakan menyatakan tanggal acuannya: bawaan tanggal bisnis Asia/Jakarta saat commit, atau tanggal bisnis subjek yang ditetapkan kontraknya (tanggal acuan paket, tanggal generasi atau finalisasi dokumen). Resolusi diulang di dalam transaksi; record resmi hanya bila versi setiap keluarga yang dibutuhkan berlaku resmi pada tanggal itu ([POLICY_REGISTRY §3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi)). |
 
 ## 3. Validasi dan model galat
 
 | Situasi | Status HTTP | Bentuk | Catatan |
 |---|---|---|---|
 | Masukan tidak valid | 422 (Inertia: redirect + errors) | `errors.{field}: [message_key]` | Pesan dari `lang/{id,en}` |
-| Prasyarat bisnis tidak terpenuhi | 422 | `errors._domain: [reason_key]` + `context` (GAP, bukti kurang) | Mis. stok tidak cukup, kebijakan non-ACTIVE |
+| Prasyarat bisnis tidak terpenuhi | 422 | `errors._domain: [reason_key]` + `context` (GAP, bukti kurang) | Mis. stok tidak cukup, tidak ada versi kebijakan yang berlaku resmi pada tanggal acuan (konteks: keluarga, GAP, tanggal mulai berlaku versi terjadwal) |
 | Tidak berwenang | 403 | `reason_key` aman | Tanpa membocorkan isi |
 | Tidak ditemukan/di luar cakupan rahasia | 404 | Halaman 404 terlokalisasi | |
 | Konflik versi | 409 | `errors.lock_version` + snapshot terbaru | UI menampilkan dialog konflik (P7) |

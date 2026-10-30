@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Mewujudkan Policy Registry sesuai POLICY_REGISTRY: paket, versi, skema JSON per keluarga, lifecycle DRAFT→IN_REVIEW→ACTIVE→SUPERSEDED/RETIRED, aktivasi maker-checker berbukti, kasus uji emas, resolver menurut konteks/tanggal, gerbang lingkungan dan label simulasi, beserta UI pengelolaan.
+Mewujudkan Policy Registry sesuai POLICY_REGISTRY: paket, versi, skema JSON per keluarga, lifecycle DRAFT→IN_REVIEW→ACTIVE→SUPERSEDED/RETIRED, aktivasi maker-checker berbukti, kasus uji emas, resolver menurut konteks dan tanggal acuan dengan keberlakuan resmi yang terpisah dari status siklus hidup (POLICY_REGISTRY §3.1), gerbang lingkungan dan label simulasi, beserta UI pengelolaan.
 
 ## WHY THIS EXISTS
 
@@ -37,7 +37,7 @@ Semua aturan resmi yang masih OPEN dipegang sebagai data berversi (ADR-0003, CAP
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-013, GAP-021) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-013, GAP-021) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
@@ -46,7 +46,7 @@ Semua aturan resmi yang masih OPEN dipegang sebagai data berversi (ADR-0003, CAP
 - Kontrak pencatatan `policy_version_uses` untuk record yang bergantung pada beberapa keluarga kebijakan
 - Registry keluarga + validasi JSON Schema
 - Lifecycle + Action ajukan/kembalikan/tolak/aktifkan/pensiunkan + audit + transisi
-- Resolver + `PolicyOutcome` + gerbang `PRANATA_ALLOW_DRAFT_POLICIES`
+- Resolver + `PolicyHandle.official` + `PolicyOutcome` + gerbang `PRANATA_ALLOW_DRAFT_POLICIES`; helper keberlakuan bersama (disahkan dan jendela memuat tanggal acuan) yang juga dipakai template, penomoran dan klasifikasi; resolusi di dalam transaksi Action dengan tinjau ulang bila versi berubah; cache berkunci keluarga, konteks dan tanggal acuan (DI-32)
 - Komponen `SimulationBanner`, `BlockedReasonPanel`
 - PG-507: daftar paket, editor formulir dari skema, rujukan sumber/GAP, unggah bukti, hasil kasus uji, diff versi, riwayat
 - Keluarga awal: skema untuk semua keluarga di POLICY_REGISTRY §1 (isi diisi Task modul)
@@ -220,8 +220,8 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Isi tidak valid terhadap skema tidak dapat disimpan
 - TAC-02 Pembuat tidak dapat mengaktifkan; aktivasi menuntut bukti GAP dan kasus uji lulus
 - TAC-03 Jendela versi ACTIVE/SUPERSEDED yang tumpang tindih dan aktivasi bertanggal mundur ditolak; dua aktivasi bersamaan untuk paket yang sama → satu berhasil, satu 409 (DI-20)
-- TAC-04 Resolver memilih satu-satunya versi ACTIVE/SUPERSEDED yang jendelanya memuat tanggal acuan (SUPERSEDED tetap dipakai untuk tanggal historis, RETIRED tidak pernah); DRAFT hanya bila lingkungan mengizinkan dan ditandai simulasi (DI-20)
-- TAC-05 Di konfigurasi produksi, aksi resmi bergantung kebijakan non-ACTIVE tidak tersedia (uji)
+- TAC-04 Resolver memilih satu-satunya versi yang berlaku resmi pada tanggal acuan — disahkan (ACTIVE atau SUPERSEDED) dan jendela memuat tanggal itu — termasuk pendahulu SUPERSEDED sampai penerus terjadwal berlaku, tidak pernah versi terjadwal sebelum tanggalnya dan tidak pernah RETIRED; DRAFT hanya bila lingkungan mengizinkan dan ditandai simulasi (DI-20, DI-32)
+- TAC-05 Di konfigurasi produksi, aksi resmi tanpa versi yang berlaku resmi pada tanggal acuannya tidak tersedia, sedangkan aksi bertanggal acuan di dalam jendela versi SUPERSEDED tetap tersedia; tidak ada kode yang memutuskan ketersediaan aksi atau memilih versi dari kolom status saja (uji arsitektur, DI-32)
 - TAC-06 Record yang memakai kebijakan menyimpan policy_version_id dan is_simulation (uji kontrak)
 - TAC-07 Record yang bergantung pada beberapa keluarga mencatat setiap versi penyumbang di `policy_version_uses`; UPDATE/DELETE ditolak (DI-16)
 - TAC-08 Versi ACTIVE tanpa pengesah, atau dengan pengesah sama dengan pembuat/pengaju, ditolak constraint DB
@@ -232,7 +232,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: Validasi skema, resolver jendela
-- Feature: Lifecycle, maker-checker, EXCLUDE jendela, keadaan WF-029, gerbang lingkungan, `policy_version_uses` (DI-16, DI-20; uji negatif langsung DB)
+- Feature: Lifecycle, maker-checker, EXCLUDE jendela, keadaan WF-029, gerbang lingkungan dan keberlakuan resmi, `policy_version_uses` (DI-16, DI-20, DI-32; uji negatif langsung DB)
 - Authorization: AUTHZ-21, AUTHZ-25
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-16 bagian kebijakan

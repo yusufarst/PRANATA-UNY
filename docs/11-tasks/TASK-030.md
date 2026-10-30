@@ -32,12 +32,12 @@ OD-27/BR-031: lima metode per rezim dengan keputusan manusia yang terlacak.
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-026, GAP-027, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-026, GAP-027, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
 - Tabel `proc_method_determinations`; satu DETERMINED per paket; versi `procurement.methods` (utama) dan `procurement.regime` dicatat di `policy_version_uses`
-- State WF-032 (TR-311–316); TR-313/315 hanya dengan kebijakan ACTIVE di produksi
+- State WF-032 (TR-311–316); TR-313/315 hanya dengan versi kebijakan yang berlaku resmi pada tanggal acuan paket di produksi
 - Kartu saran IX-023 (memenuhi/tidak memenuhi beserta alasan, tumpang tindih)
 - Varian tender (terbuka/terbatas/dua tahap) wajib untuk Tender; Penunjukan Langsung mensyaratkan dasar keadaan tertentu/kriteria khusus dan bukti persetujuan permintaan oleh Penanggung Jawab Pengadaan saat DETERMINED (CHECK)
 - Nota penetapan metode (dokumen draf) via provider
@@ -207,7 +207,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Penetapan hanya oleh penugasan penetap; Super Admin tidak dapat
 - TAC-04 Perubahan kebijakan sejak saran memaksa tinjau ulang
 - TAC-05 Penetapan baru menggantikan lama dan menandai langkah terdampak
-- TAC-06 Di konfigurasi produksi tanpa kebijakan ACTIVE, tombol tetapkan nonaktif dengan alasan
+- TAC-06 Di konfigurasi produksi tanpa versi kebijakan rezim/metode yang berlaku resmi pada tanggal acuan paket, tombol tetapkan nonaktif dengan alasan (termasuk tanggal mulai berlaku versi terjadwal); versi SUPERSEDED yang masih berlaku pada tanggal acuan tetap dipakai
 - TAC-07 Penetapan Penunjukan Langsung tanpa dasar dan bukti persetujuan permintaan, atau Tender tanpa varian, ditolak aplikasi dan DB
 - TAC-08 Saran dan penetapan mencatat versi `procurement.methods` dan `procurement.regime` yang dipakai; versi baru salah satunya yang berlaku pada tanggal acuan memaksa tinjau ulang (DI-16)
 

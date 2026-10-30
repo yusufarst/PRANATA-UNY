@@ -32,11 +32,12 @@ BR-036/INV-023 dan PR 34/2023 Lampiran III B.3.b.6–7, C.4.b.1.g–h, D.2.b.5�
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-019, GAP-026) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-019, GAP-026) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
-- Tabel `proc_evaluation_rounds`, `proc_evaluation_criterion_results`, `proc_evaluation_stage_results`, `proc_clarifications`, `proc_negotiations`, `proc_catalog_options` dengan FK komposit ke pemilihan, skema, peserta dan lingkup (DI-07)
+- Tabel `proc_evaluation_rounds`, `proc_evaluation_criterion_results`, `proc_evaluation_stage_results`, `proc_clarifications`, `proc_negotiations`, `proc_catalog_options` dengan FK komposit ke pemilihan, skema, peserta, penerapan lingkup kriteria, lingkup yang ditawar dan entri pembukaan yang dibuka (DI-07, DI-31)
+- Penerapan lingkup: tahap per peserta tanpa lingkup, tahap per lingkup selalu dengan lingkup eksplisit (termasuk lingkup PACKAGE tunggal); matriks hanya menampilkan kriteria yang berlaku untuk lingkup aktif (DI-07)
 - Layanan evaluasi: hasil tahap diturunkan dari hasil kriteria VALID menurut skema beku; tahap gugur menghentikan tahap berikutnya; tanpa penimpaan manual; koreksi = VOIDED + hasil baru; penyelesaian dan evaluasi ulang beralasan (DI-25)
 - Perbandingan per lingkup dari kebijakan `procurement.evaluation` (pembanding HPS, koreksi aritmetik, skor berbobot, biaya kepemilikan) berlabel simulasi bila DRAFT; tanpa aksi tetapkan pemenang
 - Negosiasi per peserta dan lingkup; opsi katalog E-Purchasing dan urutan negosiasi termurah lebih dahulu dari kebijakan (DI-28)
@@ -216,20 +217,22 @@ BR-036/INV-023 dan PR 34/2023 Lampiran III B.3.b.6–7, C.4.b.1.g–h, D.2.b.5�
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Hasil per kriteria dan per tahap tercatat untuk setiap peserta dan lingkup; FAIL tanpa temuan atau alasan ditolak; dua hasil VALID untuk kriteria yang sama ditolak, termasuk dua evaluator bersamaan (DI-25)
-- TAC-02 Tahap gugur yang gagal membuat tahap berikutnya NOT_EVALUATED; hasil tahap tidak dapat ditimpa manual
+- TAC-02 Tahap gugur per peserta yang gagal membuat tahap berikutnya NOT_EVALUATED pada semua lingkup peserta itu dan tahap gugur per lingkup hanya pada lingkup itu; hasil tahap tidak dapat ditimpa manual (DI-25)
 - TAC-03 Penyelesaian putaran ditolak selama ada tahap PENDING; evaluasi ulang membuat putaran baru beralasan dan putaran lama tetap terbaca (DI-25)
 - TAC-04 Klarifikasi dan negosiasi tertaut tanpa mengubah penawaran; koreksi aritmetik tersimpan pada hasil tahap beserta catatannya
 - TAC-05 Perbandingan terhadap HPS, harga terkoreksi dan skor berbobot hanya menurut skema beku dan berlabel simulasi bila kebijakan DRAFT; tidak ada aksi menetapkan pemenang di ruang kerja
-- TAC-06 Opsi katalog E-Purchasing dan negosiasinya mengikuti kebijakan; lingkup di luar pemilihan ditolak (DI-28)
+- TAC-06 Opsi katalog E-Purchasing dan negosiasinya mengikuti kebijakan; lingkup di luar pemilihan atau yang tidak dicakup penawaran OPENED peserta ditolak (DI-28)
 - TAC-07 Pengguna tanpa penugasan tidak melihat nilai atau isi penawaran (AUTHZ-46)
 - TAC-08 Hasil, klarifikasi atau negosiasi untuk partisipasi atau lingkup pemilihan lain, atau untuk kriteria skema lain, ditolak aplikasi dan DB (DI-07); kolom `selection_id` tidak dapat diubah (DI-17)
+- TAC-09 Kriteria yang hanya berlaku untuk lot A tidak dapat dinilai untuk lot B; hasil untuk lingkup yang tidak ditawar peserta, hasil tanpa lingkup pada tahap per lingkup dan hasil berlingkup pada tahap per peserta ditolak aplikasi dan DB (DI-07)
+- TAC-10 Penawaran terlambat, mundur atau tidak dibuka tidak dapat dievaluasi, diklarifikasi atau dinegosiasikan, termasuk lewat sisipan langsung ke basis data (DI-31)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: Derivasi hasil tahap, skor berbobot dan perbandingan (desimal)
-- Feature: WF-009; DI-07, DI-17, DI-25, DI-28 (uji negatif langsung DB; DI-25 dengan dua koneksi)
+- Feature: WF-009; DI-07, DI-17, DI-25, DI-28, DI-31 bagian kelayakan evaluasi (uji negatif langsung DB; DI-25 dengan dua koneksi)
 - Authorization: AUTHZ-46
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-19 bagian evaluasi; bagian J-03, J-06

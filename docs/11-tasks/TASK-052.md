@@ -34,7 +34,7 @@ OD-31, CAP-22, AC-29.
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Resolusi GAP-025 sebelum aktif resmi di produksi
-- GAP terkait (GAP-023, GAP-025) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-023, GAP-025) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
@@ -209,7 +209,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Pemohon tidak dapat menyetujui permintaannya sendiri
 - TAC-03 Jumlah disetujui sebagian wajib beralasan
 - TAC-04 Rantai dua langkah: setiap langkah tercatat terpisah; permintaan APPROVED setelah langkah terakhir; pengembalian memulai siklus baru tanpa menghapus keputusan lama
-- TAC-05 Di produksi tanpa kebijakan gudang ACTIVE, keputusan resmi tidak tersedia dengan penjelasan
+- TAC-05 Di produksi tanpa versi kebijakan gudang yang berlaku resmi, keputusan resmi tidak tersedia dengan penjelasan
 - TAC-06 Gudang permintaan dan induk baris tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS

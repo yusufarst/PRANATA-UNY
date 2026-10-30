@@ -94,12 +94,12 @@ Tidak ada jawaban tambahan yang harus dikarang untuk menuntaskan kandidat P3 yan
 - **Terdampak:** WF-030/031; **TR-291–298, TR-301–306**; RT-033/034; IX-022; GAP-025/023, terkait005/006/014.
 - **Bukti tersedia:** SRC-058 (alur ATK ALP), OD-26/30/31, U-006/U-007; tidak ada aturan gudang resmi bertanggal dalam repository.
 - **Evidence/resolver:** Kepala Gudang ALP/PSRT bersama Kabag ALP dan Owner mengonfirmasi aturan berlaku dengan versi/tanggal, contoh dan kewenangan per aksi.
-- **Aman sampai resolved:** permintaan, keputusan, serah terima dan konfirmasi dapat dibangun dan diuji dengan versi kebijakan DRAFT di lingkungan non-produksi berlabel simulasi; di produksi aksi resmi menunggu versi ACTIVE.
+- **Aman sampai resolved:** permintaan, keputusan, serah terima dan konfirmasi dapat dibangun dan diuji dengan versi kebijakan DRAFT di lingkungan non-produksi berlabel simulasi; di produksi aksi resmi menunggu versi yang disahkan dan berlaku resmi pada tanggal acuannya.
 
 ## WDR-11 — Rezim, penetapan metode dan kanal resmi (WF-032)
 
 - **Keputusan diperlukan:** pemetaan sumber dana UNY ke rezim (PR 34/2023 atau Perpres 16/2018 jo. perubahannya), keberlakuan instrumen; tafsir inkonsistensi PR 34/2023 GAP-027(a)–(e); fungsi pejabat penetap metode per rezim dan nilai; kanal resmi per langkah dan langkah yang boleh dijalankan di PRANATA.
-- **Mengapa:** BR-031 mewajibkan penetapan manusia menurut rezim; TR-313/315 tetap BLOCKED_BY_GAP; saran tanpa versi ACTIVE hanya simulasi.
+- **Mengapa:** BR-031 mewajibkan penetapan manusia menurut rezim; TR-313/315 tetap BLOCKED_BY_GAP; saran tanpa versi yang berlaku resmi hanya simulasi.
 - **Terdampak:** WF-032, ekstensi metode WF-005–WF-015; **TR-311–316**; RT-035; IX-023; GAP-003/013/026/027/029.
 - **Bukti tersedia:** SRC-048 (PR 34/2023, termasuk Pasal 1 angka 1 dan 15, Pasal 3, 9, 22–30, Lampiran I–III), SRC-049/050 (Perpres), SRC-052 (jawaban provisional Owner GAP-003); [REGULATORY_SOURCE_REVIEW](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md).
 - **Evidence/resolver:** kustodian pengadaan bersama keuangan dan Owner: pemetaan rezim, catatan tafsir bertanggal dan konfirmasi kanal.

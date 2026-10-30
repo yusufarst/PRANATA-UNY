@@ -14,7 +14,7 @@ can(actor, capability, subject?) :=
        ATAU kapabilitas dipenuhi oleh penugasan proses ACTIVE pada subjek (tabel 5)
   4. aturan pemisahan tugas tidak dilanggar untuk subjek itu (bagian 6)
   5. guard keadaan workflow (TR P3) dan gerbang kebijakan terpenuhi
-  6. untuk aksi berbasis kebijakan resmi: versi kebijakan ACTIVE (di produksi)
+  6. untuk aksi berbasis kebijakan resmi: versi kebijakan yang berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi); di produksi)
 hasil: ALLOW | DENY(reason_key) — DENY tidak pernah membocorkan isi subjek
 ```
 
@@ -75,9 +75,9 @@ Cakupan yang diizinkan: G = GLOBAL, U = ORG_UNIT, S = ORG_UNIT_SUBTREE, W = WARE
 | `procurement.method.suggest` | S, G | Meminta saran (TR-312) |
 | `procurement.method.determine` | Penugasan `METHOD_DETERMINER` | TR-313/315 |
 | `procurement.activity.manage` | S, G / penugasan | Aktivitas, undangan |
-| `procurement.selection.manage` | Penugasan pemilihan (`POKJA_CHAIR`, `PEJABAT_PENGADAAN`, `PLANNER` untuk persiapan) | Pemilihan, lingkup penghargaan, undangan, penjajakan (OD-35) |
+| `procurement.selection.manage` | Penugasan pemilihan (`POKJA_CHAIR`, `PEJABAT_PENGADAAN`, `PLANNER` untuk persiapan) | Pemilihan, lingkup penghargaan, undangan, penjajakan (OD-35), batas akhir pemasukan beserta adendumnya; keputusan perpanjangan sesudah batas lewat hanya oleh penugasan yang ditetapkan versi kebijakan yang berlaku resmi, tanpa bawaan (GAP-017/029) |
 | `procurement.evaluation_scheme.manage` / `.freeze` | Penugasan pemilihan (`POKJA_CHAIR`, `PEJABAT_PENGADAAN`) | Menyusun skema dari dokumen pengadaan dan membekukannya sebelum pembukaan (BR-036) |
-| `procurement.opening.record` | Penugasan pemilihan | Pembukaan tanpa aksi gugur (INV-023) |
+| `procurement.opening.record` | Penugasan pemilihan | Pembukaan atau penutupan penerimaan sesudah batas akhir, tanpa aksi gugur (INV-023) |
 | `procurement.submission.record` | Penugasan pemilihan | Mencatat kiriman eksternal |
 | `procurement.submission.view_confidential` | Penugasan pemilihan | Penawaran rahasia |
 | `procurement.evaluation.record` | Penugasan `POKJA_MEMBER`/`PEJABAT_PENGADAAN`; `TECHNICAL_REVIEWER` hanya telaah tanpa keputusan tahap | Hasil per kriteria dan tahap per lingkup dengan alasan dan bukti |
@@ -163,7 +163,7 @@ Cakupan yang diizinkan: G = GLOBAL, U = ORG_UNIT, S = ORG_UNIT_SUBTREE, W = WARE
 | `ASSET_DECIDER` | Mutasi/perubahan/penghapusan | `asset.lifecycle` |
 | `RECON_OWNER`, `RECON_ACCEPTOR` | Kasus | `reconciliation` |
 
-Penugasan dibuat oleh pengguna berwenang (kapabilitas `procurement.package.manage`, admin gudang, dsb.) dengan rujukan SK bila ada; sistem dapat **menyarankan** pengguna dari `org_appointments`, tetapi saran bukan penugasan. Rantai keputusan gudang dapat dipetakan dari penunjukan jabatan secara otomatis hanya bila kebijakan ACTIVE menyatakannya. Pelaksana tugas (Plt.)/delegasi dicatat sebagai penunjukan/penugasan berjangka dengan rujukan; tidak ada delegasi implisit (GAP-001/014).
+Penugasan dibuat oleh pengguna berwenang (kapabilitas `procurement.package.manage`, admin gudang, dsb.) dengan rujukan SK bila ada; sistem dapat **menyarankan** pengguna dari `org_appointments`, tetapi saran bukan penugasan. Rantai keputusan gudang dapat dipetakan dari penunjukan jabatan secara otomatis hanya bila versi kebijakan yang berlaku resmi menyatakannya. Pelaksana tugas (Plt.)/delegasi dicatat sebagai penunjukan/penugasan berjangka dengan rujukan; tidak ada delegasi implisit (GAP-001/014).
 
 ## 6. Pemisahan tugas
 
@@ -174,7 +174,7 @@ Penugasan dibuat oleh pengguna berwenang (kapabilitas `procurement.package.manag
 | SOD-03 | PPK ≠ PPSPM/Bendahara | Sama; jabatan keuangan di luar PRANATA dicatat sebagai penunjukan | Peringatan + blok penugasan bila penunjukan tercatat |
 | SOD-04 | Pembuat versi kebijakan ≠ pengesah | CAP-23 | Constraint DB + aplikasi |
 | SOD-05 | Pembuat grant istimewa ≠ penyetuju | P5 | Constraint DB + aplikasi |
-| SOD-06 | Pemohon barang ≠ pemberi persetujuan atas permintaannya sendiri | Kontrol bawaan P5; dapat diubah hanya oleh kebijakan gudang ACTIVE | Aplikasi |
+| SOD-06 | Pemohon barang ≠ pemberi persetujuan atas permintaannya sendiri | Kontrol bawaan P5; dapat diubah hanya oleh versi kebijakan gudang yang berlaku resmi | Aplikasi |
 | SOD-07 | Petugas yang menyerahkan barang ≠ penerima yang mengonfirmasi | P5 | Aplikasi |
 | SOD-08 | SUPER_ADMIN tidak memegang penugasan keputusan bisnis | INV-021 | Aplikasi |
 | SOD-09 | Penyusun templat ≠ pengesah templat | P4 | Constraint DB + aplikasi |
@@ -238,7 +238,7 @@ Profil yang memuat `admin.*` atau cakupan GLOBAL atas kapabilitas keputusan dita
 | AUTHZ-32 | Bila penulisan audit gagal, isi rahasia tidak ditampilkan |
 | AUTHZ-33 | Penyedia tidak dapat mengirim penawaran di PRANATA bila kebijakan kanal menonaktifkannya |
 | AUTHZ-34 | Penugasan PPK dan Pokja pada paket sama ditolak (SOD-01) |
-| AUTHZ-40 | Penetapan metode hanya oleh penugasan `METHOD_DETERMINER` pada paket itu dan hanya dengan kebijakan ACTIVE di produksi |
+| AUTHZ-40 | Penetapan metode hanya oleh penugasan `METHOD_DETERMINER` pada paket itu dan hanya dengan versi kebijakan yang berlaku resmi pada tanggal acuan paket di produksi |
 | AUTHZ-41 | Penetapan pemenang oleh fungsi sesuai ambang nilai kebijakan |
 | AUTHZ-42 | Empat tanggung jawab SPPBJ tidak dapat dijalankan oleh satu orang bila kebijakan memisahkannya |
 | AUTHZ-43 | Ekspor laporan tidak memuat baris di luar scope pengguna |

@@ -31,11 +31,11 @@ OD-29: nomor disarankan, diperiksa petugas berwenang dan tidak pernah bertabraka
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-017) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-017) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
-- Tabel `numbering_schemes` (satu skema ACTIVE per jenis dokumen; penggantian atomik), `numbering_counters`, `document_numbers` (nomor unik per jenis dokumen lintas skema)
+- Tabel `numbering_schemes` (paling banyak satu skema per jenis dokumen untuk setiap versi kebijakan `numbering`; dipilih menurut versi yang berlaku resmi pada tanggal finalisasi, DI-32), `numbering_counters`, `document_numbers` (nomor unik per jenis dokumen lintas skema)
 - Formatter pola (`{seq:n}`, `{unit}`, `{doc}`, `{year}`, `{month_roman}`)
 - Alokasi `FOR UPDATE`, reservasi, konfirmasi, override manual tervalidasi unik, void
 - Uji konkurensi dua proses
@@ -189,15 +189,15 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Dua alokasi bersamaan tidak menghasilkan nomor ganda (uji paralel)
 - TAC-02 Override manual yang bertabrakan ditolak dengan saran nomor berikut
 - TAC-03 Nomor VOIDED tetap tercatat dan tidak dipakai ulang kecuali kebijakan gapless menyatakan lain
-- TAC-04 Tanpa skema ACTIVE, finalisasi resmi tidak tersedia di produksi
-- TAC-05 Dua skema ACTIVE untuk jenis dokumen yang sama dan teks nomor kembar lintas skema untuk jenis dokumen yang sama ditolak DB (DI-13)
+- TAC-04 Tanpa skema dari versi kebijakan `numbering` yang berlaku resmi pada tanggal finalisasi, finalisasi resmi tidak tersedia di produksi; skema versi terjadwal tidak dipakai sebelum tanggal berlakunya dan skema pendahulu tetap dipakai sampai tanggal itu (DI-32)
+- TAC-05 Dua skema ACTIVE untuk jenis dokumen yang sama pada versi kebijakan yang sama dan teks nomor kembar lintas skema untuk jenis dokumen yang sama ditolak DB (DI-13)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: Formatter
-- Feature: Alokasi/override/void; DI-13 (uji negatif langsung DB)
+- Feature: Alokasi/override/void; DI-13 (uji negatif langsung DB), DI-32
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)

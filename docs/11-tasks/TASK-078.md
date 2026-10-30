@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Menyusun dan memverifikasi paket kesiapan rilis: checklist gerbang RELEASE_PLAN §2, deklarasi rilis, status kebijakan ACTIVE/DRAFT per fitur, rencana cutover dan rollback, dukungan UAT-2/3/4, review kesiapan independen, dan menyerahkan keputusan go-live kepada Owner.
+Menyusun dan memverifikasi paket kesiapan rilis: checklist gerbang RELEASE_PLAN §2, deklarasi rilis, keberlakuan kebijakan per fitur (berlaku pada tanggal rilis, terjadwal, DRAFT), rencana cutover dan rollback, dukungan UAT-2/3/4, review kesiapan independen, dan menyerahkan keputusan go-live kepada Owner.
 
 ## WHY THIS EXISTS
 
@@ -50,7 +50,7 @@ P10: rilis memerlukan bukti, bukan keyakinan.
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
 - Keputusan/prasyarat Owner: Persetujuan rilis dan go-live
 - Keputusan/prasyarat Owner: Keputusan rilis bertahap (opsional)
-- GAP terkait (GAP-011, GAP-012, GAP-016, GAP-023, GAP-024) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-011, GAP-012, GAP-016, GAP-023, GAP-024) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 

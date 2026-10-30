@@ -33,13 +33,13 @@ INV-023/BR-036: isi penawaran tidak boleh diubah dan pembukaan tidak menggugurka
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-014, GAP-017, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-014, GAP-017, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
 - Tabel `proc_participations` (per pemilihan; `uq(id, selection_id)`, `uq(id, package_id)`, `uq(id, company_id)`), `proc_submissions`, `proc_submission_scopes`, `proc_submission_lines`, `proc_opening_records`, `proc_opening_entries`; pemeriksaan DPT saat partisipasi
-- Imutabilitas: hak kolom `UPDATE (status, opened_at)`, trigger `forbid_offer_change()`, lingkup/rincian/entri pembukaan append-only, tautan berkas OFFER tidak dapat dilepas (DI-23)
-- Pembukaan per sampul tanpa kolom atau aksi gugur; penawaran terlambat REJECTED_LATE (DI-24); penggantian skema sesudah pembukaan ditolak di bawah kunci pemilihan (DI-22)
+- Imutabilitas: hak kolom `UPDATE (status, opened_at, withdrawn_at, withdrawal_evidence_file_id)`, trigger `forbid_offer_change()`, lingkup/rincian/entri pembukaan append-only, tautan berkas OFFER tidak dapat dilepas (DI-23)
+- Pembukaan atau penutupan penerimaan per sampul tanpa kolom atau aksi gugur (DI-24), hanya sesudah batas akhir versi tertinggi; waktu terima dari jam basis data (kanal PRANATA) atau bukti terima (kanal eksternal); keterlambatan dihitung dari batas akhir tanpa kolom penanda; entri hanya untuk kiriman tepat waktu; constraint trigger tertunda `check_opening_consistency()` menyelaraskan status (DI-31); penggantian skema sesudah pembukaan ditolak di bawah kunci pemilihan (DI-22)
 - State WF-008 (TR-071–077)
 - PG-110 (penerimaan penawaran) dan PG-123 (pembukaan); berkas penawaran CONFIDENTIAL
 - Alur IX-024: alasan wajib, audit gagal tertutup, read-only, tanpa ekspor
@@ -215,19 +215,20 @@ INV-023/BR-036: isi penawaran tidak boleh diubah dan pembukaan tidak menggugurka
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Penawaran eksternal tercatat dengan tanda terima, waktu, kanal, lingkup yang ditawar, rincian harga dan sidik jari berkas; penawaran terlambat tercatat REJECTED_LATE dan tidak dapat dibuka atau dievaluasi (DI-23)
-- TAC-02 UPDATE isi penawaran, lingkup atau rinciannya dan pelepasan berkas penawaran ditolak hak kolom dan trigger, termasuk lewat koneksi `pranata_app` langsung (DI-23)
-- TAC-03 Pembukaan mencatat nilai yang dibacakan dan kelengkapan; penawaran tidak lengkap tetap berstatus sama dan tidak ada aksi gugur (DI-24); penggantian skema sesudah pembukaan ditolak dan pembukaan bersamaan pembekuan diserialkan (DI-22)
-- TAC-04 Petugas tanpa penugasan tidak dapat membuka penawaran dan tidak seorang pun dapat mengubah penawaran asli (AUTHZ-46); isolasi antar-penyedia diuji di TASK-043
-- TAC-05 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
-- TAC-06 Jawaban klarifikasi dan revisi sebelum batas akhir tertaut ke penawaran asal tanpa mengubahnya
-- TAC-07 Kolom `package_id`/`selection_id` partisipasi dan penawaran tidak dapat diubah setelah insert (DI-17)
+- TAC-01 Penawaran eksternal tercatat dengan bukti terima, waktu terima, kanal, lingkup yang ditawar, rincian harga dan sidik jari berkas (DI-23)
+- TAC-02 Penawaran terlambat yang disisipkan langsung ke basis data berstatus RECEIVED tidak dapat diberi entri pembukaan atau menjadi OPENED, dan pembukaan yang tidak menandainya REJECTED_LATE ditolak saat commit; penawaran tepat waktu tidak dapat dikecualikan dari pembukaan; pembukaan sebelum batas akhir atau dengan versi batas yang bukan tertinggi ditolak DB; kanal PRANATA memakai jam basis data (DI-31)
+- TAC-03 UPDATE isi penawaran, lingkup atau rinciannya dan pelepasan berkas penawaran ditolak hak kolom dan trigger, termasuk lewat koneksi `pranata_app` langsung (DI-23)
+- TAC-04 Pembukaan mencatat nilai yang dibacakan dan kelengkapan; penawaran tidak lengkap tetap berstatus sama dan tidak ada aksi gugur (DI-24); penggantian skema sesudah pembukaan ditolak dan pembukaan bersamaan pembekuan diserialkan (DI-22)
+- TAC-05 Petugas tanpa penugasan tidak dapat membuka penawaran dan tidak seorang pun dapat mengubah penawaran asli (AUTHZ-46); isolasi antar-penyedia diuji di TASK-043
+- TAC-06 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
+- TAC-07 Jawaban klarifikasi dan revisi sebelum batas akhir tertaut ke penawaran asal tanpa mengubahnya
+- TAC-08 Kolom `package_id`/`selection_id` partisipasi dan penawaran tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-008, IX-024; DI-17, DI-22, DI-23, DI-24 (uji negatif langsung DB; DI-22 dengan dua koneksi)
+- Feature: WF-008, IX-024; DI-17, DI-22, DI-23, DI-24, DI-31 (uji negatif langsung DB; DI-22 dan DI-31 dengan dua koneksi)
 - Authorization: AUTHZ-31, AUTHZ-32, AUTHZ-46
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-16 bagian baca teraudit; J-19 bagian pembukaan
@@ -287,7 +288,8 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## DO NOT DO
 
-- Jangan mengaktifkan kiriman penawaran di PRANATA tanpa kebijakan kanal ACTIVE
+- Jangan mengaktifkan kiriman penawaran di PRANATA tanpa versi kebijakan kanal yang berlaku resmi
+- Jangan menyimpan atau mengubah penanda keterlambatan; pengecualian hanya berupa keputusan perpanjangan tercatat
 - Jangan menyediakan aksi gugur pada pembukaan
 - Jangan menyimpan koreksi aritmetik pada rekaman penawaran
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE

@@ -39,13 +39,13 @@ CAP-08/OD-29: dokumen dihasilkan dari data sekali-input dengan asal yang dapat d
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-013, GAP-017, GAP-019) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-013, GAP-017, GAP-019) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
 - Tabel `document_templates`, `document_template_versions`, `generated_documents`, `document_signatures`, `document_packs`, `document_pack_items`
 - Validasi placeholder terhadap skema provider; tolak DOCM
-- Pemilihan template deterministik (template ACTIVE paling spesifik; satu versi berlaku per tanggal generasi; EXCLUDE jendela) dan aktivasi versi atomik di bawah kunci template memakai helper jendela TASK-018, tanpa tanggal mundur
+- Pemilihan template deterministik (template ACTIVE paling spesifik; versi yang berlaku resmi pada tanggal generasi — disahkan dan jendela memuat tanggal itu; EXCLUDE jendela) dan aktivasi versi atomik di bawah kunci template memakai helper jendela TASK-018, tanpa tanggal mundur
 - Job antrean `documents` + klien Gotenberg + status konversi + ulang
 - Formatter uang/tanggal/terbilang Indonesia teruji tabel
 - Siklus isi dokumen DRAFT → FINAL; penerbitan dan bukti tanda tangan sebagai tindakan terpisah yang wajib/urutannya ditentukan per jenis dokumen oleh kebijakan (tanpa urutan bawaan)
@@ -225,13 +225,14 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-06 Terbilang dan format lulus tabel uji
 - TAC-07 Paket dokumen menandai item wajib yang ada/kurang dan dapat dirakit menjadi PDF gabungan
 - TAC-08 Pemilihan template dan versinya deterministik; jendela tumpang tindih, aktivasi bersamaan dan aktivasi bertanggal mundur ditolak; revisi dokumen lama memakai versi template tersimpan kecuali regenerasi eksplisit (DI-12)
+- TAC-09 Versi template dipilih menurut keberlakuan resmi pada tanggal generasi: pendahulu SUPERSEDED tetap dipakai sampai penerus terjadwal berlaku dan versi terjadwal tidak dipakai lebih awal (DI-32)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: Formatter/terbilang, pemilihan template
-- Feature: Template emas, revisi, nomor, otorisasi unduh, DI-12 (uji negatif langsung DB)
+- Feature: Template emas, revisi, nomor, otorisasi unduh, DI-12 (uji negatif langsung DB), DI-32
 - Integration: Gotenberg (nightly)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute

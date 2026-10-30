@@ -34,13 +34,14 @@ OD-35/OD-36, BR-036–BR-038, CAP-06/AC-08/AC-33–AC-35: evaluasi yang andal di
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
-- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-027, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
+- GAP terkait (GAP-003, GAP-013, GAP-017, GAP-027, GAP-029) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE
 
-- Tabel `proc_award_scopes`, kolom `proc_package_items.award_scope_id` (migrasi pemilik tabel tujuan, DATA_MODEL §19 aturan 5), `proc_selections`, `proc_selection_scopes`, `proc_evaluation_schemes`, `proc_evaluation_stages`, `proc_evaluation_criteria`, `proc_activities` (dengan `selection_id`), `proc_activity_participants`, `proc_invitations` (per pemilihan), `proc_market_inquiries`
+- Tabel `proc_award_scopes`, kolom `proc_package_items.award_scope_id` (migrasi pemilik tabel tujuan, DATA_MODEL §19 aturan 5), `proc_selections`, `proc_selection_scopes`, `proc_evaluation_schemes`, `proc_evaluation_stages`, `proc_evaluation_criteria`, `proc_evaluation_criterion_scopes`, `proc_submission_deadlines`, `proc_activities` (dengan `selection_id`), `proc_activity_participants`, `proc_invitations` (per pemilihan), `proc_market_inquiries`
 - Lingkup PACKAGE bawaan; pembagian lot/item sebelum skema dibekukan; trigger eksklusivitas lingkup dan penolakan perubahan sesudah FROZEN (DI-21)
-- Skema: metode evaluasi yang diizinkan dari `procurement.evaluation`, tahap dan kriteria dari dokumen pengadaan beserta sumbernya, validasi kelengkapan, pembekuan oleh `POKJA_CHAIR`/`PEJABAT_PENGADAAN`, penggantian hanya dengan rujukan adendum sebelum pembukaan (DI-22)
+- Skema: metode evaluasi yang diizinkan dari `procurement.evaluation`, tahap per peserta atau per lingkup beserta sampulnya, kriteria dari dokumen pengadaan beserta sumbernya dan penerapan lingkup eksplisit untuk setiap kriteria per lingkup (semua lingkup disimpan per lingkup), validasi kelengkapan, pembekuan oleh `POKJA_CHAIR`/`PEJABAT_PENGADAAN`, penggantian hanya dengan rujukan adendum sebelum pembukaan (DI-22)
+- Batas akhir pemasukan per pemilihan dan sampul: versi dari dokumen pengadaan, adendum yang terbit sebelum batas lewat, dan keputusan perpanjangan sesudah batas lewat hanya sebagai versi tercatat bila kebijakan yang berlaku resmi mengizinkannya; trigger `check_deadline_version()` di bawah kunci pemilihan menolak versi tidak berurutan dan versi sesudah pembukaan (DI-31)
 - State WF-006 (TR-051–055); undangan dengan pemeriksaan minimum yang bersumber aturan (Quotation ≥ 3 DPT) dan praktik setempat yang informatif
 - PG-109 kalender + daftar, PG-110 (undangan, penjajakan, strip jumlah), PG-122 (skema dan lingkup)
 - Kolom lingkup `package_id`/`selection_id` tidak dapat diubah setelah insert (DI-17)
@@ -107,7 +108,7 @@ OD-35/OD-36, BR-036–BR-038, CAP-06/AC-08/AC-33–AC-35: evaluasi yang andal di
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `proc_award_scopes`, proc_package_items (kolom award_scope_id), `proc_selections`, `proc_selection_scopes`, `proc_evaluation_schemes`, `proc_evaluation_stages`, `proc_evaluation_criteria`, `proc_activities`, `proc_activity_participants`, `proc_invitations`, `proc_market_inquiries`
+- Tables: `proc_award_scopes`, proc_package_items (kolom award_scope_id), `proc_selections`, `proc_selection_scopes`, `proc_evaluation_schemes`, `proc_evaluation_stages`, `proc_evaluation_criteria`, `proc_evaluation_criterion_scopes`, `proc_submission_deadlines`, `proc_activities`, `proc_activity_participants`, `proc_invitations`, `proc_market_inquiries`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -221,17 +222,18 @@ OD-35/OD-36, BR-036–BR-038, CAP-06/AC-08/AC-33–AC-35: evaluasi yang andal di
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Paket tanpa pembagian memiliki satu lingkup PACKAGE; paket dua lot menempatkan setiap item pada tepat satu lot; perubahan lingkup atau penempatan item sesudah skema FROZEN ditolak aplikasi dan DB (DI-21)
-- TAC-02 Skema hanya dapat dibekukan dengan dokumen sumber dan kriteria lengkap; skema FROZEN beserta tahap dan kriterianya tidak dapat diubah (DI-22)
-- TAC-03 Undangan Quotation memperingatkan bila < 3 penyedia DPT (kebijakan DRAFT); praktik tiga penawaran Pengadaan Langsung tampil informatif tanpa memblokir
-- TAC-04 Strip jumlah dijajaki/diundang/menawar/memenuhi syarat/dievaluasi dihitung server dan konsisten dengan daftar
-- TAC-05 Kegiatan terjadwal dan hasilnya tercatat terpisah; kalender dan daftar konsisten; dapat diakses keyboard
-- TAC-06 Kolom `package_id`/`selection_id` pemilihan, lingkup dan undangan tidak dapat diubah setelah insert (DI-17)
+- TAC-02 Skema hanya dapat dibekukan dengan dokumen sumber, kriteria lengkap dan penerapan lingkup untuk setiap kriteria per lingkup; baris penerapan untuk kriteria per peserta ditolak; skema FROZEN beserta tahap, kriteria dan penerapan lingkupnya tidak dapat diubah (DI-22)
+- TAC-03 Batas akhir per pemilihan dan sampul tercatat dengan dasar dan waktu terbitnya; adendum sesudah batas lewat, versi sesudah pembukaan dan nomor versi tidak berurutan ditolak DB; perpanjangan sesudah batas lewat hanya sebagai keputusan tercatat dengan pengambil keputusan, penugasan, alasan dan bukti (DI-31)
+- TAC-04 Undangan Quotation memperingatkan bila < 3 penyedia DPT (kebijakan DRAFT); praktik tiga penawaran Pengadaan Langsung tampil informatif tanpa memblokir
+- TAC-05 Strip jumlah dijajaki/diundang/menawar/memenuhi syarat/dievaluasi dihitung server dan konsisten dengan daftar
+- TAC-06 Kegiatan terjadwal dan hasilnya tercatat terpisah; kalender dan daftar konsisten; dapat diakses keyboard
+- TAC-07 Kolom `package_id`/`selection_id` pemilihan, lingkup dan undangan tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-006; DI-17, DI-21, DI-22 (uji negatif langsung DB)
+- Feature: WF-006; DI-17, DI-21, DI-22, DI-31 bagian batas akhir (uji negatif langsung DB)
 - Authorization: AUTHZ-47
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Bagian J-04, J-19
@@ -294,6 +296,7 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 - Jangan mewajibkan negosiasi/kegiatan untuk semua metode
 - Jangan membuat bobot, ambang atau kriteria yang tidak ada dalam dokumen pengadaan
 - Jangan menjadikan praktik tiga penawaran sebagai syarat
+- Jangan mengubah batas akhir di tempat; setiap perubahan adalah versi baru beserta dasarnya
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR
