@@ -38,7 +38,7 @@ OD-31, CAP-22, AC-29.
 
 ## IN SCOPE
 
-- Tabel `inv_requests`, `inv_request_lines`
+- Tabel `inv_requests` (`uq(id, warehouse_id)`; `warehouse_id` tidak dapat diubah), `inv_request_lines` (`uq(id, request_id, item_id)`; `request_id` tidak dapat diubah) sebagai induk FK komposit serah terima
 - TR-291–294, TR-298
 - Rantai keputusan multi-langkah dari `warehouse.operations`: satu `inv_request_decisions` per langkah per siklus (penugasan REQUEST_APPROVER per langkah); TR-293 berulang per langkah; jumlah disetujui tidak boleh naik antarlangkah
 - PG-005, PG-202 (daftar, antrean keputusan, detail, form)
@@ -210,12 +210,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Jumlah disetujui sebagian wajib beralasan
 - TAC-04 Rantai dua langkah: setiap langkah tercatat terpisah; permintaan APPROVED setelah langkah terakhir; pengembalian memulai siklus baru tanpa menghapus keputusan lama
 - TAC-05 Di produksi tanpa kebijakan gudang ACTIVE, keputusan resmi tidak tersedia dengan penjelasan
+- TAC-06 Gudang permintaan dan induk baris tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: TR-291–294/298
+- Feature: TR-291–294/298; DI-17
 - Authorization: AUTHZ-11
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-09 bagian 1

@@ -36,10 +36,10 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 
 ## IN SCOPE
 
-- Tabel `asset_depreciation_runs`, `asset_depreciation_lines` (partisi tahunan) + job pembuat partisi
+- Tabel `asset_depreciation_runs`, `asset_depreciation_lines` (partisi tahunan) + job pembuat partisi; kolom proyeksi `last_depreciation_period`/`last_depreciation_run_id` pada `asset_assets` (DATA_MODEL §19 aturan 5)
 - State WF-022 (TR-211–214)
-- Run simulasi vs resmi; satu run resmi per periode dijaga constraint DB untuk status QUEUED/RUNNING/COMPLETED
-- Baris penyusutan ditulis per chunk; proyeksi nilai aset diperbarui hanya pada tahap penyelesaian run resmi dan dapat dilanjutkan bila gagal di tengah
+- Run simulasi vs resmi; satu run resmi per periode dijaga constraint DB untuk status QUEUED/RUNNING/FAILED/COMPLETED; run resmi berurutan menurut periode
+- Protokol run resmi CONCURRENCY_AND_INTEGRITY §6.1: fase VALIDATION, LINES dan PROJECTION per chunk dengan checkpoint tahan lama; proyeksi menambahkan `amount` dengan penjaga `last_depreciation_period`; lanjutan FAILED → RUNNING pada run yang sama atas permintaan pengguna berwenang (compare-and-set, bukan retry otomatis); worker usang tidak dapat menulis; CANCELLED hanya tanpa baris; tanpa run pengganti
 - PG-309 daftar run, detail per aset dengan penjelasan perhitungan
 - Uji tabel metode garis lurus dan pembulatan dengan kebijakan DRAFT
 
@@ -47,6 +47,7 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 
 - Penetapan kebijakan penyusutan resmi (GAP-007)
 - Jurnal akuntansi
+- Koreksi atau penggantian run resmi (menunggu kebijakan BR-017, GAP-007/008; melalui perubahan rencana)
 
 ## REFERENCES
 
@@ -56,6 +57,8 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 - [RT-022](../03-workflows/ROUTE_CONTRACTS.md#rt-022)
 - [POLICY_REGISTRY §5](../04-architecture/POLICY_REGISTRY.md#5-contoh-isi-lain-bentuk-bukan-nilai-resmi)
 - [PERFORMANCE_AND_SCALE PB-09](../06-api-performance/PERFORMANCE_AND_SCALE.md#2-anggaran-performa)
+- [CONCURRENCY_AND_INTEGRITY §6.1](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#61-protokol-run-penyusutan-resmi)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -82,7 +85,7 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 
 ## ARCHITECTURE RULES
 
-- Run per chunk, dapat dilanjutkan
+- Run per chunk; lanjutan memakai run yang sama dari checkpoint; setiap transaksi chunk memeriksa status dan percobaan run
 - Ikuti aturan dependensi modul ([ARCHITECTURE §5](../04-architecture/ARCHITECTURE.md#5-aturan-dependensi-antar-modul)) dan pola lapisan §6
 - Satu perintah = satu Action bertransaksi; efek samping setelah commit
 
@@ -95,10 +98,10 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `asset_depreciation_runs`, `asset_depreciation_lines`
+- Tables: `asset_depreciation_runs`, `asset_depreciation_lines`, asset_assets (kolom proyeksi penyusutan)
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
-- Data-loss risk: Proyeksi nilai hanya oleh run resmi
+- Data-loss risk: Proyeksi nilai hanya oleh run resmi; penerapan sekali per aset per periode
 
 ## MODULARITY / EXTENSIBILITY
 
@@ -203,17 +206,19 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
 - TAC-01 Run simulasi tidak mengubah proyeksi aset
-- TAC-02 Run resmi kedua untuk periode yang sama ditolak saat dibuat selama run lain QUEUED/RUNNING/COMPLETED
-- TAC-03 Kegagalan di tengah run dilanjutkan tanpa penyusutan ganda (uji)
-- TAC-04 Run berjalan per chunk tanpa mengunci pengguna lain pada data representatif; PB-09 pada 1 juta aset dibuktikan di TASK-073
-- TAC-05 Setiap angka dapat dijelaskan dari aset, kebijakan dan periode
+- TAC-02 Run resmi kedua untuk periode yang memiliki run QUEUED/RUNNING/FAILED/COMPLETED dan run di luar urutan periode ditolak saat dibuat; permintaan run pengganti/koreksi ditolak dengan penjelasan GAP-007/008 (DI-04)
+- TAC-03 Gagal setelah sebagian baris tertulis atau di tengah proyeksi dilanjutkan pada run yang sama tanpa baris ganda, proyeksi ganda atau penimpaan transaksi aset lain (DI-01, DI-02)
+- TAC-04 Dua permintaan lanjutan bersamaan: satu berjalan, satu 409; worker usang tidak menulis (DI-03)
+- TAC-05 Aset yang tidak dapat dihitung terdeteksi sebelum baris pertama; run FAILED tanpa baris dapat dibatalkan; setiap run FAILED memiliki jalan lanjut (DI-01, DI-04)
+- TAC-06 Run berjalan per chunk tanpa mengunci pengguna lain pada data representatif; PB-09 pada 1 juta aset dibuktikan di TASK-073
+- TAC-07 Setiap angka dapat dijelaskan dari aset, kebijakan dan periode
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: Metode/pembulatan
-- Feature: Run dan partisi
+- Feature: Run, partisi dan protokol lanjutan DI-01, DI-02, DI-04 (termasuk uji langsung DB)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)
@@ -223,6 +228,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Production build: npm run build
 - Performance: Uji chunk pada data representatif (PB-09 penuh di TASK-073)
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
+- Other: Uji konkurensi lanjutan ganda dan worker usang (DI-03)
 
 ## TEST CHECKLIST
 

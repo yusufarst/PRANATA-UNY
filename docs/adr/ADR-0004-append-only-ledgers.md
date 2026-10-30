@@ -16,7 +16,7 @@ INV-009, INV-020 dan BR-030 menuntut posisi stok per gudang diturunkan dari ledg
 
 ## Keputusan dan alasan
 
-`inv_stock_movements` dan `asset_transactions` append-only (trigger + hak peran DB). `inv_stock_balances` dan kolom proyeksi `asset_assets` diperbarui dalam transaksi yang sama dengan penguncian `SELECT … FOR UPDATE` menurut urutan kunci P6. Koreksi memakai record pembalik. Job berkala membandingkan saldo dengan jumlah ledger dan melaporkan selisih sebagai insiden.
+`inv_stock_movements` dan `asset_transactions` append-only (trigger + hak peran DB). `inv_stock_balances` dan kolom proyeksi `asset_assets` diperbarui dalam transaksi yang sama dengan penguncian `SELECT … FOR UPDATE` menurut urutan kunci P6. Koreksi memakai record pembalik — paling banyak satu pembalikan penuh per entri, diperiksa constraint dan trigger; entri yang berasal dari peristiwa fisik membawa identitas sumber yang unik sehingga peristiwa yang sama tidak dapat diposting dua kali ([DATA_MODEL §1](../04-architecture/DATA_MODEL.md#1-konvensi)). Job berkala membandingkan saldo dengan jumlah ledger dan melaporkan selisih sebagai insiden.
 
 ## Risiko
 

@@ -35,8 +35,8 @@ WF-023 keluarga transfer, OD-25.
 
 ## IN SCOPE
 
-- Tabel `inv_transfers`, `inv_transfer_lines`
-- Posting TRANSFER_OUT/IN
+- Tabel `inv_transfers`, `inv_transfer_lines` (beku setelah DISPATCHED kecuali `qty_received`)
+- Posting TRANSFER_OUT/IN dengan identitas sumber baris transfer; pemeriksa sumber jenis transfer (OUT di gudang asal, IN di gudang tujuan)
 - PG-209
 
 ## OUT OF SCOPE
@@ -48,6 +48,7 @@ WF-023 keluarga transfer, OD-25.
 - [EXECUTION_CONTEXT](EXECUTION_CONTEXT.md)
 - [WF-023](../03-workflows/WORKFLOW_CONTRACTS.md#wf-023)
 - [STATE_TRANSITIONS WF-023](../03-workflows/STATE_TRANSITIONS.md#wf-023)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -194,12 +195,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Kaki dispatch dan receipt tercatat di gudang masing-masing
 - TAC-02 Selisih jumlah membuka kasus
 - TAC-03 Petugas tanpa grant gudang tujuan tidak dapat menerima
+- TAC-04 Posting ganda kaki transfer dan kaki di gudang yang salah ditolak (DI-09); ubah baris setelah DISPATCHED selain `qty_received` ditolak DB (DI-15)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Transfer
+- Feature: Transfer; DI-09, DI-15
 - Authorization: Scope gudang
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)

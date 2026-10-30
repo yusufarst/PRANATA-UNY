@@ -39,7 +39,8 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 
 ## IN SCOPE
 
-- Tabel `proc_contracts`, `proc_contract_versions`, `proc_contract_lines`, `proc_guarantees`
+- Tabel `proc_contracts` (`draft_terms` sebagai rancangan sebelum SIGNED; FK komposit `(sppbj_id, package_id)`; perusahaan = pemenang hasil yang dirujuk, diperiksa constraint trigger), `proc_contract_versions` dan `proc_contract_lines` (keduanya append-only; FK `(contract_id, version_no)`; baris unik per versi), `proc_guarantees`
+- Versi ORIGINAL beserta barisnya dibuat dari `draft_terms` dalam transaksi penandatanganan; `current_version_no`/`current_value` adalah proyeksi versi terakhir
 - State WF-012 (TR-111–TR-115)
 - Evaluator `ContractForm`/`GuaranteeRequirement` (simulasi bila DRAFT)
 - PG-114
@@ -56,6 +57,8 @@ CAP-09/AC-12; bentuk bukti perjanjian berbeda menurut nilai dan rezim.
 - [STATE_TRANSITIONS WF-012](../03-workflows/STATE_TRANSITIONS.md#wf-012)
 - [RT-012](../03-workflows/ROUTE_CONTRACTS.md#rt-012)
 - [REGULATORY_SOURCE_REVIEW RG-04](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md)
+- [DATA_MODEL §14.4](../04-architecture/DATA_MODEL.md#144-kontrak-dan-pelaksanaan)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -208,13 +211,15 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Bentuk bukti perjanjian disarankan sesuai nilai dan rezim pada kebijakan DRAFT; pada pita yang belum diputus (GAP-027(b): di atas Rp20 juta s.d. Rp50 juta) sistem tidak memilih otomatis dan mewajibkan pilihan manusia beralasan
 - TAC-02 Versi ORIGINAL tercatat saat tanda tangan; nilai berjalan = nilai versi terakhir
 - TAC-03 Jaminan pelaksanaan diharapkan bila kebijakan menetapkan ambang; selama GAP-027(c) terbuka dasar perhitungan (HPS atau pagu) dipilih manusia dengan alasan
+- TAC-04 Baris kontrak hanya dibuat bersama versinya; UPDATE/DELETE baris versi ditolak hak peran dan trigger; baris tanpa versi yang cocok ditolak (DI-14)
+- TAC-05 Kontrak untuk SPPBJ paket lain atau dengan perusahaan selain pemenang ditolak aplikasi dan DB; kolom `package_id` kontrak tidak dapat diubah (DI-06, DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: Evaluator bentuk/jaminan: nilai jelas di luar pita GAP-027 dan pita yang mewajibkan pilihan manusia
-- Feature: WF-012
+- Feature: WF-012; DI-06, DI-14 (uji negatif langsung DB)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-03, J-05, J-06

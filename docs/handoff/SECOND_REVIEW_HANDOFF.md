@@ -11,6 +11,7 @@ Status: P0–P11 planning candidate — VERIFYING (AUTH-012) | Updated: 2026-10-
 | Kandidat | Cabang `docs/p0-p11-planning`, SHA HEAD yang dilaporkan bersama permintaan review; PR draft ke `main` (tidak untuk di-merge sebelum keputusan Owner) |
 | Isi | (1) amandemen remediasi P0–P3 AUTH-010, diimpor byte demi byte; (2) amandemen kompatibilitas P0–P3 AUTH-012 (OD-26–OD-34, GOV-10–GOV-12, GAP-026–GAP-029); (3) kandidat P4–P11 |
 | Status | Semua VERIFYING / belum disetujui. Tidak ada kode aplikasi. Tidak ada GAP yang diselesaikan |
+| Riwayat review | `48c2bc5`: CORRECTIONS_REQUIRED (SR-P1-01–SR-P1-05, SR-P2-01). Koreksinya diperiksa dengan pemeriksaan delta melalui [DELTA_REVIEW_HANDOFF](DELTA_REVIEW_HANDOFF.md) |
 
 Peran peninjau mengikuti [AGENT_OPERATING_MODEL](../00-governance/AGENT_OPERATING_MODEL.md): verdict kandidat **READY_FOR_OWNER_APPROVAL** atau **CORRECTIONS_REQUIRED**; temuan P0–P3 (P0 kerusakan/kehilangan data, celah keamanan atau pelanggaran aturan Owner; P1 perilaku salah pada kasus utama atau kontrol yang hilang; P2 kasus tepi/pemeliharaan; P3 saran). Verdict bukan persetujuan Owner. Sesuai GOV-11, yang diharapkan adalah **satu review substantif**; koreksi berikutnya diverifikasi dengan pemeriksaan delta.
 

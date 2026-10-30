@@ -17,7 +17,7 @@ Dua puluh sembilan GAP masih OPEN, termasuk ambang metode, kewenangan, varian do
 
 ## Keputusan dan alasan
 
-Keluarga kebijakan dengan skema JSON tervalidasi, versi DRAFT→IN_REVIEW→ACTIVE→SUPERSEDED/RETIRED, aktivasi oleh orang berbeda dari pembuat dengan bukti resolusi GAP dan kasus uji yang lulus, tanggal berlaku tanpa tumpang tindih, penyimpanan `policy_version_id` pada setiap hasil, dan label simulasi untuk keluaran berbasis versi non-ACTIVE. Di produksi, aksi resmi yang bergantung kebijakan non-ACTIVE tidak tersedia ([POLICY_REGISTRY](../04-architecture/POLICY_REGISTRY.md)).
+Keluarga kebijakan dengan skema JSON tervalidasi, versi DRAFT→IN_REVIEW→ACTIVE→SUPERSEDED/RETIRED, aktivasi oleh orang berbeda dari pembuat dengan bukti resolusi GAP dan kasus uji yang lulus, jendela tanggal berlaku tanpa tumpang tindih (termasuk versi yang sudah digantikan, tanpa tanggal mundur), penyimpanan `policy_version_id` pada setiap hasil beserta semua versi penyumbang di `policy_version_uses` bila hasil bergantung pada beberapa keluarga, dan label simulasi untuk keluaran berbasis versi non-ACTIVE. Di produksi, aksi resmi yang bergantung kebijakan non-ACTIVE tidak tersedia ([POLICY_REGISTRY](../04-architecture/POLICY_REGISTRY.md)).
 
 ## Risiko
 

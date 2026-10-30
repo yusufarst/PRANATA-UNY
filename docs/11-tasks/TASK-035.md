@@ -31,11 +31,12 @@ WF-010; kewenangan penetapan bergantung nilai (PR 34 Pasal 9; Perpres Pasal 9/13
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
+- Keputusan/prasyarat Owner: Jawaban D-26 tentang jumlah pemenang per paket (GAP-003/013/017), atau penerimaan Owner yang tercatat atas asumsi V1 satu pemenang per paket; bila praktik resmi memerlukan beberapa pemenang, perubahan rencana atas TASK-035–TASK-037 lebih dahulu
 - GAP terkait (GAP-003, GAP-013, GAP-017, GAP-027) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila kebijakan terkait ACTIVE ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register))
 
 ## IN SCOPE
 
-- Tabel `proc_results`, `proc_result_rankings`
+- Tabel `proc_results`, `proc_result_rankings` dengan FK komposit hasil dan partisipasi pada paket yang sama; satu WINNER dan peringkat unik per hasil (asumsi rancangan V1: satu pemenang per paket, menunggu D-26)
 - State WF-010 (TR-091–094)
 - Evaluator `WinnerAuthority` dari TASK-024
 - PG-112; dokumen surat penetapan/laporan sebagai draf
@@ -50,6 +51,8 @@ WF-010; kewenangan penetapan bergantung nilai (PR 34 Pasal 9; Perpres Pasal 9/13
 - [WF-010](../03-workflows/WORKFLOW_CONTRACTS.md#wf-010)
 - [STATE_TRANSITIONS WF-010](../03-workflows/STATE_TRANSITIONS.md#wf-010)
 - [RT-010](../03-workflows/ROUTE_CONTRACTS.md#rt-010)
+- [DATA_MODEL §14.3](../04-architecture/DATA_MODEL.md#143-pemilihan)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -198,12 +201,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Penetap hasil sesuai ambang nilai kebijakan (uji batas)
 - TAC-02 Pemilihan gagal tercatat dengan alasan dan langkah berikut
 - TAC-03 Satu hasil ditetapkan per paket
+- TAC-04 Peringkat atau pemenang dari partisipasi paket lain, dua WINNER, atau peringkat ganda dalam satu hasil ditolak aplikasi dan DB; kolom `package_id` hasil tidak dapat diubah (DI-05, DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-010
+- Feature: WF-010; DI-05 (uji negatif langsung DB)
 - Authorization: AUTHZ-41
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-03, J-05
@@ -264,6 +268,7 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 ## DO NOT DO
 
 - Jangan menetapkan pemenang otomatis dari peringkat
+- Jangan mengakali beberapa pemenang dalam satu paket di luar model yang disetujui
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan menambahkan atribusi AI pada commit/PR

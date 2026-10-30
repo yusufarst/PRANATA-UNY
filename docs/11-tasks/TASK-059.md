@@ -45,7 +45,7 @@ CAP-11/18, AC-14/21, OD-16/22.
 ## IN SCOPE
 
 - Tabel dan indeks DATA_MODEL §16
-- Layanan transaksi aset (sebelum/sesudah, pembalikan)
+- Layanan transaksi aset (sebelum/sesudah) dengan identitas sumber unik; pembalikan tunggal hanya atas transaksi terakhir aset yang belum dibalik (`check_asset_reversal()`), selain itu melalui koreksi WF-020
 - PG-302 daftar (filter unit/status/klasifikasi/lokasi/kata kunci), PG-303 detail
 - Scope unit subtree; isolasi dari Pengadaan (AUTHZ-03)
 - Uji jumlah kueri dan EXPLAIN pada data representatif (≥ 100.000 baris dari factory)
@@ -60,6 +60,7 @@ CAP-11/18, AC-14/21, OD-16/22.
 - [DATA_MODEL §16](../04-architecture/DATA_MODEL.md#16-asset)
 - [PERFORMANCE_AND_SCALE §2–3](../06-api-performance/PERFORMANCE_AND_SCALE.md#2-anggaran-performa)
 - [RT-017](../03-workflows/ROUTE_CONTRACTS.md#rt-017)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -211,12 +212,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Rencana kueri daftar aset memakai indeks yang dirancang pada data representatif; PB-01 pada 1 juta aset dibuktikan di TASK-073
 - TAC-02 Riwayat aset dari transaksi append-only; proyeksi konsisten
 - TAC-03 Pengguna Pengadaan tanpa grant aset tidak dapat mencari/membuka aset
+- TAC-04 Pembalikan ganda atau tidak cocok dan transaksi ganda dari sumber yang sama ditolak DB (DI-11)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Transaksi, scope
+- Feature: Transaksi, scope; DI-11 (uji negatif langsung DB dan konkurensi)
 - Authorization: AUTHZ-03
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-12

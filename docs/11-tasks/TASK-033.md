@@ -37,7 +37,7 @@ CAP-07/AC-09/10 dan OD-28: penawaran rahasia; Super Admin hanya baca teraudit.
 
 ## IN SCOPE
 
-- Tabel `proc_participations`, `proc_submissions`; pemeriksaan DPT saat partisipasi
+- Tabel `proc_participations` (`uq(id, package_id)` sebagai induk FK komposit; `package_id` tidak dapat diubah), `proc_submissions`; pemeriksaan DPT saat partisipasi
 - State WF-008 (TR-071–077)
 - PG-110; berkas penawaran CONFIDENTIAL
 - Alur IX-024: alasan wajib, audit gagal tertutup, read-only, tanpa ekspor
@@ -208,12 +208,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Petugas tanpa penugasan tidak dapat membuka penawaran; isolasi antar-penyedia diuji di TASK-043 setelah akun penyedia ada
 - TAC-03 Super Admin membuka penawaran hanya setelah alasan; audit tercatat; gagal audit = tidak tampil
 - TAC-04 Revisi tertaut ke kiriman asal
+- TAC-05 Kolom `package_id` partisipasi tidak dapat diubah setelah insert (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-008, IX-024
+- Feature: WF-008, IX-024; DI-17
 - Authorization: AUTHZ-31, AUTHZ-32
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-16 bagian baca teraudit

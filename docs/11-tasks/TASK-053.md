@@ -37,7 +37,7 @@ OD-30(7)/OD-31: stok berkurang saat serah terima fisik; konfirmasi terpisah.
 
 ## IN SCOPE
 
-- Tabel `inv_handovers`, `inv_handover_lines`
+- Tabel `inv_handovers`, `inv_handover_lines` dengan FK komposit ke permintaan/gudang dan baris permintaan/barang; baris beku sejak diposting; pemeriksa sumber jenis serah terima
 - TR-295–297
 - IX-022 (PG-204) mobile-first
 - Penerima tanpa akun: bukti unggah sesuai kebijakan
@@ -54,6 +54,7 @@ OD-30(7)/OD-31: stok berkurang saat serah terima fisik; konfirmasi terpisah.
 - [WF-030](../03-workflows/WORKFLOW_CONTRACTS.md#wf-030)
 - [STATE_TRANSITIONS WF-030](../03-workflows/STATE_TRANSITIONS.md#wf-030)
 - [IX-022](../03-workflows/INTERACTION_CONTRACTS.md#ix-022)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -204,12 +205,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Serah terima parsial lalu sisa: status dan sisa benar
 - TAC-03 Konfirmasi tidak mengubah stok; selisih membuat pekerjaan telaah
 - TAC-04 Barang tidak tersedia dapat diteruskan menjadi kebutuhan pengadaan tanpa persetujuan otomatis
+- TAC-05 Serah terima atau baris yang tidak cocok dengan permintaan, gudang atau barangnya ditolak aplikasi dan DB (DI-08); posting ganda baris serah terima ditolak (DI-09); baris tidak berubah setelah diposting (DI-15); kolom permintaan/gudang serah terima tidak dapat diubah (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: TR-295–297
+- Feature: TR-295–297; DI-08, DI-15 (uji negatif langsung DB)
 - Authorization: AUTHZ-12
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-09
@@ -218,7 +220,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Accessibility: axe tanpa pelanggaran serius/kritis
 - Production build: npm run build
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
-- Other: Konkurensi serah terima
+- Other: Konkurensi serah terima dan posting ganda baris sumber (DI-09)
 
 ## TEST CHECKLIST
 

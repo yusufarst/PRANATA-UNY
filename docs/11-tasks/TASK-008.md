@@ -39,7 +39,7 @@ Kepercayaan riwayat (INV-017, CAP-19) dan hak minimum DB (ADR-0010) menjadi dasa
 
 - Migrasi pembuatan peran (dev/test) dan dokumentasi pembuatan peran di server
 - Koneksi `migrator` di konfigurasi; aplikasi memakai `pranata_app`
-- Fungsi `forbid_update_delete()` dan helper migrasi untuk memasang pada tabel append-only
+- Fungsi trigger generik `forbid_update_delete()`, `forbid_scope_change()` dan `forbid_change_when_parent_final()` beserta helper migrasi untuk memasangnya; pemasangan pada tabel domain oleh Task pemilik tabel (DATA_MODEL §19 aturan 6)
 - `audit_events` berpartisi + partisi default + command pembuat partisi 3 bulan ke depan
 - `AuditLogger` (actor, action, subject, changes tanpa rahasia, request_id, ip, reason) dan uji
 - Uji hak: `pranata_app` tidak dapat UPDATE/DELETE audit
@@ -56,6 +56,7 @@ Kepercayaan riwayat (INV-017, CAP-19) dan hak minimum DB (ADR-0010) menjadi dasa
 - [ADR-0010](../adr/ADR-0010-audit-and-db-roles.md)
 - [SECURITY_MODEL §9](../05-security/SECURITY_MODEL.md#9-pemantauan-keamanan)
 - [OPERATIONS_RUNBOOK RB-05](../09-operations/OPERATIONS_RUNBOOK.md#rb-05-partisi-audit-dan-pemeliharaan-basis-data)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -175,13 +176,14 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 UPDATE/DELETE pada audit_events ditolak untuk peran app dan oleh trigger
 - TAC-03 Partisi bulan berjalan + 3 bulan ke depan ada; sisipan di luar rentang masuk partisi default
 - TAC-04 AuditLogger mencatat field yang diwajibkan dan menolak memuat field rahasia
+- TAC-05 Pada tabel uji, `forbid_scope_change()` menolak perubahan kolom lingkup dan `forbid_change_when_parent_final()` menolak ubah/hapus baris anak dari induk final, termasuk perintah langsung memakai peran app (DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: AuditLogger
-- Feature: Pest uji hak dan trigger
+- Feature: Pest uji hak dan trigger; uji negatif langsung DB untuk ketiga fungsi trigger generik (DI-17)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Production build: npm run build

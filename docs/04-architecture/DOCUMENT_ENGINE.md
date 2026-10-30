@@ -9,7 +9,7 @@ Dokumen ini memiliki desain teknis WF-028 dan OD-08/OD-29: data dimasukkan sekal
 ```mermaid
 flowchart LR
   A[Data terstruktur modul] --> B[DocumentDataProvider<br/>membangun snapshot bertipe]
-  B --> C{Template versi ACTIVE<br/>untuk jenis/rezim/metode?}
+  B --> C{Satu template paling spesifik<br/>dan satu versi berlaku<br/>pada tanggal generasi?}
   C -- tidak --> X[Tidak tersedia + alasan GAP-017]
   C -- ya --> D[Job antrean documents:<br/>isi DOCX]
   D --> E[Gotenberg: DOCX → PDF]
@@ -26,6 +26,8 @@ flowchart LR
 |---|---|
 | Snapshot | Setiap jenis dokumen memiliki `DocumentDataProvider` di modul pemilik yang menghasilkan DTO bertipe → `data_snapshot` + `data_sha256`. Dokumen tidak membaca basis data setelah snapshot dibuat; regenerasi selalu memakai snapshot baru. |
 | Template | DOCX dengan placeholder `${nama}`, baris berulang (`cloneRow`) dan blok (`cloneBlock`) gaya PhpWord TemplateProcessor. Saat unggah, placeholder dipindai dan dicocokkan dengan `placeholder_schema` provider: placeholder wajib hilang atau tak dikenal → template ditolak. |
+| Pemilihan template | Deterministik dan dapat diaudit: (1) di antara template ACTIVE untuk `document_type` subjek, pilih yang paling spesifik terhadap konteks (rezim → metode → jenis pengadaan; kolom terisi mengalahkan `NULL`), dijamin unik oleh constraint; (2) di dalam template itu, pilih satu-satunya versi ACTIVE/SUPERSEDED yang jendela `[effective_from, effective_to)` memuat tanggal generasi; (3) tidak ada atau lebih dari satu kandidat → generasi tidak tersedia dengan alasan (konfigurasi), tidak pernah memilih acak. Dokumen menyimpan `template_version_id`; revisi atas dokumen yang sama memakai versi tersimpan kecuali pengguna meminta regenerasi dengan versi yang berlaku, yang menjadi revisi baru dengan versi baru tercatat. |
+| Aktivasi versi template | Maker-checker; di bawah kunci baris template, versi baru diaktifkan dengan `effective_from`, jendela versi terbuka sebelumnya ditutup pada tanggal itu dan ditandai SUPERSEDED dalam transaksi yang sama; `effective_from` tidak boleh sebelum tanggal aktivasi; `EXCLUDE` menolak jendela tumpang tindih sehingga dua aktivasi bersamaan tidak dapat sama-sama berhasil (DI-12). Keadaan WF-029 F8 diturunkan seperti kebijakan ([POLICY_REGISTRY §2](POLICY_REGISTRY.md#2-lifecycle-versi)). |
 | Banner status | Setiap template wajib memuat `${status_banner}` pada header. Nilainya `DRAF — BUKAN DOKUMEN RESMI` untuk DRAFT dan `SIMULASI — KEBIJAKAN BELUM DISAHKAN` bila `is_simulation`; kosong hanya untuk dokumen FINAL non-simulasi. |
 | Konversi | Job antrean `documents` mengirim DOCX ke Gotenberg (route LibreOffice) dengan batas waktu; bila PDF gagal, DOCX tetap tersedia dan status konversi menunjukkan kegagalan yang dapat diulang (EP-010). |
 | Nomor | Saat finalisasi, layanan Numbering memberi saran nomor sesuai skema kebijakan; petugas berwenang mengonfirmasi atau mengisi manual; keunikan dijamin constraint (OD-29). Tanpa skema ACTIVE, finalisasi resmi tidak tersedia. |

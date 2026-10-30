@@ -36,7 +36,7 @@ OD-29: data dan aritmetika HPS ditangkap; rumus khusus hanya setelah kebijakan d
 
 ## IN SCOPE
 
-- Tabel `proc_hps`, `proc_hps_lines`; satu HPS SET per paket
+- Tabel `proc_hps`, `proc_hps_lines`; satu HPS SET per paket; baris unik per HPS dan beku setelah SET/SUPERSEDED (`forbid_change_when_parent_final()`)
 - Editor HPS (salin dari item, impor baris sederhana dari XLSX templat sintetis opsional)
 - Evaluator kewajiban HPS (PR 34 Pasal 21; Perpres Pasal 26) — berlabel simulasi
 - Penetapan oleh `HPS_SETTER`; proyeksi `hps_total` ke paket
@@ -50,6 +50,7 @@ OD-29: data dan aritmetika HPS ditangkap; rumus khusus hanya setelah kebijakan d
 - [EXECUTION_CONTEXT](EXECUTION_CONTEXT.md)
 - [DATA_MODEL §14.2](../04-architecture/DATA_MODEL.md#142-paket-hps-dan-penetapan-metode)
 - [REGULATORY_SOURCE_REVIEW RG-04](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -202,13 +203,14 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Hanya penetap yang ditugaskan dapat menetapkan; satu HPS SET per paket
 - TAC-03 Versi baru tidak menimpa versi lama
 - TAC-04 Label simulasi tampil bila kebijakan HPS DRAFT
+- TAC-05 Ubah/hapus baris HPS setelah SET ditolak aplikasi dan DB; revisi membuat versi HPS baru (DI-15)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: Aritmetika/pembulatan
-- Feature: Lifecycle HPS
+- Feature: Lifecycle HPS; DI-15 (uji negatif langsung DB)
 - Authorization: HPS_SETTER
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Bagian J-03

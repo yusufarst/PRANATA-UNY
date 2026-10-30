@@ -97,6 +97,7 @@ GAP-020 tidak relevan untuk V1 (OD-24).
 | GAP-029 | Untuk setiap metode, kanal resmi mana yang dipakai dan apakah penawaran/klarifikasi/pengumuman boleh dilakukan di PRANATA? | Kanal per metode; di PRANATA: tidak / sebagian / ya | Konfirmasi tertulis pengelola pengadaan |
 | GAP-003/004 | Siapa penyusun, pemeriksa, penerbit dan penanda tangan SPPBJ per metode; siapa menetapkan metode dan HPS? | Peran per langkah (default dari masukan Owner SRC-052) | Prosedur resmi terkini |
 | GAP-017 | Varian dokumen dan penomoran per metode yang berlaku sekarang | Daftar varian + skema nomor | Templat resmi terkini |
+| GAP-003/013/017 (hasil pemilihan) | Apakah ada metode atau jenis pengadaan di UNY yang menetapkan **lebih dari satu pemenang dalam satu paket** (misalnya per item atau per lot)? Bila ada, bagaimana hasil, SPPBJ dan kontrak dicatat? | Tidak ada — satu pemenang per paket / Ada, untuk metode … dengan aturan … | Prosedur resmi atau contoh dokumen hasil terkini |
 | GAP-028 | Sumber anggaran resmi untuk pemeriksaan internal (RBA/RKA, aplikasi anggaran, DIPA) dan siapa memverifikasi/melepas komitmen | Sumber + peran | Konfirmasi Keuangan |
 | GAP-024 | Apa kepanjangan, definisi dan bentuk laporan BMU, dan siapa yang mewajibkannya? | Definisi + contoh format resmi | Instrumen/format resmi |
 | GAP-025 | Daftar resmi gudang, rantai persetujuan permintaan per jenis, bukti serah terima/konfirmasi, kewenangan transfer dan penyesuaian opname | Aturan per gudang ALP/PSRT | Prosedur gudang resmi |
@@ -104,6 +105,8 @@ GAP-020 tidak relevan untuk V1 (OD-24).
 | GAP-007 | Penyusutan dimulai bulan berikutnya setelah pengakuan (masukan sementara Owner): dikonfirmasi? Metode dan masa manfaat per klasifikasi? | Ya/tidak + tabel masa manfaat | Kebijakan akuntansi resmi |
 
 Pertanyaan lengkap dan bukti per GAP ada di [GAP_REGISTER](../00-governance/GAP_REGISTER.md).
+
+Rancangan V1 memakai **asumsi satu pemenang per paket** ([DATA_MODEL §14.3](../04-architecture/DATA_MODEL.md#143-pemilihan)); asumsi ini bukan aturan pengadaan. TASK-035 baru dapat READY setelah pertanyaan hasil pemilihan di atas dijawab, atau setelah Owner mencatat penerimaan asumsi tersebut; bila jawabannya beberapa pemenang, TASK-035–TASK-037 diubah lebih dahulu melalui perubahan rencana.
 
 ## G. Ringkasan dampak bila belum dijawab
 
@@ -114,6 +117,6 @@ Pertanyaan lengkap dan bukti per GAP ada di [GAP_REGISTER](../00-governance/GAP_
 | D-05 | TASK-006 (AppShell) dan Task UI Gudang hanya dapat mengikuti IA kandidat |
 | D-19–D-23 | TASK-040, TASK-076, TASK-077; UAT di staging |
 | D-24 | Pelaksanaan UAT |
-| D-25/D-26 | Aktivasi resmi aturan di produksi; penerimaan V1 untuk AC-16 (GAP-024) |
+| D-25/D-26 | Aktivasi resmi aturan di produksi; penerimaan V1 untuk AC-16 (GAP-024); READY TASK-035 (jumlah pemenang per paket atau penerimaan asumsi V1) |
 | D-27 | Mode otonom (eksekusi terawasi tetap mungkin) |
 | D-28 | Task yang aksi resminya bergantung pada GAP gerbang aktivasi; Task tanpa GAP atau hanya dengan GAP gerbang rilis — TASK-001–TASK-012, TASK-016, TASK-022, TASK-023 dan Task operasi/rilis — tidak tertahan |

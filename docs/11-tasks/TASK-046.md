@@ -37,7 +37,7 @@ CAP-09/10, BR-012/013/032: BAST tidak otomatis menjadi pengakuan aset atau stok.
 
 ## IN SCOPE
 
-- Tabel `proc_inspections`, `proc_handovers`, `proc_handover_lines`
+- Tabel `proc_inspections`, `proc_handovers`, `proc_handover_lines` (FK komposit ke serah terima dan baris kontrak pada kontrak yang sama; beku setelah SIGNED kecuali klasifikasi dan rujukan hilir)
 - State WF-014 (TR-131–136)
 - PG-117
 - Penanda status hilir PENDING
@@ -52,6 +52,7 @@ CAP-09/10, BR-012/013/032: BAST tidak otomatis menjadi pengakuan aset atau stok.
 - [WF-014](../03-workflows/WORKFLOW_CONTRACTS.md#wf-014)
 - [STATE_TRANSITIONS WF-014](../03-workflows/STATE_TRANSITIONS.md#wf-014)
 - [RT-014](../03-workflows/ROUTE_CONTRACTS.md#rt-014)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -202,12 +203,14 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Pemeriksaan, penerimaan, serah terima dan BAST tercatat sebagai klaim berbeda
 - TAC-02 BAST tidak membuat aset/stok otomatis
 - TAC-03 Baris BAST siap diklasifikasikan
+- TAC-04 Baris BAST yang menunjuk baris kontrak dari kontrak lain ditolak aplikasi dan DB; kolom `contract_id` serah terima dan barisnya tidak dapat diubah (DI-17, DI-19)
+- TAC-05 Ubah/hapus baris BAST setelah SIGNED ditolak kecuali kolom klasifikasi dan rujukan hilir (DI-15)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-014
+- Feature: WF-014; DI-15, DI-19 (uji negatif langsung DB)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Bagian J-08

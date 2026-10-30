@@ -2,7 +2,7 @@
 
 Status: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
 
-Matriks ini dibangkitkan dari kontrak Task dan diperiksa otomatis: setiap CAP-01–CAP-23, AC-01–AC-32, NFR-P01–P04/NFR-O01–O02, WF-001–WF-033, RT-001–RT-036 dan IX-001–IX-024 dipetakan ke minimal satu Task.
+Matriks ini dibangkitkan dari kontrak Task dan diperiksa otomatis: setiap CAP-01–CAP-23, AC-01–AC-32, NFR-P01–P04/NFR-O01–O02, WF-001–WF-033, RT-001–RT-036 dan IX-001–IX-024 dipetakan ke minimal satu Task. Skenario integritas data DI-01–DI-20 ([TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)) dipetakan ke Task yang kriteria penerimaan atau ujinya memuatnya.
 
 ## Kapabilitas (CAP)
 
@@ -218,6 +218,31 @@ Matriks ini dibangkitkan dari kontrak Task dan diperiksa otomatis: setiap CAP-01
 | IX-022 | [TASK-053](TASK-053.md) |
 | IX-023 | [TASK-030](TASK-030.md) |
 | IX-024 | [TASK-033](TASK-033.md), [TASK-072](TASK-072.md), [TASK-074](TASK-074.md) |
+
+## Skenario integritas data (DI)
+
+| DI | Task |
+|---|---|
+| [DI-01](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-066](TASK-066.md) |
+| [DI-02](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-066](TASK-066.md) |
+| [DI-03](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-066](TASK-066.md) |
+| [DI-04](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-066](TASK-066.md) |
+| [DI-05](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-035](TASK-035.md) |
+| [DI-06](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-036](TASK-036.md), [TASK-037](TASK-037.md) |
+| [DI-07](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-034](TASK-034.md) |
+| [DI-08](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-053](TASK-053.md), [TASK-054](TASK-054.md) |
+| [DI-09](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-050](TASK-050.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-054](TASK-054.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md) |
+| [DI-10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-050](TASK-050.md) |
+| [DI-11](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-059](TASK-059.md) |
+| [DI-12](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-021](TASK-021.md) |
+| [DI-13](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-020](TASK-020.md) |
+| [DI-14](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-037](TASK-037.md), [TASK-045](TASK-045.md) |
+| [DI-15](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-029](TASK-029.md), [TASK-046](TASK-046.md), [TASK-051](TASK-051.md), [TASK-053](TASK-053.md), [TASK-055](TASK-055.md), [TASK-056](TASK-056.md) |
+| [DI-16](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-018](TASK-018.md), [TASK-028](TASK-028.md), [TASK-030](TASK-030.md) |
+| [DI-17](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-008](TASK-008.md), [TASK-033](TASK-033.md), [TASK-035](TASK-035.md), [TASK-036](TASK-036.md), [TASK-037](TASK-037.md), [TASK-046](TASK-046.md), [TASK-052](TASK-052.md), [TASK-053](TASK-053.md) |
+| [DI-18](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-058](TASK-058.md) |
+| [DI-19](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-046](TASK-046.md) |
+| [DI-20](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib) | [TASK-018](TASK-018.md) |
 
 ## Perlakuan GAP
 

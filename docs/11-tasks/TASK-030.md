@@ -36,7 +36,7 @@ OD-27/BR-031: lima metode per rezim dengan keputusan manusia yang terlacak.
 
 ## IN SCOPE
 
-- Tabel `proc_method_determinations`; satu DETERMINED per paket
+- Tabel `proc_method_determinations`; satu DETERMINED per paket; versi `procurement.methods` (utama) dan `procurement.regime` dicatat di `policy_version_uses`
 - State WF-032 (TR-311–316); TR-313/315 hanya dengan kebijakan ACTIVE di produksi
 - Kartu saran IX-023 (memenuhi/tidak memenuhi beserta alasan, tumpang tindih)
 - Nota penetapan metode (dokumen draf) via provider
@@ -54,6 +54,7 @@ OD-27/BR-031: lima metode per rezim dengan keputusan manusia yang terlacak.
 - [RT-035](../03-workflows/ROUTE_CONTRACTS.md#rt-035)
 - [IX-023](../03-workflows/INTERACTION_CONTRACTS.md#ix-023)
 - [BR-031](../02-domain/BUSINESS_RULES.md#br-031)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -206,12 +207,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-04 Perubahan kebijakan sejak saran memaksa tinjau ulang
 - TAC-05 Penetapan baru menggantikan lama dan menandai langkah terdampak
 - TAC-06 Di konfigurasi produksi tanpa kebijakan ACTIVE, tombol tetapkan nonaktif dengan alasan
+- TAC-07 Saran dan penetapan mencatat versi `procurement.methods` dan `procurement.regime` yang dipakai; versi baru salah satunya yang berlaku pada tanggal acuan memaksa tinjau ulang (DI-16)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-032 transisi dan guard
+- Feature: WF-032 transisi dan guard; DI-16
 - Authorization: AUTHZ-40
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-03, J-04

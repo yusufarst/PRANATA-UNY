@@ -36,7 +36,8 @@ OD-29 dan PR 34/2023 Pasal 40 / Perpres Pasal 54.
 
 ## IN SCOPE
 
-- Tabel `proc_amendments`
+- Tabel `proc_amendments`; kolom `amendment_id` beserta FK, `CHECK` dan unique pasangannya pada `proc_contract_versions` (DATA_MODEL §19 aturan 5)
+- Adendum berlaku membuat versi kontrak AMENDMENT beserta set baris lengkapnya dalam satu transaksi (satu versi per adendum) dan memperbarui proyeksi kontrak
 - State WF-033 (TR-321–327)
 - Evaluator `AmendmentLimit` (cara hitung dari kebijakan; perlakuan kumulatif sesuai kebijakan)
 - IX-013 perbandingan sebelum–sesudah
@@ -53,6 +54,7 @@ OD-29 dan PR 34/2023 Pasal 40 / Perpres Pasal 54.
 - [STATE_TRANSITIONS WF-033](../03-workflows/STATE_TRANSITIONS.md#wf-033)
 - [RT-036](../03-workflows/ROUTE_CONTRACTS.md#rt-036)
 - [REGULATORY_SOURCE_REVIEW RG-04](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -91,7 +93,7 @@ OD-29 dan PR 34/2023 Pasal 40 / Perpres Pasal 54.
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `proc_amendments`
+- Tables: `proc_amendments`, proc_contract_versions (kolom `amendment_id`)
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -206,14 +208,14 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 - TAC-01 Kenaikan di atas batas kebijakan menuntut keputusan pengecualian yang tidak dapat dilewati
 - TAC-02 Kontrak berlaku tidak berubah sebelum adendum ditandatangani
-- TAC-03 Versi kontrak baru tercatat; versi lama tetap
+- TAC-03 Versi kontrak baru beserta set baris lengkap tercatat saat adendum berlaku; versi dan baris lama tidak berubah; satu versi per adendum (DI-14)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: AmendmentLimit
-- Feature: WF-033
+- Feature: WF-033; DI-14
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-07

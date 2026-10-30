@@ -35,7 +35,7 @@ WF-023 keluarga count/adjust.
 
 ## IN SCOPE
 
-- Tabel `inv_counts`, `inv_count_lines`
+- Tabel `inv_counts`, `inv_count_lines` (beku setelah CLOSED); penyesuaian diposting dengan identitas sumber baris opname; pemeriksa sumber jenis opname
 - TR WF-023 terkait (S5/TR-225)
 - PG-208; lembar hitung mobile; BA hitung fisik DRAF
 
@@ -49,6 +49,7 @@ WF-023 keluarga count/adjust.
 - [WF-023](../03-workflows/WORKFLOW_CONTRACTS.md#wf-023)
 - [STATE_TRANSITIONS WF-023](../03-workflows/STATE_TRANSITIONS.md#wf-023)
 - [WF-025](../03-workflows/WORKFLOW_CONTRACTS.md#wf-025)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -196,12 +197,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Selisih tercatat tanpa mengubah stok sampai penyesuaian diputuskan
 - TAC-02 Penyesuaian diposting sebagai movement beralasan
 - TAC-03 Selisih dapat dibuka sebagai kasus rekonsiliasi
+- TAC-04 Penyesuaian ganda untuk baris opname yang sama ditolak (DI-09); ubah/hapus baris setelah CLOSED ditolak DB (DI-15)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Count/adjust
+- Feature: Count/adjust; DI-09, DI-15
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Opname

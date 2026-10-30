@@ -41,8 +41,9 @@ INV-009/019/020 dan ADR-0004.
 
 - Tabel ledger dan saldo + trigger/hak append-only; kolom `is_simulation` dan `policy_version_id`
 - Aturan pencatatan terlambat: diterima hanya bila saldo menurut `occurred_at` tetap ≥ 0 pada titik itu dan setiap titik sesudahnya; OPENING hanya sebelum gerakan lain item–gudang
-- `StockPostingService` (kunci terurut, `balance_after`, kebijakan, idempotensi sumber)
-- Pembalikan movement
+- `StockPostingService` (kunci terurut, `balance_after`, kebijakan) dengan identitas sumber unik di DB `(source_type, source_id, source_line_id, movement_type)`
+- Kerangka pemeriksa sumber: `CHECK` jenis sumber terdaftar dan constraint trigger per jenis sumber yang dipasang Task pemilik tabel sumber
+- Pembalikan penuh tunggal (`uq(reversal_of_id)`, `check_stock_reversal()`) dengan sumber koreksi dan alasan wajib; koreksi sebagian sebagai entri koreksi tersendiri
 - Job verifikasi saldo vs ledger → insiden
 - PG-206 stok dan kartu stok (keyset)
 
@@ -57,6 +58,7 @@ INV-009/019/020 dan ADR-0004.
 - [CONCURRENCY_AND_INTEGRITY §2–4](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md)
 - [ADR-0004](../adr/ADR-0004-append-only-ledgers.md)
 - [WF-023](../03-workflows/WORKFLOW_CONTRACTS.md#wf-023)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -210,12 +212,14 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-04 Kartu stok diurutkan `(occurred_at, id)` dengan saldo berjalan dihitung saat kueri; `balance_after` mengikuti urutan posting untuk pemeriksaan integritas
 - TAC-05 Pencatatan terlambat yang membuat saldo per tanggal negatif ditolak
 - TAC-06 Gerakan di bawah kebijakan non-ACTIVE bertanda simulasi
+- TAC-07 Posting kedua untuk identitas sumber yang sama ditolak walaupun kunci idempotensi berbeda (DI-09)
+- TAC-08 Pembalikan ganda, tidak cocok, tanpa sumber koreksi atau alasan, atas pembalikan, atau yang membuat saldo negatif ditolak (DI-10)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Posting, pembalikan, verifikasi
+- Feature: Posting, pembalikan, verifikasi; DI-09, DI-10 (uji negatif langsung DB)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)
@@ -224,7 +228,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Accessibility: axe tanpa pelanggaran serius/kritis
 - Production build: npm run build
 - Migration: Hak peran
-- Other: Uji konkurensi dua proses
+- Other: Uji konkurensi dua proses: barang terakhir, posting sumber ganda, pembalikan ganda
 
 ## TEST CHECKLIST
 

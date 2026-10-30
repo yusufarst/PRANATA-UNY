@@ -36,7 +36,7 @@ WF-023 keluarga receipt/opening; OD-30(7) stok bertambah pada penerimaan fisik t
 
 ## IN SCOPE
 
-- Tabel `inv_receipts`, `inv_receipt_lines`
+- Tabel `inv_receipts`, `inv_receipt_lines` (beku setelah POSTED); pemeriksa sumber jenis penerimaan dan saldo awal
 - State keluarga receipt/opening (TR-221–226)
 - Kontrak `Inventory\Contracts\CreatesReceiptDraft` untuk handoff pengadaan
 - PG-207
@@ -51,6 +51,7 @@ WF-023 keluarga receipt/opening; OD-30(7) stok bertambah pada penerimaan fisik t
 - [WF-023](../03-workflows/WORKFLOW_CONTRACTS.md#wf-023)
 - [STATE_TRANSITIONS WF-023](../03-workflows/STATE_TRANSITIONS.md#wf-023)
 - [RT-023](../03-workflows/ROUTE_CONTRACTS.md#rt-023)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -201,12 +202,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Stok bertambah hanya saat penerimaan diposting setelah verifikasi
 - TAC-02 Draf dari handoff tidak menambah stok sebelum diverifikasi
 - TAC-03 Saldo awal memerlukan bukti dan alasan
+- TAC-04 Posting ulang baris penerimaan yang sama ditolak identitas sumber (DI-09); ubah/hapus baris setelah POSTED ditolak DB (DI-15)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Receipt/opening
+- Feature: Receipt/opening; DI-09, DI-15
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Bagian J-08

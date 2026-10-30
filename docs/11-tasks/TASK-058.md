@@ -37,7 +37,7 @@ DC-078, GAP-022: klasifikasi berversi tanpa penimpaan retroaktif.
 
 ## IN SCOPE
 
-- Tabel `asset_classification_versions`, `asset_classification_nodes`
+- Tabel `asset_classification_versions` (EXCLUDE jendela ACTIVE/SUPERSEDED; aktivasi atomik memakai helper jendela TASK-018; tanpa tanggal mundur), `asset_classification_nodes`
 - Impor node klasifikasi dari berkas terstruktur yang disetujui (tanpa data riil di repo)
 - Lokasi `ref_locations` hierarkis
 - UI administrasi klasifikasi dan lokasi
@@ -51,6 +51,7 @@ DC-078, GAP-022: klasifikasi berversi tanpa penimpaan retroaktif.
 - [EXECUTION_CONTEXT](EXECUTION_CONTEXT.md)
 - [WF-029](../03-workflows/WORKFLOW_CONTRACTS.md#wf-029)
 - [DATA_MODEL §16](../04-architecture/DATA_MODEL.md#16-asset)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -197,12 +198,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 - TAC-01 Versi baru tidak mengubah klasifikasi aset lama
 - TAC-02 Pembuat versi tidak dapat mengaktifkannya
+- TAC-03 Jendela versi tumpang tindih dan aktivasi bertanggal mundur ditolak; aktivasi menutup jendela versi sebelumnya secara atomik (DI-18)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Versi dan aktivasi
+- Feature: Versi dan aktivasi; DI-18 (uji negatif langsung DB)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)

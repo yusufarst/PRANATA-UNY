@@ -45,6 +45,7 @@ CAP-08/OD-29: dokumen dihasilkan dari data sekali-input dengan asal yang dapat d
 
 - Tabel `document_templates`, `document_template_versions`, `generated_documents`, `document_signatures`, `document_packs`, `document_pack_items`
 - Validasi placeholder terhadap skema provider; tolak DOCM
+- Pemilihan template deterministik (template ACTIVE paling spesifik; satu versi berlaku per tanggal generasi; EXCLUDE jendela) dan aktivasi versi atomik di bawah kunci template memakai helper jendela TASK-018, tanpa tanggal mundur
 - Job antrean `documents` + klien Gotenberg + status konversi + ulang
 - Formatter uang/tanggal/terbilang Indonesia teruji tabel
 - Siklus isi dokumen DRAFT → FINAL; penerbitan dan bukti tanda tangan sebagai tindakan terpisah yang wajib/urutannya ditentukan per jenis dokumen oleh kebijakan (tanpa urutan bawaan)
@@ -62,6 +63,7 @@ CAP-08/OD-29: dokumen dihasilkan dari data sekali-input dengan asal yang dapat d
 - [ADR-0005](../adr/ADR-0005-document-generation.md)
 - [WF-028](../03-workflows/WORKFLOW_CONTRACTS.md#wf-028)
 - [OPERATIONS_RUNBOOK RB-11](../09-operations/OPERATIONS_RUNBOOK.md#rb-11-gotenberg-bermasalah)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -222,13 +224,14 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-05 Tanpa urutan dari kebijakan, penerbitan dan tanda tangan dapat dicatat dalam urutan apa pun; dengan urutan kebijakan, urutan lain ditolak
 - TAC-06 Terbilang dan format lulus tabel uji
 - TAC-07 Paket dokumen menandai item wajib yang ada/kurang dan dapat dirakit menjadi PDF gabungan
+- TAC-08 Pemilihan template dan versinya deterministik; jendela tumpang tindih, aktivasi bersamaan dan aktivasi bertanggal mundur ditolak; revisi dokumen lama memakai versi template tersimpan kecuali regenerasi eksplisit (DI-12)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Unit: Formatter/terbilang
-- Feature: Template emas, revisi, nomor, otorisasi unduh
+- Unit: Formatter/terbilang, pemilihan template
+- Feature: Template emas, revisi, nomor, otorisasi unduh, DI-12 (uji negatif langsung DB)
 - Integration: Gotenberg (nightly)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
@@ -238,6 +241,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Accessibility: axe tanpa pelanggaran serius/kritis
 - Production build: npm run build
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
+- Other: Uji konkurensi aktivasi versi template (DI-12)
 
 ## TEST CHECKLIST
 

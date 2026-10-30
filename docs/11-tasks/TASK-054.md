@@ -35,7 +35,7 @@ OD-31, BR-033.
 
 ## IN SCOPE
 
-- Tabel `inv_returns`, `inv_return_lines`
+- Tabel `inv_returns` (FK komposit serah terima asal pada gudang yang sama), `inv_return_lines`; pemeriksa sumber jenis pengembalian
 - TR-301–306
 - PG-205
 - Tanda terima pengembalian
@@ -50,6 +50,7 @@ OD-31, BR-033.
 - [WF-031](../03-workflows/WORKFLOW_CONTRACTS.md#wf-031)
 - [STATE_TRANSITIONS WF-031](../03-workflows/STATE_TRANSITIONS.md#wf-031)
 - [RT-034](../03-workflows/ROUTE_CONTRACTS.md#rt-034)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -200,12 +201,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Stok bertambah hanya untuk jumlah layak pakai
 - TAC-02 Pernyataan pengembali tidak menambah stok
 - TAC-03 Penolakan beralasan tidak mengubah stok
+- TAC-04 Posting ganda RETURN_IN untuk baris yang sama ditolak (DI-09); pengembalian yang merujuk serah terima gudang lain ditolak (DI-08)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-031
+- Feature: WF-031; DI-08, DI-09
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-10

@@ -51,7 +51,7 @@ Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURR
 | P9 environments, isolation, monitoring, backup/restore, runbooks | [INFRASTRUCTURE](09-operations/INFRASTRUCTURE.md) / [OPERATIONS_RUNBOOK](09-operations/OPERATIONS_RUNBOOK.md) |
 | P10 increments, release gates, UAT, migration and cutover | [RELEASE_PLAN](10-release/RELEASE_PLAN.md) / [UAT_PLAN](10-release/UAT_PLAN.md) / [MIGRATION_AND_CUTOVER](10-release/MIGRATION_AND_CUTOVER.md) |
 | P11 executor context, Task plan and contracts, traceability, executor operating model and bootstrap | [EXECUTION_CONTEXT](11-tasks/EXECUTION_CONTEXT.md) / [TASK_PLAN](11-tasks/TASK_PLAN.md) / [TRACEABILITY_MATRIX](11-tasks/TRACEABILITY_MATRIX.md) / [EXECUTOR_OPERATING_MODEL](11-tasks/EXECUTOR_OPERATING_MODEL.md) / [EXECUTOR_BOOTSTRAP](11-tasks/EXECUTOR_BOOTSTRAP.md) |
-| Pending Owner decisions / independent Second Review handoff | [OWNER_DECISION_PACKAGE](handoff/OWNER_DECISION_PACKAGE.md) / [SECOND_REVIEW_HANDOFF](handoff/SECOND_REVIEW_HANDOFF.md) |
+| Pending Owner decisions / independent Second Review handoff / delta check of corrections | [OWNER_DECISION_PACKAGE](handoff/OWNER_DECISION_PACKAGE.md) / [SECOND_REVIEW_HANDOFF](handoff/SECOND_REVIEW_HANDOFF.md) / [DELTA_REVIEW_HANDOFF](handoff/DELTA_REVIEW_HANDOFF.md) |
 | P0–P11 planning candidate quality evidence | [P0_P11_PLANNING_QUALITY_GATE](00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md) |
 | Current operational state / exact next action | [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) |
 

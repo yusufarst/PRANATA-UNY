@@ -38,7 +38,8 @@ Ekstensi metode WF-005 tidak boleh memaksakan satu urutan; langkah yang applicab
 ## IN SCOPE
 
 - Panel penugasan paket memakai TASK-015 + aturan SOD-01–03 dari `procurement.authority`
-- Model `package_step_plan` (dibangkitkan, disimpan bersama `policy_version_id`)
+- Model `proc_package_step_plans` (dibangkitkan; `reference_date`, `generation_reason`; `policy_version_id` keluarga utama `procurement.documents` dan semua versi penyumbang — `procurement.methods`, serta `procurement.authority` bila dipakai — di `policy_version_uses`)
+- Pemicu regenerasi: perubahan metode/jenis/rezim paket, atau — setelah aktivasi versi salah satu keluarga penyumbang — job menemukan rencana aktif yang versi berlakunya pada `reference_date` berbeda dari yang tercatat; rencana versi baru dibuat, langkah terdampak ditandai untuk ditelaah, rencana lama beserta rujukan versinya tetap
 - Tampilan langkah: wajib/opsional/tidak berlaku/bersyarat, dengan status dan dokumen terkait
 - Label simulasi bila kebijakan DRAFT
 
@@ -51,7 +52,10 @@ Ekstensi metode WF-005 tidak boleh memaksakan satu urutan; langkah yang applicab
 - [EXECUTION_CONTEXT](EXECUTION_CONTEXT.md)
 - [WF-005](../03-workflows/WORKFLOW_CONTRACTS.md#wf-005)
 - [ACCESS_CONTROL §5–6](../05-security/ACCESS_CONTROL.md#5-penugasan-proses)
+- [POLICY_REGISTRY §3](../04-architecture/POLICY_REGISTRY.md#3-resolusi-dan-evaluasi)
 - [POLICY_REGISTRY §5](../04-architecture/POLICY_REGISTRY.md#5-contoh-isi-lain-bentuk-bukan-nilai-resmi)
+- [DATA_MODEL §14.2](../04-architecture/DATA_MODEL.md#142-paket-hps-dan-penetapan-metode)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -200,12 +204,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 PPK tidak dapat sekaligus Pokja/Pejabat Pengadaan pada paket sama (kebijakan PR 34/2023 DRAFT)
 - TAC-02 Rencana langkah berbeda untuk PL dan Tender sesuai kebijakan
 - TAC-03 Perubahan metode membangkitkan ulang rencana dan menandai langkah terdampak
+- TAC-04 Versi baru `procurement.documents` atau `procurement.methods` yang berlaku pada tanggal acuan paket menghasilkan rencana versi baru; rencana lama mempertahankan rujukan semua versi penyumbangnya (DI-16)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: SoD paket, rencana langkah
+- Feature: SoD paket, rencana langkah, regenerasi per keluarga kebijakan (DI-16)
 - Authorization: AUTHZ-34
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)

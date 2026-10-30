@@ -17,15 +17,15 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 
 | Field | Current value |
 |---|---|
-| Current phase | P0–P11 planning candidate complete for review; P4–P11 DRAFTED — VERIFYING. Approved phases 4/12. |
+| Current phase | P0–P11 planning candidate under review; P4–P11 DRAFTED — VERIFYING. Approved phases 4/12. |
 | Current Task / status | NONE — Tasks become executable only after P11 approval, Planning Freeze and a standing execution authorization. |
-| Last completed action | P11 candidate completed (78 Task contracts, TASK_PLAN, TRACEABILITY_MATRIX, EXECUTION_CONTEXT, EXECUTOR_OPERATING_MODEL, EXECUTOR_BOOTSTRAP); internal pre-review by a fresh reviewer (8 P1 / 12 P2 / 4 P3) with all findings fixed or turned into Owner decisions (D-27–D-29); Owner decision package and Second Review handoff prepared on `docs/p0-p11-planning`; draft PR #1 open, not for merge. |
-| Evidence | [P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md) (link/anchor, ID, coverage, dependency-graph and attribution checks). The exact review identity is the branch head SHA reported with the review request. |
+| Last completed action | Independent Second Review of `48c2bc5` returned CORRECTIONS_REQUIRED (SR-P1-01–SR-P1-05, SR-P2-01). All six findings were re-verified as substantiated and corrected with targeted changes to DATA_MODEL, POLICY_REGISTRY, DOCUMENT_ENGINE, CONCURRENCY_AND_INTEGRITY (new §6.1 depreciation-run protocol), TEST_STRATEGY (new §10, DI-01–DI-20) and 24 Task contracts; one Owner question added to D-26 (winners per package, READY prerequisite of TASK-035); dispositions recorded in the quality gate; delta-review handoff prepared; draft PR #1 open, not for merge. |
+| Evidence | [P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md) (link/anchor, ID, coverage, dependency-graph, schema-order, DI-ownership and attribution checks; Second Review dispositions). The exact review identity is the branch head SHA reported with the delta-review request. |
 | Task plan | Baseline candidate 78 · Current 78 · DONE 0 · READY 0 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 78 · SUPERSEDED 0 · progress percentage not reported before the baseline is approved. |
-| Open blockers | Independent Second Review; Owner batch decision ([OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md)); Planning Freeze; standing execution authorization. Staging/UAT also need Owner hosting decisions (TASK-040). |
+| Open blockers | Delta check of the Second Review corrections ([DELTA_REVIEW_HANDOFF](DELTA_REVIEW_HANDOFF.md)); Owner batch decision ([OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md)); Planning Freeze; standing execution authorization. Staging/UAT also need Owner hosting decisions (TASK-040). |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates, never as invented rules ([TRACEABILITY_MATRIX — Perlakuan GAP](../11-tasks/TRACEABILITY_MATRIX.md#perlakuan-gap)). |
 | Decisions made | OD-01–OD-34 and GOV-01–GOV-12 as recorded in [DECISION_INDEX](../00-governance/DECISION_INDEX.md); GOV-08 Owner identity confirmation. |
-| Decisions pending | See [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md) D-01–D-29: batch approval, APPR-005/AUTH-011 consolidation, Planning Freeze and execution scope, Gudang workspace, release model, merge method and trunk-based flow, Codex, runner, executor token scope, GAP gating model and go-live conditions, security options SEC-D1–D7, optional penetration test, hosting/operations/UAT signers, GAP resolver roles and priority questions. |
+| Decisions pending | See [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md) D-01–D-29: batch approval, APPR-005/AUTH-011 consolidation, Planning Freeze and execution scope, Gudang workspace, release model, merge method and trunk-based flow, Codex, runner, executor token scope, GAP gating model and go-live conditions, security options SEC-D1–D7, optional penetration test, hosting/operations/UAT signers, GAP resolver roles and priority questions (including the number of winners per package, a READY prerequisite of TASK-035). |
 | Files changed | Branch `docs/p0-p11-planning` relative to `0e3f7de`; the exact list is `git diff --stat 0e3f7de...docs/p0-p11-planning`. |
 | Toolchain | Planning used only Git, GitHub CLI and Python standard-library scripts in the session scratchpad (renderer and link/ID checks); nothing installed in the repository; no MCP configuration changed. |
 | Graphify / Context7 | Graphify N/A (no application code). Version-sensitive facts are deferred to TASK-002/TASK-003 verification; Claude Code capabilities to TASK-001. |
@@ -37,7 +37,7 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 
 ## Exact next safe action
 
-Independent Second Review of branch `docs/p0-p11-planning` at the reported head SHA using [SECOND_REVIEW_HANDOFF](SECOND_REVIEW_HANDOFF.md); focused corrections and a delta check; then the Owner's explicit batch decision using [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md). Merge into `main` only after that decision, with the merge method the Owner selects.
+Delta check of the corrections at the reported head SHA of `docs/p0-p11-planning` using [DELTA_REVIEW_HANDOFF](DELTA_REVIEW_HANDOFF.md); then the Owner's explicit batch decision using [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md). Merge into `main` only after that decision, with the merge method the Owner selects.
 
 ## DO NOT DO
 

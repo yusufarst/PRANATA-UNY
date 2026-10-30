@@ -36,7 +36,7 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 
 ## IN SCOPE
 
-- Tabel `proc_sppbj` dan `proc_sppbj_acts` (kontribusi PREPARED/CHECKED/ISSUED/SIGNED terpisah dengan pelaku, penugasan dan bukti)
+- Tabel `proc_sppbj` (FK komposit `(result_id, package_id)`; `package_id` tidak dapat diubah) dan `proc_sppbj_acts` (kontribusi PREPARED/CHECKED/ISSUED/SIGNED terpisah dengan pelaku, penugasan pada paket yang sama — diperiksa constraint trigger — dan bukti)
 - Urutan antarkontribusi tidak dipaksakan kecuali kebijakan `procurement.authority` menetapkannya (WF-011: TR-102–104 tidak saling menjadi prasyarat universal)
 - State WF-011 (TR-101–TR-106)
 - Perhitungan tenggat jaminan memakai `ref_calendar_days` bila kebijakan menyatakan
@@ -52,6 +52,7 @@ WF-011/GAP-004: empat tanggung jawab tidak boleh disamakan.
 - [WF-011](../03-workflows/WORKFLOW_CONTRACTS.md#wf-011)
 - [STATE_TRANSITIONS WF-011](../03-workflows/STATE_TRANSITIONS.md#wf-011)
 - [RT-011](../03-workflows/ROUTE_CONTRACTS.md#rt-011)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -201,12 +202,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Tanpa urutan dari kebijakan, pemeriksaan, penerbitan dan penandatanganan dapat dicatat dalam urutan apa pun; SPPBJ lengkap bila semua kontribusi wajib tercatat
 - TAC-03 Dokumen SPPBJ DRAF→FINAL bernomor unik
 - TAC-04 Tenggat jaminan dihitung hanya bila kebijakan menetapkannya
+- TAC-05 SPPBJ untuk hasil paket lain dan kontribusi dengan penugasan paket lain ditolak aplikasi dan DB; kolom `package_id` SPPBJ tidak dapat diubah (DI-06, DI-17)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-011
+- Feature: WF-011; DI-06 (uji negatif langsung DB)
 - Authorization: AUTHZ-42
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-05

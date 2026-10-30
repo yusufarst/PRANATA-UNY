@@ -41,7 +41,9 @@ Semua aturan resmi yang masih OPEN dipegang sebagai data berversi (ADR-0003, CAP
 
 ## IN SCOPE
 
-- Tabel `policy_packs`, `policy_versions` (EXCLUDE tumpang tindih, CHECK maker-checker), `policy_test_cases`
+- Tabel `policy_packs`, `policy_versions` (EXCLUDE atas jendela ACTIVE/SUPERSEDED, CHECK maker-checker), `policy_test_cases`, `policy_version_uses` (append-only)
+- Helper jendela berlaku bersama: aktivasi menutup jendela versi sebelumnya dan menandainya SUPERSEDED secara atomik di bawah kunci induk, tanpa tanggal mundur, keadaan WF-029 S4/S5/S6 diturunkan dari status dan jendela, job harian yang mencatat transisi keberlakuan dan penggantian WF-029 saat tanggal efektif tercapai; dipakai ulang oleh template (TASK-021) dan klasifikasi aset (TASK-058)
+- Kontrak pencatatan `policy_version_uses` untuk record yang bergantung pada beberapa keluarga kebijakan
 - Registry keluarga + validasi JSON Schema
 - Lifecycle + Action ajukan/kembalikan/tolak/aktifkan/pensiunkan + audit + transisi
 - Resolver + `PolicyOutcome` + gerbang `PRANATA_ALLOW_DRAFT_POLICIES`
@@ -61,6 +63,7 @@ Semua aturan resmi yang masih OPEN dipegang sebagai data berversi (ADR-0003, CAP
 - [ADR-0003](../adr/ADR-0003-versioned-policy-registry.md)
 - [WF-029 F4/F5/F8/F9](../03-workflows/STATE_TRANSITIONS.md#wf-029)
 - [OPERATIONS_RUNBOOK RB-09](../09-operations/OPERATIONS_RUNBOOK.md#rb-09-aktivasi-kebijakan)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -103,7 +106,7 @@ Semua aturan resmi yang masih OPEN dipegang sebagai data berversi (ADR-0003, CAP
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `policy_packs`, `policy_versions`, `policy_test_cases`
+- Tables: `policy_packs`, `policy_versions`, `policy_test_cases`, `policy_version_uses`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -216,19 +219,20 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 - TAC-01 Isi tidak valid terhadap skema tidak dapat disimpan
 - TAC-02 Pembuat tidak dapat mengaktifkan; aktivasi menuntut bukti GAP dan kasus uji lulus
-- TAC-03 Dua versi ACTIVE tumpang tindih ditolak DB
-- TAC-04 Resolver memilih versi berlaku menurut tanggal; DRAFT hanya bila lingkungan mengizinkan dan ditandai simulasi
+- TAC-03 Jendela versi ACTIVE/SUPERSEDED yang tumpang tindih dan aktivasi bertanggal mundur ditolak; dua aktivasi bersamaan untuk paket yang sama → satu berhasil, satu 409 (DI-20)
+- TAC-04 Resolver memilih satu-satunya versi ACTIVE/SUPERSEDED yang jendelanya memuat tanggal acuan (SUPERSEDED tetap dipakai untuk tanggal historis, RETIRED tidak pernah); DRAFT hanya bila lingkungan mengizinkan dan ditandai simulasi (DI-20)
 - TAC-05 Di konfigurasi produksi, aksi resmi bergantung kebijakan non-ACTIVE tidak tersedia (uji)
 - TAC-06 Record yang memakai kebijakan menyimpan policy_version_id dan is_simulation (uji kontrak)
-- TAC-07 Versi ACTIVE tanpa pengesah, atau dengan pengesah sama dengan pembuat/pengaju, ditolak constraint DB
-- TAC-08 Pengesah hanya dapat mengaktifkan versi keluarga dalam cakupan grant-nya (AUTHZ-25)
+- TAC-07 Record yang bergantung pada beberapa keluarga mencatat setiap versi penyumbang di `policy_version_uses`; UPDATE/DELETE ditolak (DI-16)
+- TAC-08 Versi ACTIVE tanpa pengesah, atau dengan pengesah sama dengan pembuat/pengaju, ditolak constraint DB
+- TAC-09 Pengesah hanya dapat mengaktifkan versi keluarga dalam cakupan grant-nya (AUTHZ-25)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Unit: Validasi skema, resolver
-- Feature: Lifecycle, maker-checker, EXCLUDE, gerbang lingkungan
+- Unit: Validasi skema, resolver jendela
+- Feature: Lifecycle, maker-checker, EXCLUDE jendela, keadaan WF-029, gerbang lingkungan, `policy_version_uses` (DI-16, DI-20; uji negatif langsung DB)
 - Authorization: AUTHZ-21, AUTHZ-25
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-16 bagian kebijakan
@@ -237,6 +241,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Accessibility: axe tanpa pelanggaran serius/kritis
 - Production build: npm run build
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB
+- Other: Uji konkurensi aktivasi bersamaan (DI-20)
 
 ## TEST CHECKLIST
 

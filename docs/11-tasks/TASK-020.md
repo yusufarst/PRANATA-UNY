@@ -35,7 +35,7 @@ OD-29: nomor disarankan, diperiksa petugas berwenang dan tidak pernah bertabraka
 
 ## IN SCOPE
 
-- Tabel `numbering_schemes`, `numbering_counters`, `document_numbers`
+- Tabel `numbering_schemes` (satu skema ACTIVE per jenis dokumen; penggantian atomik), `numbering_counters`, `document_numbers` (nomor unik per jenis dokumen lintas skema)
 - Formatter pola (`{seq:n}`, `{unit}`, `{doc}`, `{year}`, `{month_roman}`)
 - Alokasi `FOR UPDATE`, reservasi, konfirmasi, override manual tervalidasi unik, void
 - Uji konkurensi dua proses
@@ -51,6 +51,7 @@ OD-29: nomor disarankan, diperiksa petugas berwenang dan tidak pernah bertabraka
 - [ARCHITECTURE §7](../04-architecture/ARCHITECTURE.md#7-komponen-lintas-modul)
 - [DATA_MODEL §11](../04-architecture/DATA_MODEL.md#11-numbering)
 - [CONCURRENCY_AND_INTEGRITY §2–4](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -189,13 +190,14 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Override manual yang bertabrakan ditolak dengan saran nomor berikut
 - TAC-03 Nomor VOIDED tetap tercatat dan tidak dipakai ulang kecuali kebijakan gapless menyatakan lain
 - TAC-04 Tanpa skema ACTIVE, finalisasi resmi tidak tersedia di produksi
+- TAC-05 Dua skema ACTIVE untuk jenis dokumen yang sama dan teks nomor kembar lintas skema untuk jenis dokumen yang sama ditolak DB (DI-13)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
 - Unit: Formatter
-- Feature: Alokasi/override/void
+- Feature: Alokasi/override/void; DI-13 (uji negatif langsung DB)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Perjalanan yang disentuh (Chromium + WebKit)

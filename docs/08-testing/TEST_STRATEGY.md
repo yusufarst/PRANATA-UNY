@@ -98,3 +98,30 @@ Aturan bukti:
 - Fixture menghormati otorisasi dan scope organisasi: setiap peran masuk sebagai pengguna yang benar; uji yang membutuhkan data unit/gudang lain membuatnya melalui factory dengan scope eksplisit.
 - Uji asap fixture bersama (`tests/e2e/smoke/fixtures.spec.ts`) berjalan pertama di CI dan lokal; kegagalannya menghentikan job dengan status setup.
 - Selektor stabil berbasis peran/label; asersi aksesibilitas (axe) dipertahankan pada perjalanan yang disentuh; proyek Chromium dan WebKit didukung.
+
+## 10. Skenario integritas data wajib
+
+Skenario berikut adalah uji regresi wajib bagi Task pemiliknya. Setiap skenario yang ditandai **DB** diuji juga dengan insert/update langsung ke basis data memakai peran `pranata_app`, sehingga constraint atau trigger terbukti menolak walaupun lapisan aplikasi dilewati. Skenario **K** memakai dua koneksi/proses paralel ([CONCURRENCY_AND_INTEGRITY §9](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#9-pengujian-konkurensi)).
+
+| ID | Skenario dan hasil yang diharapkan | Jenis | Task |
+|---|---|---|---|
+| DI-01 | Run penyusutan resmi gagal setelah sebagian baris tertulis → dilanjutkan pada run yang sama dari checkpoint, baris yang ada dilewati, tidak ada baris ganda, proyeksi diterapkan sekali; aset yang tidak dapat dihitung terdeteksi pada fase VALIDATION sebelum baris pertama ditulis | Feature, DB | TASK-066 |
+| DI-02 | Gagal di tengah fase proyeksi → lanjutan memulai dari kursor; aset yang sudah diterapkan tidak berubah lagi (penjaga `last_depreciation_period`); transaksi nilai aset lain di antara fase tidak tertimpa | Feature, DB | TASK-066 |
+| DI-03 | Dua permintaan melanjutkan run FAILED yang sama → satu berjalan, satu ditolak 409; worker dari percobaan lama tidak dapat menulis setelah run dilanjutkan; tidak ada eksekusi ganda | K | TASK-066 |
+| DI-04 | Run resmi kedua untuk periode yang memiliki run QUEUED/RUNNING/FAILED/COMPLETED ditolak; run resmi di luar urutan periode ditolak; permintaan run pengganti/koreksi ditolak dengan penjelasan GAP-007/008; pembatalan hanya bila belum ada baris; setiap run FAILED memiliki jalan lanjut (lanjutkan, atau batalkan bila tanpa baris) | Feature, DB | TASK-066 |
+| DI-05 | Peringkat/pemenang dari partisipasi paket lain ditolak; hanya satu WINNER dan peringkat unik per hasil | Feature, DB | TASK-035 |
+| DI-06 | SPPBJ yang menunjuk hasil paket lain, kontrak yang menunjuk SPPBJ paket lain, atau kontrak dengan perusahaan selain pemenang ditolak; penugasan kontribusi SPPBJ dari paket lain ditolak | Feature, DB | TASK-036, TASK-037 |
+| DI-07 | Evaluasi atau negosiasi untuk partisipasi paket lain ditolak | Feature, DB | TASK-034 |
+| DI-08 | Serah terima gudang dengan permintaan dari gudang lain, baris dari permintaan lain atau barang berbeda ditolak; pengembalian yang merujuk serah terima gudang lain ditolak; gerakan stok yang tidak cocok dengan baris sumbernya ditolak trigger | Feature, DB | TASK-053, TASK-054 |
+| DI-09 | Dua posting bersamaan untuk baris sumber yang sama (serah terima, penerimaan, pengembalian, transfer, opname) → satu sukses, satu ditolak identitas sumber, termasuk dengan kunci idempotensi berbeda | K, DB | TASK-050, TASK-051, TASK-053, TASK-054, TASK-055, TASK-056 |
+| DI-10 | Dua pembalikan bersamaan atas gerakan stok yang sama → satu sukses; pembalikan dengan gudang/barang/jumlah/arah berbeda, tanpa sumber koreksi atau alasan, pembalikan atas pembalikan, atau pembalikan yang membuat saldo negatif ditolak | K, DB | TASK-050 |
+| DI-11 | Transaksi aset: pembalikan ganda atau tidak cocok ditolak; sumber yang sama tidak membuat transaksi ganda; pembalikan atas transaksi yang bukan transaksi terakhir aset yang belum dibalik ditolak (gunakan koreksi WF-020) | K, DB | TASK-059 |
+| DI-12 | Template: dua versi berlaku dengan jendela tumpang tindih ditolak; dua aktivasi bersamaan → satu gagal; aktivasi bertanggal mundur ditolak; pemilihan template paling spesifik dan versi menurut tanggal generasi deterministik; revisi dokumen lama memakai versi template yang tersimpan | Feature, K, DB | TASK-021 |
+| DI-13 | Penomoran: dua skema ACTIVE untuk jenis dokumen yang sama ditolak; teks nomor yang sama pada skema berbeda untuk jenis dokumen yang sama ditolak | DB | TASK-020 |
+| DI-14 | Kontrak: UPDATE/DELETE baris versi kontrak ditolak (hak + trigger); baris dengan `(contract_id, version_no)` yang tidak ada ditolak; adendum berlaku membuat versi baru dengan set baris lengkap tanpa mengubah versi lama; satu versi per adendum | Feature, DB | TASK-037, TASK-045 |
+| DI-15 | Baris final beku: ubah/hapus baris HPS setelah SET, baris penerimaan setelah POSTED, baris opname setelah CLOSED, baris transfer setelah DISPATCHED (kecuali `qty_received` saat penerimaan), baris serah terima gudang, dan baris BAST setelah SIGNED (kecuali klasifikasi/rujukan hilir) ditolak; revisi HPS membuat versi baru | Feature, DB | TASK-029, TASK-046, TASK-051, TASK-053, TASK-055, TASK-056 |
+| DI-16 | Rencana langkah dan penetapan metode mencatat versi setiap keluarga kebijakan penyumbang; versi baru salah satu keluarga yang berlaku pada tanggal acuan paket menghasilkan rencana versi baru, rencana lama mempertahankan rujukannya | Feature | TASK-018, TASK-028, TASK-030 |
+| DI-17 | Kolom lingkup induk (`package_id`, `contract_id`, `request_id`, `warehouse_id`) tidak dapat diubah setelah insert | DB | TASK-008 (utilitas), TASK-033, TASK-035, TASK-036, TASK-037, TASK-046, TASK-052, TASK-053 |
+| DI-18 | Dua versi klasifikasi aset berlaku dengan jendela tumpang tindih ditolak; aktivasi menutup jendela versi sebelumnya secara atomik; aktivasi bertanggal mundur ditolak | Feature, DB | TASK-058 |
+| DI-19 | Baris BAST yang menunjuk baris kontrak dari kontrak lain ditolak | Feature, DB | TASK-046 |
+| DI-20 | Kebijakan: jendela versi ACTIVE/SUPERSEDED yang tumpang tindih ditolak; dua aktivasi bersamaan untuk paket yang sama → satu gagal; aktivasi bertanggal mundur ditolak; resolver memilih versi SUPERSEDED untuk tanggal acuan di dalam jendelanya dan tidak pernah memilih RETIRED; keadaan WF-029 S4/S5/S6 diturunkan benar dan TR-286/TR-287 tercatat saat tanggal efektif | Feature, K, DB | TASK-018 |

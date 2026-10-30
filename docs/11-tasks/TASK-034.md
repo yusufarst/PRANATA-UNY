@@ -36,7 +36,7 @@ CAP-05/WF-009; aturan evaluasi resmi tetap kebijakan.
 
 ## IN SCOPE
 
-- Tabel `proc_evaluations`, `proc_negotiations`
+- Tabel `proc_evaluations`, `proc_negotiations` dengan FK komposit `(participation_id, package_id)`; putaran negosiasi unik per partisipasi
 - State WF-009 (TR-081–085)
 - PG-111; perbandingan penawaran untuk penugasan yang berhak
 - Koreksi aritmetika tercatat sebagai `corrected_amount`
@@ -51,6 +51,7 @@ CAP-05/WF-009; aturan evaluasi resmi tetap kebijakan.
 - [WF-009](../03-workflows/WORKFLOW_CONTRACTS.md#wf-009)
 - [STATE_TRANSITIONS WF-009](../03-workflows/STATE_TRANSITIONS.md#wf-009)
 - [RT-009](../03-workflows/ROUTE_CONTRACTS.md#rt-009)
+- [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
 
 ## TRACEABILITY
 
@@ -198,12 +199,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Hasil per tahap per peserta tercatat dengan alasan
 - TAC-02 Negosiasi mencatat nilai sebelum/sesudah per putaran
 - TAC-03 Pengguna tanpa penugasan tidak melihat nilai penawaran
+- TAC-04 Evaluasi atau negosiasi untuk partisipasi paket lain ditolak aplikasi dan DB (DI-07)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: WF-009
+- Feature: WF-009; DI-07 (uji negatif langsung DB)
 - Authorization: Penugasan pemilihan
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: Bagian J-03

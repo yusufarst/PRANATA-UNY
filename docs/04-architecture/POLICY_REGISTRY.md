@@ -39,7 +39,7 @@ stateDiagram-v2
   IN_REVIEW --> DRAFT: kembalikan
   IN_REVIEW --> REJECTED: tolak
   IN_REVIEW --> ACTIVE: aktifkan (pengesah ≠ penyusun, bukti GAP lengkap, kasus uji lulus)
-  ACTIVE --> SUPERSEDED: versi penerus ACTIVE berlaku
+  ACTIVE --> SUPERSEDED: versi penerus diaktifkan (jendela ditutup)
   ACTIVE --> RETIRED: dihentikan beralasan
 ```
 
@@ -48,7 +48,8 @@ stateDiagram-v2
 | Maker-checker | Pengesah tidak boleh sama dengan pembuat atau pengaju dan tidak boleh kosong (constraint DB yang tidak lolos bila kosong + pemeriksaan aplikasi). Keduanya memerlukan kapabilitas berbeda yang bercakupan keluarga: `admin.policy.author` dan `admin.policy.activate` dengan cakupan `POLICY_FAMILY` ([ACCESS_CONTROL §4](../05-security/ACCESS_CONTROL.md#4-katalog-kapabilitas), AUTHZ-25). |
 | Bukti | Status ACTIVE mensyaratkan `resolution_evidence` untuk setiap `gap_refs`: rujukan keputusan resmi (nomor/tanggal instrumen, keputusan Owner yang tercatat di repositori) dan berkas bukti. |
 | Kasus uji | Semua `policy_test_cases` paket harus lulus terhadap versi kandidat sebelum aktivasi; hasil disimpan di audit. |
-| Tanggal berlaku | `effective_from` wajib; tidak ada dua versi ACTIVE yang tumpang tindih (EXCLUDE constraint). Versi baru tidak mengubah record lama yang sudah merujuk versi lama (INV-017/018). |
+| Tanggal berlaku | `effective_from` wajib; jendela versi ACTIVE dan SUPERSEDED tidak pernah tumpang tindih (EXCLUDE constraint). Aktivasi versi penerus menutup jendela versi terbuka pada `effective_from` penerus dan menandainya SUPERSEDED dalam transaksi yang sama, di bawah kunci baris paket; versi SUPERSEDED tetap dipakai untuk tanggal acuan di dalam jendelanya sehingga hasil historis dapat direproduksi, sedangkan RETIRED tidak pernah dipilih. `effective_from` tidak boleh sebelum tanggal aktivasi ([STATE_TRANSITIONS TR-286](../03-workflows/STATE_TRANSITIONS.md#wf-029): tidak pernah backdate menimpa riwayat); tanggal berlaku resmi instrumen tetap dicatat pada rujukan sumber versi. Versi baru tidak mengubah record lama yang sudah merujuk versi lama (INV-017/018). |
+| Keadaan WF-029 | Status data mencatat keputusan siklus hidup; keadaan P3 diturunkan dari status dan jendela terhadap hari ini: ACTIVE dengan `effective_from` setelah hari ini = WF029-S4 (disetujui, belum berlaku); jendela memuat hari ini = S5 (berlaku); SUPERSEDED dengan `effective_to` paling lambat hari ini = S6 (digantikan). TR-286/TR-287 ditulis ke `workflow_transitions` oleh job harian `maintenance` saat tanggal efektif tercapai; resolusi tidak bergantung pada job itu karena selalu memilih menurut jendela. Pola yang sama dipakai versi template dokumen (F8) dan versi klasifikasi aset (F6). |
 | Imutabilitas | `content` tidak dapat diubah setelah IN_REVIEW; perubahan berarti versi baru. |
 | Audit | Setiap perubahan status tercatat di `audit_events` dan `workflow_transitions` (keluarga WF-029 F4). |
 
@@ -67,14 +68,14 @@ Aktivasi di aplikasi **tidak** menutup GAP di repositori dan sebaliknya penutupa
 PolicyResolver::resolve(family, context) -> PolicyHandle
   context: { regime_key?, warehouse_code?, org_unit_id?, reference_date, allow_simulation }
   1. pilih paket menurut family + context (mis. regime_key, warehouse_code)
-  2. pilih versi ACTIVE yang berlaku pada reference_date
+  2. pilih satu-satunya versi ACTIVE/SUPERSEDED yang jendelanya memuat reference_date
   3. bila tidak ada dan allow_simulation dan lingkungan mengizinkan DRAFT:
        pilih versi DRAFT/IN_REVIEW terbaru -> is_simulation = true
   4. bila tidak ada: PolicyUnavailable(family, gap_refs) -> aksi tidak tersedia + alasan
 PolicyHandle: { version_id, status, is_simulation, content, citations }
 ```
 
-Setiap evaluator mengembalikan `PolicyOutcome { value, citations[], policy_version_id, is_simulation }`; Action yang menyimpan hasil wajib menyimpan `policy_version_id` dan `is_simulation`. Aturan lingkungan:
+Setiap evaluator mengembalikan `PolicyOutcome { value, citations[], policy_version_id, is_simulation }`; Action yang menyimpan hasil wajib menyimpan `policy_version_id` dan `is_simulation`. Bila hasil bergantung pada lebih dari satu keluarga (misalnya rencana langkah: `procurement.documents` + `procurement.methods` + `procurement.authority`; penetapan metode: `procurement.methods` + `procurement.regime`), setiap versi penyumbang dicatat di `policy_version_uses` dalam transaksi yang sama ([DATA_MODEL §8](DATA_MODEL.md#8-policy)). Record turunan dibangkitkan ulang menjadi versi baru — bukan ditimpa — bila input bisnisnya berubah atau versi yang berlaku pada tanggal acuannya untuk salah satu keluarga penyumbang berbeda dari yang tercatat; record lama mempertahankan rujukan versinya. Aturan lingkungan:
 
 | Konfigurasi | Default produksi | Default non-produksi |
 |---|---|---|
