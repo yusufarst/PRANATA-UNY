@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: BLOCKED
-EXECUTION STAGE: — (BLOCKED: menunggu PCR-001, FRZ-001)
+STATUS: TODO
+EXECUTION STAGE: —
 RISK CLASS: STANDARD
 MILESTONE: M8 — Pelaporan, hardening dan rilis
 PARALLEL SAFE: YES
@@ -24,6 +24,7 @@ CAP-13/17/18, AC-16/17/20.
 - TASK-057
 - TASK-059
 - TASK-039
+- TASK-066
 
 ## BLOCKS
 
@@ -43,11 +44,14 @@ CAP-13/17/18, AC-16/17/20.
 - Definisi laporan: posisi aset per tanggal, mutasi aset per rentang, rekap aset per unit/klasifikasi/kondisi, posisi stok per tanggal per gudang, mutasi stok per rentang, rekap pengadaan per metode/jenis/tahap, nilai kontrak per periode, status rekonsiliasi
 - Halaman PG-121/211/313 terpadu
 - Uji kebenaran terhadap data sintetis dengan nilai yang dihitung independen
-- Entri katalog BMU berstatus "menunggu definisi resmi (GAP-024)" tanpa keluaran angka; definisi ditambahkan sebagai format `reporting.formats` setelah GAP-024 terselesaikan, melalui TASK PLAN CHANGE bila memerlukan kerja tambahan
+- Keluarga laporan BMU sebagai format DRAFT `reporting.formats.uny` (POLICY_REGISTRY §5) dari perilaku legacy dengan koreksi LEGACY_REPORTING_EVIDENCE §9: Laporan BMU (saldo awal, mutasi bersih dengan rincian tambah/kurang, saldo akhir; kuantitas dan nilai perolehan), Laporan Penyusutan (nilai, akumulasi awal, beban periode, akumulasi, nilai buku) dan Neraca BMU (nilai, akumulasi, netto per kode klasifikasi 7 karakter); varian Intra, Ekstra dan Gabungan; periode Y, S1, S2, Q1–Q4 dan per tanggal; kunci (kode klasifikasi, kode barang, flag); unit pada tanggal laporan
+- Ekspor PDF dan XLSX per varian melalui antrean ekspor TASK-023, dengan blok penanda tangan dari peran dan snapshot penugasan (tanpa nama tetap) dan label simulasi selama format belum berlaku resmi
+- Oracle uji legacy (LEGACY_REPORTING_EVIDENCE §3–§7) dan prosedur pemeriksaan paritas lokal §10
 
 ## OUT OF SCOPE
 
-- Isi laporan BMU sebelum definisi dan bentuknya diketahui (GAP-024)
+- Aktivasi format BMU, penyusutan dan Neraca BMU sebagai format resmi sebelum GAP-024 dan GAP-007/009 terselesaikan
+- Menyalin `index (1).html` atau data institusi ke repositori
 - Neraca/laporan akuntansi resmi tanpa versi kebijakan yang berlaku resmi (GAP-007–010/013)
 
 ## REFERENCES
@@ -57,6 +61,8 @@ CAP-13/17/18, AC-16/17/20.
 - [STATE_TRANSITIONS WF-027](../03-workflows/STATE_TRANSITIONS.md#wf-027)
 - [RT-027](../03-workflows/ROUTE_CONTRACTS.md#rt-027)
 - [BR-022](../02-domain/BUSINESS_RULES.md#br-022)
+- [LEGACY_REPORTING_EVIDENCE](../00-governance/evidence/LEGACY_REPORTING_EVIDENCE.md)
+- [POLICY_REGISTRY §5](../04-architecture/POLICY_REGISTRY.md#5-contoh-isi-lain-bentuk-bukan-nilai-resmi)
 
 ## TRACEABILITY
 
@@ -202,12 +208,18 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Setiap laporan menyatakan makna waktunya dan kebijakan yang dipakai
 - TAC-02 Hasil cocok dengan perhitungan independen pada data sintetis
 - TAC-03 Scope pengguna dihormati pada isi ekspor
+- TAC-04 Pada data sintetis, Laporan BMU, Laporan Penyusutan dan Neraca BMU setiap varian dan periode sama dengan oracle legacy kecuali perbedaan yang dicatat sebagai koreksi LEGACY_REPORTING_EVIDENCE §9; saldo akhir = saldo awal + mutasi bersih dan sama dengan laporan posisi aset per tanggal yang sama
+- TAC-05 Aset yang dihapus atau dipindah keluar pada periode P tetap muncul di saldo awal P dan sebagai pengurangan di P, dan tidak lagi muncul di periode sesudahnya; periode historis tidak berubah
+- TAC-06 Kode barang dengan baris intra dan ekstra atau klasifikasi berbeda dihitung pada kelompok dan flag masing-masing
+- TAC-07 PDF dan XLSX memuat judul varian, periode atau tanggal posisi, kelompok dan total, serta penanda tangan dari peran terkonfigurasi; tidak ada nama atau nomor identitas tetap di kode, fixture atau dokumentasi
+- TAC-08 Pemeriksaan paritas lokal terhadap CSV sumber dan PDF BMU triwulan III 2026 milik Owner dijalankan di luar repositori; hanya hasil lulus/gagal per varian dan jumlah serta kategori selisih yang dicatat
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Kebenaran laporan
+- Unit: Oracle legacy LEGACY_REPORTING_EVIDENCE §3–§7
+- Feature: Kebenaran laporan, termasuk keluarga laporan BMU
 - Authorization: AUTHZ-43
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-17

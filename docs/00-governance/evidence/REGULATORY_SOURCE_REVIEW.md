@@ -121,10 +121,22 @@ Field observations compared with official provisions:
 | Evaluation is the hardest part of the work | — | Owner priority (OD-36) | Evaluation workspace |
 | Several winners per package by item or lot | No explicit provision; framework agreements with one or more providers | OWNER_APPROVED_DECISION (OD-35); limits unvalidated | Award scopes (GAP-003/017/027) |
 
+## RG-08 National sources checked on 2026-11-01
+
+Checked at the Owner's direction (U-012 §4) on official JDIH listings and their metadata; full texts were not re-read.
+
+| Instrument | Observation | Effect on PRANATA |
+|---|---|---|
+| Perpres 16/2018 jo. 12/2021 jo. 46/2025 | Perpres 46/2025 is the second amendment of Perpres 16/2018 (JDIH LKPP and JDIH BPK listings). No later amendment was found on 2026-11-01. | None: SRC-049/050 remain the national-regime sources. |
+| Peraturan LKPP No. 3/2026 — Pedoman Persiapan dan Pelaksanaan Pengadaan Barang/Jasa Pemerintah melalui Penyedia | Set on 2026-09-21 (JDIH BPPBJ DKI Jakarta metadata); revokes Peraturan LKPP 12/2021 and its amendment 4/2024. Reported content: methods e-purchasing, pengadaan langsung, penunjukan langsung, tender cepat and tender/seleksi; SPSE transactional feature above Rp50.000.000 and recording feature up to Rp50.000.000; beneficial-owner evaluation phased in from 1 November 2026 and SPSE data only from 1 January 2027. | Applies to procurement financed by APBN/APBD and other national-regime funds. It does not change the UNY institutional regime (PR 34/2023). National-regime policy versions (`procurement.*.perpres16-2018-46-2025`) cite it once the text is reviewed; no value is activated from these reports. |
+| Peraturan Rektor UNY No. 34/2023 | No amending Rector regulation was found in public sources on 2026-11-01. A missing search result does not prove it is current. | GAP-026 stays OPEN; the Owner states PR 34/2023 is the intended institutional reference, subject to formal verification. |
+
+Sources: [JDIH LKPP — Peraturan LKPP 3/2026](https://jdih.lkpp.go.id/regulation/peraturan-lkpp/peraturan-lkpp-nomor-3-tahun-2026); [JDIH BPPBJ DKI — Peraturan LKPP 3/2026](https://bppbj.jakarta.go.id/jdih/read/peraturan-lembaga-kebijakan-pengadaan-barang-jasa-pemerintah-nomor-3-tahun-2026); [JDIH LKPP — Perpres 46/2025](https://jdih.lkpp.go.id/regulation/peraturan-presiden/peraturan-presiden-nomor-46-tahun-2025); [JDIH BPK — Perpres 46/2025](https://peraturan.bpk.go.id/Details/318647).
+
 ## Items not verified
 
 - The currentness of PR 34/2023 and whether a later Rector regulation amends it.
-- Perpres 12/2021 text and LKPP implementing regulations.
+- Perpres 12/2021 text and the text of Peraturan LKPP 3/2026 (metadata only, RG-08).
 - Exact spelling of the e-catalogue URL (OCR shows `unyy`).
 - Current functions of pbj.uny.ac.id (invitation only, or also submission and announcement) and of the UNY e-market.
 - Whether a current UNY instrument defines lot or item award, or a minimum number of quotations for Pengadaan Langsung.

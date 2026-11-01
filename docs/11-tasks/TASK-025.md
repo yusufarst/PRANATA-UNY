@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: BLOCKED
-EXECUTION STAGE: — (BLOCKED: menunggu PCR-001, FRZ-001)
+STATUS: TODO
+EXECUTION STAGE: —
 RISK CLASS: STANDARD
 MILESTONE: M3 — Pengadaan inti (R1 / UAT-1)
 PARALLEL SAFE: NO
@@ -37,7 +37,8 @@ CAP-04/AC-03/06: asal unit dan kelengkapan dapat ditelusuri kedua pihak.
 
 ## IN SCOPE
 
-- Tabel `proc_needs`, `proc_need_lines`
+- Tabel `proc_needs` (termasuk `submission_channel`, `received_ref`, `received_evidence_file_id`), `proc_need_lines`
+- Dua kanal pengajuan (U-012, PCR-001): langsung oleh unit (`UNIT_DIRECT`) dan pencatatan oleh penerima intake pusat atas nama unit asal untuk usulan yang masuk melalui kanal pengadaan pusat (`CENTRAL_CHANNEL`, TR-021, kapabilitas `procurement.need.review`)
 - State machine WF-003 (TR-021–026 sesuai kontrak)
 - PG-102 daftar/detail/form; inbox unit dan pusat
 - Kapabilitas `procurement.need.*` ditambahkan ke katalog
@@ -209,6 +210,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Perbaikan diminta dengan alasan; unit melihat alasan dan mengajukan ulang; riwayat versi tersimpan
 - TAC-03 Status, pemilik dan pihak ditunggu konsisten bagi kedua pihak
 - TAC-04 Persetujuan resmi tidak diklaim; gerbang GAP-001 dijelaskan
+- TAC-05 Penerima intake pusat mencatat usulan kanal pusat atas nama unit asal dengan rujukan surat dan bukti terima opsional; unit asal melihat dan melengkapinya; daftar dan detail menampilkan kanalnya; pengguna unit tanpa kapabilitas pusat tidak dapat mencatat atas nama unit lain; kanal dan unit asal tidak dapat diubah sesudah dicatat
 
 ## TEST REQUIREMENTS
 

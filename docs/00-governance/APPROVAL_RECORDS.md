@@ -303,3 +303,9 @@ Historical next action under AUTH-004 was independent P1 review, then Owner appr
 ## AUTH-012 closure
 
 AUTH-012 is **HISTORICAL / COMPLETED** as of 2026-11-01: every P4–P11 phase is approved under APPR-006. Post-freeze planning amendments (for example PCR-001) are prepared by Claude Planning under FRZ-001 change control.
+
+## PCR-001
+
+- Kind: **POST-FREEZE PLANNING CHANGE** under FRZ-001, prepared by Claude Planning at the Owner's direction (U-012 §1, §4, §5).
+- Content: (1) legacy reporting and depreciation evidence ([LEGACY_REPORTING_EVIDENCE](evidence/LEGACY_REPORTING_EVIDENCE.md)) with DRAFT defaults in POLICY_REGISTRY §5 and contract changes to TASK-066, TASK-069 and TASK-071 (TASK-071 now depends on TASK-066); (2) two-channel procurement-need intake in DATA_MODEL `proc_needs` and TASK-025; (3) national regulatory sources checked (REGULATORY_SOURCE_REVIEW RG-08). Still 78 Tasks; no GAP resolved; no P0–P3 approved wording changed.
+- Gate: focused independent Second Review of the change before it enters `main`. Published by verified fast-forward after an acceptable verdict; the verdict and the published SHA are recorded at publication. Until then TASK-025, TASK-066, TASK-069 and TASK-071 stay BLOCKED on `main`.

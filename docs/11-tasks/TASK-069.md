@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: BLOCKED
-EXECUTION STAGE: — (BLOCKED: menunggu PCR-001, FRZ-001)
+STATUS: TODO
+EXECUTION STAGE: —
 RISK CLASS: HIGH
 MILESTONE: M7 — Nilai aset, KDP, intake dan rekonsiliasi
 PARALLEL SAFE: NO
@@ -41,6 +41,7 @@ CAP-16 dan MIGRATION_AND_CUTOVER.
 
 - Adapter target dan aturan validasi masing-masing
 - Profil pemetaan contoh berbasis struktur kolom yang diamati (tanpa nilai riil)
+- Profil adapter aset untuk ekspor bentuk legacy (LEGACY_REPORTING_EVIDENCE §2): pemisah titik koma, deteksi baris header, pemetaan kolom; nilai perolehan, kuantitas, tanggal perolehan dan pembukuan, kode klasifikasi 7 karakter, `flag_sak` dan masa manfaat per record dipertahankan
 - Laporan rekonsiliasi total per unit/klasifikasi/gudang
 - Uji dengan berkas sintetis berbentuk sama
 
@@ -55,6 +56,7 @@ CAP-16 dan MIGRATION_AND_CUTOVER.
 - [WF-026](../03-workflows/WORKFLOW_CONTRACTS.md#wf-026)
 - [MIGRATION_AND_CUTOVER](../10-release/MIGRATION_AND_CUTOVER.md)
 - [ASSET_SOURCE_REVIEW](../00-governance/evidence/ASSET_SOURCE_REVIEW.md)
+- [LEGACY_REPORTING_EVIDENCE](../00-governance/evidence/LEGACY_REPORTING_EVIDENCE.md)
 
 ## TRACEABILITY
 
@@ -208,6 +210,8 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-01 Kode P01/P02 tersimpan mentah dan tidak dipetakan
 - TAC-02 Rekonsiliasi total tersedia setelah penerimaan
 - TAC-03 Baris ambigu identitas tidak diterima tanpa keputusan
+- TAC-04 Berkas sintetis berbentuk ekspor legacy terbaca; tanggal pembukuan/perolehan kosong atau tak terbaca dan `flag_sak` selain Y/T menjadi galat validasi, bukan nilai bawaan diam-diam
+- TAC-05 Masa manfaat dan nilai perolehan per record tersimpan apa adanya dan dipakai TASK-066 untuk aset hasil migrasi
 
 ## TEST REQUIREMENTS
 

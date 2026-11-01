@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: BLOCKED
-EXECUTION STAGE: — (BLOCKED: menunggu PCR-001, FRZ-001)
+STATUS: TODO
+EXECUTION STAGE: —
 RISK CLASS: HIGH
 MILESTONE: M7 — Nilai aset, KDP, intake dan rekonsiliasi
 PARALLEL SAFE: NO
@@ -24,6 +24,7 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 
 ## BLOCKS
 
+- TASK-071
 - TASK-073
 
 ## PREREQUISITES (READY GATE)
@@ -42,6 +43,8 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 - Protokol run resmi CONCURRENCY_AND_INTEGRITY §6.1: fase VALIDATION, LINES dan PROJECTION per chunk dengan checkpoint tahan lama; proyeksi menambahkan `amount` dengan penjaga `last_depreciation_period`; lanjutan FAILED → RUNNING pada run yang sama atas permintaan pengguna berwenang (compare-and-set, bukan retry otomatis); worker usang tidak dapat menulis; CANCELLED hanya tanpa baris; tanpa run pengganti
 - PG-309 daftar run, detail per aset dengan penjelasan perhitungan
 - Uji tabel metode garis lurus dan pembulatan dengan kebijakan DRAFT
+- Evaluator mengikuti bentuk `asset.depreciation.uny` (POLICY_REGISTRY §5): jangkar perolehan, mulai bulan sesudah jangkar, masa manfaat dari record aset lalu klasifikasi, residu nol, pembulatan kumulatif, catch-up pada periode pembukuan, cakupan flag; nilai bawaan DRAFT dari LEGACY_REPORTING_EVIDENCE §4 dan §9
+- Jadwal lima tahun per aset pada detail PG-309 (akumulasi awal, beban, akumulasi, nilai buku per tahun)
 
 ## OUT OF SCOPE
 
@@ -56,6 +59,7 @@ CAP-13/AC-16; INV-013/022: ketidakpastian akuntansi tidak menjadi angka resmi.
 - [STATE_TRANSITIONS WF-022](../03-workflows/STATE_TRANSITIONS.md#wf-022)
 - [RT-022](../03-workflows/ROUTE_CONTRACTS.md#rt-022)
 - [POLICY_REGISTRY §5](../04-architecture/POLICY_REGISTRY.md#5-contoh-isi-lain-bentuk-bukan-nilai-resmi)
+- [LEGACY_REPORTING_EVIDENCE](../00-governance/evidence/LEGACY_REPORTING_EVIDENCE.md)
 - [PERFORMANCE_AND_SCALE PB-09](../06-api-performance/PERFORMANCE_AND_SCALE.md#2-anggaran-performa)
 - [CONCURRENCY_AND_INTEGRITY §6.1](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#61-protokol-run-penyusutan-resmi)
 - [TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)
@@ -212,12 +216,14 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-05 Aset yang tidak dapat dihitung terdeteksi sebelum baris pertama; run FAILED tanpa baris dapat dibatalkan; setiap run FAILED memiliki jalan lanjut (DI-01, DI-04)
 - TAC-06 Run berjalan per chunk tanpa mengunci pengguna lain pada data representatif; PB-09 pada 1 juta aset dibuktikan di TASK-073
 - TAC-07 Setiap angka dapat dijelaskan dari aset, kebijakan dan periode
+- TAC-08 Pada data sintetis, akumulasi awal, beban periode, akumulasi dan nilai buku per aset untuk periode Y, S1, S2, Q1–Q4 sama dengan oracle legacy (LEGACY_REPORTING_EVIDENCE §4) dengan toleransi pembulatan ≤ Rp1, termasuk masa manfaat 0, perolehan sesudah tahun laporan dan ekstrakomptabel; jumlah baris periode sama dengan akumulasi kumulatif yang dibulatkan
+- TAC-09 Perolehan bertanggal mundur menghasilkan catch-up pada periode pembukuannya secara sama untuk semua jenis periode; aset hasil migrasi memakai masa manfaat recordnya
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Unit: Metode/pembulatan
+- Unit: Metode/pembulatan; oracle legacy LEGACY_REPORTING_EVIDENCE §4
 - Feature: Run, partisi dan protokol lanjutan DI-01, DI-02, DI-04 (termasuk uji langsung DB)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: Rute baru terdaftar di uji integritas rute

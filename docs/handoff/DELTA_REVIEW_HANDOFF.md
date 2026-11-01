@@ -1,61 +1,54 @@
-# Handoff pemeriksaan delta — koreksi SR-D4-P1-01 atas `78bf722`
+# Handoff review terfokus — PCR-001
 
-Status: P0–P11 planning — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Untuk: Second Review Agent independen (ChatGPT)
+Status: Perubahan pasca-freeze PCR-001 (FRZ-001) — menunggu Second Review terfokus | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Untuk: Second Review Agent independen (ChatGPT)
 
-> Historis: review delta atas koreksi SR-D4-P1-01 selesai dengan verdict READY_FOR_OWNER_APPROVAL pada `851013f`; paket disetujui Owner (APPR-005, APPR-006, 2026-11-01). Handoff review terfokus PCR-001 berada di cabang `docs/pcr-001-legacy-reporting-and-intake`.
-
-Sesuai GOV-11, koreksi diverifikasi dengan **pemeriksaan delta sempit**: apakah SR-D4-P1-01 tertutup secara substansi dan apakah koreksinya menimbulkan masalah baru. Review delta `78bf722` telah menutup SR-D3-P1-01 (sisipan terlambat) di tingkat spesifikasi; bagian itu tidak perlu diperiksa ulang kecuali tersentuh koreksi ini. Handoff lengkap tetap [SECOND_REVIEW_HANDOFF](SECOND_REVIEW_HANDOFF.md).
+Baseline P0–P11 telah disetujui Owner pada `851013f` (APPR-005, APPR-006) dan dibekukan sebagai FRZ-001. Owner kemudian menyerahkan bukti fungsional baru: halaman legacy `index (1).html` dan laporan BMU triwulan III 2026. Owner juga meminta verifikasi regulasi nasional dan menambah satu persyaratan usulan pengadaan. Review ini **sempit**: apakah PCR-001 benar, minimal dan konsisten. Bagian baseline yang tidak tersentuh tidak perlu diperiksa ulang.
 
 ## 1. Identitas
 
 | Unsur | Nilai |
 |---|---|
-| Repositori | `https://github.com/yusufarst/PRANATA-UNY`, cabang `docs/p0-p11-planning`, PR draft #1 (tidak untuk di-merge sebelum keputusan Owner) |
-| Identitas yang direview sebelumnya | `78bf722178c1ba69663f05bbf98023a34d273f9b` — verdict **CORRECTIONS_REQUIRED**: SR-D4-P1-01 (P1); footer deskripsi PR sebagai tindakan Owner |
-| Identitas koreksi | SHA HEAD cabang yang dilaporkan bersama permintaan ini — dua commit di atas `78bf722`: `1452ccd` (koreksi) dan commit tindak lanjut pemeriksaan internal (dokumen tidak dapat memuat hash commit yang memuatnya); diff `git diff 78bf722..<SHA HEAD>` |
-| Status | Semua kandidat tetap VERIFYING / belum disetujui; 0 Task READY; GAP-001–GAP-029 OPEN; tidak ada kode aplikasi |
+| Repositori | `https://github.com/yusufarst/PRANATA-UNY` |
+| Baseline | Cabang `docs/planning-baseline` (catatan persetujuan, freeze dan otorisasi di atas `851013f`) |
+| Perubahan | Cabang `docs/pcr-001-legacy-reporting-and-intake`; diff `git diff docs/planning-baseline..docs/pcr-001-legacy-reporting-and-intake` atau halaman perbandingan GitHub `compare/docs/planning-baseline...docs/pcr-001-legacy-reporting-and-intake`. Tidak ada PR yang dibuka, agar deskripsi PR tidak mendapat footer atribusi otomatis. |
+| Status | Selama PCR-001 belum masuk `main`, TASK-025, TASK-066, TASK-069 dan TASK-071 BLOCKED. Task lain berjalan menurut AUTH-013. GAP-001–GAP-029 tetap OPEN. |
 
-## 2. Disposisi dan peta koreksi
+## 2. Isi perubahan
 
-| Temuan | Hasil verifikasi pada `78bf722` | Inti koreksi | Tempat memeriksa | Uji regresi |
-|---|---|---|---|---|
-| SR-D4-P1-01 Tautan berkas penawaran dan identitas berkas masih dapat diubah | Terbukti. `file_links` dan `file_objects` adalah tabel biasa dengan hak `UPDATE` penuh bagi `pranata_app`; `verify_capture_manifest()` hanya berjalan pada INSERT, dan "tautan OFFER tidak dapat dilepas" hanya pernyataan tanpa mekanisme. Tautan OFFER yang sudah tersegel dapat dilepas atau dialihkan (`file_id`, `owner_id`, `owner_type`, `purpose`) lewat SQL langsung, dan `path`, `disk`, `sha256` atau `size_bytes` berkasnya dapat diubah sehingga `file_id` yang sama menyajikan byte lain — paling cepat terdeteksi pada perhitungan ulang harian. Sekelas: sidik jari hanya mencakup tautan bertujuan OFFER, sehingga tautan bertujuan lain ke kiriman lolos segel; bukti terima dan bukti penarikan memiliki identitas berkas yang sama-sama dapat diubah; `withdrawal_evidence_file_id` tetap dapat diubah sesudah penarikan; verifikasi sidik jari saat unduh hanya opsional dan kontrak penyimpanan tidak melarang penimpaan byte | **Identitas isi tetap untuk setiap berkas:** `sha256`/`size_bytes` dihitung server dari byte yang disimpan; penyimpanan tulis-sekali (path acak baru, pembuatan eksklusif, tanpa operasi timpa/pindah/hapus); hak kolom `file_objects` hanya `UPDATE (classification, scan_status)`; `guard_file_object_change()` menolak perubahan identitas, penurunan klasifikasi dan transisi pemindaian yang tidak sah. **Tautan:** hak kolom hanya `UPDATE (label, unlinked_by, unlinked_at)`; `guard_file_link_change()` menjaga berkas, pemilik dan tujuan setiap tautan tetap, mengizinkan pelepasan sekali untuk tautan biasa (diputuskan modul pemilik), dan menolak **setiap** UPDATE — termasuk pelepasan dan label — serta DELETE tautan yang jenis pemiliknya terdaftar di tabel baru `file_sealed_owner_types` (hanya migrasi; V1: `proc_submissions`, didaftarkan TASK-033). `owner_type` tautan dibatasi pada nama tabel sesuai morph map; sisipan tautan ke pemilik bersegel mengunci baris pemilik dan ditolak bila belum terlihat; `verify_capture_manifest()` dipasang sekali pada `file_links` dengan dispatch melalui `seal_function`. Sidik jari kiriman kini mencakup semua tautannya (termasuk status lepas) beserta `sha256` dan `size_bytes` berkas serta bukti terima; `content_sha256` didefinisikan dan dicocokkan saat commit; bukti terima dan penarikan dirujuk lewat kolom FK, bukan tautan, dan bukti penarikan tetap sesudah transisi penarikan. **Unduhan, pratinjau dan setiap pembacaan byte sisi server** (perakitan paket dokumen, konversi) selalu memverifikasi ukuran dan SHA-256 lebih dahulu dan gagal tertutup (`files.integrity_failed`, audit, peringatan operasi); job harian menghitung ulang byte berkas bersegel; latihan restore menjalankan job yang sama | [DATA_MODEL §1](../04-architecture/DATA_MODEL.md#1-konvensi) (segel tangkapan), [§2](../04-architecture/DATA_MODEL.md#2-peran-basis-data-dan-hak), [§12](../04-architecture/DATA_MODEL.md#12-files-documents-dan-audit) (`file_objects`, `file_links`, `file_sealed_owner_types`), [§14.3](../04-architecture/DATA_MODEL.md#143-pemilihan) (`proc_submissions`), §19 aturan 4 dan 6, §20; [COMMAND_AND_API_CONTRACTS §7](../06-api-performance/COMMAND_AND_API_CONTRACTS.md#7-unggah-dan-unduh); DOCUMENT_ENGINE (paket SPJ); [SECURITY_MODEL §6](../05-security/SECURITY_MODEL.md#6-berkas-unduhan-dan-ekspor) dan SEC-22; [CONCURRENCY_AND_INTEGRITY §3, §4, §7, §9](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#3-invarian-yang-ditegakkan-basis-data); ARCHITECTURE (baris Berkas); ADR-0009; DESIGN_SYSTEM (`EvidenceList`); OPERATIONS_RUNBOOK RB-07 dan INFRASTRUCTURE §7; [TASK-016](../11-tasks/TASK-016.md), [TASK-033](../11-tasks/TASK-033.md) | DI-23 (SQL langsung, peran berhak tabel penuh, koneksi kedua, `owner_type` varian, pemilik belum terlihat, `content_sha256`, unduhan dengan byte yang diubah), DI-33 baru (TASK-016; termasuk pembacaan sisi server dan job harian), SEC-22 |
-| Footer deskripsi PR #1 | Masih ada | Tidak diubah dari sesi perencanaan karena gateway GitHub sesi ini menambahkannya kembali pada setiap penulisan deskripsi. Owner menghapus dua baris terakhir (`---` dan baris generated-by) di antarmuka web GitHub; deskripsi diperiksa ulang sebelum persetujuan akhir atau merge. Tidak ada commit yang ditulis ulang, tanpa force push, identitas Git tidak diubah | [P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md#independent-delta-second-review-of-78bf722) | — |
+| Bagian | Masalah pada baseline | Perubahan | Tempat memeriksa |
+|---|---|---|---|
+| A. Laporan BMU, penyusutan dan Neraca BMU | TASK-071 hanya menyediakan entri BMU "menunggu definisi resmi" tanpa angka. Padahal Owner menyatakan rumusnya sudah ada di HTML legacy dan meminta agar tidak ditanyakan lagi. | Bukti rumus legacy dicatat lengkap tanpa data pribadi: dialek CSV, periode Y/S1/S2/Q1/Q3, cutoff, penyusutan, BMU, pengelompokan, Neraca BMU, riwayat lima tahun dan ekspor. Rumus itu menjadi nilai bawaan DRAFT, dengan koreksi tercatat atas cacat legacy: mutasi hanya tambah, kunci agregasi kode barang saja, unit saat ini, tanggal kosong, catch-up S2/Q3 tidak konsisten, dan heuristik kondisi/hapus. TASK-071 kini membangun keluarga laporan itu dengan label simulasi dan bergantung pada TASK-066. | [LEGACY_REPORTING_EVIDENCE](../00-governance/evidence/LEGACY_REPORTING_EVIDENCE.md); [POLICY_REGISTRY §2, §5](../04-architecture/POLICY_REGISTRY.md#5-contoh-isi-lain-bentuk-bukan-nilai-resmi); [TASK-071](../11-tasks/TASK-071.md), TASK_PLAN |
+| B. Evaluator penyusutan | Contoh kebijakan hanya memuat `MONTH_AFTER_RECOGNITION` dengan pembulatan per baris. | Jangkar tanggal perolehan, mulai bulan sesudahnya, masa manfaat dari record lalu klasifikasi, residu nol, pembulatan kumulatif, catch-up pada periode pembukuan untuk semua jenis periode, dan cakupan flag. Semua dapat dikonfigurasi; GAP-007 tetap terbuka. | [TASK-066](../11-tasks/TASK-066.md) TAC-08/09; POLICY_REGISTRY §5 |
+| C. Adapter intake aset | Bentuk ekspor legacy belum dipetakan. | Profil adapter titik koma dengan deteksi header. Tanggal kosong dan `flag_sak` tak dikenal menjadi galat validasi. Masa manfaat dan nilai per record dipertahankan. | [TASK-069](../11-tasks/TASK-069.md) TAC-04/05 |
+| D. Dua kanal usulan | Persyaratan Owner yang baru: usulan dapat diajukan langsung oleh unit maupun melalui kanal pengadaan pusat. | `proc_needs.submission_channel`, `received_ref`, `received_evidence_file_id`. Penerima intake pusat (`procurement.need.review`, TR-021) mencatat atas nama unit asal yang tetap. Tidak ada kapabilitas atau Task baru. | [DATA_MODEL §14.1](../04-architecture/DATA_MODEL.md#141-anggaran-dan-kebutuhan) (`proc_needs`); [TASK-025](../11-tasks/TASK-025.md) TAC-05 |
+| E. Regulasi nasional | Peraturan LKPP pelaksana belum ditinjau. | Peraturan LKPP 3/2026 (ditetapkan 21-09-2026) mencabut Peraturan LKPP 12/2021 jo. 4/2024. Isinya hanya berdampak pada rezim APBN/APBD, tanpa nilai yang diaktifkan. Tidak ditemukan perubahan Perpres sesudah 46/2025, dan tidak ditemukan perubahan publik atas PR 34/2023. GAP-026 tetap OPEN. | [REGULATORY_SOURCE_REVIEW RG-08](../00-governance/evidence/REGULATORY_SOURCE_REVIEW.md#rg-08-national-sources-checked-on-2026-11-01) |
 
-## 3. Pilihan rancangan yang perlu dinilai
+## 3. Batas dan pilihan yang perlu dinilai
 
-1. **Larangan langsung, bukan deteksi saat commit.** Perubahan baris yang sudah tertangkap ditolak seketika oleh hak kolom dan trigger BEFORE; segel sidik jari tetap menolak sisipan, dan job harian menjadi lapisan deteksi ketiga, bukan pengaman utama.
-2. **Identitas isi tetap untuk semua berkas, bukan hanya berkas penawaran.** Tidak ada alur yang sah untuk mengganti isi `file_objects`; isi berbeda selalu menjadi berkas baru. Karena itu aturan ini tidak membekukan alur lain, dan bukti terima, bukti penarikan serta dokumen hasil generasi ikut terlindungi.
-3. **Segel tautan per jenis pemilik.** Daftar `file_sealed_owner_types` yang hanya diisi migrasi menjadi satu sumber bagi trigger, job harian dan antarmuka. Tautan ke pemilik lain tetap dapat dilepas sekali menurut aturan modulnya; pengalihan selalu berupa tautan baru.
-4. **Kolom operasional berbatas.** Hanya `classification` (naik) dan `scan_status` (transisi tertentu) yang dapat diperbarui; keduanya tidak masuk sidik jari, dan hasil pemindaian tidak pernah menghapus, mengganti atau melepas berkas.
-5. **Sidik jari wajib di kedua ujung.** Saat diterima, SHA-256 dan ukuran dihitung server dan masuk segel kiriman; saat diunduh, verifikasi dilakukan atas salinan yang akan dikirim sebelum byte pertama, sehingga tidak ada celah antara verifikasi dan pengiriman. Pembacaan sisi server lain memakai layanan yang sama, sehingga byte rusak tidak dapat "dicuci" ke berkas baru bersidik jari sah.
-6. **Bukti lewat kolom FK, bukan tautan.** Bukti terima dan bukti penarikan tetap dirujuk kolom kiriman; dengan begitu bukti penarikan yang diunggah kemudian tidak bertabrakan dengan segel tautan, dan semua tautan ke kiriman tetap terbatas pada transaksi pencatatan.
-7. **Risiko sisa dinyatakan.** Peran istimewa (`migrator`) yang menulis ulang data beserta sidik jarinya sekaligus tidak terdeteksi job harian; risiko ini dibatasi pembatasan koneksi `migrator`, audit dan cadangan, bukan oleh mekanisme aplikasi.
+1. HTML legacy adalah rujukan perilaku, bukan kewenangan akuntansi. Rumusnya hanya dipakai sebagai nilai bawaan DRAFT. Aktivasi resmi tetap memerlukan GAP-007/009/024.
+2. Setiap koreksi atas perilaku legacy beralasan integritas data: periode historis tetap benar sesudah penghapusan, kode campuran tidak salah atribusi, tidak ada nilai bawaan diam-diam, dan kondisi fisik tidak diturunkan dari umur penyusutan. Tidak ada aturan akuntansi baru yang dikarang.
+3. PDF BMU 84 halaman tidak tersedia bagi sesi perencanaan. Paritas terhadap keluaran nyata dilakukan lokal oleh eksekutor dengan berkas milik Owner. Yang dicatat hanya lulus/gagal dan kategori selisih, tanpa angka atau data.
+4. Nama dan nomor identitas penanda tangan di HTML legacy tidak disalin. Penanda tangan berasal dari peran dan penugasan.
 
 ## 4. Pertanyaan pemeriksaan
 
-1. Apakah pelepasan, perubahan label, pengalihan (`file_id`, `owner_id`, `owner_type`, `purpose`) dan penghapusan tautan berkas kiriman, serta perubahan identitas isi berkas yang dirujuk kiriman, benar-benar ditolak lewat SQL langsung sebagai `pranata_app` — dan oleh trigger walaupun hak tabel diberikan — termasuk dari koneksi kedua selama pencatatan?
-2. Apakah batas kolom operasional (`classification`, `scan_status`) cukup aman, dan apakah verifikasi unduhan yang gagal tertutup serta job harian menjawab pertanyaan sidik jari wajib saat penerimaan dan unduhan?
-3. Apakah pelepasan sekali untuk tautan tidak bersegel, daftar jenis pemilik bersegel dan pembaruan TASK-016/TASK-033, DI-23/DI-33 dan SEC-22 konsisten tanpa regresi pada urutan pembuatan skema, kepemilikan DI atau kata-kata P0–P3 yang disetujui?
+1. Apakah rumus pada LEGACY_REPORTING_EVIDENCE §2–§8 setia pada HTML legacy, dan apakah setiap koreksi §9 perlu serta tidak mengarang aturan?
+2. Apakah TASK-066, TASK-069 dan TASK-071 cukup diuji untuk paritas, pembulatan, catch-up, penghapusan dan kunci agregasi, dan apakah dependensi baru TASK-071 → TASK-066 benar?
+3. Apakah dua kanal usulan konsisten dengan WF-003/TR-021 dan model akses tanpa memperluas kewenangan?
+4. Apakah RG-08 mencatat sumber nasional dengan benar tanpa menutup GAP-026?
 
 ## 5. Yang tidak berubah
 
-- Tidak ada berkas P0–P3 yang disentuh oleh koreksi ini; kata-kata P0–P3 yang disetujui tetap.
-- Jumlah Task tetap 78; tidak ada Task baru, GAP baru atau GAP yang diselesaikan; keputusan Owner D-01–D-29 tidak berubah.
+Kata-kata P0–P3 yang disetujui tetap. Jumlah Task tetap 78, tanpa Task baru, GAP baru atau GAP yang diselesaikan. Keputusan Owner D-01–D-29 tidak berubah.
 
-## 6. Bukti pemeriksaan mandiri
-
-[P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md#independent-delta-second-review-of-78bf722): render 78 Task, tautan/anchor, ID, cakupan (termasuk SEC-22) dan kepemilikan DI (33/33), urutan pembuatan skema, serta 82 FK komposit dengan unique pasangan — semuanya tanpa masalah. Pemeriksaan internal oleh agen terpisah atas `1452ccd` tidak menemukan P1; enam P2 dan tujuh P3 diperbaiki pada commit tindak lanjut. Hasil identitas dan atribusi commit koreksi dilaporkan bersama permintaan ini.
-
-## 7. Format hasil yang diminta
+## 6. Format hasil
 
 ```text
-VERDICT: READY_FOR_OWNER_APPROVAL | CORRECTIONS_REQUIRED
-IDENTITAS YANG DIREVIEW: <SHA HEAD>
-DISPOSISI: SR-D4-P1-01 = CLOSED | OPEN (alasan)
-TEMUAN BARU (bila ada):
+VERDICT: APPROVED | APPROVED WITH CONDITIONS | REVISE | BLOCKED
+IDENTITAS YANG DIREVIEW: <SHA HEAD cabang PCR-001>
+TEMUAN (bila ada):
 | ID | Tingkat | Berkas § | Masalah | Koreksi yang diminta |
-CATATAN UNTUK OWNER: <hal yang memerlukan keputusan Owner>
+CATATAN UNTUK OWNER: <bila ada>
 ```
 
-Laporan dan pertanyaan kepada Owner ditulis dalam Bahasa Indonesia. Verdict bukan persetujuan Owner.
+Laporan kepada Owner ditulis dalam Bahasa Indonesia. Dengan verdict yang dapat diterima, PCR-001 diterbitkan ke `main` melalui fast-forward terverifikasi (oleh Owner bila sesi perencanaan tidak diizinkan mendorong `main`), dan verdict tersebut dicatat di APPROVAL_RECORDS.

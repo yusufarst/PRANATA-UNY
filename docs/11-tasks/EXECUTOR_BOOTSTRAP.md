@@ -67,7 +67,7 @@ Lalu ikuti AGENTS.md → EXECUTION_CONTEXT → CURRENT_HANDOFF → TASK_PLAN →
 Kerjakan TASK-001–TASK-005 berurutan dalam mode bootstrap tanpa meminta persetujuan per Task; tanyakan hanya
 izin alat yang belum ada di allowlist dan langkah GitHub yang hanya dapat dilakukan Owner (ruleset, token D-27).
 Sesudah prasyarat mode otonom terpenuhi, aktifkan runner dan watcher (scripts/executor/runner.ps1 -Start) dan
-lanjutkan TASK-006–TASK-078 menurut dependensi. Jangan memulai Task BLOCKED (termasuk yang ditahan PCR-001).
+lanjutkan TASK-006–TASK-078 menurut dependensi. Jangan memulai Task BLOCKED.
 Eskalasi hanya hal yang dicadangkan EXECUTOR_OPERATING_MODEL §12. Tanpa atribusi AI di commit/PR/dokumen.
 Laporan dalam Bahasa Indonesia, ringkas, diakhiri footer EXECUTION PROGRESS.
 ```
