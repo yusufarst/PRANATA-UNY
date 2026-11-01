@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # PRANATA UNY - Local/private source materials
 # ============================================================
 
@@ -23,3 +23,9 @@ Thumbs.db
 # IDE/editor local state
 .idea/
 .vscode/
+
+# Executor runtime state (checkpoint, hold, heartbeat, locks, logs)
+/.pranata/
+
+# Local-only Claude Code settings
+/.claude/settings.local.json

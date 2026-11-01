@@ -1,0 +1,132 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "permissions": {
+    "disableBypassPermissionsMode": "disable",
+    "allow": [
+      "PowerShell(git status*)",
+      "PowerShell(git log*)",
+      "PowerShell(git diff*)",
+      "PowerShell(git show*)",
+      "PowerShell(git rev-parse*)",
+      "PowerShell(git ls-remote*)",
+      "PowerShell(git ls-files*)",
+      "PowerShell(git merge-base*)",
+      "PowerShell(git branch*)",
+      "PowerShell(git switch*)",
+      "PowerShell(git fetch*)",
+      "PowerShell(git cat-file*)",
+      "PowerShell(git config user.*)",
+      "PowerShell(git -c core.autocrlf=false add *)",
+      "PowerShell(git -c core.autocrlf=false commit *)",
+      "PowerShell(git -c commit.gpgsign=false -c core.autocrlf=false commit *)",
+      "PowerShell(git push -u origin *)",
+      "PowerShell(git push origin *)",
+      "PowerShell(gh pr *)",
+      "PowerShell(gh run *)",
+      "PowerShell(gh api *)",
+      "PowerShell(gh ruleset *)",
+      "PowerShell(gh repo view*)",
+      "PowerShell(php artisan *)",
+      "PowerShell(composer *)",
+      "PowerShell(npm *)",
+      "PowerShell(npx *)",
+      "PowerShell(powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\executor\\*)",
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git show*)",
+      "Bash(git rev-parse*)",
+      "Bash(git ls-remote*)",
+      "Bash(git fetch*)",
+      "Bash(gh pr *)",
+      "Bash(gh run *)",
+      "Bash(gh api *)",
+      "Bash(php artisan *)",
+      "Bash(composer *)",
+      "Bash(npm *)",
+      "Bash(npx *)"
+    ],
+    "deny": [
+      "Read(//**/MULTIPLECORP/**)",
+      "Read(//**/MultipleCorp/**)",
+      "Read(//**/multiplecorp/**)",
+      "Read(//**/BANTUKASIR/**)",
+      "Read(//**/BantuKasir/**)",
+      "Read(//**/bantukasir/**)",
+      "Read(//**/ELLIGBLE/**)",
+      "Read(//**/Elligble/**)",
+      "Read(//**/elligble/**)",
+      "Edit(//**/MULTIPLECORP/**)",
+      "Edit(//**/MultipleCorp/**)",
+      "Edit(//**/multiplecorp/**)",
+      "Edit(//**/BANTUKASIR/**)",
+      "Edit(//**/BantuKasir/**)",
+      "Edit(//**/bantukasir/**)",
+      "Edit(//**/ELLIGBLE/**)",
+      "Edit(//**/Elligble/**)",
+      "Edit(//**/elligble/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.git-credentials)",
+      "Read(~/.config/gh/**)",
+      "Edit(.git/**)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git config --global*)",
+      "Bash(docker *)",
+      "Bash(docker-compose *)",
+      "Bash(gh auth*)",
+      "Bash(gh secret*)",
+      "PowerShell(git push --force*)",
+      "PowerShell(git push -f*)",
+      "PowerShell(git config --global*)",
+      "PowerShell(docker *)",
+      "PowerShell(docker-compose *)",
+      "PowerShell(gh auth*)",
+      "PowerShell(gh secret*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|Read|Write|Edit|NotebookEdit|MultiEdit|Glob|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "& \"$env:CLAUDE_PROJECT_DIR\\.claude\\hooks\\pretooluse-guard.ps1\"",
+            "onFailure": "block",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "& \"$env:CLAUDE_PROJECT_DIR\\.claude\\hooks\\posttooluse-heartbeat.ps1\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "& \"$env:CLAUDE_PROJECT_DIR\\.claude\\hooks\\stop-guard.ps1\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

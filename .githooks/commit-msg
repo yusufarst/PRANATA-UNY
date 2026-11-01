@@ -1,0 +1,17 @@
+#!/bin/sh
+# GOV-08: reject AI or tool attribution in commit messages. Also rejects any co-author:
+# the Owner is the only author and committer of this repository.
+msg_file="$1"
+robot="$(printf '\360\237\244\226')"
+
+if LC_ALL=C grep -Eiq \
+    -e '^[[:space:]]*co-authored-by[[:space:]]*:' \
+    -e '(generated|created|written|authored|assisted)[[:space:]]+(with|by|using)[[:space:]]+\[?(claude|anthropic|chatgpt|openai|codex|copilot|gemini|cursor|an?[[:space:]]+ai([^a-z]|$)|ai([^a-z]|$))' \
+    -e 'noreply@anthropic\.com' \
+    -e 'claude\.(ai|com)/code' \
+    -e '^[[:space:]]*(ai|tool|assistant|claude|codex|copilot|chatgpt|gemini)[- ]?(assisted|generated|author|session|by)[a-z-]*[[:space:]]*:' \
+    "$msg_file" || LC_ALL=C grep -Fq "$robot" "$msg_file"; then
+    echo "commit-msg: AI or tool attribution is forbidden (GOV-08). Commit rejected." >&2
+    exit 1
+fi
+exit 0
