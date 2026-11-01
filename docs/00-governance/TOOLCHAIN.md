@@ -136,3 +136,20 @@ Findings for Claude Planning, none silently resolved as a plan change:
 - **Frontend lint and format.** QUALITY_GATES and TASK-002 name ESLint and Prettier. The current kit ships Vite+ (`vp check`: Oxlint and Oxfmt) and neither of the named tools. Under this registry's rule that verified capability is the requirement, `app-boot` runs `npm run check` and `npm run types:check`; no package was added. Capability is not yet proven for the ESLint rules that TEST_STRATEGY requires (literal JSX text, react-hooks): `vite.config.ts` configures no such rule, so this needs a Planning decision before the i18n and `quality` work depend on it. `vp check` also checks the formatting of every repository file, so `vite.config.ts` excludes `docs/`, `scripts/`, `.claude/`, `.githooks/`, `.pranata/` and the root Markdown files (GOV-09).
 - **Passkeys.** The kit enables passkey sign-in, which is outside the approved auth profile of password plus TOTP (EXECUTION_CONTEXT §3) and could bypass mandatory TOTP (SEC-D1). The feature, routes, table and pages are removed. An unused rate limiter and the `passkeys` block in `config/fortify.php` stay as the kit ships them. `laravel/passkeys` stays in `composer.lock` because `laravel/fortify` requires it, and `@laravel/passkeys` stays unused in `package.json` so that TASK-002 does not rewrite the kit's lockfile.
 - **Kit behaviour left for later Tasks.** These come from the kit and are not approved behaviour: self-service account deletion (`profile.destroy`); email sign-in without username; password reset by email, shown on the login page, against TASK-011; a password profile of `min(12)` plus `uncompromised()` in production and framework defaults elsewhere, against AICWDF-COMPAT-8 (SECURITY_MODEL), where `uncompromised()` also calls an external service, which TASK-010 owns; and the `laravel/chisel` dependency. TASK-003 removed `laravel/sail`, a Docker wrapper, under OD-37.
+
+## Integration environment — TASK-003 (2026-11-02)
+
+Both services run only inside GitHub-hosted jobs, bound to `127.0.0.1` on the runner, and hold synthetic data only. Nothing runs on the Owner's machine.
+
+| Component | Version or result | Source |
+| --- | --- | --- |
+| PostgreSQL service | 18.6, with `pg_trgm`, `ltree`, `btree_gist` created and used by tests | Run `41335757703`, `db:show` |
+| Gotenberg service | 8.39.0, image `gotenberg/gotenberg:8.39.0@sha256:13672f317b443c793e972b1bd2155ec62a3e7b6891b411e8196442cc053ee5f5` | Run `41334071760` |
+| Job durations | `app-boot` 54 s, `db-integration` 66 s, `bootstrap-gate` 7 s, without a Composer or npm cache | Run `41335757703` |
+
+Facts verified by test and against the Laravel 13.x source:
+
+- **Parallel database names.** Laravel appends `_test_<token>` to the database name, so workers use `pranata_test_test_1` and so on. This fits `pranata_test_<token>` in TEST_STRATEGY §4 with the token `test_1`.
+- **Reset guard layers.** The console kernel forwards `CommandStarting` only outside unit tests. So `DB::prohibitDestructiveCommands` guards the default connection in every environment, and the `CommandStarting` listener adds `--database`. Limit: under `APP_ENV=testing`, a destructive command with an explicit `--database` is covered by neither layer; the test suite's own `DatabaseGuard` still refuses a wrong default database. No destructive seeder exists yet, so `db:seed` is not guarded.
+- **A missing database can be created.** `php artisan migrate --force` creates a missing PostgreSQL database by itself, which is one more reason the guard must run first.
+- **Invalid workflow file.** A YAML error yields a failed `push` run and no `pull_request` run; the merge gate then refuses with "no bootstrap run".
