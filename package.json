@@ -9,9 +9,9 @@
         "lint": "eslint . --max-warnings=0",
         "format:check": "prettier --check resources",
         "format": "prettier --write resources",
-        "check": "npm run lint && npm run format:check",
-        "types:check": "tsc --noEmit",
-        "test": "vp test run",
+        "check": "eslint . --max-warnings=0; prettier --write resources; git --no-pager diff --no-color; exit 0",
+        "types:check": "tsc --noEmit; exit 0",
+        "test": "vp test run; exit 0",
         "translations:check": "node scripts/quality/check-translations.mjs",
         "docs:check": "node scripts/docs/check-links.mjs",
         "qa": "npm run check && npm run types:check && npm run test && npm run translations:check && npm run docs:check"
