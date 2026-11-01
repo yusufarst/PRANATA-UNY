@@ -307,7 +307,15 @@ jobs:
 
       - name: A forbidden module import must fail the architecture test
         run: |
-          mkdir -p app/Modules/Platform/Actions
+          # Pest ignores a dependency on a class that does not exist, so the probe needs a real one.
+          mkdir -p app/Modules/Platform/Actions app/Modules/Identity/Models
+          cat > app/Modules/Identity/Models/Account.php <<'PHP'
+          <?php
+
+          namespace App\Modules\Identity\Models;
+
+          class Account {}
+          PHP
           cat > app/Modules/Platform/Actions/ForbiddenProbe.php <<'PHP'
           <?php
 
@@ -325,8 +333,9 @@ jobs:
             echo 'the architecture test did not fail'
             exit 1
           fi
-          grep -q 'Platform' arch.log
-          rm -r app/Modules/Platform/Actions
+          cat arch.log | grep -E 'FAILED|Tests:'
+          grep -q 'Platform uses no' arch.log
+          rm -r app/Modules/Platform/Actions app/Modules/Identity
 
       - name: A route without sign-in or authorization must fail the route test
         run: |
