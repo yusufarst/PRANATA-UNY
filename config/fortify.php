@@ -160,17 +160,15 @@ return [
     |
     */
 
+    // Public registration stays off (OD-11). Passkeys stay off: they would be a sign-in path outside the
+    // approved auth profile of password plus TOTP (EXECUTION_CONTEXT section 3).
     'features' => [
-        Features::registration(),
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,
             // 'window' => 0
-        ]),
-        Features::passkeys([
-            'confirmPassword' => true,
         ]),
     ],
 
