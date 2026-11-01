@@ -2,6 +2,7 @@
 # Part 1 runs on a disposable PR in this repository: merge-verified.ps1 -Bootstrap -DryRun, never a push to main.
 # Part 2 runs on the Owner-approved sandbox, the only place where a base may really move: the library functions directly.
 # Repository names are fixed here on purpose. The PR is closed without merge; its branch stays.
+param([switch]$SandboxOnly)
 $ErrorActionPreference = 'Continue'
 foreach ($item in @(Get-ChildItem Env: | Where-Object { $_.Name -match '^(CLAUDE|ANTHROPIC_BASE_URL)' })) { Remove-Item -LiteralPath ("Env:" + $item.Name) }
 $source = (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path
@@ -93,6 +94,7 @@ $mainBefore = ((& git ls-remote origin refs/heads/main) -split '\s+')[0]
 $pr = 0
 try {
     # --- Part 1: disposable PR in this repository.
+    if (-not $SandboxOnly) {
     & git fetch --quiet origin main 2>$null
     & git worktree add --quiet -b $branch $wt origin/main 2>$null
     if (-not (Test-Path -LiteralPath (Join-Path $wt '.git'))) { throw 'worktree could not be created' }
@@ -156,6 +158,7 @@ try {
     $staleFacts = Get-PranataBootstrapRun -Repo $ownRepo -Pr $pr -HeadSha $greenSha -WorkDir (Join-Path $wt '.pranata\executor')
     $staleFailures = Get-PranataBootstrapFailures -Run $staleFacts -TaskId 'TASK-002' -Pr $pr -HeadSha $staleSha -MainSha $mainBefore -Tree (& git -C $wt rev-parse "$staleSha^{tree}")
     Say 'stale-evidence-for-new-head' (($staleFailures -join ';') -match 'evidence head_sha') "old run=$($staleFacts.RunId) judged against head=$staleSha; failures=$($staleFailures -join ' | ')"
+    }
 
     # --- Part 2: the sandbox, where the base can really move.
     & git clone --quiet "https://github.com/$sandboxRepo.git" $sandboxWork 2>&1 | Out-Null
@@ -203,8 +206,10 @@ try {
         $treeH2 = (& git -C $sandboxWork rev-parse "$h2^{tree}")
         $facts2 = Get-PranataBootstrapRun -Repo $sandboxRepo -Pr $sandboxPr -HeadSha $h2 -WorkDir $env:TEMP
         $failures3 = Get-PranataBootstrapFailures -Run $facts2 -TaskId 'TASK-002' -Pr $sandboxPr -HeadSha $h2 -MainSha $sandboxMain -Tree $treeH2
-        $onlyTree = (@($failures3).Count -eq 1) -and (($failures3 -join ';') -match 'evidence tree_sha')
-        Say 'sandbox-tree-mismatch' $onlyTree "run=$($r2.id) head=$h2 base=$($facts2.Evidence.base_sha) evidenceTree=$($facts2.Evidence.tree_sha) headTree=$treeH2 merge=$($facts2.Evidence.merge_sha); failures=$($failures3 -join ' | ')"
+        # GitHub keeps pull_request.base.sha at the old base after a move (seen in run 41327925221), so base_sha fails here as
+        # well. The tree line must appear on its own merit: this merge really contains the moved file.
+        $treeRefused = ($failures3 -join ';') -match 'evidence tree_sha'
+        Say 'sandbox-tree-mismatch' $treeRefused "run=$($r2.id) head=$h2 base=$($facts2.Evidence.base_sha) evidenceTree=$($facts2.Evidence.tree_sha) headTree=$treeH2 merge=$($facts2.Evidence.merge_sha); failures=$($failures3 -join ' | ')"
     }
     & gh pr close $sandboxPr --repo $sandboxRepo 2>$null | Out-Null
 } catch {
