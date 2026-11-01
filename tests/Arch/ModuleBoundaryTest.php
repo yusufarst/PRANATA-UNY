@@ -67,10 +67,13 @@ foreach (array_keys(MODULE_DEPENDENCIES) as $module) {
     $contractOnly = CONTRACT_ONLY_DEPENDENCIES[$module] ?? [];
     $forbidden = array_values(array_diff($others, moduleReach($module)));
 
-    arch("{$module} uses no module outside its declared dependencies")
-        ->expect("App\\Modules\\{$module}")
-        ->not->toUse(array_map(fn (string $other) => "App\\Modules\\{$other}", $forbidden))
-        ->ignoring(array_map(fn (string $other) => "App\\Modules\\{$other}\\Contracts", $contractOnly));
+    // Administration may read every core module, so it has nothing to forbid here.
+    if ($forbidden !== []) {
+        arch("{$module} uses no module outside its declared dependencies")
+            ->expect("App\\Modules\\{$module}")
+            ->not->toUse(array_map(fn (string $other) => "App\\Modules\\{$other}", $forbidden))
+            ->ignoring(array_map(fn (string $other) => "App\\Modules\\{$other}\\Contracts", $contractOnly));
+    }
 
     $internals = [];
 
