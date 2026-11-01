@@ -47,7 +47,7 @@ jobs:
 
       - name: Install the quality packages
         run: |
-          npm install --save-dev --no-audit --no-fund eslint@latest @eslint/js@latest typescript-eslint eslint-plugin-react eslint-plugin-react-hooks eslint-config-prettier globals prettier prettier-plugin-tailwindcss
+          npm install --save-dev --no-audit --no-fund eslint@^9 @eslint/js@^9 typescript-eslint eslint-plugin-react eslint-plugin-react-hooks eslint-config-prettier globals prettier prettier-plugin-tailwindcss
           npm ls eslint prettier typescript-eslint eslint-plugin-react eslint-plugin-react-hooks --depth=0
 
       - name: Generate the Wayfinder routes
