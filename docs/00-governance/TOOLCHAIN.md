@@ -109,3 +109,30 @@ Owner decision [OD-37](DECISION_LOG.md#od-37) (2026-11-01): the Owner's Windows 
 | GitHub-hosted | Ubuntu runner image; PHP through a SHA-pinned setup action; PostgreSQL major pinned here (≥ 16, also the staging and production target); Gotenberg image pinned here | Public repository: standard runners without minute cost; synthetic data only. Versions are verified at TASK-002/TASK-003 and recorded here |
 
 The Claude Code headless runner (`scripts/executor/runner.ps1`) is a local executor process, not a GitHub Actions runner. Its restricted token (C-15) is a later Owner prerequisite for AUTONOMOUS mode. Capability C-14 (Docker bind mount) is SUPERSEDED / NOT APPLICABLE. Exact versions, the runner image, job durations and any portable-tool checksum are recorded here by TASK-002–TASK-005.
+
+## Application versions — TASK-002 (2026-11-01)
+
+Generated on a GitHub-hosted runner by the temporary `scaffold` job (run `41325195031`) with the official installer `laravel/installer` v5.32.0, `laravel new app --react --pest --npm --no-boost`, from `laravel/react-starter-kit` branch `main` at `98d9b821baba4f4cc4120c96d35971366cec53e6`. The kit's tagged Packagist release was not used: `composer create-project` without a stability flag resolved to Laravel 12 (run `41324895646`). Source of the method: Laravel 13.x starter kit documentation through Context7. No portable tool was needed; no local PHP, Composer, PostgreSQL or Docker was used.
+
+| Component | Version | Source of the version |
+| --- | --- | --- |
+| Runner image | `ubuntu-24.04` | `bootstrap.yml` |
+| PHP | 8.5.12 (setup-php `2.40.0`) | Run log; the kit requires `^8.3` |
+| Composer | 2.11.1 | Run log |
+| Node, npm | 24.22.1, 11.19.1 | Run log; the executor machine has Node 24.18.0, npm 11.16.0 |
+| Laravel framework | 13.39.0 | `composer.lock` |
+| Fortify, Wayfinder, Tinker | 1.41.0, 0.1.23, 3.0.2 | `composer.lock` |
+| Inertia | `inertia-laravel` 3.6.0, `@inertiajs/react` 3.10.0 | `composer.lock`, `package-lock.json` |
+| Pest, PHPUnit, Pint, Larastan | 5.3.5, 13.4.5, 1.32.1, 3.13.2 | `composer.lock` |
+| React, TypeScript, Tailwind CSS, Vite+ | 19.3.1, 5.9.3, 4.3.3, 1.4.0 | `package-lock.json` |
+| shadcn/ui | Style `new-york`, base color `neutral`; components copied by the kit under `resources/js/components/ui` | `components.json` |
+| PostgreSQL (CI service) | 18.6, image `postgres:18.6@sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81` | Run `41326024572` |
+| Browser for screenshots | Google Chrome 156.0.8078.47 of the runner image | Run `41326024572` |
+| Actions, by commit SHA | `checkout` v7.0.1, `setup-node` v7.1.0, `upload-artifact` v7.0.2, `setup-php` 2.40.0 | `git ls-remote` on the public repositories |
+
+Findings for Claude Planning, none silently resolved as a plan change:
+
+- **Inertia major.** EXECUTION_CONTEXT §2 names Inertia 2. The current official starter kit ships Inertia 3. TASK-002 takes the kit's version, because its objective is the current stable kit and downgrading would leave the kit.
+- **Frontend lint and format.** QUALITY_GATES and TASK-002 name ESLint and Prettier. The current kit ships Vite+ (`vp check`: Oxlint and Oxfmt) and neither of the named tools. Under this registry's rule that verified capability is the requirement, `app-boot` runs `npm run check` and `npm run types:check`; no package was added. `vp check` also formats repository files, so `vite.config.ts` excludes `docs/`, `scripts/`, `.claude/`, `.githooks/`, `.pranata/` and the root Markdown files (GOV-09).
+- **Passkeys.** The kit enables passkey sign-in, which is outside the approved auth profile of password plus TOTP (EXECUTION_CONTEXT §3) and could bypass mandatory TOTP (SEC-D1). The feature, routes, table and pages are removed. `laravel/passkeys` stays in `composer.lock` because `laravel/fortify` requires it, and `@laravel/passkeys` stays unused in `package.json` so that TASK-002 does not rewrite the kit's lockfile.
+- **Kit behaviour left for later Tasks.** Self-service account deletion (`profile.destroy`), email sign-in without username and the `laravel/sail` dev dependency come from the kit. They are unused or owned by later Identity Tasks, and are recorded here so they are not taken as approved behaviour.
