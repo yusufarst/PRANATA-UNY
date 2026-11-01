@@ -13,5 +13,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 require __DIR__.'/settings.php';
 
-// Inside the web group, so a 404 page has the session and its language.
-Route::fallback(fn () => abort(404));
+// Inside the web group, so a 404 page has the session and its language. Route::fallback alone answers GET only,
+// which would turn any other method on an unknown address into a 405.
+Route::any('{fallbackPlaceholder}', fn () => abort(404))->where('fallbackPlaceholder', '.*')->fallback();

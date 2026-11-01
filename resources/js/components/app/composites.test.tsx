@@ -1,6 +1,16 @@
 import { renderToStaticMarkup } from 'react-dom/server';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vite-plus/test';
-import { chooseLocale, LanguageSwitcher } from '@/components/app/language-switcher';
+import {
+    afterEach,
+    beforeEach,
+    describe,
+    expect,
+    it,
+    vi,
+} from 'vite-plus/test';
+import {
+    chooseLocale,
+    LanguageSwitcher,
+} from '@/components/app/language-switcher';
 import { PageHeader } from '@/components/app/page-header';
 import {
     EmptyState,
@@ -71,7 +81,9 @@ describe('state views', () => {
     it('renders an action only when there is one', () => {
         expect(renderToStaticMarkup(<EmptyState />)).not.toContain('<button');
         expect(
-            renderToStaticMarkup(<EmptyState action={<button type="button" />} />),
+            renderToStaticMarkup(
+                <EmptyState action={<button type="button" />} />,
+            ),
         ).toContain('<button');
     });
 
@@ -104,7 +116,9 @@ describe('WorkspaceSwitcher', () => {
             { key: 'home', href: '/other' },
         ];
 
-        expect(renderToStaticMarkup(<WorkspaceSwitcher />)).toContain('<button');
+        expect(renderToStaticMarkup(<WorkspaceSwitcher />)).toContain(
+            '<button',
+        );
     });
 
     it('renders nothing without an allowed workspace', () => {

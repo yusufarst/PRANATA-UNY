@@ -25,7 +25,7 @@ export function AppSidebar() {
     return (
         <Sidebar collapsible="icon" variant="sidebar">
             <SidebarHeader>
-                <SidebarMenu>
+                <SidebarMenu className="group-data-[collapsible=icon]:items-center">
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href={dashboard()} prefetch>
