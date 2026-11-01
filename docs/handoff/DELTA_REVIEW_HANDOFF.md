@@ -2,6 +2,8 @@
 
 Status: PCR-001 — PENDING_SECOND_REVIEW / NOT_PUBLISHED (FRZ-001) | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Untuk: Second Review Agent independen (ChatGPT)
 
+> Selesai: review delta atas `6b880b4` memberi verdict APPROVED WITH CONDITIONS; PCR-001 terbit di `main` pada 2026-11-01 dan kedua syarat nonblocking (C1, C2) diterapkan pada commit transisi status. Handoff ini kini historis.
+
 Review terfokus atas `94eb50bb5166b50d42e12539defb9ae77988cbf4` memberi verdict **REVISE**: dua temuan P1 dan satu P2. Bagian lain PCR-001 dinilai dapat diterima. Pemeriksaan ini **delta sempit**: apakah ketiga temuan tertutup dan apakah koreksinya menimbulkan masalah baru. Baseline `docs/planning-baseline` (`167864c`) tidak berubah.
 
 ## 1. Identitas

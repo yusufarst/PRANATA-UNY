@@ -1,6 +1,6 @@
 # Legacy reporting and depreciation evidence
 
-Status: PROPOSED under PCR-001 (FRZ-001 change control) | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED under PCR-001 (FRZ-001 change control; focused review `6b880b4` APPROVED WITH CONDITIONS, conditions applied) | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent
 
 This record states the calculation behaviour of the legacy PRANATA page `index (1).html` ([SRC-027 / ASSET-12](ASSET_SOURCE_REVIEW.md)), re-read in full on 2026-11-01 at the Owner's direction (U-012 §5), and how V1 uses it. The page is the **primary legacy behavioural reference**. It is not accounting or legal authority, so GAP-007, GAP-009 and GAP-024 stay OPEN. Its formulas are the provisional DRAFT defaults of `asset.depreciation.uny` and `reporting.formats.uny` ([POLICY_REGISTRY §5](../../04-architecture/POLICY_REGISTRY.md#5-contoh-isi-lain-bentuk-bukan-nilai-resmi)), except where §9 records a correction.
 
@@ -89,17 +89,18 @@ A report scope is a set of UNY units: one unit, a subtree, or the whole universi
 
 | Movement | Source in V1 | Effect on a scope |
 |---|---|---|
-| Acquisition from outside UNY (purchase, donation, transfer in from another entity, construction completion, found) | `asset_transactions` REGISTER/RECOGNIZE; `acquisition_type` | Addition to the scope that holds the asset |
+| Acquisition from outside UNY (purchase, donation, transfer in from another entity, construction completion, found) | One **inclusion event** per asset: `REGISTER`, or `IMPORT` for migrated assets with the source posting date (DRAFT `inclusion_event`); `acquisition_type` | One addition to the scope that holds the asset, on the inclusion date. `RECOGNIZE` and other later events never add the asset again; a REVERSAL of the inclusion event removes the addition |
 | Internal transfer between UNY units | WF-018 `asset_mutation_lines(from_org_unit_id, to_org_unit_id)` posted as `CHANGE_UNIT` on its `effective_date` | Origin in scope, destination outside: transfer out. Destination in scope, origin outside: transfer in. Both in scope, including UNY as a whole: no movement — nets to zero |
 | Disposal or transfer out of UNY | WF-021 `asset_disposals` (`disposal_method` AUCTION, DESTRUCTION, TRANSFER, GRANT, OTHER) posted as `DISPOSAL` | Reduction in the scope that holds the asset; reduces the UNY total |
 | Correction or development | WF-020 transactions with `value_delta` | Addition or reduction of value in the holding scope |
 
 Rules:
 
-1. Each asset belongs to exactly one unit on any date, given by the dated unit history. Opening and closing positions use the unit on the opening and closing dates. An asset is never counted in two units on the same date.
-2. A transfer carries the asset's gross value and accumulated depreciation together. Depreciation is calculated per asset and is unchanged by a transfer. In unit scopes, a period's depreciation line is attributed to the unit that holds the asset at the end of that line's period. Consolidated expense is the sum of the lines and does not change because of transfers.
-3. For each scope and period: closing value = opening value + additions + transfers in − transfers out − reductions; closing accumulated = opening accumulated + period expense + accumulated transferred in − accumulated transferred out − accumulated on reductions. For UNY as a whole the transfer terms are zero.
-4. The sum of the closing positions of all units equals the UNY closing position, on every date.
+1. Each asset is added at most once, at its inclusion event. A later change of its intra/ekstra flag moves it between the Intra and Ekstra variants and nets to zero in Gabungan (DRAFT; the treatment stays with GAP-009).
+2. Each asset belongs to exactly one unit on any date, given by the dated unit history. Opening and closing positions use the unit on the opening and closing dates. An asset is never counted in two units on the same date.
+3. A transfer carries the asset's gross value and accumulated depreciation together. Depreciation is calculated per asset and is unchanged by a transfer. In unit scopes, a period's depreciation line is attributed to the unit that holds the asset at the end of that line's period. Consolidated expense is the sum of the lines and does not change because of transfers.
+4. For each scope and period: closing value = opening value + additions + transfers in − transfers out − reductions; closing accumulated = opening accumulated + period expense + accumulated transferred in − accumulated transferred out − accumulated on reductions. For UNY as a whole the transfer terms are zero.
+5. The sum of the closing positions of all units equals the UNY closing position, on every date.
 
 Every number produced under a DRAFT version carries the simulation label until a version of `reporting.formats` and `asset.depreciation` is officially effective on the report's reference date (D-28). Official activation needs the GAP-024 format authority and the GAP-007/009 accounting answers.
 
