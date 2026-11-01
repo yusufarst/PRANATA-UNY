@@ -4,7 +4,7 @@ Status: bukti TASK-001 | Updated: 2026-11-01 (Asia/Jakarta) | Pemilik: Execution
 
 Setiap status berasal dari uji nyata pada mesin Owner, tanpa rahasia. Lingkungan: Windows 11 Home, Windows PowerShell 5.1.26100, Git 2.55.0.windows.3, GitHub CLI 2.96.0, Claude Code 2.1.310, Node 24.18.0. RAM fisik 7,2 GB. PHP, Composer dan psql tidak terpasang. Docker lokal **tidak digunakan** (keputusan Owner 2026-11-01); semua uji larangan Docker adalah uji keputusan guard tanpa menjalankan Docker.
 
-Ulangi dengan: `scripts/executor/tests/guard.tests.ps1`, `scripts.tests.ps1` (keduanya luring), `capability.probes.ps1` (repositori sekali pakai + panggilan model ringan), `c10.probe.ps1` (repositori sandbox publik sintetis), `c15.probe.ps1` (setelah token terpasang).
+Ulangi dengan: `scripts/executor/tests/guard.tests.ps1`, `scripts.tests.ps1` (keduanya luring), `capability.probes.ps1` (repositori sekali pakai + panggilan model ringan), `c10.probe.ps1` (repositori sandbox publik sintetis), `c15.probe.ps1` (setelah token terpasang), `c16.probe.ps1` (PR uji sekali pakai dan sandbox).
 
 ## Ringkasan
 
@@ -25,6 +25,37 @@ Ulangi dengan: `scripts/executor/tests/guard.tests.ps1`, `scripts.tests.ps1` (ke
 | C-13 | Worktree Git di Windows | VERIFIED | Worktree dibuat dan dihapus pada repositori sekali pakai | — |
 | C-14 | Bind mount Docker Desktop | SUPERSEDED / NOT APPLICABLE | Keputusan Owner OD-37 (2026-11-01, tanpa Docker lokal); diklasifikasi ulang oleh PCR-002; tidak diuji | — |
 | C-15 | Token runner terpisah | NOT AVAILABLE — menunggu Owner | Kode dan `c15.probe.ps1` siap; token DPAPI hanya masuk proses anak (diuji dengan nilai palsu, tidak muncul di argumen atau log). Uji nyata setelah Owner memasang token | Wajib VERIFIED sebelum mode otonom |
+| C-16 | Gerbang bukti bootstrap | VERIFIED (TASK-002) | PR uji sekali pakai dan sandbox dengan run GitHub-hosted nyata: lihat bagian C-16 | `pull_request.base.sha` tidak diperbarui setelah base bergerak |
+
+## C-16
+
+Diverifikasi TASK-002 pada 2026-11-01 dengan `scripts/executor/tests/c16.probe.ps1`. Bagian 1 menjalankan `merge-verified.ps1 -Bootstrap -DryRun` pada [PR uji #6](https://github.com/yusufarst/PRANATA-UNY/pull/6), yang ditutup tanpa merge; `main` tetap `bbf2e59` sebelum dan sesudahnya. Job `app-boot` pada PR uji adalah stub cepat, sedangkan header workflow dan job `bootstrap-gate` diambil dari `bootstrap.yml` yang sebenarnya. Berkas review di PR uji adalah fixture lokal per SHA, agar hanya gerbang bukti yang diuji.
+
+| Skenario | Run | SHA HEAD | Hasil gerbang |
+|---|---|---|---|
+| Job gagal | [41327250082](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41327250082) | `87700ea` | Ditolak: job `app-boot` `failure` |
+| Run belum selesai | [41327322461](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41327322461) | `0a641ab` | Ditolak: status `in_progress` |
+| Run dibatalkan | 41327322461 | `0a641ab` | Ditolak: kesimpulan `cancelled` |
+| Job wajib dilewati | [41327463823](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41327463823) | `cde61af` | Ditolak: job `app-boot` `skipped` |
+| Job tambahan dilewati, run `success` | [41327518373](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41327518373) | `8b42d15` | Ditolak: job `extra` `skipped` |
+| Run hilang | Tidak ada | `44056dc` | Ditolak: tidak ada run bootstrap |
+| Run hijau pada HEAD terbaru | [41327683341](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41327683341), attempt 1 | `542e683` | **Diterima**; base `bbf2e59`, uji-merge `4ec7c0e` |
+| Push baru, SHA lama | 41327683341 | `542e683` → `3b227f3` | Ditolak: 8.1.1 |
+| Bukti lama untuk HEAD baru | 41327683341 | `3b227f3` | Ditolak: `head_sha` dan `tree_sha` |
+
+**Filter `head_sha` pada API nyata.** SHA HEAD PR menemukan satu run dan semua hasilnya bersesuaian; SHA uji-merge `4ec7c0e` dan SHA `main` tidak menemukan run. Filter sesuai dengan prosedur QUALITY_GATES §4.1, jadi jalur cadangan enumerasi run tidak diperlukan.
+
+**Base bergerak dan tree tidak cocok.** `main` repositori ini tidak boleh digerakkan untuk uji, jadi kedua skenario memakai fungsi gerbang yang sama atas run nyata di sandbox `yusufarst/pranata-uny-sandbox-c10` ([PR #7](https://github.com/yusufarst/pranata-uny-sandbox-c10/pull/7)). Base digerakkan lewat ruleset sandbox itu sendiri.
+
+| Skenario | Run | SHA HEAD | Hasil |
+|---|---|---|---|
+| Garis dasar hijau | [41328110703](https://github.com/yusufarst/pranata-uny-sandbox-c10/actions/runs/41328110703) | `719fc94` | Tanpa kegagalan; base `50b523d` |
+| Base bergerak ke `eda177c` | 41328110703 | `719fc94` | Ditolak: `base_sha` |
+| Run baru setelah base bergerak | [41328205032](https://github.com/yusufarst/pranata-uny-sandbox-c10/actions/runs/41328205032) | `6709649` | Ditolak: `tree_sha` dan `base_sha` |
+
+**Temuan platform.** Setelah base bergerak, run baru menguji uji-merge terhadap base baru, tetapi `github.event.pull_request.base.sha` tetap berisi base lama (run 41327925221 dan 41328205032). Akibatnya PR yang melewati perpindahan base selalu ditolak, dan pemulihannya adalah cabang `-r2` baru menurut [§8.2](../EXECUTOR_OPERATING_MODEL.md#82-metode-merge-keputusan-owner). Perilaku ini fail-closed dan sesuai prosedur. Satu run probe pertama ditandai FAILED karena asersinya mengharapkan hanya `tree_sha` yang gagal; gerbang sudah menolak dengan benar, asersi diperbaiki, gerbang tidak diubah, dan bagian sandbox dijalankan ulang.
+
+**Batas.** Penolakan `tree_sha` yang berdiri sendiri hanya dibuktikan oleh uji luring `scripts.tests.ps1`, karena pada run nyata selalu disertai `base_sha` atau `head_sha`.
 
 ## C-09
 
