@@ -4,7 +4,6 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import literalBaseline from './eslint.literal-baseline.json' with { type: 'json' };
 
 export default tseslint.config(
     {
@@ -46,12 +45,6 @@ export default tseslint.config(
                 { noStrings: false, ignoreProps: true },
             ],
         },
-    },
-    {
-        // Pages as the starter kit ships them, with English text. TASK-006 moves their text
-        // to the catalog and empties this list, so a new file can never join it.
-        files: literalBaseline,
-        rules: { 'react/jsx-no-literals': 'off' },
     },
     {
         // Declaration merging has to repeat the generics of the original interface.

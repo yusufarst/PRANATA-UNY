@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -42,6 +43,11 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'locale' => App::getLocale(),
+            // Only the shared home workspace exists until the access model of TASK-012 grants others.
+            'workspaces' => $request->user() === null ? [] : [
+                ['key' => 'home', 'href' => route('dashboard', absolute: false)],
+            ],
         ];
     }
 }

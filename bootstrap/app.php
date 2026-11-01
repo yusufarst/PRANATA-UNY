@@ -1,12 +1,15 @@
 <?php
 
-use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,10 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        $middleware->encryptCookies(except: ['sidebar_state']);
 
         $middleware->web(append: [
-            HandleAppearance::class,
+            SetLocale::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
@@ -27,4 +30,20 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // PG-013. A failure before SetLocale (419, 503) still needs the language of the session, so it is resolved here.
+        $exceptions->respond(function (Response $response, Throwable $exception, Request $request): Response {
+            $status = $response->getStatusCode();
+            $wantsJson = $request->is('api/*') || ($request->expectsJson() && ! $request->hasHeader('X-Inertia'));
+
+            if (! in_array($status, [403, 404, 419, 429, 500, 503], true) || $wantsJson || ($status === 500 && config('app.debug'))) {
+                return $response;
+            }
+
+            App::setLocale(SetLocale::resolve($request));
+
+            return Inertia::render('errors/show', ['status' => $status, 'locale' => App::getLocale()])
+                ->toResponse($request)
+                ->setStatusCode($status);
+        });
     })->create();

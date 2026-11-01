@@ -1,0 +1,13 @@
+{
+    "category": {
+        "draft": "Draft",
+        "waiting": "Waiting",
+        "action": "Needs your action",
+        "revision": "Needs revision",
+        "approved": "Approved",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "blocked": "Awaiting policy ratification",
+        "simulation": "Simulation"
+    }
+}

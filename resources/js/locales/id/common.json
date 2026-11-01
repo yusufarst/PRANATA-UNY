@@ -1,0 +1,80 @@
+{
+    "nav": {
+        "main": "Menu utama",
+        "home": "Beranda",
+        "breadcrumb": "Lokasi halaman",
+        "toggle": "Buka atau tutup menu",
+        "drawer_title": "Menu",
+        "drawer_description": "Menu navigasi utama"
+    },
+    "workspace": {
+        "label": "Ruang kerja",
+        "home": "Beranda"
+    },
+    "language": {
+        "label": "Pilih bahasa",
+        "id": "ID",
+        "en": "EN",
+        "id_name": "Bahasa Indonesia",
+        "en_name": "Bahasa Inggris"
+    },
+    "account": {
+        "menu": "Menu akun",
+        "settings": "Pengaturan",
+        "logout": "Keluar"
+    },
+    "actions": {
+        "back": "Kembali",
+        "cancel": "Batal",
+        "close": "Tutup",
+        "confirm": "Konfirmasi",
+        "continue": "Lanjutkan",
+        "save": "Simpan"
+    },
+    "home": {
+        "title": "Beranda",
+        "description": "Pekerjaan yang perlu Anda tangani tampil di sini.",
+        "empty_title": "Belum ada pekerjaan",
+        "empty_description": "Pekerjaan baru akan muncul di sini begitu ada yang perlu Anda tangani."
+    },
+    "states": {
+        "loading": "Memuat…",
+        "empty_title": "Belum ada data",
+        "forbidden_title": "Anda tidak berwenang membuka halaman ini",
+        "forbidden_description": "Hubungi administrator bila Anda merasa perlu mendapat akses.",
+        "not_found_title": "Halaman tidak ditemukan",
+        "not_found_description": "Alamatnya mungkin salah, atau halamannya sudah tidak tersedia.",
+        "error_title": "Terjadi kesalahan",
+        "error_description": "Data yang sudah tersimpan tetap aman. Silakan coba lagi.",
+        "request_id": "Kode permintaan: {{id}}"
+    },
+    "errors": {
+        "home": "Kembali ke Beranda",
+        "retry": "Coba lagi",
+        "reload": "Muat ulang halaman",
+        "403": {
+            "title": "Anda tidak berwenang membuka halaman ini",
+            "description": "Hubungi administrator bila Anda merasa perlu mendapat akses."
+        },
+        "404": {
+            "title": "Halaman tidak ditemukan",
+            "description": "Alamatnya mungkin salah, atau halamannya sudah tidak tersedia."
+        },
+        "419": {
+            "title": "Sesi halaman sudah berakhir",
+            "description": "Muat ulang halaman, lalu ulangi langkah Anda. Masukan yang belum dikirim mungkin perlu diisi kembali."
+        },
+        "429": {
+            "title": "Terlalu banyak permintaan",
+            "description": "Tunggu sebentar, lalu coba lagi."
+        },
+        "500": {
+            "title": "Terjadi kesalahan pada sistem",
+            "description": "Permintaan Anda belum dapat diselesaikan. Data yang sudah tersimpan tetap aman. Silakan coba lagi."
+        },
+        "503": {
+            "title": "Sistem sedang dalam pemeliharaan",
+            "description": "Sistem belum dapat digunakan untuk sementara. Silakan coba lagi beberapa saat lagi."
+        }
+    }
+}

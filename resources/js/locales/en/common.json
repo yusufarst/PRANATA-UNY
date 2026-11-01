@@ -1,0 +1,80 @@
+{
+    "nav": {
+        "main": "Main menu",
+        "home": "Home",
+        "breadcrumb": "Page location",
+        "toggle": "Open or close the menu",
+        "drawer_title": "Menu",
+        "drawer_description": "Main navigation menu"
+    },
+    "workspace": {
+        "label": "Workspace",
+        "home": "Home"
+    },
+    "language": {
+        "label": "Choose language",
+        "id": "ID",
+        "en": "EN",
+        "id_name": "Indonesian",
+        "en_name": "English"
+    },
+    "account": {
+        "menu": "Account menu",
+        "settings": "Settings",
+        "logout": "Log out"
+    },
+    "actions": {
+        "back": "Back",
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "continue": "Continue",
+        "save": "Save"
+    },
+    "home": {
+        "title": "Home",
+        "description": "Work that needs your attention appears here.",
+        "empty_title": "No work yet",
+        "empty_description": "New work appears here as soon as something needs your attention."
+    },
+    "states": {
+        "loading": "Loading…",
+        "empty_title": "No data yet",
+        "forbidden_title": "You are not allowed to open this page",
+        "forbidden_description": "Contact an administrator if you believe you need access.",
+        "not_found_title": "Page not found",
+        "not_found_description": "The address may be wrong, or the page is no longer available.",
+        "error_title": "Something went wrong",
+        "error_description": "Data that was already saved is safe. Please try again.",
+        "request_id": "Request code: {{id}}"
+    },
+    "errors": {
+        "home": "Back to Home",
+        "retry": "Try again",
+        "reload": "Reload the page",
+        "403": {
+            "title": "You are not allowed to open this page",
+            "description": "Contact an administrator if you believe you need access."
+        },
+        "404": {
+            "title": "Page not found",
+            "description": "The address may be wrong, or the page is no longer available."
+        },
+        "419": {
+            "title": "This page session has expired",
+            "description": "Reload the page, then repeat your step. Input that was not sent may need to be entered again."
+        },
+        "429": {
+            "title": "Too many requests",
+            "description": "Wait a moment, then try again."
+        },
+        "500": {
+            "title": "Something went wrong in the system",
+            "description": "Your request could not be completed. Data that was already saved is safe. Please try again."
+        },
+        "503": {
+            "title": "The system is under maintenance",
+            "description": "The system is temporarily unavailable. Please try again in a while."
+        }
+    }
+}
