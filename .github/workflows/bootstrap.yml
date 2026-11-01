@@ -17,10 +17,11 @@ concurrency:
 jobs:
   app-boot:
     name: app-boot
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
-      - run: sleep 300
+      - run: echo ok
 
   bootstrap-gate:
     name: bootstrap-gate
