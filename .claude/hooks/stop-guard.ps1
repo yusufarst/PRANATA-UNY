@@ -12,7 +12,6 @@ try {
     $stateDir = Join-Path $projectDir '.pranata\executor'
     $checkpointPath = Join-Path $stateDir 'checkpoint.json'
     if (-not (Test-Path -LiteralPath $checkpointPath)) { exit 0 }
-    if (Test-Path -LiteralPath (Join-Path $stateDir 'hold.json')) { exit 0 }
 
     $checkpoint = Get-Content -LiteralPath $checkpointPath -Raw | ConvertFrom-Json
     if (-not $checkpoint.task_id -or $checkpoint.stage -in @('DONE', 'NONE')) { exit 0 }

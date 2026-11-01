@@ -3,6 +3,7 @@
 $script:OwnerName = 'Yusuf Arif Setiawan'
 $script:OwnerEmail = '134618411+yusufarst@users.noreply.github.com'
 $script:GuardPathRegex = '^(\.github/workflows/|\.claude/|\.githooks/|scripts/executor/)'
+$script:HeldLocks = @{}
 
 function Get-PranataRepoRoot { return (Resolve-Path (Join-Path $PSScriptRoot '..\..\..')).Path }
 
@@ -16,6 +17,7 @@ function Get-PranataStatePaths([string]$Root) {
         Context = Join-Path $dir 'context.md'
         RunnerLock = Join-Path $dir 'runner.lock'
         WatcherLock = Join-Path $dir 'watcher.lock'
+        StepLock = Join-Path $dir 'step.lock'
         Logs = Join-Path $Root '.pranata\logs'
     }
 }
@@ -64,9 +66,26 @@ function Get-PranataCheckpoint([string]$Root) {
     return $checkpoint
 }
 
-# Single-instance lock: the file holds PID and process start time, so a reused PID cannot pin it.
+# AUTONOMOUS wins if either signal says so; same rule as the guard hook.
+function Get-PranataEffectiveMode([string]$Root) {
+    if ($env:PRANATA_EXECUTOR_MODE -eq 'AUTONOMOUS') { return 'AUTONOMOUS' }
+    if ((Get-PranataCheckpoint $Root).mode -eq 'AUTONOMOUS') { return 'AUTONOMOUS' }
+    return 'SUPERVISED'
+}
+
+function New-PranataProcessStamp([int]$ProcessId) {
+    $process = Get-Process -Id $ProcessId
+    return (@{ pid = $ProcessId; started = $process.StartTime.ToUniversalTime().ToString('o') } | ConvertTo-Json -Compress)
+}
+
+# The body is informational (status, watcher). The lock itself is the open handle below.
 function Get-PranataLockHolder([string]$LockPath) {
-    $lock = Read-PranataJson $LockPath
+    if (-not (Test-Path -LiteralPath $LockPath)) { return $null }
+    try {
+        $stream = [IO.File]::Open($LockPath, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite -bor [IO.FileShare]::Delete)
+        try { $text = (New-Object IO.StreamReader($stream)).ReadToEnd() } finally { $stream.Close() }
+    } catch { return $null }
+    try { $lock = $text | ConvertFrom-Json } catch { return $null }
     if (-not $lock) { return $null }
     $process = Get-Process -Id $lock.pid -ErrorAction SilentlyContinue
     if (-not $process) { return $null }
@@ -74,30 +93,43 @@ function Get-PranataLockHolder([string]$LockPath) {
     return $lock
 }
 
+# Single instance through an exclusive handle kept for the life of the process: the OS releases it on any
+# death, so a stale lock can never be confused with a live one and no holder can delete another's lock.
 function Enter-PranataLock([string]$LockPath) {
-    # Creating with CreateNew makes acquisition atomic; a stale file is removed only after proving the holder is dead.
-    for ($attempt = 0; $attempt -lt 2; $attempt++) {
-        if (Test-Path -LiteralPath $LockPath) {
-            if (Get-PranataLockHolder $LockPath) { return $false }
-            Remove-Item -LiteralPath $LockPath -Force -ErrorAction SilentlyContinue
-        }
-        $self = Get-Process -Id $PID
-        $body = @{ pid = $PID; started = $self.StartTime.ToUniversalTime().ToString('o') } | ConvertTo-Json -Compress
-        try {
-            $stream = [IO.File]::Open($LockPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::None)
-            try {
-                $bytes = [Text.Encoding]::UTF8.GetBytes($body)
-                $stream.Write($bytes, 0, $bytes.Length)
-            } finally { $stream.Close() }
-            return $true
-        } catch [IO.IOException] { continue }
-    }
-    return $false
+    try {
+        $stream = [IO.File]::Open($LockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::Read)
+    } catch [IO.IOException] { return $false }
+    $stream.SetLength(0)
+    $bytes = [Text.Encoding]::UTF8.GetBytes((New-PranataProcessStamp $PID))
+    $stream.Write($bytes, 0, $bytes.Length)
+    $stream.Flush()
+    $script:HeldLocks[$LockPath] = $stream
+    return $true
 }
 
 function Exit-PranataLock([string]$LockPath) {
-    $lock = Read-PranataJson $LockPath
-    if ($lock -and $lock.pid -eq $PID) { Remove-Item -LiteralPath $LockPath -Force -ErrorAction SilentlyContinue }
+    if ($script:HeldLocks.ContainsKey($LockPath)) {
+        $script:HeldLocks[$LockPath].Close()
+        $script:HeldLocks.Remove($LockPath)
+        Remove-Item -LiteralPath $LockPath -Force -ErrorAction SilentlyContinue
+    }
+}
+
+# Restricted runner token (D-27): DPAPI-encrypted for this Windows user, outside the repository.
+function Get-PranataTokenPath { return (Join-Path $env:LOCALAPPDATA 'PRANATA-UNY\runner-token.dpapi') }
+
+function Read-PranataRunnerToken([string]$Path) {
+    if (-not (Test-Path -LiteralPath $Path)) { return $null }
+    $secure = ConvertTo-SecureString ([IO.File]::ReadAllText($Path).Trim())
+    $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+    try { return [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer) }
+    finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
+}
+
+function Set-PranataWatcherEnabled([bool]$Enabled) {
+    $task = Get-ScheduledTask -TaskName 'PRANATA-UNY-Watcher' -ErrorAction SilentlyContinue
+    if (-not $task) { return }
+    if ($Enabled) { [void](Enable-ScheduledTask -TaskName 'PRANATA-UNY-Watcher') } else { [void](Disable-ScheduledTask -TaskName 'PRANATA-UNY-Watcher') }
 }
 
 function Test-PranataIdentity([string]$Root) {

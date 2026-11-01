@@ -10,4 +10,6 @@ if (-not $Root) { $Root = Get-PranataRepoRoot }
 $paths = Initialize-PranataStateDirs $Root
 $hold = [ordered]@{ mode = $Mode; reason = $Reason; requested_at = (Get-Date).ToUniversalTime().ToString('o'); requested_by = 'Owner' }
 Write-PranataFileAtomic $paths.Hold ($hold | ConvertTo-Json)
+# Section 10: the scheduled watcher is disabled during a full stop. -Root marks a disposable test repo.
+if ($Mode -eq 'IMMEDIATE_SAFE_SHUTDOWN' -and -not $PSBoundParameters.ContainsKey('Root')) { Set-PranataWatcherEnabled $false }
 Write-Output "HOLD ACTIVE: $Mode"

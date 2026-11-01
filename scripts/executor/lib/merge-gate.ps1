@@ -6,6 +6,8 @@ function Get-PranataMergeFailures {
     $failures = New-Object System.Collections.ArrayList
     $bootstrapTasks = @('TASK-001', 'TASK-002', 'TASK-003', 'TASK-004')
 
+    if (-not $Facts.TaskId) { [void]$failures.Add('task: PR branch does not name a Task') }
+    if ($Facts.RiskClass -notin @('LOW', 'STANDARD', 'HIGH')) { [void]$failures.Add("task: risk class '$($Facts.RiskClass)' could not be read from the contract on main") }
     if ($Facts.Bootstrap) {
         if ($Facts.Mode -ne 'SUPERVISED') { [void]$failures.Add('bootstrap: only allowed in a SUPERVISED session') }
         if ($Facts.TaskId -notin $bootstrapTasks) { [void]$failures.Add("bootstrap: not allowed for $($Facts.TaskId) (only TASK-001 to TASK-004)") }
@@ -13,7 +15,10 @@ function Get-PranataMergeFailures {
     if ($Facts.PrState -ne 'OPEN') { [void]$failures.Add("8.1.5 PR state is $($Facts.PrState), expected OPEN") }
     if ($Facts.PrBase -ne 'main') { [void]$failures.Add("8.1.5 PR base is $($Facts.PrBase), expected main") }
     if ($Facts.IsDraft) { [void]$failures.Add('8.1.5 PR is a draft') }
-    if (-not $Facts.Authorized) { [void]$failures.Add('8.1.5 no active authorization covers this merge') }
+    if ($Facts.PrMergeable -ne 'MERGEABLE') { [void]$failures.Add("8.1.5 PR mergeable state is '$($Facts.PrMergeable)'") }
+    if (-not $Facts.Authorized) { [void]$failures.Add('8.1.5 no active authorization on main covers this Task') }
+    if (-not $Facts.ReconcileScopeOk) { [void]$failures.Add('8.3 a reconciliation PR may change documents only') }
+    if ($Facts.PrTextProblem) { [void]$failures.Add('GOV-08 PR title or body carries attribution') }
 
     if (-not $Facts.PrHeadSha -or $Facts.PrHeadSha -ne $Facts.VerifiedSha) {
         [void]$failures.Add("8.1.1 PR HEAD $($Facts.PrHeadSha) differs from verified SHA $($Facts.VerifiedSha)")
@@ -25,7 +30,8 @@ function Get-PranataMergeFailures {
     if ($Facts.ReviewStatus -ne 'PASS') { [void]$failures.Add("8.1.3 review status is '$($Facts.ReviewStatus)', expected PASS") }
     if ($Facts.OpenBlockingFindings -gt 0) { [void]$failures.Add("8.1.3 $($Facts.OpenBlockingFindings) blocking finding(s) open") }
     if ($Facts.RiskClass -eq 'HIGH' -and -not $Facts.IndependentReviewDone) { [void]$failures.Add('8.1.3 independent review missing for a HIGH Task') }
-    if ($Facts.CodexStatus -notin @('COMPLETED_NO_FINDINGS', 'COMPLETED_WITH_FINDINGS') -and -not $Facts.SubstituteReviewDone) {
+    # Section 8.3: reconciliation PRs (LOW) carry no Codex review.
+    if ($Facts.RiskClass -ne 'LOW' -and $Facts.CodexStatus -notin @('COMPLETED_NO_FINDINGS', 'COMPLETED_WITH_FINDINGS') -and -not $Facts.SubstituteReviewDone) {
         [void]$failures.Add("8.1.3 Codex status '$($Facts.CodexStatus)' is not final and no substitute review is recorded")
     }
     if (-not $Facts.MainIsAncestor) { [void]$failures.Add('8.1.4 main is not an ancestor of PR HEAD; a fast-forward is impossible') }
@@ -39,6 +45,21 @@ function Get-PranataMergeFailures {
     return ,$failures
 }
 
+# Reads the PR branch name; the Task is never taken from a caller-supplied argument.
+function Get-PranataTaskFromBranch([string]$Branch) {
+    if ($Branch -match '^(feature|chore|fix)/task-(\d{3})-') { return @{ TaskId = "TASK-$($Matches[2])"; Reconcile = $false } }
+    if ($Branch -match '^docs/reconcile-task-(\d{3})(-r\d+)?$') { return @{ TaskId = "TASK-$($Matches[1])"; Reconcile = $true } }
+    return @{ TaskId = $null; Reconcile = $false }
+}
+
+function Test-PranataAuthorizationText([string]$Records, [string]$TaskId) {
+    if ($TaskId -notmatch '^TASK-(\d{3})$') { return $false }
+    $number = [int]$Matches[1]
+    if ($number -lt 1 -or $number -gt 78) { return $false }
+    if ($Records -notmatch '(?ms)^## AUTH-013\s*$(.*?)(^## |\z)') { return $false }
+    return ($Matches[1] -match 'State: \*\*ACTIVE\*\*')
+}
+
 # Raw metadata check over every commit the merge would publish.
 function Get-PranataCommitProblems {
     param([string]$Root, [string]$Range, [string]$OwnerName, [string]$OwnerEmail)
@@ -50,9 +71,7 @@ function Get-PranataCommitProblems {
             if ($raw -notmatch "(?m)^$field (.+) \d+ [+-]\d{4}$") { [void]$problems.Add("$sha has no $field"); continue }
             if ($Matches[1] -cne $expected) { [void]$problems.Add("$sha $field is '$($Matches[1])'") }
         }
-        if ($raw -match '(?im)^co-authored-by\s*:' -or $raw -match '(?i)noreply@anthropic\.com' -or $raw -match '(?i)generated with' -or $raw -match ([string][char]0xD83E + [string][char]0xDD16)) {
-            [void]$problems.Add("$sha carries attribution text")
-        }
+        if (Test-PranataAttributionInCommand $raw) { [void]$problems.Add("$sha carries attribution text") }
     }
     return ,$problems
 }

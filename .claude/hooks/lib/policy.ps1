@@ -7,7 +7,8 @@ $script:OtherProjects = 'multiplecorp|bantukasir|elligble'
 $script:OwnRepo = 'yusufarst/PRANATA-UNY'
 $script:SandboxRepo = 'yusufarst/pranata-uny-sandbox-[a-z0-9-]+'
 $script:GuardPaths = '(^|[\\/\s"''])(\.github[\\/]workflows|\.claude|\.githooks|scripts[\\/]executor)([\\/\s"'']|$)|\.pranata[\\/]executor[\\/]hold\.json'
-$script:WriteVerbs = '(?i)\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Expand-Archive|sc|ac|ni|ri|mi|cpi|rni|del|erase|rm|rmdir|mv|cp|ren|tee|touch|sed\s+-i|git\s+(rm|mv|checkout|restore|apply|add|update-index|stash))\b|>|\.WriteAll'
+$script:RuntimeDir = '(?i)\.pranata([\\/]executor)?[\\/]?(["''\s]|$)'
+$script:WriteVerbs = '(?i)\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Expand-Archive|sc|ac|ni|ri|mi|cpi|rni|del|erase|rm|rmdir|mv|cp|ren|tee|touch|sed\s+-i|git\s+(rm|mv|checkout|restore|apply|add|update-index|stash))\b|>|::(Write|Delete|Move|Copy|Replace|Create|Append|Open)'
 
 function New-PranataVerdict([string]$Decision, [string]$Category, [string]$Reason) {
     return @{ Decision = $Decision; Category = $Category; Reason = $Reason }
@@ -96,9 +97,14 @@ function Test-PranataAttribution([string]$Text) {
     return $false
 }
 
+function Test-PranataAttributionInCommand([string]$Text) {
+    if (Test-PranataAttribution $Text) { return $true }
+    return ($Text -match '(?i)co-authored-by\s*:|\b(ai|tool|assistant|claude|codex|copilot|chatgpt|gemini)[- ](assisted|generated|author|session|by)[a-z-]*\s*:')
+}
+
 function Get-PranataSegments([string]$Command) {
     $flat = ($Command -replace '`|"|''|\\\r?\n', '')
-    $parts = [regex]::Split($flat, '\r?\n|;|&&|\|\||\||\(|\)|(?<![\w:])&(?!\w)')
+    $parts = [regex]::Split($flat, '\r?\n|;|&&|\|\||\||\(|\)|\{|\}|(?<![\w:])&(?!\w)')
     return @($parts | ForEach-Object { $_.Trim() } | Where-Object { $_ })
 }
 
@@ -110,7 +116,7 @@ function Get-PranataInvocations([string]$Segment, [string]$Name) {
     $tokens = Get-PranataTokens $Segment
     $result = New-Object System.Collections.ArrayList
     for ($i = 0; $i -lt $tokens.Count; $i++) {
-        if ($tokens[$i] -match "(?i)(^|[\\/&])$Name(\.exe|\.cmd)?$") {
+        if ($tokens[$i] -match "(?i)(^|[\\/&=,{])$Name(\.exe|\.cmd)?$") {
             $rest = @()
             if ($i + 1 -lt $tokens.Count) { $rest = @($tokens[($i + 1)..($tokens.Count - 1)]) }
             [void]$result.Add([object[]]$rest)
@@ -120,7 +126,7 @@ function Get-PranataInvocations([string]$Segment, [string]$Name) {
 }
 
 function Test-PranataGit {
-    param([string[]]$GitArgs, [string]$CurrentBranch, [string]$Original, [hashtable]$Facts)
+    param([string[]]$GitArgs, [string]$CurrentBranch, [bool]$SwitchesBranch)
     $i = 0
     $configOverrides = @()
     while ($i -lt $GitArgs.Count -and $GitArgs[$i] -like '-*') {
@@ -151,7 +157,7 @@ function Test-PranataGit {
     switch ($sub) {
         'push' {
             foreach ($a in $rest) {
-                if ($a -match '^(--force.*|--mirror|--all|--tags|--delete|--prune|--no-verify|--follow-tags)$' -or $a -match '^-[a-zA-Z]*[fd][a-zA-Z]*$') {
+                if ($a -match '^(--force.*|--mirror|--all|--branches|--tags|--delete|--prune|--no-verify|--follow-tags)$' -or $a -match '^-[a-zA-Z]*[fd][a-zA-Z]*$') {
                     return (Deny 'git-push-forbidden' "git push $a is forbidden.")
                 }
             }
@@ -159,14 +165,14 @@ function Test-PranataGit {
                 return (Deny 'git-push-remote' 'Pushing to anything but origin is forbidden.')
             }
             $refspecs = @($positional | Select-Object -Skip 1)
-            if ($refspecs.Count -eq 0 -and $CurrentBranch -eq 'main') {
+            if ($refspecs.Count -eq 0 -and ($SwitchesBranch -or -not $CurrentBranch -or $CurrentBranch -eq 'main')) {
                 return (Deny 'git-push-main' 'Direct push to main outside merge-verified.ps1 is forbidden.')
             }
             foreach ($spec in $refspecs) {
                 if ($spec -match '^\+') { return (Deny 'git-push-forbidden' 'Forced refspecs are forbidden.') }
                 if ($spec -match '^:') { return (Deny 'git-push-delete' 'Deleting remote branches is forbidden.') }
                 $dest = ($spec -split ':')[-1]
-                if ($dest -in @('main', 'refs/heads/main') -or ($dest -eq 'HEAD' -and $CurrentBranch -eq 'main')) {
+                if ($dest -in @('main', 'refs/heads/main') -or ($dest -eq 'HEAD' -and ($SwitchesBranch -or -not $CurrentBranch -or $CurrentBranch -eq 'main'))) {
                     return (Deny 'git-push-main' 'Direct push to main outside merge-verified.ps1 is forbidden.')
                 }
             }
@@ -245,14 +251,13 @@ function Test-PranataDatabase([string]$Segment) {
         $hostValue = $null; $port = $null
         if ($Segment -match '(?i)(\s-h\s*|\s--host[= ])([^\s]+)') { $hostValue = $Matches[2] }
         if ($Segment -match '(?i)(\s-p\s*|\s--port[= ])([^\s]+)') { $port = $Matches[2] }
-        $insideContainer = $Segment -match '(?i)\bexec\b.*\bpranata-postgres\b'
-        if (-not $insideContainer -and -not $hostValue) {
-            return (Deny 'db-foreign-host' 'Name the PRANATA host explicitly (-h localhost -p 55432) or use docker exec pranata-postgres.')
+        if (-not $hostValue) {
+            return (Deny 'db-foreign-host' 'Name the PRANATA host explicitly (-h localhost -p 55432).')
         }
         if ($hostValue -and $hostValue -notmatch '(?i)^(localhost|127\.0\.0\.1|pranata-postgres)$') {
             return (Deny 'db-foreign-host' 'Database host is outside pranata-postgres.')
         }
-        if (-not $insideContainer -and $port -ne '55432') { return (Deny 'db-foreign-host' 'Only port 55432 reaches pranata-postgres.') }
+        if ($port -ne '55432') { return (Deny 'db-foreign-host' 'Only port 55432 reaches pranata-postgres.') }
         if ($Segment -notmatch '(?i)\bpranata_(dev|test\w*|e2e_\w+|perf)\b') {
             return (Deny 'db-foreign-name' 'Database name is outside the PRANATA set.')
         }
@@ -361,7 +366,7 @@ function Test-PranataGhApi([string[]]$ApiArgs) {
         if ($a -match '^--method=(.+)$') { $method = $Matches[1].ToUpperInvariant(); continue }
         if ($a -match '^-X(.+)$') { $method = $Matches[1].ToUpperInvariant(); continue }
         if ($a -in @('-f', '-F', '--field', '--raw-field', '--input')) { $hasFields = $true; $i++; continue }
-        if ($a -match '^(--field|--raw-field|--input)=') { $hasFields = $true; continue }
+        if ($a -match '^(--field|--raw-field|--input)=' -or $a -match '^-[fF].') { $hasFields = $true; continue }
         if ($a -in @('-H', '--header', '-q', '--jq', '-t', '--template', '--hostname', '--cache', '-p', '--preview')) { $i++; continue }
         if ($a -like '-*') { continue }
         if (-not $endpoint) { $endpoint = $a }
@@ -370,7 +375,7 @@ function Test-PranataGhApi([string[]]$ApiArgs) {
     if ($method -eq 'GET' -and $hasFields -and $endpoint -ne 'graphql') { $method = 'POST' }
     if ($endpoint -eq 'graphql') {
         $joined = $ApiArgs -join ' '
-        if ($joined -match '(?i)\bmutation\b' -or $joined -match '--input') { return (Deny 'gh-api-admin' 'GraphQL mutations are forbidden.') }
+        if ($joined -match '(?i)\bmutation\b|=@|--input') { return (Deny 'gh-api-admin' 'GraphQL mutations are forbidden.') }
         return (New-PranataVerdict 'allow' '' '')
     }
     $path = $endpoint.TrimStart('/')
@@ -405,7 +410,7 @@ function Test-PranataShellPaths {
         $token = $m.Value.Trim('"', "'")
         if ($token -match '^--?[\w-]+=(.+)$') { $token = $Matches[1] }
         $isAbsolute = $token -match '^[A-Za-z]:[\\/]' -or $token -match '^/[a-zA-Z](/|$)' -or $token -match '^\\\\'
-        $hasParent = ($token -notmatch '\s') -and ($token -match '(^|[\\/])\.\.([\\/]|$)') -and ($token -notmatch '^(https?:|refs/|[\w./-]*\.\.\.?[\w./-]*$)')
+        $hasParent = ($token -notmatch '\s') -and ($token -match '(^|[\\/])\.\.([\\/]|$)') -and ($token -notmatch '^https?:')
         if (-not ($isAbsolute -or $hasParent)) { continue }
         if ($isAbsolute -and $token -match '(?i)^([a-z]:[\\/]|/[a-z]/)(windows|program files( \(x86\))?|programdata)([\\/]|$)') { continue }
         $token = $token.Replace([string][char]1, ' ')
@@ -451,13 +456,13 @@ function Test-PranataCommand {
     if ($Mode -eq 'AUTONOMOUS') {
         if ($Command -match '(?i)release-hold\.ps1') { return (Deny 'hold-owner-only' 'Releasing a hold is Owner-only.') }
         if ($Command -match '(?i)(^|[\s\\/])merge-verified\.ps1\b.*-Bootstrap') { return (Deny 'merge-bootstrap' 'Bootstrap merge is SUPERVISED only.') }
-        foreach ($segment in (Get-PranataSegments $Command)) {
-            if ($segment -match $script:GuardPaths -and ($segment -match $script:WriteVerbs)) {
-                return (Deny 'guard-path-autonomous' 'Guardrail paths are read-only in AUTONOMOUS mode.')
-            }
+        $flat = ($Command -replace '`', '')
+        if (($flat -match $script:GuardPaths -or $flat -match $script:RuntimeDir) -and ($flat -match $script:WriteVerbs)) {
+            return (Deny 'guard-path-autonomous' 'Guardrail paths are read-only in AUTONOMOUS mode.')
         }
     }
 
+    $switchesBranch = $Command -match '(?i)\bgit(\.exe)?\b[^;|&]*\b(switch|checkout)\b'
     foreach ($segment in (Get-PranataSegments $Command)) {
         if ($segment -match '(?i)\bGIT_(AUTHOR|COMMITTER)_(NAME|EMAIL|DATE)\b|\bGIT_CONFIG_(GLOBAL|SYSTEM|COUNT|PARAMETERS|KEY|VALUE)|\bGIT_(DIR|WORK_TREE|SSH_COMMAND|ASKPASS)\b|\bGH_(HOST|REPO|ENTERPRISE_TOKEN)\b') {
             return (Deny 'git-env-override' 'Overriding Git or gh identity and location through the environment is forbidden.')
@@ -476,7 +481,7 @@ function Test-PranataCommand {
             if ($check.Decision -eq 'deny') { return $check }
         }
         foreach ($invocation in (Get-PranataInvocations $segment 'git')) {
-            $check = Test-PranataGit -GitArgs $invocation -CurrentBranch $Facts['CurrentBranch'] -Original $Command -Facts $Facts
+            $check = Test-PranataGit -GitArgs $invocation -CurrentBranch $Facts['CurrentBranch'] -SwitchesBranch $switchesBranch
             if ($check.Decision -eq 'deny') { return $check }
         }
         foreach ($invocation in (Get-PranataInvocations $segment 'docker')) {
@@ -491,7 +496,7 @@ function Test-PranataCommand {
 
     $wantsMessage = $Command -match '(?i)\bgit(\.exe)?\b.*\bcommit\b|\bgh(\.exe)?\b.*\b(pr|issue|api)\b'
     if ($wantsMessage) {
-        if (Test-PranataAttribution $Command) {
+        if (Test-PranataAttributionInCommand $Command) {
             return (Deny 'attribution' 'Commit or PR text carries AI/tool attribution, which GOV-08 forbids.')
         }
         $check = Test-PranataBodyFiles -Segment '' -Original $Command -Cwd $Cwd

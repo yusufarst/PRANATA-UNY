@@ -48,7 +48,7 @@ try {
         }
         $command = [string]$toolInput.command
         $facts = @{
-            CurrentBranch = $(if ($command -match '\bpush\b') { (& git -C $projectDir rev-parse --abbrev-ref HEAD 2>$null) } else { $null })
+            CurrentBranch = $(if ($command -match '\bpush\b') { (& git -C $cwd rev-parse --abbrev-ref HEAD 2>$null) } else { $null })
             ProcessCommandLine = {
                 param($id)
                 $process = Get-CimInstance Win32_Process -Filter "ProcessId = $id" -ErrorAction SilentlyContinue

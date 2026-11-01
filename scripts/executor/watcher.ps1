@@ -41,29 +41,31 @@ if (-not (Enter-PranataLock $paths.WatcherLock)) { Write-Output 'REFUSED: anothe
 
 try {
     $hold = Read-PranataJson $paths.Hold
-    if ($hold) { Write-WatcherLog "hold active ($($hold.mode)); not restarting anything"; exit 0 }
+    # SHUTDOWN_AFTER_CURRENT_TASK still finishes the active Task, so a dead runner is restarted until it is DONE.
+    if ($hold -and $hold.mode -eq 'IMMEDIATE_SAFE_SHUTDOWN') { Write-WatcherLog "hold active ($($hold.mode)); not restarting anything"; exit 0 }
 
     $checkpoint = Get-PranataCheckpoint $Root
-    $runner = $null
-    if (Test-Path -LiteralPath $paths.RunnerLock) { $runner = Get-PranataLockHolder $paths.RunnerLock }
+    $runner = Get-PranataLockHolder $paths.RunnerLock
+    $step = Get-PranataLockHolder $paths.StepLock
 
     $heartbeatAge = [double]::PositiveInfinity
     if (Test-Path -LiteralPath $paths.Heartbeat) { $heartbeatAge = ((Get-Date) - (Get-Item -LiteralPath $paths.Heartbeat).LastWriteTime).TotalMinutes }
 
-    # PRANATA-owned activity only: the command line must name this repository.
+    # PRANATA-owned activity only: tests, migrations and builds name this repository on their command line.
     $rootPattern = [regex]::Escape($Root)
     $active = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
         $_.ProcessId -ne $PID -and $_.CommandLine -and $_.CommandLine -match $rootPattern -and $_.CommandLine -notmatch 'watcher\.ps1'
     })
     $waiting = $checkpoint.wait_until -and ([datetime]$checkpoint.wait_until) -gt (Get-Date)
-    $idle = (-not $runner) -and ($active.Count -eq 0) -and (-not $waiting) -and ($heartbeatAge -ge $IdleMinutes)
+    # Section 9.2: idle needs all of these. No code change is not evidence, and neither is a quiet step.
+    $idle = (-not $runner) -and (-not $step) -and ($active.Count -eq 0) -and (-not $waiting) -and ($heartbeatAge -ge $IdleMinutes)
 
-    Write-WatcherLog ("runner={0} active={1} waiting={2} heartbeat_min={3:N1} idle={4} stage={5}" -f [bool]$runner, $active.Count, [bool]$waiting, $heartbeatAge, $idle, $checkpoint.stage)
+    Write-WatcherLog ("runner={0} step={1} active={2} waiting={3} heartbeat_min={4:N1} idle={5} stage={6}" -f [bool]$runner, [bool]$step, $active.Count, [bool]$waiting, $heartbeatAge, $idle, $checkpoint.stage)
 
-    if ($runner) { exit 0 }
+    if (-not $idle) { exit 0 }
     if ($checkpoint.mode -ne 'AUTONOMOUS') { exit 0 }
-    if (-not $checkpoint.task_id -or $checkpoint.stage -in @('NONE', 'BLOCKED', 'DONE')) { exit 0 }
-    if ($waiting -or $active.Count -gt 0) { exit 0 }
+    if (-not $checkpoint.task_id -or $checkpoint.stage -in @('NONE', 'BLOCKED')) { exit 0 }
+    if ($checkpoint.stage -eq 'DONE' -and $hold) { exit 0 }
     if ($NoStart) { Write-WatcherLog 'runner is down; -NoStart given'; exit 0 }
 
     Write-WatcherLog 'runner is down with eligible work and no hold; starting one runner'

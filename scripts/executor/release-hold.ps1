@@ -21,4 +21,5 @@ foreach ($lockPath in @($paths.RunnerLock, $paths.WatcherLock)) {
     }
 }
 Remove-Item -LiteralPath $paths.Hold -Force
+if (-not $PSBoundParameters.ContainsKey('Root')) { Set-PranataWatcherEnabled $true }
 Write-Output 'HOLD RELEASED'
