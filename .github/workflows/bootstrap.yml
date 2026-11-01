@@ -17,6 +17,13 @@ concurrency:
 jobs:
   app-boot:
     name: app-boot
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - run: echo ok
+
+  extra:
+    name: extra
     if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 8
