@@ -1,6 +1,6 @@
 # Ketertelusuran workflow — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
 Dokumen ini memiliki **pemetaan P3 dan penilaian dampak workflow seluruh GAP**. [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) adalah indeks; [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md) memiliki tujuan/batas/handoff; [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki keadaan/TR; [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki RT; [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) memiliki IX. Semua ID di sini adalah locator perencanaan, bukan Tasks atau kriteria penerimaan aplikasi yang sudah diuji.
 

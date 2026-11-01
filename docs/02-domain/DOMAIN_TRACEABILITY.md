@@ -1,6 +1,6 @@
 # Domain traceability — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
 Dokumen ini memiliki pemetaan P2 dan penilaian kontribusi P2 terhadap GAP; tidak memiliki rumusan aturan atau status penutupan GAP. [DOMAIN_MODEL](DOMAIN_MODEL.md) memiliki DC-001–DC-079; [BUSINESS_RULES](BUSINESS_RULES.md) memiliki rumusan, status, authority, sumber dan kualifikasi BR/INV. [V1_SCOPE](../01-product/V1_SCOPE.md) tetap memiliki 21 CAP; [ACCEPTANCE_CRITERIA](../01-product/ACCEPTANCE_CRITERIA.md) tetap memiliki 28 AC dan 4 target NFR usulan. Semua definisi produk P1 dipertahankan dengan prasyarat validasinya.
 

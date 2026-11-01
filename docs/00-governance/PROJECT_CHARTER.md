@@ -1,6 +1,6 @@
 # Project charter
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment approved: APPR-005 (AUTH-010 remediation) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Identity and purpose
 

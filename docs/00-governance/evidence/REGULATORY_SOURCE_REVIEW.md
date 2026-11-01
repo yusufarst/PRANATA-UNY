@@ -1,6 +1,6 @@
 # Regulatory source review
 
-Status: VERIFYING — AUTH-012 planning candidate, not approved | Custodian: Planning Agent | Reviewed on 2026-10-30 (Asia/Jakarta). This document records what the supplied regulatory instruments and SOP diagrams say about procurement scope, actors, methods, values, documents and controls, with locators. It does not decide which regime governs a UNY funding source ([GAP-026](../GAP_REGISTER.md)), interpret the inconsistencies of PR 34/2023 (GAP-027), activate any rule, or make any source current UNY policy.
+Status: APPROVED (APPR-006) — evidence record | Custodian: Planning Agent | Reviewed on 2026-10-30 (Asia/Jakarta). This document records what the supplied regulatory instruments and SOP diagrams say about procurement scope, actors, methods, values, documents and controls, with locators. It does not decide which regime governs a UNY funding source ([GAP-026](../GAP_REGISTER.md)), interpret the inconsistencies of PR 34/2023 (GAP-027), activate any rule, or make any source current UNY policy.
 
 ## Review method and limits
 

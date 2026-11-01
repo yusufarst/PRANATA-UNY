@@ -1,6 +1,6 @@
 # Interaction contracts — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
 Dokumen ini memiliki **24 kontrak interaksi reusable IX-001–IX-024** pada tingkat intent/hasil produk. Kontrak tidak menentukan komponen, form fields final, layout, API, penegakan izin, mekanisme retry atau state database. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki wording state/transition WF; interaksi di bawah hanya dapat memakai transition yang applicable pada WF terkait. Tidak semua IX berlaku pada semua WF, dan generic review/accept tidak menambah official approval chain.
 

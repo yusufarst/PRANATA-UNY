@@ -1,6 +1,6 @@
 # Workflow contracts — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
 Dokumen ini memiliki **tujuan, batas, pemicu, prasyarat, bukti, penyelesaian dan handoff WF-001–WF-033**. [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) adalah indeks. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) memiliki satu-satunya rumusan state dan tindakan/transisi TR; tabel yang ditautkan pada setiap kontrak adalah bagian kontrak tersebut, bukan salinan state machine. [ROUTE_CONTRACTS](ROUTE_CONTRACTS.md) memiliki tujuan navigasi RT, [INTERACTION_CONTRACTS](INTERACTION_CONTRACTS.md) hasil interaksi IX, dan [EXCEPTION_REVISION_PATTERNS](EXCEPTION_REVISION_PATTERNS.md) pola EP.
 

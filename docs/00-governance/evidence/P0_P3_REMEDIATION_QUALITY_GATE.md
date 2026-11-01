@@ -1,6 +1,6 @@
 # P0–P3 remediation quality gate
 
-Status: VERIFYING (AUTH-010 remediation candidate evidence) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED evidence (APPR-005; AUTH-010 remediation) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
 This record is the quality evidence for the P0–P3 remediation amendment candidate prepared under [AUTH-010](../APPROVAL_RECORDS.md#auth-010). It is not an approval: the candidate stays **VERIFYING / NOT YET APPROVED** until an explicit Owner decision (reserved APPR-005, not recorded). The exact candidate identity is [P0_P3_REMEDIATION_ARTIFACT_MANIFEST](P0_P3_REMEDIATION_ARTIFACT_MANIFEST.json), which excludes itself; its own byte size and SHA-256 are reported in the session final report, never embedded. Current state is owned by [PHASE_STATUS](../../PHASE_STATUS.md) and [CURRENT_HANDOFF](../../handoff/CURRENT_HANDOFF.md).
 

@@ -1,6 +1,6 @@
 # Cakupan referensi produk
 
-Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
+Status: Approved baseline: published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
 
 Dokumen ini memiliki pemetaan bukti ke kemampuan produk, bukan aturan pengadaan, kebijakan akuntansi, izin pengguna, atau rancangan antarmuka final. Otorisasi penyusunan P1 tercatat dalam [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004); persetujuan atas kandidat P1 yang direview kini diberikan melalui [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002), tanpa mengubah klasifikasi/kekuatan bukti atau menutup GAP. [V1_SCOPE](V1_SCOPE.md) memiliki definisi dan prioritas CAP-01–CAP-21; [ACCEPTANCE_CRITERIA](ACCEPTANCE_CRITERIA.md) memiliki hasil penerimaannya. Kehadiran sumber dalam tabel tidak dengan sendirinya menambah cakupan V1. Locator bagian U-002 pada dokumen ini adalah provenance; otoritas operatif P1 adalah keputusan Owner yang tercatat di DECISION_INDEX beserta APPR-002 (aturan authority-basis di SOURCE_OF_TRUTH).
 

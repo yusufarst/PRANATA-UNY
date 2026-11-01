@@ -1,6 +1,6 @@
 # Product acceptance criteria — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Authorization: [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
+Status: Approved baseline: published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Authorization: [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
 
 Dokumen ini memiliki kriteria penerimaan **produk V1 yang diusulkan**, bukan pengujian teknis atau bukti aplikasi sudah berjalan. [V1_SCOPE](V1_SCOPE.md) memiliki prioritas CAP-01–CAP-23; [REFERENCE_COVERAGE](REFERENCE_COVERAGE.md) memiliki pemetaan bukti. ID AC/NFR tetap stabil. Persetujuan Owner atas P1 tidak menyelesaikan aturan P2/P3/P5/P6/P7 yang masih terbuka.
 

@@ -1,6 +1,6 @@
 # Domain responsibilities — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
 Dokumen ini memiliki makna tanggung jawab dan batas pemetaannya. Istilah/definisi konsep DC dimiliki [DOMAIN_GLOSSARY](DOMAIN_GLOSSARY.md); hubungan, klasifikasi kebenaran dan identitas konseptual dimiliki [DOMAIN_MODEL](DOMAIN_MODEL.md). Seluruh rumusan aturan BR/INV dimiliki [BUSINESS_RULES](BUSINESS_RULES.md). P2 disetujui Owner under APPR-003 dengan semua kualifikasi dan kebutuhan validasi tanggung jawab tetap berlaku. Semua GAP yang disebut tetap OPEN dalam [GAP_REGISTER](../00-governance/GAP_REGISTER.md).
 

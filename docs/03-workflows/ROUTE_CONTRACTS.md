@@ -1,6 +1,6 @@
 # Route and navigation contracts — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
 Dokumen ini memiliki **36 kontrak rute konseptual RT-001–RT-036**, termasuk kesinambungan konteks dan jalur kembali. Key rute adalah nama intent perencanaan, bukan URL, Laravel route, kontrak API atau rancangan halaman. Satu kontrak dapat mempunyai konteks daftar, detail dan tindakan anak; ini tidak menetapkan jumlah halaman atau endpoint. ID konseptual menunjuk objek domain yang perlu dapat dibedakan menurut [DOMAIN_MODEL](../02-domain/DOMAIN_MODEL.md#identitas-dan-keunikan-konseptual), bukan format identifier atau kunci database.
 

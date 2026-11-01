@@ -1,6 +1,6 @@
 # Business rules — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
 Dokumen ini memiliki **kata-kata kanonik 39 aturan BR-001–BR-039 dan 24 invariant INV-001–INV-024**. [DOMAIN_GLOSSARY](DOMAIN_GLOSSARY.md) memiliki istilah, [DOMAIN_MODEL](DOMAIN_MODEL.md) konsep/relasi, [DOMAIN_RESPONSIBILITIES](DOMAIN_RESPONSIBILITIES.md) tanggung jawab, [DOMAIN_LIFECYCLES](DOMAIN_LIFECYCLES.md) makna lifecycle, dan [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) pemetaan balik. Dokumen lain merujuk ID ini; tidak membuat salinan aturan yang dapat bersaing.
 

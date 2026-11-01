@@ -1,6 +1,6 @@
 # Kebutuhan keputusan workflow — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
 Dokumen terfokus ini mengelompokkan **dua belas kebutuhan validasi**, WDR-01–WDR-12, bukan keputusan Owner baru atau Tasks. [GAP_REGISTER](../00-governance/GAP_REGISTER.md) memiliki pertanyaan/status kanonik; seluruh GAP-001–GAP-029 tetap OPEN. [WORKFLOW_TRACEABILITY](WORKFLOW_TRACEABILITY.md#penilaian-seluruh-gap-dari-perspektif-workflow-p3) memiliki penilaian P3. [STATE_TRANSITIONS](STATE_TRANSITIONS.md) adalah pemilik arti TR yang disebut; rentang di bawah menyebut hanya ID TR yang benar-benar dialokasikan. Referensi ini tidak merumuskan state/transisi kedua.
 

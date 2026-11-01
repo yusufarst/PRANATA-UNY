@@ -1,6 +1,6 @@
 # V1 scope — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
+Status: Approved baseline: published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
 
 Dokumen ini memiliki **usulan batas rilis dan ID kapabilitas CAP-01–CAP-23**. Definisi/nilai produk dimiliki [PRODUCT_OVERVIEW](PRODUCT_OVERVIEW.md), ukuran penerimaan dimiliki [ACCEPTANCE_CRITERIA](ACCEPTANCE_CRITERIA.md), pemetaan sumber dimiliki [REFERENCE_COVERAGE](REFERENCE_COVERAGE.md), dan arah pengalaman dimiliki [PRODUCT_EXPERIENCE_DIRECTION](PRODUCT_EXPERIENCE_DIRECTION.md). Otorisasi [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) hanya mengizinkan perencanaan P1. Kandidat yang direview kini disetujui melalui [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002) pada tingkat definisi produk P1, dengan semua kualifikasi usulan/hipotesis dan kewajiban validasi tetap berlaku.
 

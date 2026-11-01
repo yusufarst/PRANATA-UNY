@@ -1,6 +1,6 @@
 # State and transition contracts — PRANATA UNY
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P3 | Preparation: [AUTH-008](../00-governance/APPROVAL_RECORDS.md#auth-008) (HISTORICAL / COMPLETED) | Approval/checkpoint: [APPR-004](../00-governance/APPROVAL_RECORDS.md#appr-004) / [AUTH-009](../00-governance/APPROVAL_RECORDS.md#auth-009)
 
 Dokumen ini memiliki **rumusan state dan transition/action TR P3**. Tujuan, scope, trigger, DC/BR/INV/CAP/AC/GAP dan handoff fase tiap workflow dimiliki [WORKFLOW_CONTRACTS](WORKFLOW_CONTRACTS.md). [WORKFLOW_CATALOG](WORKFLOW_CATALOG.md) hanya indeks; RT/IX/EP memiliki kontrak navigasi/interaksi/pola kegagalan. State IDs adalah referensi lokal per workflow, bukan enum atau database fields. **WF-001 context-only; WF-002–WF-033 mempunyai state workflow/konteks, total 32 stateful workflows.**
 

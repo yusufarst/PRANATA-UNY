@@ -1,6 +1,6 @@
 # Gap register
 
-Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 P0–P11 planning) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: published 0e3f7de · Amendments approved: APPR-005, APPR-006 | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
 
 All entries below are **UNRESOLVED_GAP**, **OPEN**, with no resolution/approval claimed. Sources may establish that a question exists without establishing its answer. Owner/domain specialists validate business/accounting authority; the Planning Agent records safe evidence and incorporates an actual decision in the separately authorized phase. These gaps block dependent later specifications/Tasks, not completion of the P0 governance package. P0 Owner approval is recorded separately as [APPR-001](APPROVAL_RECORDS.md#appr-001); it approves this record without resolving any entry.
 

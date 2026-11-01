@@ -1,6 +1,6 @@
 # Arah pengalaman produk
 
-Status: APPROVED (published 0e3f7de) · Amendment candidate: VERIFYING (AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Authorization: [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
+Status: APPROVED (published 0e3f7de) · Amendment approved: APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Authorization: [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
 
 Dokumen ini menetapkan arah pengalaman produk dan batas penerimaan **CAP-20** pada [V1_SCOPE](V1_SCOPE.md), berdasarkan mandat P1 [U-002](../00-governance/SOURCE_INVENTORY.md#u-002-p1-owner-request) dan [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004). Dokumen ini bukan desain layar, Design System, kontrak rute, atau izin memulai P7. Kriteria penerimaan produk dimiliki [ACCEPTANCE_CRITERIA](ACCEPTANCE_CRITERIA.md); ruang lingkup dimiliki [V1_SCOPE](V1_SCOPE.md).
 

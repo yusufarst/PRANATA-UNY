@@ -1,6 +1,6 @@
 # Change control
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidate: VERIFYING (AUTH-010) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-004, published 0e3f7de · Amendment approved: APPR-005 (AUTH-010 remediation) | Updated: 2026-10-06 (Asia/Jakarta) | Custodian: Planning Agent
 
 This document owns how changes are classified, reviewed, and recorded. [SOURCE_OF_TRUTH](SOURCE_OF_TRUTH.md) owns authority precedence and document lifecycle; [APPROVAL_RECORDS](APPROVAL_RECORDS.md) owns approval evidence. The Owner retains final decision authority.
 

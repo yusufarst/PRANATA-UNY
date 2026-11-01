@@ -1,6 +1,6 @@
 # Domain decision requests — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
+Status: Approved baseline: published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P2 | Preparation: [AUTH-006](../00-governance/APPROVAL_RECORDS.md#auth-006), completed | Approval: [APPR-003](../00-governance/APPROVAL_RECORDS.md#appr-003) | Checkpoint: [AUTH-007](../00-governance/APPROVAL_RECORDS.md#auth-007), automatically completed after verified publication
 
 Dokumen ini mengelompokkan kebutuhan validasi yang belum tersedia; bukan pengganti [GAP_REGISTER](../00-governance/GAP_REGISTER.md), bukan keputusan Owner baru, dan bukan permintaan memulai fase berikutnya. Semua GAP tetap OPEN. [DOMAIN_TRACEABILITY](DOMAIN_TRACEABILITY.md) memiliki kelas kontribusi P2 tiap GAP; [BUSINESS_RULES](BUSINESS_RULES.md) memiliki rumusan/status aturan. DR-01–DR-07 adalah locators kebutuhan keputusan, **bukan execution Tasks**.
 

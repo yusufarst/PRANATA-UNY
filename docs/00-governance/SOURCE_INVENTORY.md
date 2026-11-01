@@ -1,6 +1,6 @@
 # Safe source inventory
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 P0–P11 planning) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved baseline: APPR-001–APPR-006 (P0–P11 approved at 851013f) · Planning Freeze FRZ-001 | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
 
 ## Authority and coverage
 

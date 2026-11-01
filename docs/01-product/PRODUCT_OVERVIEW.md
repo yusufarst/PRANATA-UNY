@@ -1,6 +1,6 @@
 # Product overview — PRANATA UNY
 
-Status: Approved baseline: published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 compatibility amendment 2026-10-30) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
+Status: Approved baseline: published 0e3f7de · Amendments approved: APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P1 | Approval: [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002)
 
 Dokumen ini disusun berdasarkan [AUTH-004](../00-governance/APPROVAL_RECORDS.md#auth-004) dan kandidat yang direview disetujui Owner melalui [APPR-002](../00-governance/APPROVAL_RECORDS.md#appr-002), dengan seluruh hipotesis, usulan dan kewajiban validasinya tetap dipertahankan. Otorisasi perencanaan sendiri bukan persetujuan hasil P1. Arah Owner yang sudah berlaku tetap dimiliki [DECISION_LOG](../00-governance/DECISION_LOG.md); seluruh GAP-001–GAP-025 tetap OPEN dalam [GAP_REGISTER](../00-governance/GAP_REGISTER.md). Status fase dan otorisasi terkini dimiliki PHASE_STATUS dan CURRENT_HANDOFF.
 
