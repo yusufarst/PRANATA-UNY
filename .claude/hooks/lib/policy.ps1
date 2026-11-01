@@ -8,7 +8,7 @@ $script:OwnRepo = 'yusufarst/PRANATA-UNY'
 $script:SandboxRepo = 'yusufarst/pranata-uny-sandbox-[a-z0-9-]+'
 $script:GuardPaths = '(^|[\\/\s"''])(\.github[\\/]workflows|\.claude|\.githooks|scripts[\\/]executor)([\\/\s"'']|$)|\.pranata[\\/]executor[\\/]hold\.json'
 $script:RuntimeDir = '(?i)\.pranata([\\/]executor)?[\\/]?\*?(["''\s]|$)'
-$script:WriteVerbs = '(?i)\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Expand-Archive|sc|ac|ni|ri|mi|cpi|rni|del|erase|rm|rmdir|mv|cp|ren|tee|touch|sed\s+-i|git\b.*\b(rm|mv|checkout|restore|apply|add|update-index|stash|reset|cherry-pick|merge|pull))\b|stage\.ps1|>|::(Write|Delete|Move|Copy|Replace|Create|Append|Open)'
+$script:WriteVerbs = '(?i)\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Expand-Archive|sc|ac|ni|ri|mi|cpi|rni|del|erase|rm|rmdir|mv|cp|ren|tee|touch|sed\s+-i|git\b.*\b(rm|mv|checkout|restore|apply|add|update-index|stash|reset|cherry-pick|merge|pull))\b|>|::(Write|Delete|Move|Copy|Replace|Create|Append|Open)'
 
 function New-PranataVerdict([string]$Decision, [string]$Category, [string]$Reason) {
     return @{ Decision = $Decision; Category = $Category; Reason = $Reason }
@@ -467,6 +467,13 @@ function Test-PranataCommand {
         if ($Command -match '(?i)release-hold\.ps1') { return (Deny 'hold-owner-only' 'Releasing a hold is Owner-only.') }
         if ($Command -match '(?i)(^|[\s\\/])merge-verified\.ps1\b.*-Bootstrap') { return (Deny 'merge-bootstrap' 'Bootstrap merge is SUPERVISED only.') }
         $flat = ($Command -replace '`', '')
+        # stage.ps1 lives in a guardrail folder and is allowed; only its targets decide. The script refuses them too.
+        if ($flat -match '(?i)stage\.ps1') {
+            $targets = $flat -replace '(?i)scripts[\\/]executor[\\/]stage\.ps1', ''
+            if ($targets -match $script:GuardPaths -or $targets -match $script:RuntimeDir) {
+                return (Deny 'guard-path-autonomous' 'Guardrail paths are read-only in AUTONOMOUS mode.')
+            }
+        }
         if (($flat -match $script:GuardPaths -or $flat -match $script:RuntimeDir) -and ($flat -match $script:WriteVerbs)) {
             return (Deny 'guard-path-autonomous' 'Guardrail paths are read-only in AUTONOMOUS mode.')
         }
