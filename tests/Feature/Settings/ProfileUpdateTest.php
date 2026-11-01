@@ -33,6 +33,41 @@ test('profile information can be updated', function () {
     expect($user->email_verified_at)->toBeNull();
 });
 
+test('a mixed-case email is stored in lowercase and still allows login', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->patch(route('profile.update'), [
+            'name' => 'Test User',
+            'email' => 'Test.User@Example.com',
+        ])
+        ->assertSessionHasNoErrors();
+
+    expect($user->refresh()->email)->toBe('test.user@example.com');
+
+    $this->post(route('logout'));
+    $this->assertGuest();
+
+    $this->post(route('login.store'), [
+        'email' => 'Test.User@Example.com',
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticatedAs($user);
+});
+
+test('a mixed-case email cannot duplicate an existing address', function () {
+    User::factory()->create(['email' => 'taken@example.com']);
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->patch(route('profile.update'), [
+            'name' => 'Test User',
+            'email' => 'Taken@Example.com',
+        ])
+        ->assertSessionHasErrors('email');
+});
+
 test('email verification status is unchanged when the email address is unchanged', function () {
     $user = User::factory()->create();
 

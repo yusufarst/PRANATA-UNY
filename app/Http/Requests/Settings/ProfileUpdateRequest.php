@@ -5,10 +5,24 @@ namespace App\Http\Requests\Settings;
 use App\Concerns\ProfileValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class ProfileUpdateRequest extends FormRequest
 {
     use ProfileValidationRules;
+
+    /**
+     * Prepare the data for validation.
+     *
+     * Fortify lowercases the email at login and PostgreSQL compares it case-sensitively,
+     * so a mixed-case address would lock the user out.
+     */
+    protected function prepareForValidation(): void
+    {
+        if (is_string($this->input('email'))) {
+            $this->merge(['email' => Str::lower($this->input('email'))]);
+        }
+    }
 
     /**
      * Get the validation rules that apply to the request.
