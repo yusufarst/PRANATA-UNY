@@ -5,7 +5,8 @@ namespace App\Modules\Platform\Providers;
 use App\Modules\ModuleServiceProvider;
 use App\Modules\Platform\Support\DatabaseResetGuard;
 use Illuminate\Console\Events\CommandStarting;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Console\Kernel as KernelContract;
+use Illuminate\Foundation\Console\Kernel;
 use Illuminate\Support\Facades\Event;
 
 class PlatformServiceProvider extends ModuleServiceProvider
@@ -21,19 +22,16 @@ class PlatformServiceProvider extends ModuleServiceProvider
     }
 
     /**
-     * Guard destructive database commands in two layers.
-     *
-     * The prohibition covers the default connection in every environment. The listener
-     * also covers --database, but Laravel does not fire this event when APP_ENV=testing.
+     * Run the reset guard before every destructive command, in every environment.
      */
     private function guardDestructiveCommands(): void
     {
-        $default = config('database.default');
+        // Laravel forwards console events only outside unit tests; APP_ENV=testing needs the guard as well.
+        $kernel = $this->app->make(KernelContract::class);
 
-        DB::prohibitDestructiveCommands(! DatabaseResetGuard::allows(
-            $this->app->environment(),
-            config("database.connections.{$default}.database"),
-        ));
+        if ($this->app->runningUnitTests() && $kernel instanceof Kernel) {
+            $kernel->rerouteSymfonyCommandEvents();
+        }
 
         Event::listen(CommandStarting::class, function (CommandStarting $event): void {
             if (! in_array($event->command, DatabaseResetGuard::COMMANDS, true)) {
@@ -44,7 +42,7 @@ class PlatformServiceProvider extends ModuleServiceProvider
 
             DatabaseResetGuard::assertAllowed(
                 $this->app->environment(),
-                config("database.connections.{$connection}.database"),
+                DatabaseResetGuard::databaseName(config("database.connections.{$connection}")),
             );
         });
     }

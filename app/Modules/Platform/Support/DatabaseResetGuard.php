@@ -2,6 +2,7 @@
 
 namespace App\Modules\Platform\Support;
 
+use Illuminate\Support\ConfigurationUrlParser;
 use RuntimeException;
 
 /**
@@ -19,13 +20,23 @@ final class DatabaseResetGuard
     private const ALLOWED_DATABASE = '/^pranata_(dev|test|e2e|perf)(_[a-z0-9_]+)?\z/';
 
     /**
-     * Determine if a destructive command may run in this environment on this database.
+     * Get the PostgreSQL database a connection really uses, after DB_URL overrides are applied.
+     *
+     * @param  array<string, mixed>|null  $connection
      */
-    public static function allows(string $environment, ?string $database): bool
+    public static function databaseName(?array $connection): ?string
     {
-        return $environment !== 'production'
-            && $database !== null
-            && preg_match(self::ALLOWED_DATABASE, $database) === 1;
+        if ($connection === null) {
+            return null;
+        }
+
+        $resolved = (new ConfigurationUrlParser)->parseConfiguration($connection);
+
+        if (($resolved['driver'] ?? null) !== 'pgsql' || ! is_string($resolved['database'] ?? null)) {
+            return null;
+        }
+
+        return $resolved['database'];
     }
 
     /**
@@ -37,7 +48,7 @@ final class DatabaseResetGuard
             throw new RuntimeException('Destructive database commands are forbidden in production.');
         }
 
-        if (! self::allows($environment, $database)) {
+        if ($database === null || preg_match(self::ALLOWED_DATABASE, $database) !== 1) {
             throw new RuntimeException("Destructive database commands are forbidden on database [{$database}].");
         }
     }

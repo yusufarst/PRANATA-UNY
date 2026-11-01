@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Modules\Platform\Support\DatabaseResetGuard;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Laravel\Fortify\Features;
 use Tests\Support\DatabaseGuard;
@@ -19,7 +20,7 @@ abstract class TestCase extends BaseTestCase
 
         DatabaseGuard::assertSafe(
             $app->environment(),
-            $app['config']->get("database.connections.{$connection}.database"),
+            DatabaseResetGuard::databaseName($app['config']->get("database.connections.{$connection}")),
         );
 
         return $app;
