@@ -2,6 +2,7 @@
 
 use App\Modules\Platform\Support\DatabaseResetGuard;
 use Illuminate\Console\Events\CommandStarting;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Process;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -47,21 +48,10 @@ test('the reset guard refuses other databases and production', function () {
         ->toThrow(RuntimeException::class, 'production');
 });
 
-test('the reset guard recognises destructive commands and their abbreviations', function (string $command, bool $destructive) {
-    expect(DatabaseResetGuard::isDestructive($command))->toBe($destructive);
-})->with([
-    ['migrate:fresh', true],
-    ['migrate:refresh', true],
-    ['migrate:reset', true],
-    ['db:wipe', true],
-    ['m:fr', true],
-    ['db:w', true],
-    ['migrate', false],
-    ['migrate:status', false],
-    ['db:seed', false],
-    ['about', false],
-    [':', false],
-]);
+test('the reset guard covers every command that drops or empties tables', function () {
+    expect(DatabaseResetGuard::COMMANDS)
+        ->toEqualCanonicalizing(['migrate:fresh', 'migrate:refresh', 'migrate:reset', 'db:wipe']);
+});
 
 /**
  * Dispatch the event Artisan fires before a command, without running the command.
@@ -104,14 +94,25 @@ test('the reset guard lets other commands and allowed databases through', functi
     expect(true)->toBeTrue();
 });
 
-// The event only fires for a real console run, so these two go through the artisan script itself.
+// Laravel fires the event only outside APP_ENV=testing, so these run the artisan script itself.
 test('artisan migrate:fresh stops on a foreign database', function () {
     $result = Process::path(base_path())
-        ->env(['DB_DATABASE' => 'other_app'])
+        ->env(['APP_ENV' => 'local', 'DB_DATABASE' => 'other_app'])
         ->run([PHP_BINARY, 'artisan', 'migrate:fresh', '--force']);
 
     expect($result->output().$result->errorOutput())->toContain('forbidden on database [other_app]')
-        ->and($result->failed())->toBeTrue();
+        ->and($result->failed())->toBeTrue()
+        ->and(DB::table('pg_database')->where('datname', 'other_app')->exists())->toBeFalse();
+});
+
+test('artisan migrate:fresh also stops on a foreign database under APP_ENV=testing', function () {
+    $result = Process::path(base_path())
+        ->env(['APP_ENV' => 'testing', 'DB_DATABASE' => 'other_app'])
+        ->run([PHP_BINARY, 'artisan', 'migrate:fresh', '--force']);
+
+    expect($result->output().$result->errorOutput())->toContain('prohibited')
+        ->and($result->failed())->toBeTrue()
+        ->and(DB::table('pg_database')->where('datname', 'other_app')->exists())->toBeFalse();
 });
 
 test('artisan db:wipe stops in production', function () {

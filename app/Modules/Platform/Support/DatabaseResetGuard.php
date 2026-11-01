@@ -14,32 +14,18 @@ final class DatabaseResetGuard
      *
      * @var list<string>
      */
-    private const COMMANDS = ['migrate:fresh', 'migrate:refresh', 'migrate:reset', 'db:wipe'];
+    public const COMMANDS = ['migrate:fresh', 'migrate:refresh', 'migrate:reset', 'db:wipe'];
 
     private const ALLOWED_DATABASE = '/^pranata_(dev|test|e2e|perf)(_[a-z0-9_]+)?\z/';
 
     /**
-     * Determine if the typed command may resolve to a destructive command.
-     *
-     * Artisan accepts abbreviations such as "m:fr", so each part is compared as a prefix.
+     * Determine if a destructive command may run in this environment on this database.
      */
-    public static function isDestructive(string $command): bool
+    public static function allows(string $environment, ?string $database): bool
     {
-        $typed = explode(':', $command);
-
-        if (count($typed) !== 2 || in_array('', $typed, true)) {
-            return false;
-        }
-
-        foreach (self::COMMANDS as $destructive) {
-            [$namespace, $name] = explode(':', $destructive);
-
-            if (str_starts_with($namespace, $typed[0]) && str_starts_with($name, $typed[1])) {
-                return true;
-            }
-        }
-
-        return false;
+        return $environment !== 'production'
+            && $database !== null
+            && preg_match(self::ALLOWED_DATABASE, $database) === 1;
     }
 
     /**
@@ -51,7 +37,7 @@ final class DatabaseResetGuard
             throw new RuntimeException('Destructive database commands are forbidden in production.');
         }
 
-        if ($database === null || preg_match(self::ALLOWED_DATABASE, $database) !== 1) {
+        if (! self::allows($environment, $database)) {
             throw new RuntimeException("Destructive database commands are forbidden on database [{$database}].");
         }
     }
