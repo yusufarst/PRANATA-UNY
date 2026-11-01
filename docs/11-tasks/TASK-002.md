@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: READY
-EXECUTION STAGE: READY
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: NO
@@ -230,19 +230,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint: Pint; Oxlint dan Oxfmt lewat `vp check`, pengganti ESLint dan Prettier yang tidak dibawa kit (TOOLCHAIN)
+- [x] Typecheck: `tsc` dan Larastan
+- [x] Relevant automated tests: 51 lulus, 301 asersi
+- [x] Authorization: rute modul dan policy fixture, positif dan negatif
+- N/A Route integrity: uji integritas rute dibuat TASK-004
+- N/A Interaction behavior: hanya kerangka bawaan; desain di TASK-006
+- N/A Browser E2E: harness dibuat TASK-007; ada uji asap HTTP dan screenshot
+- [x] Responsive/adaptive: screenshot 390×844 dan 1440×900 ditinjau, tanpa tumpang tindih
+- N/A Visual breathing room/density: tampilan bawaan kit; desain di TASK-006
+- [x] Production build: `npm run build`
+- [x] Security checks: `composer audit`, `npm audit`, pemeriksaan pola rahasia pada diff; gitleaks NOT RUN (job `quality`, TASK-004)
+- [x] Database safety review: hanya `pranata_test` pada service container runner
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -257,18 +257,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41333078042](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41333078042) pada HEAD `561ceec`, attempt 1, uji-merge `0794f1c`, base `bbf2e59`. `app-boot` success (51 dtk), `bootstrap-gate` success (7 dtk). Pest 51 lulus, 301 asersi, pada PostgreSQL 18.6. Pint, Larastan, `vp check` dan `tsc` lulus. `composer audit` dan `npm audit` tanpa temuan. Uji gerbang luring `scripts.tests.ps1` 182 lulus, 0 gagal.
+- Build result: `npm run build` lulus pada run yang sama. Migrasi: `migrate:fresh`, `migrate:rollback`, `migrate` lulus. Hak peran DB: N/A, peran `pranata_app` baru dibuat TASK-008; semua langkah berjalan sebagai pengguna uji service container.
+- Route evidence: `GET /login` 200 dengan komponen `auth/login`, `GET /register` 404, dari server uji di runner. `PublicRegistrationTest`: rute tidak terdaftar, tidak ada tautan ke registrasi di `resources/js`, tidak ada rute passkey.
+- Interaction evidence: N/A, hanya kerangka bawaan.
+- Browser evidence: artefak `login-screenshots` pada run di atas, ukuran 390×844 dan 1440×900 diasersi job dan ditinjau visual. Harness E2E: N/A sampai TASK-007.
+- Localization evidence: lokal default `id`, fallback `en`, diuji; teks halaman masih bawaan kit karena infrastruktur i18n ada di TASK-006.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Independen pada `fa53bfd`: tanpa P0/P1; P2 yang valid diperbaiki di `eb3c7f4` (fallback SQLite di `config/queue.php`, uji default dan middleware `web`, audit dan Larastan di `app-boot`) atau dicatat di TOOLCHAIN (profil kata sandi kit, reset lewat email, aturan ESLint TEST_STRATEGY); dugaan ukuran screenshot terbantahkan oleh PNG 390×844. Codex pada `eb3c7f4`: COMPLETED_WITH_FINDINGS, satu P2 (email profil campuran huruf besar-kecil mengunci login di PostgreSQL), valid, diperbaiki di `561ceec` beserta uji. Delta `561ceec` diverifikasi dengan swa-review dan run di atas, tanpa review penuh ulang (§6.1).
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: impor kit tanpa perubahan di `9fc25d2`; perubahan proyek pada `git diff 9fc25d2 561ceec`; `.github/workflows/bootstrap.yml`; gerbang `-Bootstrap` dan ujinya di `scripts/executor/`; `docs/00-governance/TOOLCHAIN.md`; laporan kemampuan dan baris status §13.
+- PR / CI run: [PR #5](https://github.com/yusufarst/PRANATA-UNY/pull/5) MERGED; run di atas. C-16 VERIFIED: [PR uji #6](https://github.com/yusufarst/PRANATA-UNY/pull/6) ditutup tanpa merge, sandbox [PR #7](https://github.com/yusufarst/pranata-uny-sandbox-c10/pull/7); rincian di [EXECUTOR_CAPABILITY_REPORT](evidence/EXECUTOR_CAPABILITY_REPORT.md#c-16).
+- Commit SHA: `561ceec55b69baf6544a34a989877a2ec5ad5423`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1 -Bootstrap`.
+- Notes: kerangka dari run `scaffold` 41325195031; job `scaffold` tidak ada di HEAD. NOT RUN: gitleaks (TASK-004). Temuan untuk Claude Planning ada di [TOOLCHAIN](../00-governance/TOOLCHAIN.md#application-versions--task-002-2026-11-01): Inertia 3 menggantikan Inertia 2 yang tertulis, Vite+ menggantikan ESLint dan Prettier. Penyimpangan GOV-09 yang tertangkap sebelum merge: penulisan ulang CR di `.gitignore` dan TOOLCHAIN dipulihkan di `6347765`.
 
 ## SAFE NEXT TASK
 

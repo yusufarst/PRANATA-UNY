@@ -12,21 +12,21 @@ PROJECT TASK STATUS
 Baseline Total Tasks: 78 (FRZ-001)
 Current Total Tasks: 78
 
-DONE: 1
+DONE: 2
 READY: 1
 IN_PROGRESS: 0
 BLOCKED: 0
 VERIFYING: 0
-TODO: 76
+TODO: 75
 SUPERSEDED: 0
 
-Progress: 1 / 78
-Percentage: 1%
+Progress: 2 / 78
+Percentage: 3%
 ```
 
 ```text
 CURRENT TASK: —
-NEXT READY TASK: TASK-002 (mode SUPERVISED bootstrap, AUTH-013)
+NEXT READY TASK: TASK-003 (mode SUPERVISED bootstrap, AUTH-013)
 LAST TASK PLAN CHANGE: PCR-002 — PUBLISHED 2026-11-01 (review delta `6d7c8c3` APPROVED WITH CONDITIONS; syarat PCR002-SR-C1 masuk TASK-005; terverifikasi di `origin/main`): topologi pengembangan tanpa Docker lokal (OD-37); kontrak TASK-002, TASK-003, TASK-004, TASK-005, TASK-071; jumlah Task tetap 78 dan dependensi tidak berubah. Sebelumnya: PCR-001 — PUBLISHED 2026-11-01 (kontrak TASK-025, TASK-066, TASK-069, TASK-071)
 ADDITIONAL RECURRING PRODUCTION COST: 0 di luar infrastruktur yang dibiayai klien
 PAID SERVICE EXCEPTIONS: NONE
@@ -51,7 +51,7 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 ## Master Task Checklist
 
 - [x] [TASK-001](TASK-001.md) — Pagar pengaman eksekutor, runner dan verifikasi kemampuan (mode terawasi)
-- [ ] [TASK-002](TASK-002.md) — Bootstrap aplikasi Laravel React dan struktur modul
+- [x] [TASK-002](TASK-002.md) — Bootstrap aplikasi Laravel React dan struktur modul
 - [ ] [TASK-003](TASK-003.md) — Lingkungan pengembangan terisolasi `pranata` dan pengaman basis data uji
 - [ ] [TASK-004](TASK-004.md) — Perkakas kualitas dan uji arsitektur
 - [ ] [TASK-005](TASK-005.md) — Pipeline CI dan pemeriksa dokumentasi
@@ -134,8 +134,8 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | Task | Judul | Status | Risiko | Milestone | Depends On | Parallel Safe | DB Impact | UI Impact |
 |---|---|---|---|---|---|---|---|---|
 | [TASK-001](TASK-001.md) | Pagar pengaman eksekutor, runner dan verifikasi kemampuan (mode terawasi) | DONE | HIGH | M0 | — | NO | NONE | NO |
-| [TASK-002](TASK-002.md) | Bootstrap aplikasi Laravel React dan struktur modul | READY | HIGH | M0 | TASK-001 | NO | PROPOSED | YES |
-| [TASK-003](TASK-003.md) | Lingkungan pengembangan terisolasi `pranata` dan pengaman basis data uji | TODO | STANDARD | M0 | TASK-002 | NO | NONE | NO |
+| [TASK-002](TASK-002.md) | Bootstrap aplikasi Laravel React dan struktur modul | DONE | HIGH | M0 | TASK-001 | NO | PROPOSED | YES |
+| [TASK-003](TASK-003.md) | Lingkungan pengembangan terisolasi `pranata` dan pengaman basis data uji | READY | STANDARD | M0 | TASK-002 | NO | NONE | NO |
 | [TASK-004](TASK-004.md) | Perkakas kualitas dan uji arsitektur | TODO | STANDARD | M0 | TASK-003 | NO | NONE | NO |
 | [TASK-005](TASK-005.md) | Pipeline CI dan pemeriksa dokumentasi | TODO | STANDARD | M0 | TASK-004 | YES | NONE | NO |
 | [TASK-006](TASK-006.md) | Token desain, AppShell dan lokalisasi id/en | TODO | STANDARD | M0 | TASK-004 | YES | NONE | YES |

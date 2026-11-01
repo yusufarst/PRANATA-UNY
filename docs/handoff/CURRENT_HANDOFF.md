@@ -1,15 +1,15 @@
 # Current handoff
 
-Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · PCR-002 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-001 DONE | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
+Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · PCR-002 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-002 DONE | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
 
 ## Current state
 
 Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRANATA-UNY`, specifically published `main`, is the durable shared Source of Truth; confirm it with `git ls-remote origin refs/heads/main` before acting.
 
 - P0–P11 **DONE — APPROVED** (APPR-005, APPR-006); Planning Freeze **FRZ-001** effective; PCR-001 published; execution authorized by **AUTH-013**.
-- **TASK-001 DONE** (1/78): executor guardrails, runner, watcher and capability report on `main` at `170c1f1`. Application implementation: NONE yet.
+- **TASK-001 DONE**: executor guardrails, runner, watcher and capability report. **TASK-002 DONE** (2/78): Laravel 13 React skeleton, `app/Modules`, `bootstrap.yml` and the `-Bootstrap` evidence gate, on `main` at `561ceec`. No business feature yet.
 - Executor mode: **SUPERVISED**. AUTONOMOUS is not active: it needs TASK-002–TASK-005 DONE, the `main` ruleset and the runner token (C-15).
-- **PCR-002 published** (2026-11-01): Owner decision OD-37 forbids local Docker; heavy checks run on GitHub-hosted runners, first through the temporary bootstrap workflow ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)). C-16 (bootstrap evidence gate) is UNVERIFIED until TASK-002 proves it on a disposable PR before its merge.
+- **PCR-002 published** (2026-11-01): Owner decision OD-37 forbids local Docker; heavy checks run on GitHub-hosted runners, first through the temporary bootstrap workflow ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)). C-16 (bootstrap evidence gate) is VERIFIED ([EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md#c-16)).
 - GAP-001–GAP-029: OPEN (resolved NONE).
 
 ## Handoff (AICWDF §36)
@@ -17,20 +17,20 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Field | Current value |
 |---|---|
 | Current phase | Execution; approved phases 12/12. |
-| Current Task / status | None active. **TASK-002 READY** (SUPERVISED bootstrap). |
-| Last completed action | 2026-11-01: PCR-002 published by verified fast-forward and its state transition recorded ([APPROVAL_RECORDS](../00-governance/APPROVAL_RECORDS.md#pcr-002-publication-record)). |
-| Evidence | [TASK-001 COMPLETION EVIDENCE](../11-tasks/TASK-001.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
-| Task plan | Baseline 78 · Current 78 · DONE 1 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 76 · SUPERSEDED 0 · 1%. |
+| Current Task / status | None active. **TASK-003 READY** (SUPERVISED bootstrap). |
+| Last completed action | 2026-11-02: TASK-002 merged by verified fast-forward through the C-16 evidence gate. |
+| Evidence | [TASK-002 COMPLETION EVIDENCE](../11-tasks/TASK-002.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
+| Task plan | Baseline 78 · Current 78 · DONE 2 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 75 · SUPERSEDED 0 · 3%. |
 | Open blockers | (1) Owner, after TASK-005: apply the `main` ruleset. (2) Owner: install the restricted runner token with `scripts/executor/install-runner-token.ps1`, then `scripts/executor/tests/c15.probe.ps1` proves C-15. Neither blocks TASK-002–TASK-005. |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
 | Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, and OD-37 (no local Docker; GitHub-hosted testing). |
-| Decisions pending | None for TASK-002–TASK-005. Before TASK-040: where staging runs (D-19 as limited by OD-37). |
+| Decisions pending | None for TASK-003–TASK-005. For Claude Planning, non-blocking: the current starter kit ships Inertia 3 and Vite+ (Oxlint, Oxfmt) where the plan names Inertia 2, ESLint and Prettier, and the ESLint rules of TEST_STRATEGY need a decision before the i18n and `quality` work rely on them ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#application-versions--task-002-2026-11-01)). Before TASK-040: where staging runs (D-19 as limited by OD-37). |
 | Toolchain | See [TOOLCHAIN — Executor machine facts](../00-governance/TOOLCHAIN.md). Stage with `scripts/executor/stage.ps1`; a bulk add under `core.autocrlf=false` rewrites line endings on this machine. |
-| Machine | RAM 7.2 GB, 0.1–1.1 GB free during TASK-001 without any PRANATA container; PHP, Composer and psql not installed. Other projects were not touched. |
+| Machine | RAM 7.2 GB, 0.1–1.1 GB free during TASK-001 without any PRANATA container; PHP, Composer and psql not installed. Other projects were not touched. Editing a file that holds carriage returns (`docs/00-governance/TOOLCHAIN.md`, `.gitignore`) must keep them (GOV-09); check before staging. |
 | Cost | New recurring cost: NONE. Paid exception: NONE. |
-| Database | Direct production DB touched: NO. Schema/migrations: none yet. |
-| Cleanup for the Owner | Public synthetic sandbox `yusufarst/pranata-uny-sandbox-c10` may be deleted by the Owner; the executor token cannot delete repositories. |
-| Next READY Task | TASK-002. |
+| Database | Direct production DB touched: NO. Schema: Laravel skeleton tables only, tested on a runner service container. |
+| Cleanup for the Owner | Public synthetic sandbox `yusufarst/pranata-uny-sandbox-c10` (used for C-10 and C-16) may be deleted by the Owner; the executor token cannot delete repositories. Disposable branches stay as they are. |
+| Next READY Task | TASK-003. |
 
 ## TASK PLAN CHANGE proposal — Docker-free local development (for Claude Planning)
 
@@ -57,7 +57,7 @@ Status: **INCORPORATED into PCR-002** (published; mapping in [PCR-002_REVIEW_HAN
 
 ## Exact next safe action
 
-**Executor:** verify that `origin/main` contains the PCR-002 publication record, then start TASK-002 in SUPERVISED bootstrap mode under AUTH-013: prove C-16 on a disposable PR before the TASK-002 merge, and use no local Docker, PHP, Composer or PostgreSQL (OD-37). Continue TASK-003–TASK-005 in order.
+**Executor:** continue TASK-003, then TASK-004 and TASK-005, in SUPERVISED bootstrap mode under AUTH-013, with no local Docker, PHP, Composer or PostgreSQL (OD-37). Merge through `merge-verified.ps1 -Bootstrap`.
 
 ## DO NOT DO
 
