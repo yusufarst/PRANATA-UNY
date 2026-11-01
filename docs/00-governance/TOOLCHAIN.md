@@ -171,3 +171,21 @@ ESLint and Prettier replace `vp check`, which TASK-002 used in `app-boot`; Vite+
 - **Literal JSX text.** `react/jsx-no-literals` is on. The 17 kit files that still hold English text are listed in `eslint.literal-baseline.json` and exempt until TASK-006 empties the list; any other file fails.
 - **Architecture test.** `tests/Arch/ModuleBoundaryTest.php` follows the dependency column of ARCHITECTURE §4, with `Workflow` and `Audit` added for the business modules because §6 has their Actions write those records. Pest ignores a dependency on a class that does not exist, so the negative check in `quality` uses a real class.
 - **Finding for Claude Planning.** ARCHITECTURE §5 rule 3 draws Access above Organization and Policy, while §4 has Access depending on both. The test follows §4, which is free of cycles; §5 rule 3 needs a correction.
+
+## CI pipeline — TASK-005 (2026-11-02)
+
+`ci.yml` and `ci-nightly.yml` replace the temporary `bootstrap.yml`. `actions/cache` v6.1.0 is pinned by SHA. All jobs run on GitHub-hosted `ubuntu-24.04`.
+
+| Job | First run (`41341172993`) | With cache (`41341485098`) |
+| --- | --- | --- |
+| `changes` | 3 s | 6 s |
+| `ci-fast` | 112 s | 61 s |
+| `ci-e2e` | 113 s | 67 s |
+| `docs-check` | 5 s | 6 s |
+| `ci-gate` | 3 s | 2 s |
+
+- **Filter.** `changes` fails closed: an unusable range or an empty diff runs everything, and any file outside `docs/` and the root Markdown files counts as code. Every path under `tests/` triggers `ci-e2e`, which covers Gotenberg tests outside `tests/e2e/` (PCR002-SR-C1).
+- **Gate.** `ci-gate` requires `success` for a called job and `skipped` for a job the filter did not call; anything else fails, as does a failed `changes`.
+- **Gotenberg group.** The two tests in `tests/Feature/Documents/GotenbergSmokeTest.php` skip in `ci-fast`, which has no Gotenberg service, and `ci-e2e` and `ci-nightly` refuse a skip with `--fail-on-skipped`.
+- **Probe.** `scripts/executor/tests/ci.probe.ps1` proves the gate and the filter on disposable draft PRs.
+- **Ruleset.** Instructions for the Owner: [MAIN_RULESET](../09-operations/MAIN_RULESET.md).
