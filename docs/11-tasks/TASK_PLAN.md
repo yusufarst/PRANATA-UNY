@@ -1,23 +1,23 @@
 # Rencana Task — PRANATA UNY
 
-Status: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
+Status: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
 
-Dokumen ini adalah **dasbor kemajuan Owner** dan baseline Task (AICWDF §22, §35). Task dirancang sendiri oleh Claude Planning dari P1–P10; tidak menyalin daftar MULTIPLECORP atau draf ChatGPT. Baseline baru berlaku setelah Owner menyetujui kandidat P11 dan Planning Freeze tercatat; sebelum itu tidak ada Task READY dan tidak ada eksekusi.
+Dokumen ini adalah **dasbor kemajuan Owner** dan baseline Task (AICWDF §22, §35). Task dirancang sendiri oleh Claude Planning dari P1–P10; tidak menyalin daftar MULTIPLECORP atau draf ChatGPT. Baseline berlaku sejak persetujuan APPR-006 dan Planning Freeze FRZ-001 (2026-11-01); eksekusi mengikuti AUTH-013.
 
 ## Status proyek
 
 ```text
 PROJECT TASK STATUS
 
-Baseline Total Tasks: 78 (diusulkan; final saat persetujuan P11)
+Baseline Total Tasks: 78 (FRZ-001)
 Current Total Tasks: 78
 
 DONE: 0
-READY: 0
+READY: 1
 IN_PROGRESS: 0
-BLOCKED: 0
+BLOCKED: 4
 VERIFYING: 0
-TODO: 78
+TODO: 73
 SUPERSEDED: 0
 
 Progress: 0 / 78
@@ -26,8 +26,8 @@ Percentage: 0%
 
 ```text
 CURRENT TASK: —
-NEXT READY TASK: TASK-001 setelah persetujuan P4–P11, Planning Freeze dan otorisasi eksekusi
-LAST TASK PLAN CHANGE: — (baseline kandidat)
+NEXT READY TASK: TASK-001
+LAST TASK PLAN CHANGE: PCR-001 diusulkan 2026-11-01 (menunggu Second Review terfokus); TASK-025, TASK-066, TASK-069, TASK-071 BLOCKED sampai PCR-001 masuk `main`
 ADDITIONAL RECURRING PRODUCTION COST: 0 di luar infrastruktur yang dibiayai klien
 PAID SERVICE EXCEPTIONS: NONE
 ```
@@ -36,7 +36,7 @@ PAID SERVICE EXCEPTIONS: NONE
 
 | Milestone | Isi | Task | Increment rilis | Gerbang |
 |---|---|---|---|---|
-| M0 | Fondasi rekayasa | TASK-001–TASK-007 (7) | R0 | Mode otonom hanya setelah TASK-001 terverifikasi + otorisasi Owner |
+| M0 | Fondasi rekayasa | TASK-001–TASK-007 (7) | R0 | Mode bootstrap TASK-001–TASK-005; mode otonom sesudah prasyarat EXECUTOR_OPERATING_MODEL §1 (AUTH-013) |
 | M1 | Identitas, akses dan audit | TASK-008–TASK-016 (9) | R0 | — |
 | M2 | Platform lintas modul | TASK-017–TASK-023 (7) | R0 | — |
 | M3 | Pengadaan inti (R1 / UAT-1) | TASK-024–TASK-041 (18) | R1 | UAT-1 Pengadaan (OD-32) |
@@ -133,7 +133,7 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 
 | Task | Judul | Status | Risiko | Milestone | Depends On | Parallel Safe | DB Impact | UI Impact |
 |---|---|---|---|---|---|---|---|---|
-| [TASK-001](TASK-001.md) | Pagar pengaman eksekutor, runner dan verifikasi kemampuan (mode terawasi) | TODO | HIGH | M0 | — | NO | NONE | NO |
+| [TASK-001](TASK-001.md) | Pagar pengaman eksekutor, runner dan verifikasi kemampuan (mode terawasi) | READY | HIGH | M0 | — | NO | NONE | NO |
 | [TASK-002](TASK-002.md) | Bootstrap aplikasi Laravel React dan struktur modul | TODO | HIGH | M0 | TASK-001 | NO | PROPOSED | YES |
 | [TASK-003](TASK-003.md) | Lingkungan pengembangan terisolasi `pranata` dan pengaman basis data uji | TODO | STANDARD | M0 | TASK-002 | NO | NONE | NO |
 | [TASK-004](TASK-004.md) | Perkakas kualitas dan uji arsitektur | TODO | STANDARD | M0 | TASK-003 | NO | NONE | NO |
@@ -157,7 +157,7 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-022](TASK-022.md) | DataTable server-driven, pagination keyset dan pencarian global dasar | TODO | STANDARD | M2 | TASK-014, TASK-019 | YES | PROPOSED | YES |
 | [TASK-023](TASK-023.md) | Infrastruktur laporan dan ekspor asinkron | TODO | STANDARD | M2 | TASK-022, TASK-016 | YES | PROPOSED | YES |
 | [TASK-024](TASK-024.md) | Paket kebijakan pengadaan DRAFT dan kasus uji regulasi | TODO | HIGH | M3 | TASK-018, TASK-017 | NO | NONE | NO |
-| [TASK-025](TASK-025.md) | Usulan kebutuhan unit (WF-003) | TODO | STANDARD | M3 | TASK-019, TASK-017 | NO | PROPOSED | YES |
+| [TASK-025](TASK-025.md) | Usulan kebutuhan unit (WF-003) | BLOCKED | STANDARD | M3 | TASK-019, TASK-017 | NO | PROPOSED | YES |
 | [TASK-026](TASK-026.md) | Referensi RUP dan referensi kanal eksternal (WF-004) | TODO | STANDARD | M3 | TASK-025, TASK-016 | YES | PROPOSED | YES |
 | [TASK-027](TASK-027.md) | Paket, item, referensi anggaran dan komitmen (WF-005 inti) | TODO | HIGH | M3 | TASK-025, TASK-024, TASK-026 | NO | PROPOSED | YES |
 | [TASK-028](TASK-028.md) | Penugasan pejabat paket dan rencana langkah per metode | TODO | HIGH | M3 | TASK-027, TASK-015 | NO | PROPOSED | YES |
@@ -198,12 +198,12 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-063](TASK-063.md) | Inventarisasi dan pemeliharaan (WF-019) | TODO | STANDARD | M6 | TASK-059 | YES | PROPOSED | YES |
 | [TASK-064](TASK-064.md) | Perubahan aset: koreksi, pengembangan, reklasifikasi (WF-020) | TODO | HIGH | M6 | TASK-059 | YES | PROPOSED | YES |
 | [TASK-065](TASK-065.md) | Penghapusan aset (WF-021) | TODO | HIGH | M6 | TASK-059, TASK-021 | YES | PROPOSED | YES |
-| [TASK-066](TASK-066.md) | Penyusutan dan amortisasi (WF-022) | TODO | HIGH | M7 | TASK-060 | NO | PROPOSED | YES |
+| [TASK-066](TASK-066.md) | Penyusutan dan amortisasi (WF-022) | BLOCKED | HIGH | M7 | TASK-060 | NO | PROPOSED | YES |
 | [TASK-067](TASK-067.md) | KDP dan penyelesaian (WF-024) | TODO | STANDARD | M7 | TASK-060, TASK-044 | YES | PROPOSED | YES |
 | [TASK-068](TASK-068.md) | Kerangka intake historis (WF-026) | TODO | HIGH | M7 | TASK-016, TASK-019 | YES | PROPOSED | YES |
-| [TASK-069](TASK-069.md) | Adapter intake: aset, barang, saldo awal persediaan dan organisasi | TODO | HIGH | M7 | TASK-068, TASK-059, TASK-051, TASK-013 | NO | NONE | YES |
+| [TASK-069](TASK-069.md) | Adapter intake: aset, barang, saldo awal persediaan dan organisasi | BLOCKED | HIGH | M7 | TASK-068, TASK-059, TASK-051, TASK-013 | NO | NONE | YES |
 | [TASK-070](TASK-070.md) | Rekonsiliasi (WF-025) | TODO | STANDARD | M7 | TASK-055, TASK-059 | YES | PROPOSED | YES |
-| [TASK-071](TASK-071.md) | Katalog laporan menurut makna waktu (WF-027) | TODO | STANDARD | M8 | TASK-023, TASK-057, TASK-059, TASK-039 | YES | NONE | YES |
+| [TASK-071](TASK-071.md) | Katalog laporan menurut makna waktu (WF-027) | BLOCKED | STANDARD | M8 | TASK-023, TASK-057, TASK-059, TASK-039 | YES | NONE | YES |
 | [TASK-072](TASK-072.md) | Dasbor per peran dan pencarian global lengkap | TODO | STANDARD | M8 | TASK-071 | YES | NONE | YES |
 | [TASK-073](TASK-073.md) | Data sintetis skala dan uji performa | TODO | HIGH | M8 | TASK-059, TASK-066, TASK-071 | YES | PROPOSED | NO |
 | [TASK-074](TASK-074.md) | Regresi keamanan dan matriks otorisasi lengkap | TODO | HIGH | M8 | TASK-072 | YES | NONE | NO |

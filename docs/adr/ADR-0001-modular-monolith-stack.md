@@ -1,6 +1,6 @@
 # ADR-0001 — Modular monolith Laravel dengan Inertia, React, TypeScript dan PostgreSQL
 
-Status: PROPOSED (P4 candidate, AUTH-012) | Date: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Approval: belum ada — memerlukan persetujuan Owner atas kandidat P4
+Status: ACCEPTED (APPR-006) | Date: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Approval: APPR-006, 2026-11-01
 
 ## Konteks dan bukti
 

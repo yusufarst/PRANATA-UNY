@@ -1,6 +1,6 @@
 # Performa dan skala — PRANATA UNY
 
-Status: P6 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P6
+Status: P6 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P6
 
 Dokumen ini memiliki **model beban, anggaran performa, strategi indeks/kueri, skenario uji performa dan perilaku kegagalan/pemulihan pada skala target**. Target P1 (NFR-P01–P04, AC-21) tetap berlaku; dokumen ini menurunkannya menjadi anggaran yang dapat diuji. Kapasitas pasti dan beban riil tetap GAP-016 sampai diukur pada staging dengan data sintetis.
 

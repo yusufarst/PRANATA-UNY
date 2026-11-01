@@ -1,6 +1,6 @@
 # Strategi pengujian — PRANATA UNY
 
-Status: P8 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P8
+Status: P8 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P8
 
 Dokumen ini memiliki **lapisan uji, alat, data uji, isolasi basis data uji, uji otorisasi/rute/interaksi/E2E/aksesibilitas/lokalisasi/keamanan/performa/migrasi dan kebijakan uji tidak stabil**. Gerbang kualitas, Definition of Done dan pipeline CI dimiliki [QUALITY_GATES](QUALITY_GATES.md). Mengikuti AICWDF §19, §25–§28.
 

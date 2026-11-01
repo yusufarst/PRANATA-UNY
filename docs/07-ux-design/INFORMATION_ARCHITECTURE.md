@@ -1,6 +1,6 @@
 # Arsitektur informasi dan inventaris halaman — PRANATA UNY
 
-Status: P7 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P7
+Status: P7 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P7
 
 Dokumen ini memiliki **ruang kerja, struktur navigasi, inventaris halaman (PG), pemetaan halaman ke kontrak rute P3 (RT), dashboard per peran, pencarian global dan konvensi URL**. Isi rute dan jalur kembali tetap dimiliki [ROUTE_CONTRACTS](../03-workflows/ROUTE_CONTRACTS.md); halaman di bawah adalah perwujudan P7 atas kontrak tersebut. Visibilitas menu mengikuti izin server ([ACCESS_CONTROL](../05-security/ACCESS_CONTROL.md)).
 

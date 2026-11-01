@@ -1,6 +1,6 @@
 # Bootstrap eksekutor — PRANATA UNY
 
-Status: P11 candidate — VERIFYING (AUTH-012), belum disetujui; **tidak aktif** | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
+Status: P11 — APPROVED (APPR-006); baseline beku FRZ-001; **aktif menurut AUTH-013** | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
 
 Dokumen ini memiliki **urutan memulai Claude Code sebagai Execution Agent**: bootstrap baca-saja yang boleh dipakai sekarang, urutan aktivasi setelah otorisasi, templat prompt, dan konvensi cabang/commit/PR. Aturan operasi dimiliki [EXECUTOR_OPERATING_MODEL](EXECUTOR_OPERATING_MODEL.md); konteks minimum dimiliki [EXECUTION_CONTEXT](EXECUTION_CONTEXT.md). Owner tidak perlu menulis ulang instruksi operasi: setelah otorisasi, templat di bagian 5 cukup.
 
@@ -46,13 +46,31 @@ Boleh dijalankan kapan saja; **tidak mengubah apa pun**.
 3. **TASK-002–TASK-005 (SUPERVISED, mode bootstrap)** — tanpa `ci-gate` sampai TASK-005 membuat `ci.yml`; bukti verifikasi lokal dan metadata commit disaksikan Owner ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada)).
 4. **Proteksi repositori** — setelah `ci-gate` terbukti pada PR TASK-005, Owner menerapkan ruleset `main` dan perlindungan tag sesuai D-08; eksekutor hanya memverifikasinya dengan `gh api` baca.
 5. **Token runner** — Owner memasang token sesuai D-27 khusus untuk proses runner (C-15).
-6. **Keputusan mode otonom** — Owner membaca laporan kemampuan dan, bila menerima, mencatat otorisasi mode otonom dengan ruang lingkup (disarankan bertahap: TASK-006–TASK-023 dahulu, lalu M3).
+6. **Mode otonom** — sudah diotorisasi untuk TASK-006–TASK-078 oleh AUTH-013; berlaku begitu laporan kemampuan menunjukkan kemampuan pengaman VERIFIED, ruleset dan token terpasang. Bila kemampuan pengaman gagal, eksekutor tetap SUPERVISED dan melapor.
 7. **Mulai** — satu perintah: `scripts/executor/runner.ps1 -Start` (dibuat TASK-001); watcher terjadwal diaktifkan. Laporan pertama memuat footer EXECUTION PROGRESS.
 8. **Titik sentuh Owner** — hal yang dicadangkan ([EXECUTOR_OPERATING_MODEL §12](EXECUTOR_OPERATING_MODEL.md#12-pelaporan-kemajuan-dan-eskalasi-owner)), merge yang menyentuh jalur pengaman, UAT, dan keputusan rilis.
 
 ## 5. Templat prompt
 
 Templat ditulis untuk ditempel apa adanya; teks dalam `<…>` diisi runner atau Owner.
+
+### 5.0 Mulai eksekusi (AUTH-013)
+
+Dipakai Owner sekali di sesi interaktif Claude Code pada klon PRANATA di PC Windows, setelah `main` memuat FRZ-001:
+
+```text
+Peran: EXECUTION AGENT. Otorisasi: AUTH-013 (TASK-001–TASK-078, otonomi maksimum yang aman).
+Verifikasi dulu: `git fetch origin`, cabang main = origin/main, working tree bersih, git config
+user.name/user.email = identitas Owner di GIT_WORKFLOW, dan APPROVAL_RECORDS memuat FRZ-001 serta AUTH-013.
+Bila salah satu tidak cocok: berhenti dan laporkan.
+Lalu ikuti AGENTS.md → EXECUTION_CONTEXT → CURRENT_HANDOFF → TASK_PLAN → TASK-001 dan EXECUTOR_OPERATING_MODEL.
+Kerjakan TASK-001–TASK-005 berurutan dalam mode bootstrap tanpa meminta persetujuan per Task; tanyakan hanya
+izin alat yang belum ada di allowlist dan langkah GitHub yang hanya dapat dilakukan Owner (ruleset, token D-27).
+Sesudah prasyarat mode otonom terpenuhi, aktifkan runner dan watcher (scripts/executor/runner.ps1 -Start) dan
+lanjutkan TASK-006–TASK-078 menurut dependensi. Jangan memulai Task BLOCKED (termasuk yang ditahan PCR-001).
+Eskalasi hanya hal yang dicadangkan EXECUTOR_OPERATING_MODEL §12. Tanpa atribusi AI di commit/PR/dokumen.
+Laporan dalam Bahasa Indonesia, ringkas, diakhiri footer EXECUTION PROGRESS.
+```
 
 ### 5.1 Bootstrap WAITING (dapat dipakai sekarang)
 

@@ -1,6 +1,6 @@
 # Migrasi data historis dan cutover — PRANATA UNY
 
-Status: P10 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P10
+Status: P10 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P10
 
 Dokumen ini memiliki **strategi intake historis, validasi, rekonsiliasi, cutover, go/no-go dan rollback**. Mekanisme intake di aplikasi adalah WF-026 (staging → validasi → keputusan → penerimaan). Kepercayaan sumber, identitas historis, pemetaan kode dan kepemilikan tulis setelah cutover tetap GAP-011/012/005/006/022 dan menjadi gerbang. Tidak ada impor ke produksi oleh agen; semua pemuatan dijalankan operator melalui fitur intake.
 

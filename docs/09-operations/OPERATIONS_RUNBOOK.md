@@ -1,6 +1,6 @@
 # Runbook operasi — PRANATA UNY
 
-Status: P9 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P9
+Status: P9 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P9
 
 Runbook ini ditujukan bagi **operator produksi yang ditunjuk Owner**, bukan agen AI. Setiap prosedur yang mengubah produksi mengikuti [PRODUCTION_DATA_SAFETY](../00-governance/PRODUCTION_DATA_SAFETY.md): cadangan terverifikasi sebelum perubahan, perintah yang sudah direview, dan pencatatan. Perintah rinci (nama layanan, path) difinalkan pada Task infrastruktur sesuai server yang dipilih.
 

@@ -1,8 +1,8 @@
 # Context index
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 P0–P11 planning) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent
 
-Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Current state: see [PHASE_STATUS](PHASE_STATUS.md) and [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation and compatibility amendments plus P4–P11 candidates VERIFYING / NOT YET APPROVED on branch `docs/p0-p11-planning`; P4–P11 preparation authorized by AUTH-012 (not approval); application execution NOT AUTHORIZED. Future executors enter through [EXECUTION_CONTEXT](11-tasks/EXECUTION_CONTEXT.md) instead of this index.
+Zero-context entry: [AGENTS.md](../AGENTS.md) → [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md) → [PHASE_STATUS](PHASE_STATUS.md) → relevant owning records below. Current state: see [PHASE_STATUS](PHASE_STATUS.md) and [CURRENT_HANDOFF](handoff/CURRENT_HANDOFF.md). P0–P11 DONE — APPROVED (APPR-005, APPR-006 at `851013f`) and frozen as FRZ-001; execution authorized by AUTH-013. Future executors enter through [EXECUTION_CONTEXT](11-tasks/EXECUTION_CONTEXT.md) instead of this index.
 
 | Need | Read |
 |---|---|

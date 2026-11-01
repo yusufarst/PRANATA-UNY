@@ -257,3 +257,49 @@ Historical next action under AUTH-004 was independent P1 review, then Owner appr
 - Excluded: marking any P4–P11 phase APPROVED or DONE; merging an unapproved candidate into `main`; Planning Freeze; making any Task READY; application coding, scaffolding, package installation in the repository, schema or migrations; activating the Claude Code execution workflow; production, hosting, domain or paid-service actions; resolving a GAP without the required evidence and review; rewriting historical approvals or approval identities; global Git configuration changes, history rewrites or force pushes; publishing raw reference inputs, credentials or personal data.
 - Supersession: supersedes earlier preparation restrictions only to the extent stated here (for example "each later phase needs separate explicit authorization" for preparation). Approval, publication to `main`, Planning Freeze, Task baseline, execution and release remain separate Owner gates; GOV-11 allows them to be consolidated into batch decisions when safe.
 - State: **ACTIVE** from 2026-10-30 until every P4–P11 phase is approved or the Owner revokes it.
+
+## APPR-005
+
+- Kind: **OWNER APPROVAL — P0–P3 REMEDIATION AMENDMENT** (AUTH-010 candidate).
+- Recorded: **2026-11-01 (Asia/Jakarta)** from the Owner directive "FINAL CONSOLIDATED OWNER DIRECTIVE — PRANATA UNY" ([U-012](SOURCE_INVENTORY.md#u-012-owner-consolidated-directive-of-2026-11-01); in-session attachment, **10,113 bytes / SHA-256 `fdd5e69e4a8b87bd56beb55a4398b14ff48d5b9efbe71c17dbd471b9ddb37220`**), decisions D-01 and D-02 of the [OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md).
+- Approved identity: the remediation content as carried, byte for byte, by the independently reviewed branch head **`851013ff2dc33bf75a1973089f09e38c7512c058`** of `docs/p0-p11-planning` (described by the P0_P3_REMEDIATION_ARTIFACT_MANIFEST).
+- Basis: independent Second Review verdict **READY_FOR_OWNER_APPROVAL** at `851013ff2dc33bf75a1973089f09e38c7512c058`, as reported by the Owner in U-012. Approval does not resolve any GAP.
+
+## APPR-006
+
+- Kind: **OWNER APPROVAL — AUTH-012 P0–P3 COMPATIBILITY AMENDMENT AND P4–P11 PLANNING**, including the procurement field-findings amendment (U-011), ADR-0001–ADR-0010 and the 78-Task backlog TASK-001–TASK-078.
+- Recorded: **2026-11-01 (Asia/Jakarta)** from U-012 (**10,113 bytes / SHA-256 `fdd5e69e4a8b87bd56beb55a4398b14ff48d5b9efbe71c17dbd471b9ddb37220`**), decision D-01.
+- Approved identity: **`851013ff2dc33bf75a1973089f09e38c7512c058`** exactly. P4–P11: **DONE — APPROVED**. ADR-0001–ADR-0010: **ACCEPTED**. P0–P3 compatibility wording (OD-26–OD-36, GOV-10–GOV-12 and the items listed in PHASE_STATUS) is approved with it.
+- Approved with it: the Owner answers to D-01–D-29 recorded in [OWNER_DECISION_PACKAGE §0](../handoff/OWNER_DECISION_PACKAGE.md#0-jawaban-owner-2026-11-01), including the override of D-04.
+- Not approved by it: any GAP resolution (GAP-001–GAP-029 stay OPEN), official policy activation, production action or spending.
+
+## AUTH-011
+
+- Kind: **OWNER AUTHORIZATION — PUBLICATION OF THE APPROVED PLANNING BRANCH** (D-02, D-08 option A).
+- Recorded: **2026-11-01 (Asia/Jakarta)** from U-012.
+- Authorized: advancing `main` by verified fast-forward from `0e3f7de3acbed5213c13e22a61fc2728e57ccc77` to the baseline commit that carries this record. That commit descends from `851013ff2dc33bf75a1973089f09e38c7512c058` and adds only approval, freeze, authorization and status records; the planning content is unchanged. Pre-merge checks performed on 2026-11-01: `0e3f7de` is an ancestor of `851013ff2dc33bf75a1973089f09e38c7512c058`; all 12 commits in the range have Owner-only author and committer and no AI attribution in their messages; the PR #1 description contains no AI attribution; live remote `main` = `0e3f7de`.
+- Execution note: the planning session's own push to `main` was refused by that session's permission control; it was not bypassed. The fast-forward is executed by the Owner's command given in [CURRENT_HANDOFF](../handoff/CURRENT_HANDOFF.md).
+- State: **COMPLETED** once live `main` equals the baseline commit (`git ls-remote origin refs/heads/main`) and GitHub shows PR #1 merged.
+
+## FRZ-001
+
+- Kind: **PLANNING FREEZE AND TASK BASELINE** (D-03).
+- Recorded: **2026-11-01 (Asia/Jakarta)** from U-012.
+- Baseline: the approved planning `851013ff2dc33bf75a1973089f09e38c7512c058` as published on `main` with this record. Baseline Total Tasks: **78** (TASK-001–TASK-078). TASK-001: **READY**.
+- Change control after the freeze: [CHANGE_CONTROL](CHANGE_CONTROL.md) and the TASK PLAN CHANGE rule of [EXECUTOR_OPERATING_MODEL §12](../11-tasks/EXECUTOR_OPERATING_MODEL.md#12-pelaporan-kemajuan-dan-eskalasi-owner). Material planning changes receive a focused independent Second Review before they enter `main`; status, evidence and handoff updates do not.
+- Pending change: **PCR-001** (legacy BMU/depreciation reporting evidence, two-channel procurement-need intake and a regulatory-source update), proposed on branch `docs/pcr-001-legacy-reporting-and-intake`. Until it is reviewed and published, TASK-025, TASK-066, TASK-069 and TASK-071 are **BLOCKED**; every other Task follows the frozen baseline.
+- Effective: when live `main` contains this record (AUTH-011).
+
+## AUTH-013
+
+- Kind: **OWNER AUTHORIZATION — STANDING AUTONOMOUS EXECUTION OF TASK-001–TASK-078** with maximum safe autonomy (D-04 overridden by the Owner).
+- Recorded: **2026-11-01 (Asia/Jakarta)** from U-012. Executor: Claude Code as Execution Agent on the Owner's Windows PC. Planning amendments stay with Claude Planning; ChatGPT reviews material planning changes only.
+- Authorized: continuous execution of every READY Task in dependency order without Owner approval per Task or milestone — Task branches, commits with the Owner identity only (GOV-08), pushes, pull requests, CI repair, risk-based review, merges by the guarded fast-forward script after the checks of [EXECUTOR_OPERATING_MODEL §8.1](../11-tasks/EXECUTOR_OPERATING_MODEL.md#81-pemeriksaan-sebelum-merge), DONE reconciliation, marking the next eligible Task READY, ordinary error recovery and safe parallelism within §3 and §14 of that model.
+- Modes: TASK-001–TASK-005 run once in bootstrap mode (SUPERVISED: an interactive session in which the Owner answers permission prompts and performs the one-time GitHub steps; no per-Task approval); TASK-006–TASK-078 run AUTONOMOUS as soon as the additional prerequisites of [EXECUTOR_OPERATING_MODEL §1](../11-tasks/EXECUTOR_OPERATING_MODEL.md#1-prasyarat-aktivasi) are met (capability report, `ci-gate` proven, `main` ruleset applied by the Owner, restricted runner token per D-27). No further scope authorization is needed for later milestones.
+- Retained controls: dependency and READY gates; authorization, database-integrity, concurrency, security and accessibility tests required by each Task; `ci-gate`; independent review for HIGH-risk Tasks; guardrail-path changes merged only in SUPERVISED mode; hold/shutdown; backup and release gates; secret scanning and the privacy rules of U-012 §7.
+- Excluded (Owner-only): production deployment or activation, real institutional transactions, official policy activation while its GAP is open (D-28), purchases and paid services, GitHub administration (rulesets, tokens, settings), publishing secrets or private institutional data, Git identity changes, history rewrites, amended published commits and force pushes, and starting a Task blocked by PCR-001.
+- State: **ACTIVE** from FRZ-001 until V1 release, an Owner hold or revocation.
+
+## AUTH-012 closure
+
+AUTH-012 is **HISTORICAL / COMPLETED** as of 2026-11-01: every P4–P11 phase is approved under APPR-006. Post-freeze planning amendments (for example PCR-001) are prepared by Claude Planning under FRZ-001 change control.

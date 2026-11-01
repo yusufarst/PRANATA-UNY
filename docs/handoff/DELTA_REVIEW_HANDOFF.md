@@ -1,6 +1,8 @@
 # Handoff pemeriksaan delta — koreksi SR-D4-P1-01 atas `78bf722`
 
-Status: P0–P11 planning candidate — VERIFYING (AUTH-012) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Untuk: Second Review Agent independen (ChatGPT)
+Status: P0–P11 planning — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Untuk: Second Review Agent independen (ChatGPT)
+
+> Historis: review delta atas koreksi SR-D4-P1-01 selesai dengan verdict READY_FOR_OWNER_APPROVAL pada `851013f`; paket disetujui Owner (APPR-005, APPR-006, 2026-11-01). Handoff review terfokus PCR-001 berada di cabang `docs/pcr-001-legacy-reporting-and-intake`.
 
 Sesuai GOV-11, koreksi diverifikasi dengan **pemeriksaan delta sempit**: apakah SR-D4-P1-01 tertutup secara substansi dan apakah koreksinya menimbulkan masalah baru. Review delta `78bf722` telah menutup SR-D3-P1-01 (sisipan terlambat) di tingkat spesifikasi; bagian itu tidak perlu diperiksa ulang kecuali tersentuh koreksi ini. Handoff lengkap tetap [SECOND_REVIEW_HANDOFF](SECOND_REVIEW_HANDOFF.md).
 

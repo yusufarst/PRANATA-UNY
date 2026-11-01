@@ -1,6 +1,6 @@
 # Model keamanan — PRANATA UNY
 
-Status: P5 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P5 | ADR: [ADR-0007](../adr/ADR-0007-local-authentication.md), [ADR-0009](../adr/ADR-0009-private-file-storage.md), [ADR-0010](../adr/ADR-0010-audit-and-db-roles.md)
+Status: P5 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P5 | ADR: [ADR-0007](../adr/ADR-0007-local-authentication.md), [ADR-0009](../adr/ADR-0009-private-file-storage.md), [ADR-0010](../adr/ADR-0010-audit-and-db-roles.md)
 
 Dokumen ini memiliki **autentikasi, sesi, pemulihan, klasifikasi data, model ancaman, perlindungan berkas/ekspor, header, rahasia, pemantauan keamanan dan skenario regresi keamanan**. Otorisasi (kapabilitas, cakupan, penugasan, pemisahan tugas, isolasi) dimiliki [ACCESS_CONTROL](ACCESS_CONTROL.md). Keputusan yang masih memerlukan Owner ditandai **[KEPUTUSAN OWNER]** dan dikumpulkan di [OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md).
 

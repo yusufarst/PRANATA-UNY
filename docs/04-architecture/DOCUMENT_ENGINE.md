@@ -1,6 +1,6 @@
 # Mesin dokumen — generasi, versi, nomor dan bukti tanda tangan
 
-Status: P4 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P4 | ADR: [ADR-0005](../adr/ADR-0005-document-generation.md)
+Status: P4 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P4 | ADR: [ADR-0005](../adr/ADR-0005-document-generation.md)
 
 Dokumen ini memiliki desain teknis WF-028 dan OD-08/OD-29: data dimasukkan sekali, dokumen terkait dihasilkan dalam beberapa klik, setiap keluaran dapat dijelaskan asal datanya, dan dokumen resmi berbahasa Indonesia. Varian dokumen, isi wajib dan penomoran resmi tetap kebijakan (GAP-017/019) yang dikelola Policy Registry.
 

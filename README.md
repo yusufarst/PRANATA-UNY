@@ -2,7 +2,7 @@
 
 PRANATA is planned as one integrated web application and one shared data ecosystem, with Asset Workspace, Procurement Workspace, Vendor Portal and Super Admin. Owner direction is recorded in [DECISION_LOG](docs/00-governance/DECISION_LOG.md); P1 product definition is approved under APPR-002. The [P2 domain model](docs/02-domain/DOMAIN_MODEL.md) is approved under APPR-003 with every rule/source/GAP qualification preserved.
 
-Current state: see [PHASE_STATUS](docs/PHASE_STATUS.md) and [CURRENT_HANDOFF](docs/handoff/CURRENT_HANDOFF.md). P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de`; P0–P3 remediation amendment candidate VERIFYING / NOT YET APPROVED; P4–P11 NOT AUTHORIZED; application execution NOT AUTHORIZED.
+Current state: see [PHASE_STATUS](docs/PHASE_STATUS.md) and [CURRENT_HANDOFF](docs/handoff/CURRENT_HANDOFF.md). P0–P11 DONE — APPROVED (APPR-005, APPR-006 at `851013f`) and frozen as FRZ-001; autonomous execution of TASK-001–TASK-078 authorized by AUTH-013.
 
 Start with [AGENTS.md](AGENTS.md), then [CURRENT_HANDOFF](docs/handoff/CURRENT_HANDOFF.md), [PHASE_STATUS](docs/PHASE_STATUS.md) and [CONTEXT_INDEX](docs/CONTEXT_INDEX.md). [PROJECT_CHARTER](docs/00-governance/PROJECT_CHARTER.md) defines the P0 foundation. [P0_QUALITY_GATE](docs/00-governance/evidence/P0_QUALITY_GATE.md) records review evidence.
 

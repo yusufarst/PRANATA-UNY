@@ -1,6 +1,6 @@
 # Perjalanan pengguna kritis — PRANATA UNY
 
-Status: P7 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P7
+Status: P7 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P7
 
 Dokumen ini memiliki **perjalanan kritis per peran** yang menjadi dasar desain halaman, uji E2E browser (P8) dan skenario UAT (P10). Setiap perjalanan memakai data sintetis; nilai kebijakan pada perjalanan pengadaan memakai versi kebijakan DRAFT berlabel simulasi di lingkungan non-produksi sampai GAP terkait terselesaikan.
 

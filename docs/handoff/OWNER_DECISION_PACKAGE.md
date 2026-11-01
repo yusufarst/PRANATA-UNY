@@ -1,10 +1,44 @@
 # Paket keputusan Owner — PRANATA UNY
 
-Status: P0–P11 planning candidate — VERIFYING (AUTH-012) | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Disusun menurut GOV-11
+Status: P0–P11 planning — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Disusun menurut GOV-11
 
 Paket ini mengumpulkan **semua keputusan Owner** yang dibutuhkan agar perencanaan P0–P11 dapat disetujui, dibekukan dan dieksekusi. Setiap butir memuat rekomendasi, alternatif, konsekuensi dan dokumen yang terdampak. Diam tidak pernah dianggap persetujuan. Keputusan teknis biasa sudah diambil Planning Agent di dalam batas arahan Owner dan tidak diulang di sini.
 
 Draf keputusan di Project claude.ai yang dibuat sesi-sesi sebelumnya (antara lain `FORMULIR_KEPUTUSAN_OWNER_FT-01`, `JALUR_TERCEPAT_KE_PRODUKSI_FT-01`, `DRAF_D-1_R2.4`, berkas REC-REM-01) **tidak mengikat** dan digantikan oleh paket ini (GOV-10).
+
+## 0. Jawaban Owner 2026-11-01
+
+Dijawab Owner melalui direktif konsolidasi [U-012](../00-governance/SOURCE_INVENTORY.md#u-012-owner-consolidated-directive-of-2026-11-01) dan dicatat di [APPROVAL_RECORDS](../00-governance/APPROVAL_RECORDS.md) (APPR-005, APPR-006, AUTH-011, FRZ-001, AUTH-013). Owner juga menyetujui default operasional dan tata kelola aman yang sebelumnya direkomendasikan; butir yang tidak dijawab secara khusus mengikuti rekomendasinya. Bagian di bawah §A–§F tetap sebagai catatan alasan dan alternatif.
+
+| ID | Jawaban yang berlaku |
+|---|---|
+| D-01 | Disetujui: remediasi AUTH-010, amandemen kompatibilitas AUTH-012 dan P4–P11 pada `851013f` (APPR-005, APPR-006). |
+| D-02 | Disetujui: APPR-005, APPR-006 dan AUTH-011 dalam satu keputusan. |
+| D-03 | Disetujui: Planning Freeze dan baseline 78 Task (FRZ-001); TASK-001 READY. |
+| D-04 | **Diganti Owner**: otonomi maksimum yang aman untuk seluruh TASK-001–TASK-078 (AUTH-013). TASK-001–TASK-005 tetap satu kali dalam mode bootstrap; sesudah prasyarat mode otonom terpenuhi tidak ada perluasan bertahap per milestone. |
+| D-05 | Rekomendasi (a): Gudang ruang kerja sendiri. |
+| D-06 | Rekomendasi (a): satu go-live setelah R4; aktivasi produksi tetap menunggu persetujuan produksi eksplisit Owner. |
+| D-07 | Disetujui: data institusi yang sah dan dianonimkan boleh untuk UAT dengan persetujuan Owner per sampel; pengembangan memakai data sintetis. |
+| D-08 | A — fast-forward terverifikasi. |
+| D-09 | Disetujui: alur berbasis trunk. |
+| D-10 | Review Codex bila tersedia tanpa biaya tambahan; bila tidak, review pengganti subagen segar. |
+| D-11 | Watcher melalui Penjadwal Tugas Windows; otomasi berkelanjutan di PC Windows Owner diizinkan. |
+| D-12–D-16 | Sesuai rekomendasi: TOTP untuk akun istimewa dan pemegang penugasan keputusan; idle 60/30 menit; AICWDF-COMPAT-8; ClamAV hanya bila RAM server ≥ 16 GB, selain itu `NOT_SCANNED`; pemeriksaan password bocor OFF. |
+| D-17 | SMTP belum tersedia: notifikasi in-app dan pemulihan akun dibantu admin yang aman; SMTP opsional kelak. |
+| D-18 | Sesuai rekomendasi: kode aktivasi penyedia diserahkan langsung oleh petugas pengadaan berwenang. |
+| D-19 | Produksi: VPS yang dilanggan dan dibiayai pribadi oleh Owner, dibeli hanya saat implementasi selesai dan persiapan produksi dimulai, dengan otorisasi eksplisit. Staging disetujui **tanpa VPS kedua**: lingkungan staging terisolasi di mesin yang dikendalikan Owner (proyek Docker Compose, basis data, volume, rahasia dan port terpisah dari pengembangan), dipakai TASK-040 sampai produksi tersedia. Pengembangan dan uji awal di PC Windows Owner. |
+| D-20 | Domain dibeli dan dikonfigurasi Owner kemudian; DNS, TLS dan administrasi server dikelola Owner; TLS otomatis. |
+| D-21 | Cadangan terenkripsi di luar VPS produksi, sebaiknya memakai penyimpanan gratis milik Owner yang sudah ada; layanan berbayar hanya dengan izin. |
+| D-22 | Operator teknis: Owner. Peringatan operasi dikirim ke Owner sebagai penerima utama melalui kanal tanpa biaya yang dipilih saat TASK-076. |
+| D-23 | Sesuai rekomendasi: pemeriksa uptime gratis/self-hosted di host terpisah dari produksi. |
+| D-24 | Owner satu-satunya otoritas penerimaan UAT tingkat proyek (UAT-1–UAT-4); staf lain boleh membantu pengujian. Persetujuan institusi yang wajib secara terpisah tetap berlaku dan tidak digantikan. |
+| D-25 | Sesuai rekomendasi sebagai panduan rute pertanyaan; GAP tetap OPEN sampai bukti resmi tersedia. |
+| D-26 | Masukan Owner, bukan penyelesaian GAP: PR 34/2023 tetap rujukan institusi yang dimaksud dengan syarat keberlakuannya diverifikasi (GAP-026); usulan pengadaan harus dapat diajukan langsung oleh unit maupun melalui kanal pengadaan pusat (diusulkan dalam PCR-001); temuan lapangan pengadaan (OD-35/OD-36, RG-07) ditegaskan kembali — praktik tiga penawaran tidak menjadi syarat umum; templat resmi ada, versi dan provenansnya diperiksa sebelum aktivasi resmi (GAP-017). |
+| D-27 | Disetujui: token runner terbatas khusus repositori ini tanpa hak Administration. |
+| D-28 | Disetujui (a)–(c) beserta syarat go-live; kebijakan yang belum terselesaikan tidak menghalangi pengembangan yang tidak terkait, tetapi menghalangi transaksi produksi resmi yang belum berwenang. |
+| D-29 | Tidak dipesan sekarang (target biaya berulang Rp0): keamanan dibuktikan regresi SEC/AUTHZ otomatis dan review independen TASK-074; dapat dipertimbangkan Owner sebelum go-live. |
+
+Biaya: target pengeluaran berulang tambahan Rp0; setiap layanan berbayar memerlukan izin Owner. Tidak ada pembelian infrastruktur atau deploy produksi tanpa otorisasi eksplisit Owner.
 
 ## Cara menjawab
 

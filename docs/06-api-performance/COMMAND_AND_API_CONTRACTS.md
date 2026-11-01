@@ -1,6 +1,6 @@
 # Kontrak perintah, rute dan respons — PRANATA UNY
 
-Status: P6 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P6
+Status: P6 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P6
 
 Dokumen ini memiliki **bentuk permintaan/respons, validasi, model galat, idempotensi, konkurensi optimistis, pagination, unggah/unduh, operasi panjang dan batas laju**. Aturan transaksi, urutan kunci dan invarian basis data dimiliki [CONCURRENCY_AND_INTEGRITY](CONCURRENCY_AND_INTEGRITY.md); target performa dimiliki [PERFORMANCE_AND_SCALE](PERFORMANCE_AND_SCALE.md). PRANATA V1 tidak memiliki API publik; semua rute melayani aplikasi Inertia milik sendiri.
 

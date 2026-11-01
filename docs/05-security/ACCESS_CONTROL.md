@@ -1,6 +1,6 @@
 # Kontrol akses — kelompok peran, kapabilitas, cakupan, penugasan dan pemisahan tugas
 
-Status: P5 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P5
+Status: P5 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P5
 
 Dokumen ini memiliki **model otorisasi PRANATA**: kelompok peran global yang ringkas, katalog kapabilitas, cakupan grant, penugasan proses per objek, aturan pemisahan tugas, isolasi data per ruang kerja/gudang/penyedia, batas Super Admin, kesesuaian frontend–backend dan skenario regresi otorisasi. Dasar: [OD-09](../00-governance/DECISION_LOG.md#od-09), [OD-10](../00-governance/DECISION_LOG.md#od-10), [OD-20](../00-governance/DECISION_LOG.md#od-20), [OD-28](../00-governance/DECISION_LOG.md#od-28), BR-034, INV-001/004/021. Pemetaan jabatan resmi ke fungsi per metode tetap GAP-003/014 dan dikelola sebagai kebijakan `procurement.authority` / `warehouse.operations` / `asset.lifecycle`.
 

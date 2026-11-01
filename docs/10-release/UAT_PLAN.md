@@ -1,6 +1,6 @@
 # Rencana UAT — PRANATA UNY
 
-Status: P10 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P10
+Status: P10 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P10
 
 Dokumen ini memiliki **tahap UAT, kriteria masuk/keluar, katalog skenario, peran, tingkat cacat dan berita acara penerimaan**. Penandatangan dan pengguna UAT per ruang kerja ditetapkan Owner (jabatan/peran, bukan nama pribadi di repositori) **[KEPUTUSAN OWNER]**.
 

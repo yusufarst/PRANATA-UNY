@@ -1,6 +1,6 @@
 # Matriks ketertelusuran Task — PRANATA UNY
 
-Status: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
+Status: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
 
 Matriks ini dibangkitkan dari kontrak Task dan diperiksa otomatis: setiap CAP-01–CAP-23, AC-01–AC-36, NFR-P01–P04/NFR-O01–O02, WF-001–WF-033, RT-001–RT-036 dan IX-001–IX-024 dipetakan ke minimal satu Task. Skenario integritas data DI-01–DI-33 ([TEST_STRATEGY §10](../08-testing/TEST_STRATEGY.md#10-skenario-integritas-data-wajib)) dipetakan ke Task yang kriteria penerimaan atau ujinya memuatnya.
 

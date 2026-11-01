@@ -1,10 +1,10 @@
 # TASK-066 — Penyusutan dan amortisasi (WF-022)
 
-Status dokumen: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
+Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: BLOCKED
+EXECUTION STAGE: — (BLOCKED: menunggu PCR-001, FRZ-001)
 RISK CLASS: HIGH
 MILESTONE: M7 — Nilai aset, KDP, intake dan rekonsiliasi
 PARALLEL SAFE: NO

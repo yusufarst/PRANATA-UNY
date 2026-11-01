@@ -1,6 +1,6 @@
 # Gerbang kualitas, Definition of Done dan pipeline CI — PRANATA UNY
 
-Status: P8 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P8
+Status: P8 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P8
 
 Dokumen ini memiliki **status Task, Definition of Done per kelas risiko, gerbang review, desain pipeline CI dan aturan bukti**. Strategi uji dimiliki [TEST_STRATEGY](TEST_STRATEGY.md); operasi eksekutor dimiliki [EXECUTOR_OPERATING_MODEL](../11-tasks/EXECUTOR_OPERATING_MODEL.md); gerbang rilis dimiliki [RELEASE_PLAN](../10-release/RELEASE_PLAN.md).
 

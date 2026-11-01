@@ -1,6 +1,6 @@
 # Infrastruktur, observabilitas, cadangan dan pemulihan — PRANATA UNY
 
-Status: P9 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P9
+Status: P9 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P9
 
 Dokumen ini memiliki **lingkungan, topologi, kontainer pengembangan yang terisolasi, CI, staging/produksi, batas sumber daya, rahasia, logging/pemantauan, cadangan/pemulihan, keamanan server, inventaris biaya dan respons insiden**. Prosedur langkah demi langkah ada di [OPERATIONS_RUNBOOK](OPERATIONS_RUNBOOK.md). Pilihan yang memerlukan keputusan Owner ditandai **[KEPUTUSAN OWNER]**. Tidak ada infrastruktur yang dibuat oleh dokumen ini.
 

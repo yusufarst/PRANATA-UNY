@@ -1,10 +1,10 @@
 # TASK-001 — Pagar pengaman eksekutor, runner dan verifikasi kemampuan (mode terawasi)
 
-Status dokumen: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
+Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: READY
+EXECUTION STAGE: READY
 RISK CLASS: HIGH
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: NO

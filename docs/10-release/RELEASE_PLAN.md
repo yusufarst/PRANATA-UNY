@@ -1,6 +1,6 @@
 # Rencana rilis — PRANATA UNY
 
-Status: P10 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P10
+Status: P10 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P10
 
 Dokumen ini memiliki **urutan increment, gerbang rilis, deklarasi rilis, versi, rollback dan hubungan dengan penerimaan V1**. UAT dimiliki [UAT_PLAN](UAT_PLAN.md); migrasi data dan cutover dimiliki [MIGRATION_AND_CUTOVER](MIGRATION_AND_CUTOVER.md); prosedur operasi dimiliki [OPERATIONS_RUNBOOK](../09-operations/OPERATIONS_RUNBOOK.md).
 

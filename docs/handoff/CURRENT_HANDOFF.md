@@ -1,49 +1,46 @@
 # Current handoff
 
-Status: Approved baseline: APPR-004, published 0e3f7de · Amendment candidates: VERIFYING (AUTH-010 remediation; AUTH-012 P0–P11 planning) | Updated: 2026-10-30 (Asia/Jakarta) | Role: LEAD PLANNING AGENT (GOV-10) | Phase: P0–P11 planning candidate | Authorization: AUTH-012 (preparation only)
+Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: LEAD PLANNING AGENT (GOV-10) | Phase: execution start | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
 
 ## Current state
 
-Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRANATA-UNY`, specifically published `main`, is the durable shared Source of Truth. Branch `docs/p0-p11-planning` carries the planning candidate for review; nothing on it is approved or merged.
+Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRANATA-UNY`, specifically published `main`, is the durable shared Source of Truth.
 
-- Approved published baseline: P0–P3 DONE — APPROVED AND PUBLISHED at `0e3f7de3acbed5213c13e22a61fc2728e57ccc77` (`docs: finalize P3 workflows`); approvals APPR-001–APPR-004.
-- Candidates on `docs/p0-p11-planning`, all **VERIFYING / NOT YET APPROVED**: AUTH-010 P0–P3 remediation amendment (imported byte for byte); AUTH-012 P0–P3 compatibility amendment; AUTH-012 P4–P11 planning candidates; procurement field-findings amendment (U-011, OD-35/OD-36).
-- Active authorization: [AUTH-012](../00-governance/APPROVAL_RECORDS.md#auth-012) — planning preparation and bounded planning Git operations only. APPR-005 and AUTH-011 reserved, not recorded.
-- Planning Freeze: NOT REACHED. Task backlog: 78 candidate Tasks, none READY. Task Baseline: NOT READY.
-- Application implementation: NONE. Application execution: NOT AUTHORIZED. Claude Code: EXECUTION AGENT — WAITING.
+- P0–P11 **DONE — APPROVED** at `851013ff2dc33bf75a1973089f09e38c7512c058` (APPR-005, APPR-006); Owner answers D-01–D-29 in [OWNER_DECISION_PACKAGE §0](OWNER_DECISION_PACKAGE.md#0-jawaban-owner-2026-11-01).
+- Publication (AUTH-011): `main` is fast-forwarded by the Owner to the baseline commit on branch `docs/planning-baseline`, which adds only the approval, freeze, authorization and status records to `851013f`.
+- Planning Freeze **FRZ-001**; Task Baseline 78 Tasks; TASK-001 READY; TASK-025, TASK-066, TASK-069, TASK-071 BLOCKED by PCR-001.
+- Execution **AUTHORIZED — AUTH-013** (TASK-001–TASK-078, maximum safe autonomy). Application implementation: NONE yet.
 - GAP-001–GAP-029: OPEN (resolved NONE).
 
 ## Handoff (AICWDF §36)
 
 | Field | Current value |
 |---|---|
-| Current phase | P0–P11 planning candidate under review; P4–P11 DRAFTED — VERIFYING. Approved phases 4/12. |
-| Current Task / status | NONE — Tasks become executable only after P11 approval, Planning Freeze and a standing execution authorization. |
-| Last completed action | Correction of the delta Second Review of `78bf722` (2026-10-30): SR-D4-P1-01 substantiated — existing offer file links and referenced file identity were updatable because the capture seal checks inserts only. File content identity is now immutable for every file (column grants, `guard_file_object_change()`, write-once storage), file links keep file/owner/purpose fixed with a one-time unlink for ordinary links, and links to sealed owners (`file_sealed_owner_types`, V1 submissions) reject every update and delete; downloads verify SHA-256 before sending and fail closed; DI-23 extended, DI-33 and SEC-22 added, TASK-016 and TASK-033 updated (still 78 Tasks); an internal pre-check of `1452ccd` found no P1 and its P2/P3 items were corrected in a follow-up commit (owner-type and owner-row checks on links, evidence via FK columns, verified server-side reads, residual-risk statement). The generated-by footer in the PR #1 description remains for the Owner to delete in the GitHub interface (the planning session's gateway re-appends it). Previously: SR-D3-P1-01 capture seal in `78bf722` (closed by the delta review). |
-| Evidence | [P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md) (link/anchor, ID, coverage, dependency-graph, schema-order, DI-ownership and attribution checks; Second Review dispositions). The exact review identity is the branch head SHA reported with the delta-review request. |
-| Task plan | Baseline candidate 78 · Current 78 · DONE 0 · READY 0 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 78 · SUPERSEDED 0 · progress percentage not reported before the baseline is approved. |
-| Open blockers | Narrow delta check of the SR-D4-P1-01 correction ([DELTA_REVIEW_HANDOFF](DELTA_REVIEW_HANDOFF.md)); PR #1 description footer to be removed by the Owner; Owner batch decision ([OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md)); Planning Freeze; standing execution authorization. Staging/UAT also need Owner hosting decisions (TASK-040). |
-| Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates, never as invented rules ([TRACEABILITY_MATRIX — Perlakuan GAP](../11-tasks/TRACEABILITY_MATRIX.md#perlakuan-gap)). |
-| Decisions made | OD-01–OD-36 and GOV-01–GOV-12 as recorded in [DECISION_INDEX](../00-governance/DECISION_INDEX.md); GOV-08 Owner identity confirmation. |
-| Decisions pending | See [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md) D-01–D-29: batch approval, APPR-005/AUTH-011 consolidation, Planning Freeze and execution scope, Gudang workspace, release model, merge method and trunk-based flow, Codex, runner, executor token scope, GAP gating model and go-live conditions, security options SEC-D1–D7, optional penetration test, hosting/operations/UAT signers, GAP resolver roles and priority questions for UNY custodians (including lot/item award limits, evaluation rules, method/type document sets, offer-deadline semantics and pbj.uny.ac.id functions; the number-of-winners question is answered by OD-35). |
-| Files changed | Branch `docs/p0-p11-planning` relative to `0e3f7de`; the exact list is `git diff --stat 0e3f7de...docs/p0-p11-planning`. |
-| Toolchain | Planning used only Git, GitHub CLI and Python standard-library scripts in the session scratchpad (renderer and link/ID checks); nothing installed in the repository; no MCP configuration changed. |
-| Graphify / Context7 | Graphify N/A (no application code). Version-sensitive facts are deferred to TASK-002/TASK-003 verification; Claude Code capabilities to TASK-001. |
-| Cost | New recurring cost: NONE. Paid exception: NONE. Hosting and offsite storage are client-funded Owner decisions. |
-| UI / UX / localization | Candidate design system (OD-34 colors), information architecture with 77 page contracts (PG), including the evaluation workspace, Indonesian default with English, mobile-first, contextual returns — not implemented. |
-| Database | Direct production DB touched: NO. Schema: candidate design only. Migration: NONE. |
-| Tests | Documentation checks only; application tests N/A (no application exists). |
-| Next READY Task | NONE (TASK-001 becomes READY only after approval, Planning Freeze and execution authorization). |
+| Current phase | Execution start after approved and frozen planning; approved phases 12/12. |
+| Current Task / status | TASK-001 READY (bootstrap, SUPERVISED). |
+| Last completed action | 2026-11-01: Owner approval recorded (APPR-005, APPR-006), publication authorized (AUTH-011), Planning Freeze FRZ-001, standing autonomous execution AUTH-013; legacy `index (1).html` re-inspected in full and national procurement sources checked on official JDIH listings; post-freeze change PCR-001 proposed for focused review. |
+| Evidence | [P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md#final-review-and-owner-approval); [APPROVAL_RECORDS](../00-governance/APPROVAL_RECORDS.md#appr-006). |
+| Task plan | Baseline 78 · Current 78 · DONE 0 · READY 1 · IN_PROGRESS 0 · BLOCKED 4 · VERIFYING 0 · TODO 73 · SUPERSEDED 0 · 0%. |
+| Open blockers | (1) Owner fast-forwards `main` (command below). (2) Focused Second Review of PCR-001 before TASK-025/066/069/071. (3) One-time Owner steps during bootstrap: answer permission prompts, apply the `main` ruleset after `ci-gate` is proven on TASK-005, install the restricted runner token (D-27). (4) The 84-page BMU PDF named in U-012 was not available to the planning session; it is needed locally for the PCR-001 parity check. |
+| Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
+| Decisions made | OD-01–OD-36, GOV-01–GOV-12 ([DECISION_INDEX](../00-governance/DECISION_INDEX.md)); D-01–D-29 answered (U-012). |
+| Decisions pending | None for TASK-001–TASK-024 and the other unblocked Tasks. PCR-001 review verdict. Production purchase, domain, go-live and paid services remain Owner decisions when reached. |
+| Files changed | Baseline records: `git diff --stat 851013f..docs/planning-baseline`; PCR-001: `git diff --stat docs/planning-baseline..docs/pcr-001-legacy-reporting-and-intake`. |
+| Toolchain | Planning used Git, GitHub CLI, official JDIH/LKPP listings via web search and Python standard-library scripts outside the repository. |
+| Cost | New recurring cost: NONE (target Rp0). Paid exception: NONE. |
+| Database | Direct production DB touched: NO. Schema/migrations: none yet. |
+| Next READY Task | TASK-001. |
 
 ## Exact next safe action
 
-Narrow delta check of the SR-D4-P1-01 correction at the reported head SHA of `docs/p0-p11-planning` using [DELTA_REVIEW_HANDOFF](DELTA_REVIEW_HANDOFF.md); then the Owner's explicit batch decision using [OWNER_DECISION_PACKAGE](OWNER_DECISION_PACKAGE.md). Merge into `main` only after that decision, with the merge method the Owner selects.
+1. **Owner — publish the baseline (once):** in a local clone, `git fetch origin` and then `git push origin <baseline-sha>:refs/heads/main`, where `<baseline-sha>` is the head of `origin/docs/planning-baseline` reported by the Planning Agent; verify `git ls-remote origin refs/heads/main` shows it and PR #1 shows merged.
+2. **Owner — start execution:** open Claude Code in the PRANATA clone on the Windows PC, `git switch main && git pull --ff-only`, and paste the prompt of [EXECUTOR_BOOTSTRAP §5.0](../11-tasks/EXECUTOR_BOOTSTRAP.md#50-mulai-eksekusi-auth-013).
+3. **Review — PCR-001:** focused Second Review of `docs/planning-baseline..docs/pcr-001-legacy-reporting-and-intake` with [DELTA_REVIEW_HANDOFF](DELTA_REVIEW_HANDOFF.md) on that branch; on an acceptable verdict the Planning Agent publishes it by the same fast-forward method and unblocks the four Tasks.
 
 ## DO NOT DO
 
-- No merge of the planning candidate into `main` before explicit Owner approval.
-- No application work: implementation, scaffolding, packages, schema, migrations, authentication or UI.
-- No Task marked READY, no Planning Freeze, no execution authorization by an agent.
+- No start of a BLOCKED Task; no Task outside AUTH-013; no production deployment, real institutional transaction, official policy activation with an open GAP, purchase or paid service.
+- No planning amendment by the executor; changes go through a TASK PLAN CHANGE and Claude Planning.
 - No GAP closure or resolution; no invented procurement, accounting, organization or security rule.
 - No Git identity/configuration change, no force push, no history rewrite, no AI attribution.
 - No access to MULTIPLECORP, BantuKasir or ELLIGBLE resources.

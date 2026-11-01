@@ -1,6 +1,6 @@
 # P0–P11 planning candidate quality gate
 
-Status: Evidence for the AUTH-012 candidate — VERIFYING, not approved | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent
+Status: Evidence for the approved P0–P11 baseline (APPR-006) | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent
 
 This record states which integrity checks the Planning Agent ran on the branch candidate `docs/p0-p11-planning` before requesting independent Second Review, the internal pre-review that was performed, the disposition of the independent Second Review findings, and their results. It is self-verification evidence, not the independent Second Review and not approval. The reviewed identity is the branch head SHA reported with the review request; a document cannot carry the hash of the commit that contains it.
 
@@ -138,6 +138,10 @@ The independent delta Second Review (ChatGPT) of `78bf722178c1ba69663f05bbf98023
 **Internal pre-check of the correction.** A separate agent that had not drafted the correction — an internal check, not the independent Second Review — reviewed `1452ccd`. It found no remaining P1 and reported six P2 and seven P3 items; each was verified and corrected in a follow-up commit: `file_links.owner_type` restricted to table names matching the enforced morph map, and inserts of links to a sealed owner lock the owner row and are rejected while it is not visible (links have no FK wait); receipt and withdrawal evidence are referenced through FK columns, not links, so a later withdrawal upload does not touch the link seal, and the upload/download contract now authorizes through links or evidence columns; every server-side read of stored bytes (document-pack assembly, conversion) goes through the integrity service; the submission manifest includes link unlink state and the receipt-evidence digest, and the residual risk of a privileged role rewriting data and manifest together is stated; remaining OFFER-only wording aligned; `verify_capture_manifest()` installed once on `file_links` by TASK-016 and dispatched through `file_sealed_owner_types.seal_function`; `scan_status` NOT NULL without return to NOT_SCANNED; "classification only rises" recorded as a planning assumption; orphan bytes kept until a retention policy exists (GAP-023); restore-drill wording aligned; acceptance-side digest tests added (client digests ignored, `content_sha256` checked at commit).
 
 The corrections await the narrow delta check described in [DELTA_REVIEW_HANDOFF](../../handoff/DELTA_REVIEW_HANDOFF.md).
+
+## Final review and Owner approval
+
+The Owner reported the independent Second Review verdict **READY_FOR_OWNER_APPROVAL** for `851013ff2dc33bf75a1973089f09e38c7512c058` and approved the package on 2026-11-01 ([APPR-005, APPR-006](../APPROVAL_RECORDS.md#appr-006)). Pre-publication checks (AUTH-011): `0e3f7de` is an ancestor of the approved head; the 12 commits have Owner-only author and committer and no attribution text; the PR #1 description has no AI footer. `1452ccd` and `851013f` carry a signature of the planning-session environment because they were created without `-c commit.gpgsign=false`; per U-012 they are not amended. Later planning changes follow FRZ-001 change control (PCR-001).
 
 ## Limits
 

@@ -1,16 +1,16 @@
 # Konteks eksekusi — PRANATA UNY
 
-Status: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
+Status: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
 
 Konteks minimum yang stabil untuk eksekutor (AICWDF §34A). Dokumen ini **tidak menyalin** aturan; ia menunjuk pemilik kanoniknya. Bila ada konflik, pemilik kanonik yang berlaku dan konflik dicatat, bukan diselesaikan diam-diam.
 
 ```text
 PROJECT: PRANATA UNY — sistem informasi pengadaan, gudang dan aset DPSA UNY (ALP; Gudang ALP dan PSRT)
 CURRENT RELEASE: belum ada (pra-implementasi)
-CURRENT PHASE: P4–P11 kandidat VERIFYING; Planning Freeze NOT REACHED
-EXECUTION AUTHORITY: NONE — eksekusi aplikasi NOT AUTHORIZED
-EXECUTOR STATE: EXECUTION AGENT — WAITING (bootstrap baca-saja saja; EXECUTOR_BOOTSTRAP §2)
-TASK BASELINE: 78 Task kandidat (TASK-001–TASK-078); READY: 0
+CURRENT PHASE: P0–P11 APPROVED (APPR-005, APPR-006); Planning Freeze FRZ-001
+EXECUTION AUTHORITY: AUTH-013 — TASK-001–TASK-078, otonomi maksimum yang aman (bootstrap TASK-001–TASK-005, lalu AUTONOMOUS)
+EXECUTOR STATE: siap memulai TASK-001 (EXECUTOR_BOOTSTRAP §5.0)
+TASK BASELINE: 78 Task (TASK-001–TASK-078); status per TASK_PLAN; PCR-001 menahan TASK-025, TASK-066, TASK-069, TASK-071
 ```
 
 ## 1. Otoritas yang harus ada sebelum Task apa pun
@@ -19,6 +19,8 @@ TASK BASELINE: 78 Task kandidat (TASK-001–TASK-078); READY: 0
 2. Planning Freeze tercatat dan baseline Task dinyatakan siap.
 3. Otorisasi eksekusi berdiri (standing) yang menyebut ruang lingkupnya: milestone/Task yang boleh dikerjakan, mode (terawasi atau otonom), izin merge ke `main`, dan batasnya.
 4. Keputusan Owner D-08 (metode merge), D-27 (token eksekutor) dan D-28 (model gerbang GAP). Untuk mode otonom ada prasyarat tambahan: TASK-001–TASK-005 DONE dalam mode bootstrap, ruleset `main` aktif, token runner terpasang dan otorisasi mode otonom ([EXECUTOR_OPERATING_MODEL §1](EXECUTOR_OPERATING_MODEL.md#1-prasyarat-aktivasi)).
+
+Status 2026-11-01: butir 1–4 terpenuhi oleh APPR-005, APPR-006, FRZ-001 dan AUTH-013 setelah `main` memuat FRZ-001; jawaban Owner D-01–D-29 (infrastruktur, staging tanpa VPS kedua, UAT, SMTP, biaya) ada di [OWNER_DECISION_PACKAGE §0](../handoff/OWNER_DECISION_PACKAGE.md#0-jawaban-owner-2026-11-01) dan mengikat setiap Task yang menyebut keputusan itu.
 
 Tanpa butir 1–4: baca saja, laporkan, berhenti.
 

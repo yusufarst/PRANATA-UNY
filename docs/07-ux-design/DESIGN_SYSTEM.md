@@ -1,6 +1,6 @@
 # Design system — PRANATA UNY
 
-Status: P7 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P7 | Dasar: [OD-21](../00-governance/DECISION_LOG.md#od-21), [OD-33](../00-governance/DECISION_LOG.md#od-33), [OD-34](../00-governance/DECISION_LOG.md#od-34), [PRODUCT_EXPERIENCE_DIRECTION](../01-product/PRODUCT_EXPERIENCE_DIRECTION.md)
+Status: P7 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P7 | Dasar: [OD-21](../00-governance/DECISION_LOG.md#od-21), [OD-33](../00-governance/DECISION_LOG.md#od-33), [OD-34](../00-governance/DECISION_LOG.md#od-34), [PRODUCT_EXPERIENCE_DIRECTION](../01-product/PRODUCT_EXPERIENCE_DIRECTION.md)
 
 Dokumen ini memiliki **token visual, tipografi, ruang, bentuk, ikon, gerak, inventaris komponen, presentasi status dan syarat aksesibilitas**. Informasi arsitektur dan halaman dimiliki [INFORMATION_ARCHITECTURE](INFORMATION_ARCHITECTURE.md); pola interaksi dimiliki [INTERACTION_PATTERNS](INTERACTION_PATTERNS.md); bahasa dimiliki [LOCALIZATION](LOCALIZATION.md). Seluruh Task frontend mewarisi dokumen ini.
 

@@ -1,6 +1,6 @@
 # Model data PostgreSQL — PRANATA UNY
 
-Status: P4 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P4
+Status: P4 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P4
 
 Dokumen ini memiliki **skema logis-implementasi PostgreSQL**: konvensi, tabel per modul, kolom, constraint, indeks, partisi, peran basis data dan aturan migrasi. Makna konsep tetap dimiliki P2 ([DOMAIN_GLOSSARY](../02-domain/DOMAIN_GLOSSARY.md), [BUSINESS_RULES](../02-domain/BUSINESS_RULES.md)); keadaan dan transisi dimiliki P3 ([STATE_TRANSITIONS](../03-workflows/STATE_TRANSITIONS.md)). Nilai status di bawah adalah kode teknis yang memetakan state P3; kode itu bukan aturan bisnis baru. Eksekutor membuat migrasi sesuai dokumen ini pada Task yang ditunjuk; perubahan material memerlukan TASK PLAN CHANGE dan, bila menyentuh ADR, persetujuan Owner.
 

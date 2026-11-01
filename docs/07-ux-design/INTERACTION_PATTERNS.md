@@ -1,6 +1,6 @@
 # Pola halaman dan interaksi — PRANATA UNY
 
-Status: P7 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P7
+Status: P7 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P7
 
 Dokumen ini memiliki **pola halaman, hierarki aksi, perwujudan IX-001–IX-024, keadaan wajib, perilaku responsif dan aturan formulir**. Hasil bisnis setiap interaksi tetap dimiliki [INTERACTION_CONTRACTS](../03-workflows/INTERACTION_CONTRACTS.md) dan pola pemulihan dimiliki [EXCEPTION_REVISION_PATTERNS](../03-workflows/EXCEPTION_REVISION_PATTERNS.md); dokumen ini menetapkan bentuk UI-nya.
 

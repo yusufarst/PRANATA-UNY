@@ -1,6 +1,6 @@
 # Model operasi eksekutor — PRANATA UNY
 
-Status: P11 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
+Status: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P11
 
 Dokumen ini memiliki **siklus eksekusi Task GOV-12, pemilihan Task, aturan konteks, review berbasis risiko dan review PR Codex, penanganan kegagalan CI, merge dan rekonsiliasi DONE, runner/watcher/checkpoint, hold dan shutdown aman, isolasi multi-proyek, pelaporan dan kemampuan platform yang wajib diverifikasi**. Status Task, Definition of Done dan desain CI dimiliki [QUALITY_GATES](../08-testing/QUALITY_GATES.md); strategi uji dimiliki [TEST_STRATEGY](../08-testing/TEST_STRATEGY.md); urutan langkah memulai dimiliki [EXECUTOR_BOOTSTRAP](EXECUTOR_BOOTSTRAP.md).
 
@@ -34,6 +34,8 @@ Mode eksekutor:
 | `WAITING` | Sekarang sampai otorisasi | Bootstrap baca-saja; laporan; tidak mengubah apa pun ([EXECUTOR_BOOTSTRAP §2](EXECUTOR_BOOTSTRAP.md#2-bootstrap-baca-saja-waiting)) |
 | `SUPERVISED` | TASK-001–TASK-005 (wajib), setiap merge yang menyentuh jalur pengaman (bagian 11), dan Task lain bila Owner memilih | Sesi interaktif Claude Code dengan Owner hadir; setiap izin yang belum ada di allowlist ditanyakan |
 | `AUTONOMOUS` | Setelah semua prasyarat tambahan di atas | Runner headless + satu watcher (bagian 9); tanpa interaksi rutin Owner |
+
+**Otorisasi yang berlaku (AUTH-013, 2026-11-01).** Owner memberi otorisasi berdiri untuk TASK-001–TASK-078 dengan otonomi maksimum yang aman (D-04 diganti): TASK-001–TASK-005 sekali dalam mode bootstrap, kemudian mode AUTONOMOUS segera setelah prasyarat tambahan di atas terpenuhi, tanpa perluasan bertahap per milestone dan tanpa persetujuan per Task. Pengecualian dan kontrol yang dipertahankan tercantum di [APPROVAL_RECORDS AUTH-013](../00-governance/APPROVAL_RECORDS.md#auth-013).
 
 Bila kemampuan pengaman (hook penolakan, pembatasan izin, penjaga atribusi) gagal pada saat mana pun, eksekutor **turun ke SUPERVISED**, menghentikan runner, mencatat alasannya dan melapor. Mode yang melewati semua izin (bypass permissions) **tidak pernah dipakai**; langkah headless memakai allowlist dan alat di luar allowlist ditolak.
 

@@ -1,6 +1,6 @@
 # Arsitektur aplikasi — PRANATA UNY
 
-Status: P4 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P4
+Status: P4 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P4
 
 Dokumen ini memiliki **struktur aplikasi, katalog modul, aturan dependensi, pola lapisan dan komponen lintas modul**. Skema basis data dimiliki [DATA_MODEL](DATA_MODEL.md); kebijakan berversi dimiliki [POLICY_REGISTRY](POLICY_REGISTRY.md); generasi dokumen dimiliki [DOCUMENT_ENGINE](DOCUMENT_ENGINE.md); keamanan dimiliki P5 ([SECURITY_MODEL](../05-security/SECURITY_MODEL.md), [ACCESS_CONTROL](../05-security/ACCESS_CONTROL.md)); kontrak perintah, konkurensi dan performa dimiliki P6; topologi operasi dimiliki P9. Keputusan material berbentuk ADR berstatus **PROPOSED** di [docs/adr](../adr/README.md) dan baru berlaku setelah persetujuan Owner.
 

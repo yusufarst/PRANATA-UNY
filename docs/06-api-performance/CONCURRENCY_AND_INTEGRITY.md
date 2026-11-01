@@ -1,6 +1,6 @@
 # Konkurensi, transaksi dan integritas data — PRANATA UNY
 
-Status: P6 candidate — VERIFYING (AUTH-012), belum disetujui | Updated: 2026-10-30 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P6 | ADR: [ADR-0004](../adr/ADR-0004-append-only-ledgers.md)
+Status: P6 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Phase: P6 | ADR: [ADR-0004](../adr/ADR-0004-append-only-ledgers.md)
 
 Dokumen ini memiliki **batas transaksi, urutan kunci, invarian yang ditegakkan basis data, perlakuan race condition, retry, konkurensi job/impor dan isolasi basis data uji**. Kontrak permintaan/idempotensi ada di [COMMAND_AND_API_CONTRACTS](COMMAND_AND_API_CONTRACTS.md).
 

@@ -21,6 +21,7 @@ In P0, 45 historical files received bounded content inspection and SRC-033/VIS-0
 | U-009 | Owner instruction: this session is the sole planning author; delete the previous session's local branch (2026-10-30) | GOV-10 | OWNER_APPROVED_DECISION | Executed 2026-10-30; working-tree content preserved |
 | U-010 | Owner directives on Git identity and attribution, then explicit identity confirmation (2026-10-30) | GOV-08 application | OWNER_APPROVED_DECISION | Repository-local identity verified before each commit |
 | U-011 | Owner procurement field findings and instruction (2026-10-30); provenance in [U-011](#u-011-owner-procurement-field-findings-of-2026-10-30) | OD-35, OD-36; RG-07; targeted P0–P11 procurement amendment | OWNER_APPROVED_DECISION for the explicit direction (multiple winners by award scope, evaluation priority, amendment instruction); the employees' observations are OBSERVED_CURRENT_PROCESS (practice) and the memorandum is a nonbinding reference | Official rules only from validated sources (GAP-003/013/017/026/027/029); candidate approval only by explicit Owner approval |
+| U-012 | Owner consolidated directive (2026-11-01); provenance in [U-012](#u-012-owner-consolidated-directive-of-2026-11-01) | APPR-005, APPR-006, AUTH-011, FRZ-001, AUTH-013; answers D-01–D-29; PCR-001 | OWNER_APPROVED_DECISION for the explicit approvals, authorizations and operational decisions; its statements about institutional rules are Owner input, not resolved GAPs |
 | FW-001 | Unchanged repository AICWDF v4.3 English source | Master operating framework | AUTHORITATIVE_SOURCE for operating rules through Owner adoption; not UNY accounting/procurement authority | Preserved hash and full section map in FRAMEWORK_ADOPTION |
 | STRUCT-001 | GitHub yusufarst/MULTIPLECORP, pinned main a526daf47444d12b4ae5c51e1ae14c9dfe3f4978 | Entry point, adapter, governance/evidence/phase/context/handoff structures | INFERENCE for reusable structural patterns; never PRANATA domain/security/financial truth | Exact inspected paths and excluded content in FRAMEWORK_ADOPTION |
 
@@ -134,6 +135,12 @@ U-004 provenance — the P3 request, its same-scope continuation and the minor-c
 | SRC-048 copy | `03_OFFICIAL_SOURCE/PR_34_2023_PBJ-1-1.pdf` | 8,641,201 / `812ee718` | Byte-identical to SRC-048 / REG-01; no new source or authority. |
 
 - Handling: originals are session-delivered and external to the repository; read only; never published; never an execution dependency. Text was extracted locally for reading only; no extraction output is tracked. No personal name or transaction data is reproduced.
+
+## U-012 Owner consolidated directive of 2026-11-01
+
+- U-012: the Owner's in-session directive "FINAL CONSOLIDATED OWNER DIRECTIVE — PRANATA UNY" (**10,113 bytes / SHA-256 `fdd5e69e4a8b87bd56beb55a4398b14ff48d5b9efbe71c17dbd471b9ddb37220`**). It approves the P0–P11 package reviewed at `851013ff2dc33bf75a1973089f09e38c7512c058` (independent verdict READY_FOR_OWNER_APPROVAL as reported by the Owner), answers the decision package and authorizes autonomous execution; operative content is recorded in [APPROVAL_RECORDS](APPROVAL_RECORDS.md) (APPR-005, APPR-006, AUTH-011, FRZ-001, AUTH-013) and [OWNER_DECISION_PACKAGE §0](../handoff/OWNER_DECISION_PACKAGE.md#0-jawaban-owner-2026-11-01).
+- Evidence named by U-012: the legacy implementation `index (1).html` (already SRC-027 / ASSET-12, re-inspected in full for PCR-001) and an 84-page "Laporan Barang Milik Universitas (Gabungan)" for the third quarter of 2026. The PDF was **not available** to the planning session on 2026-11-01; it is not tracked and its comparison is assigned to the parity checks proposed in PCR-001.
+- Handling: the directive is session-delivered and external to the repository; read only; never published. Signatory names and personal identifiers present in the legacy HTML are not reproduced anywhere in the repository.
 
 ## Starter Kit reference originals (2026-10-30)
 
