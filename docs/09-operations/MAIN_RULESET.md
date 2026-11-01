@@ -25,7 +25,9 @@ Aturan PR tetap nonaktif karena D-08 opsi A memajukan `main` dengan fast-forward
 
 ## Ruleset untuk tag rilis
 
-Buat **New tag ruleset** bernama `release-tags`, Active, bypass list kosong, target tag pattern `v*`, dengan Restrict creations, Restrict updates, Restrict deletions dan Block force pushes aktif. Tag rilis dibuat Owner.
+Buat **New tag ruleset** bernama `release-tags`, Active, target tag pattern `v*`, dengan Restrict creations, Restrict updates, Restrict deletions dan Block force pushes aktif. Bypass list memuat peran admin, karena tag rilis dibuat Owner dan daftar kosong akan menghalangi Owner sendiri.
+
+Bypass ini mengikuti peran pemilik akun, jadi berlaku juga untuk login Owner dan token runner, walaupun token tidak memegang hak Administration. Yang menahan eksekutor mendorong atau membuat tag adalah guard (`git-push-tag`, `git-tag-write`), bukan ruleset ini.
 
 ## Verifikasi
 

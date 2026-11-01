@@ -146,7 +146,7 @@ function Test-PranataGit {
         }
     }
     foreach ($override in $configOverrides) {
-        if ($override -match '(?i)^(user\.|author\.|committer\.|core\.hookspath|alias\.|credential|core\.sshcommand|core\.fsmonitor|url\.|remote\.)') {
+        if ($override -match '(?i)^(user\.|author\.|committer\.|core\.hookspath|alias\.|credential|core\.sshcommand|core\.fsmonitor|url\.|remote\.|push\.)') {
             return (Deny 'git-config-override' "Per-command override of $override is forbidden.")
         }
     }
@@ -170,10 +170,15 @@ function Test-PranataGit {
             if ($refspecs.Count -eq 0 -and ($SwitchesBranch -or -not $CurrentBranch -or $CurrentBranch -eq 'main')) {
                 return (Deny 'git-push-main' 'Direct push to main outside merge-verified.ps1 is forbidden.')
             }
+            # Release tags are Owner-only, and the Owner's login can bypass the release-tags ruleset.
+            if ($refspecs.Count -ge 1 -and $refspecs[0] -ceq 'tag') { return (Deny 'git-push-tag' 'Pushing tags is forbidden; release tags are Owner-only.') }
             foreach ($spec in $refspecs) {
                 if ($spec -match '^\+') { return (Deny 'git-push-forbidden' 'Forced refspecs are forbidden.') }
                 if ($spec -match '^:') { return (Deny 'git-push-delete' 'Deleting remote branches is forbidden.') }
+                if ($spec -match '\*') { return (Deny 'git-push-wildcard' 'Wildcard refspecs are forbidden.') }
                 $dest = ($spec -split ':')[-1]
+                # A bare v* name resolves to a tag; no branch convention starts with v.
+                if ($spec -match '(?i)refs/tags/' -or $dest -cmatch '^v') { return (Deny 'git-push-tag' 'Pushing tags is forbidden; release tags are Owner-only.') }
                 if ($dest -in @('main', 'refs/heads/main') -or ($dest -eq 'HEAD' -and ($SwitchesBranch -or -not $CurrentBranch -or $CurrentBranch -eq 'main'))) {
                     return (Deny 'git-push-main' 'Direct push to main outside merge-verified.ps1 is forbidden.')
                 }
@@ -216,7 +221,14 @@ function Test-PranataGit {
                 }
             }
         }
-        { $_ -in @('rebase', 'filter-branch', 'filter-repo', 'replace', 'update-ref', 'credential', 'credential-manager', 'daemon', 'send-email') } {
+        'tag' {
+            $reads = @($rest | Where-Object { $_ -match '^(-l|--list|--contains|--no-contains|--points-at|--merged|--no-merged)(=.*)?$' })
+            $writes = @($rest | Where-Object { $_ -match '^(-[a-zA-Z]*[adfsu][a-zA-Z]*|--annotate|--delete|--force|--sign|--local-user.*)$' })
+            if ($writes.Count -gt 0 -or ($positional.Count -gt 0 -and $reads.Count -eq 0)) {
+                return (Deny 'git-tag-write' 'Creating or changing tags is forbidden; release tags are Owner-only.')
+            }
+        }
+        { $_ -in @('rebase', 'filter-branch', 'filter-repo', 'replace', 'update-ref', 'send-pack', 'http-push', 'credential', 'credential-manager', 'daemon', 'send-email') } {
             return (Deny 'git-history-or-credential' "git $sub is forbidden.")
         }
     }
