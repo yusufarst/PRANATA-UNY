@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: STANDARD
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: NO
@@ -185,19 +185,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint: Pint, ESLint, Prettier
+- [x] Typecheck: `tsc` strict dan Larastan level 7
+- [x] Relevant automated tests: Pest 132 lulus, Vitest 2 lulus
+- [x] Authorization: uji integritas rute, dengan uji negatif
+- [x] Route integrity: `tests/Feature/RouteIntegrityTest.php`
+- N/A Interaction behavior: tanpa antarmuka baru
+- N/A Browser E2E: tidak diwajibkan kontrak
+- N/A Responsive/adaptive: tanpa antarmuka baru
+- N/A Visual breathing room/density: tanpa antarmuka baru
+- [x] Production build: `npm run build`
+- [x] Security checks: gitleaks seluruh riwayat (72 commit, tanpa temuan), `composer audit`, `npm audit`
+- N/A Database safety review: tanpa perubahan basis data
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -212,18 +212,18 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41340121876](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41340121876) pada HEAD `150be89`, attempt 1, uji-merge `db26819`, base `f77810e`. `quality` success (98 dtk), `app-boot` success (106 dtk), `db-integration` success (84 dtk), `bootstrap-gate` success (6 dtk). `composer qa` dan `npm run qa` lulus: Pest 132, Vitest 2, translations 0 kunci (katalog belum ada), tautan dokumen 4723 tanpa masalah. Uji negatif `quality`: impor modul terlarang, rute tanpa masuk, rute tanpa otorisasi, `Gate::allows` yang diabaikan, teks literal JSX, kunci terjemahan JSON dan PHP, tautan dan anchor rusak, token acak pada gitleaks, semuanya gagal sebagaimana mestinya.
+- Build result: `npm run build` lulus.
+- Route evidence: seluruh rute bernama saat ini lulus `RouteIntegrityTest`; daftar publik dan akun sendiri tertulis di uji itu dan rute yang tidak ada membuat uji gagal.
+- Interaction evidence: N/A.
+- Browser evidence: N/A.
+- Localization evidence: pemeriksa kunci berjalan; katalog dibuat TASK-006. `react/jsx-no-literals` aktif, dengan 17 berkas bawaan kit di `eslint.literal-baseline.json` sampai TASK-006.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Codex pada `b5c9f04`: COMPLETED_WITH_FINDINGS, dua P2 (katalog PHP tidak diperiksa; `Gate::allows` dianggap otorisasi), valid, diperbaiki di `150be89` dengan uji negatif. Delta diverifikasi dengan swa-review dan run di atas. Review independen tidak diwajibkan untuk kelas STANDARD.
+- Cost evidence/exception if applicable: tanpa biaya; semua paket dan gitleaks sumber terbuka.
+- Files changed: `eslint.config.js`, `eslint.literal-baseline.json`, `.prettierrc`, `.prettierignore`, `vitest.config.ts`, `vite.config.ts`, `package.json`, `package-lock.json`, `composer.json`, `phpunit.xml`, `.gitleaks.toml`, `tests/Arch/ModuleBoundaryTest.php`, `tests/Feature/RouteIntegrityTest.php`, `resources/js/lib/utils.test.ts`, `resources/js/pages/welcome.tsx`, `scripts/quality/check-translations.mjs`, `scripts/docs/check-links.mjs`, `.github/workflows/bootstrap.yml`, `docs/00-governance/TOOLCHAIN.md`.
+- PR / CI run: [PR #10](https://github.com/yusufarst/PRANATA-UNY/pull/10) MERGED; run di atas.
+- Commit SHA: `150be8980548e8081d345ab6ab7ffadd2cc18db6`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1 -Bootstrap`.
+- Notes: TAC-01–TAC-04 terbukti. Gitleaks pertama melaporkan 8 temuan; semuanya nama profil `AICWDF-COMPAT-8`, diperiksa satu per satu, bukan kredensial; `.gitleaks.toml` hanya mengecualikan string itu. Semua `npm` berjalan di runner karena RAM bebas mesin Owner tinggal sekitar 50–70 MB. ESLint 9 dipakai karena `eslint-plugin-react` belum mendukung ESLint 10. Temuan untuk Claude Planning: [TOOLCHAIN](../00-governance/TOOLCHAIN.md#quality-tooling--task-004-2026-11-02).
 
 ## SAFE NEXT TASK
 
