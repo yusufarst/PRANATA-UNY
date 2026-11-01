@@ -15,45 +15,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Temporary: removed before the final HEAD of the TASK-003 PR.
-  prepare:
-    name: prepare
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    steps:
-      - name: Check out
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Report the Gotenberg image version and digest
-        run: |
-          docker pull --quiet gotenberg/gotenberg:8
-          docker inspect --format '{{index .RepoDigests 0}}' gotenberg/gotenberg:8
-          docker inspect --format '{{index .Config.Labels "org.opencontainers.image.version"}}' gotenberg/gotenberg:8
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
-        with:
-          php-version: '8.5'
-          tools: composer:v2
-          coverage: none
-
-      - name: Remove the Docker wrapper from the lockfile
-        run: |
-          composer remove laravel/sail --dev --no-update --no-interaction
-          composer update laravel/sail --no-install --no-scripts --no-autoloader --no-interaction
-
-      - name: Upload the manifests
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: composer-manifests
-          path: |
-            composer.json
-            composer.lock
-          if-no-files-found: error
-          retention-days: 3
-
   app-boot:
     name: app-boot
     runs-on: ubuntu-24.04
@@ -67,7 +28,7 @@ jobs:
           POSTGRES_DB: pranata_test
           POSTGRES_HOST_AUTH_METHOD: trust
         ports:
-          - 5432:5432
+          - 127.0.0.1:5432:5432
         options: >-
           --health-cmd "pg_isready -U pranata -d pranata_test"
           --health-interval 5s
@@ -179,10 +140,108 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  db-integration:
+    name: db-integration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:18.6@sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81
+        # Throwaway database on the runner, without any credential.
+        env:
+          POSTGRES_USER: pranata
+          POSTGRES_DB: pranata_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 127.0.0.1:5432:5432
+        options: >-
+          --health-cmd "pg_isready -U pranata -d pranata_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+      gotenberg:
+        image: gotenberg/gotenberg:8.39.0@sha256:13672f317b443c793e972b1bd2155ec62a3e7b6891b411e8196442cc053ee5f5
+        ports:
+          - 127.0.0.1:3000:3000
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: '5432'
+      DB_DATABASE: pranata_test
+      DB_USERNAME: pranata
+      PRANATA_POSTGRES_MAJOR: '18'
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          extensions: pgsql, pdo_pgsql
+          tools: composer:v2
+          coverage: none
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction --prefer-dist
+          npm ci
+
+      - name: Create the environment file and test key
+        run: |
+          cp .env.example .env
+          php artisan key:generate --ansi
+
+      - name: Production build
+        run: npm run build
+
+      - name: Migrations (fresh and rollback)
+        run: |
+          php artisan migrate:fresh --force
+          php artisan migrate:rollback --force
+
+      - name: The reset guard stops a foreign database
+        run: |
+          if DB_DATABASE=other_app php artisan migrate:fresh --force > guard.log 2>&1; then
+            cat guard.log
+            echo 'migrate:fresh was not refused'
+            exit 1
+          fi
+          cat guard.log
+          grep -q 'forbidden on database \[other_app\]' guard.log
+
+      - name: Pest in parallel
+        run: php artisan test --parallel --processes=4
+
+      - name: PostgreSQL server version
+        run: php artisan db:show --json | jq '.platform | {name, version, database: .config.database}'
+
+      - name: Gotenberg health
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3000/health -o health.json; then break; fi
+            sleep 2
+          done
+          jq -e '.status == "up" and .details.libreoffice.status == "up"' health.json
+
+      - name: Gotenberg LibreOffice conversion of a synthetic file
+        run: |
+          printf 'Dokumen uji sintetis PRANATA.\n' > synthetic.txt
+          curl -fsS --form files=@synthetic.txt http://127.0.0.1:3000/forms/libreoffice/convert -o synthetic.pdf
+          test "$(head -c 4 synthetic.pdf)" = '%PDF'
+          ls -l synthetic.pdf
+
   bootstrap-gate:
     name: bootstrap-gate
     if: always()
-    needs: [app-boot]
+    needs: [app-boot, db-integration]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

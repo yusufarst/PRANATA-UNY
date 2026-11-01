@@ -230,18 +230,15 @@ function Test-PranataDocker {
 }
 
 function Test-PranataDatabase([string]$Segment) {
-    if ($Segment -match '(?i)(^|[\s\\/])(mysql|mysqldump|mariadb|sqlcmd|mongosh|mongo|redis-cli|sqlite3)(\.exe)?(\s|$)') {
-        return (Deny 'db-foreign-tool' 'Only the pranata-postgres database is in scope.')
+    # OD-37: no PRANATA database exists on this machine, so local clients and database URLs are out of scope.
+    if ($Segment -match '(?i)(^|[\s\\/])(psql|pg_dump|pg_dumpall|pg_restore|createdb|dropdb|mysql|mysqldump|mariadb|sqlcmd|mongosh|mongo|redis-cli|sqlite3)(\.exe)?(\s|$)') {
+        return (Deny 'db-local-forbidden' 'No database exists on this machine (OD-37); database checks run on GitHub-hosted runners.')
     }
-    foreach ($m in [regex]::Matches($Segment, '(?i)(postgres(ql)?|mysql|mongodb|redis)://[^\s]+')) {
-        if ($m.Value -notmatch '(?i)^postgres(ql)?://([^@/]+@)?(localhost|127\.0\.0\.1|pranata-postgres)(:(55432|5432))?/pranata_(dev|test\w*|e2e_\w+|perf)(\?|$)') {
-            return (Deny 'db-foreign-host' 'Database URL is outside pranata-postgres.')
-        }
+    if ($Segment -match '(?i)\b(postgres(ql)?|mysql|mariadb|mongodb(\+srv)?|redis|sqlserver)://') {
+        return (Deny 'db-local-forbidden' 'Database URLs are out of scope on this machine (OD-37).')
     }
-    foreach ($m in [regex]::Matches($Segment, '(?i)\b(DB_HOST|PGHOST)\s*=\s*([^\s]+)')) {
-        if ($m.Groups[2].Value -notmatch '(?i)^(localhost|127\.0\.0\.1|pranata-postgres)$') {
-            return (Deny 'db-foreign-host' 'Database host is outside pranata-postgres.')
-        }
+    if ($Segment -match '(?i)\b(DB_HOST|PGHOST)\s*=') {
+        return (Deny 'db-local-forbidden' 'No database host is reachable from this machine (OD-37).')
     }
     foreach ($m in [regex]::Matches($Segment, '(?i)\b(DB_DATABASE|PGDATABASE)\s*=\s*([^\s]+)')) {
         if ($m.Groups[2].Value -notmatch '(?i)^pranata_(dev|test\w*|e2e_\w+|perf)$') {
@@ -254,22 +251,6 @@ function Test-PranataDatabase([string]$Segment) {
     if ($Segment -match '(?i)artisan\b.*--database[= ]') {
         if ($Segment -notmatch '(?i)--database[= ](pgsql|pgsql_\w+|pranata_\w+)(\s|$)') {
             return (Deny 'db-foreign-name' 'Artisan database connection is outside the PRANATA set.')
-        }
-    }
-    if ($Segment -match '(?i)(^|[\s\\/])(psql|pg_dump|pg_dumpall|pg_restore|createdb|dropdb)(\.exe)?(\s|$)') {
-        if ($Segment -match '(?i)pg_dumpall') { return (Deny 'db-foreign-name' 'pg_dumpall reaches every database.') }
-        $hostValue = $null; $port = $null
-        if ($Segment -match '(?i)(\s-h\s*|\s--host[= ])([^\s]+)') { $hostValue = $Matches[2] }
-        if ($Segment -match '(?i)(\s-p\s*|\s--port[= ])([^\s]+)') { $port = $Matches[2] }
-        if (-not $hostValue) {
-            return (Deny 'db-foreign-host' 'Name the PRANATA host explicitly (-h localhost -p 55432).')
-        }
-        if ($hostValue -and $hostValue -notmatch '(?i)^(localhost|127\.0\.0\.1|pranata-postgres)$') {
-            return (Deny 'db-foreign-host' 'Database host is outside pranata-postgres.')
-        }
-        if ($port -ne '55432') { return (Deny 'db-foreign-host' 'Only port 55432 reaches pranata-postgres.') }
-        if ($Segment -notmatch '(?i)\bpranata_(dev|test\w*|e2e_\w+|perf)\b') {
-            return (Deny 'db-foreign-name' 'Database name is outside the PRANATA set.')
         }
     }
     return (New-PranataVerdict 'allow' '' '')
