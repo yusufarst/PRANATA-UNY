@@ -408,6 +408,19 @@ jobs:
           tar -xzf gitleaks.tar.gz -C .gitleaks-bin gitleaks
           .gitleaks-bin/gitleaks git --redact --verbose --no-banner --exit-code 1 .
 
+      # The token is random and made here, so nothing resembling a credential is ever committed.
+      - name: A token must fail the secret scan with this configuration
+        run: |
+          mkdir -p probe
+          printf 'token = "ghp_%s"\n' "$(head -c 18 /dev/urandom | od -An -tx1 | tr -d ' \n')" > probe/token.txt
+          if .gitleaks-bin/gitleaks dir probe --config .gitleaks.toml --redact --no-banner --exit-code 1 > leaks.log 2>&1; then
+            cat leaks.log
+            echo 'the token was not found'
+            exit 1
+          fi
+          grep -q 'leaks found: 1' leaks.log
+          rm -r probe
+
   bootstrap-gate:
     name: bootstrap-gate
     if: always()

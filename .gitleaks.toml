@@ -1,0 +1,6 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "AICWDF-COMPAT-8 is the name of the approved password profile in the planning documents, not a credential"
+regexes = ['''^AICWDF-COMPAT-8$''']

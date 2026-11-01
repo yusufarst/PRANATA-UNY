@@ -153,3 +153,21 @@ Facts verified by test and against the Laravel 13.x source:
 - **Reset guard.** A `CommandStarting` listener checks the database that the command would really use: the selected or default connection, after any `DB_URL` override, on the PostgreSQL driver only. The console kernel forwards this event only outside unit tests, so `PlatformServiceProvider` also forwards it under `APP_ENV=testing`. `DB::prohibitDestructiveCommands` stays on for production, as the kit ships it. The guard checks the database name and driver, not the host. No destructive seeder exists yet, so `db:seed` is not guarded.
 - **A missing database can be created.** `php artisan migrate --force` creates a missing PostgreSQL database by itself, which is one more reason the guard must run first.
 - **Invalid workflow file.** A YAML error yields a failed `push` run and no `pull_request` run; the merge gate then refuses with "no bootstrap run".
+
+## Quality tooling — TASK-004 (2026-11-02)
+
+| Tool | Version | Note |
+| --- | --- | --- |
+| ESLint, `@eslint/js` | 9.39.5 | npm marks this line as no longer supported. ESLint 10 fails to resolve: `eslint-plugin-react` 7.37.5 accepts up to `^9.7`, and `--force` was not used |
+| `typescript-eslint`, `eslint-plugin-react`, `eslint-plugin-react-hooks`, `eslint-config-prettier` | 8.72.1, 7.37.5, 7.1.1, 10.1.8 | Flat config in `eslint.config.js` |
+| Prettier, `prettier-plugin-tailwindcss` | 3.9.10, 0.8.1 | Options copied from the kit's formatter; the first run changed no file |
+| Vitest | 5.0.5, through `vp test run` | Vite+ ships it; `vitest.config.ts` stays apart from the Laravel plugin |
+| Larastan | 3.13.2 at level 7 | Above the contract's starting level 5 and its target of at least 6, because the kit already passes level 7 |
+| gitleaks | 8.30.1 (MIT), `linux_x64` SHA-256 `551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb` | Downloaded and verified inside the `quality` job; scans the whole history |
+
+ESLint and Prettier replace `vp check`, which TASK-002 used in `app-boot`; Vite+ still runs the build and Vitest.
+
+- **Secret scan.** The first scan reported 8 findings over the history. All 8 are the password profile name `AICWDF-COMPAT-8` in planning documents, read one by one, and none is a credential. `.gitleaks.toml` allows exactly that string and keeps the default rules; the job proves this with a random token made at run time.
+- **Literal JSX text.** `react/jsx-no-literals` is on. The 17 kit files that still hold English text are listed in `eslint.literal-baseline.json` and exempt until TASK-006 empties the list; any other file fails.
+- **Architecture test.** `tests/Arch/ModuleBoundaryTest.php` follows the dependency column of ARCHITECTURE §4, with `Workflow` and `Audit` added for the business modules because §6 has their Actions write those records. Pest ignores a dependency on a class that does not exist, so the negative check in `quality` uses a real class.
+- **Finding for Claude Planning.** ARCHITECTURE §5 rule 3 draws Access above Organization and Policy, while §4 has Access depending on both. The test follows §4, which is free of cycles; §5 rule 3 needs a correction.
