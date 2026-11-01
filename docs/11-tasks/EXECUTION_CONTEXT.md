@@ -10,7 +10,7 @@ CURRENT RELEASE: belum ada (pra-implementasi)
 CURRENT PHASE: P0–P11 APPROVED (APPR-005, APPR-006); Planning Freeze FRZ-001
 EXECUTION AUTHORITY: AUTH-013 — TASK-001–TASK-078, otonomi maksimum yang aman (bootstrap TASK-001–TASK-005, lalu AUTONOMOUS)
 EXECUTOR STATE: siap memulai TASK-001 (EXECUTOR_BOOTSTRAP §5.0)
-TASK BASELINE: 78 Task (TASK-001–TASK-078); status per TASK_PLAN; PCR-001 diterapkan
+TASK BASELINE: 78 Task (TASK-001–TASK-078); status per TASK_PLAN; PCR-001 (PENDING_SECOND_REVIEW / NOT_PUBLISHED) menahan TASK-025, TASK-066, TASK-069, TASK-071; hanya `origin/main` yang berlaku
 ```
 
 ## 1. Otoritas yang harus ada sebelum Task apa pun

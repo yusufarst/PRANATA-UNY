@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: BLOCKED
+EXECUTION STAGE: — (BLOCKED: gerbang publikasi PCR-001 — menunggu penerimaan Second Review, terbit di `origin/main` dan commit transisi status)
 RISK CLASS: STANDARD
 MILESTONE: M8 — Pelaporan, hardening dan rilis
 PARALLEL SAFE: YES
@@ -209,7 +209,9 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-02 Hasil cocok dengan perhitungan independen pada data sintetis
 - TAC-03 Scope pengguna dihormati pada isi ekspor
 - TAC-04 Pada data sintetis, Laporan BMU, Laporan Penyusutan dan Neraca BMU setiap varian dan periode sama dengan oracle legacy kecuali perbedaan yang dicatat sebagai koreksi LEGACY_REPORTING_EVIDENCE §9; saldo akhir = saldo awal + mutasi bersih dan sama dengan laporan posisi aset per tanggal yang sama
-- TAC-05 Aset yang dihapus atau dipindah keluar pada periode P tetap muncul di saldo awal P dan sebagai pengurangan di P, dan tidak lagi muncul di periode sesudahnya; periode historis tidak berubah
+- TAC-05 Aset yang dihapus atau dipindahtangankan ke luar UNY (WF-021) pada periode P tetap muncul di saldo awal P dan sebagai pengurangan di P pada unit pemegangnya maupun total UNY, lalu tidak muncul di periode sesudahnya; periode historis tidak berubah
+- TAC-09 Pemindahan antar-unit UNY (WF-018, `CHANGE_UNIT`) pada periode P: unit asal menunjukkan pindah keluar dan unit tujuan pindah masuk dengan kuantitas, nilai perolehan dan akumulasi yang sama pada tanggal efektif; total UNY dan setiap cakupan yang memuat kedua unit tidak berubah dan tidak mencatat tambah atau kurang; pada periode sesudahnya aset hanya muncul di unit tujuan; beban penyusutan konsolidasi tidak berubah dan tidak dihitung ganda (LEGACY_REPORTING_EVIDENCE §9.1)
+- TAC-10 Untuk setiap cakupan dan periode, identitas rekonsiliasi §9.1 terpenuhi, dan jumlah saldo akhir seluruh unit sama dengan saldo akhir UNY pada setiap tanggal; posisi per tanggal lampau dapat diulang dengan hasil sama
 - TAC-06 Kode barang dengan baris intra dan ekstra atau klasifikasi berbeda dihitung pada kelompok dan flag masing-masing
 - TAC-07 PDF dan XLSX memuat judul varian, periode atau tanggal posisi, kelompok dan total, serta penanda tangan dari peran terkonfigurasi; tidak ada nama atau nomor identitas tetap di kode, fixture atau dokumentasi
 - TAC-08 Pemeriksaan paritas lokal terhadap CSV sumber dan PDF BMU triwulan III 2026 milik Owner dijalankan di luar repositori; hanya hasil lulus/gagal per varian dan jumlah serta kategori selisih yang dicatat

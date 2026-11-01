@@ -11,7 +11,7 @@ The repository is the durable Source of Truth for every Planning, Execution, Rev
 3. [SOURCE_OF_TRUTH](docs/00-governance/SOURCE_OF_TRUTH.md): authority, document lifecycle and canonical ownership.
 4. The active Owner authorization in [APPROVAL_RECORDS](docs/00-governance/APPROVAL_RECORDS.md), then only relevant decisions and documents through [CONTEXT_INDEX](docs/CONTEXT_INDEX.md).
 
-Check the actual branch, HEAD and working tree before acting. Current state: see [PHASE_STATUS](docs/PHASE_STATUS.md) and [CURRENT_HANDOFF](docs/handoff/CURRENT_HANDOFF.md). P0–P11 DONE — APPROVED (APPR-005, APPR-006 at `851013f`), published on `main` with the Planning Freeze FRZ-001; standing autonomous execution of TASK-001–TASK-078 authorized by AUTH-013; post-freeze change PCR-001 published after focused review. P2 BUSINESS_RULES remains the sole canonical BR/INV wording owner.
+Check the actual branch, HEAD and working tree before acting. Current state: see [PHASE_STATUS](docs/PHASE_STATUS.md) and [CURRENT_HANDOFF](docs/handoff/CURRENT_HANDOFF.md). P0–P11 DONE — APPROVED (APPR-005, APPR-006 at `851013f`), published on `main` with the Planning Freeze FRZ-001; standing autonomous execution of TASK-001–TASK-078 authorized by AUTH-013; post-freeze change PCR-001 pending focused review. P2 BUSINESS_RULES remains the sole canonical BR/INV wording owner.
 
 ## Operating boundaries
 

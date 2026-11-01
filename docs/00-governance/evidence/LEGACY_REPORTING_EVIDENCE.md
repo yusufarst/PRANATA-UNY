@@ -73,20 +73,39 @@ Per classification code: BMU value (closing gross value) − accumulated depreci
 | Cutoff | Posting year and month | As-of date with day precision; month-end period ends give the legacy result | Superset |
 | Missing or unreadable dates | Report-year January assumed | Validation error at intake; no silent default | Data-quality defect not reproduced |
 | Periods | Y, S1, S2, Q1, Q3 | Y, S1, S2, Q1–Q4 and any as-of date; Q3 keeps July–September with the 30 June opening | Superset |
-| BMU mutation | Additions only; removed rows vanish from history | Net mutation = additions − reductions from asset transactions (acquisition, disposal, transfer, correction), with an addition/reduction breakdown; closing = opening + net mutation and equals the asset position report | Historical periods stay correct after disposal |
+| BMU mutation | Additions only; removed rows vanish from history | Net mutation = additions + internal transfers in − internal transfers out − reductions, by report scope (§9.1); closing = opening + net mutation and equals the asset position report of the same scope and date | Historical periods stay correct after disposal and transfer |
+| Internal transfer between UNY units | Not represented: the row moves to its current unit in every period, past and future | Reported by scope (§9.1): the origin unit shows a transfer out and the receiving unit a transfer in, on the effective date of the unit change; for UNY as a whole, and for any scope that contains both units, the movement nets to zero and is neither an addition nor a reduction | Unit, consolidated and intermediate views reconcile without double counting |
 | Aggregation key | Item code alone, attributes from the first row | (classification code, item code, flag); group per 7-character code; the 12 names are DRAFT data of `asset.classification` | Mixed codes no longer misattributed |
-| Unit | Current unit of the row | Unit at the report date from asset history | Historical correctness |
+| Unit | Current unit of the row | Unit on the report date from the dated unit history (`CHANGE_UNIT` transactions); as-of positions for any past date are reproducible | Historical correctness |
 | Neraca BMU | Gross − accumulated per classification | Same, titled as an asset position statement | Not a financial balance sheet |
 | History | Five years per row | Five-year schedule per asset in PG-309 | Kept |
 | Heuristics | Condition and disposal recommendation from remaining life | Not reproduced | Condition is not determined by depreciation age (PRODUCT_OVERVIEW principle 4) |
 | Signatory | Hard-coded person | Role and assignment snapshot from configuration | Privacy and authority |
 | Exports | PDF and Excel per variant | Same report family through the export queue (TASK-023) | Kept |
 
+### 9.1 Movements by report scope
+
+A report scope is a set of UNY units: one unit, a subtree, or the whole university. For every asset movement in the period:
+
+| Movement | Source in V1 | Effect on a scope |
+|---|---|---|
+| Acquisition from outside UNY (purchase, donation, transfer in from another entity, construction completion, found) | `asset_transactions` REGISTER/RECOGNIZE; `acquisition_type` | Addition to the scope that holds the asset |
+| Internal transfer between UNY units | WF-018 `asset_mutation_lines(from_org_unit_id, to_org_unit_id)` posted as `CHANGE_UNIT` on its `effective_date` | Origin in scope, destination outside: transfer out. Destination in scope, origin outside: transfer in. Both in scope, including UNY as a whole: no movement — nets to zero |
+| Disposal or transfer out of UNY | WF-021 `asset_disposals` (`disposal_method` AUCTION, DESTRUCTION, TRANSFER, GRANT, OTHER) posted as `DISPOSAL` | Reduction in the scope that holds the asset; reduces the UNY total |
+| Correction or development | WF-020 transactions with `value_delta` | Addition or reduction of value in the holding scope |
+
+Rules:
+
+1. Each asset belongs to exactly one unit on any date, given by the dated unit history. Opening and closing positions use the unit on the opening and closing dates. An asset is never counted in two units on the same date.
+2. A transfer carries the asset's gross value and accumulated depreciation together. Depreciation is calculated per asset and is unchanged by a transfer. In unit scopes, a period's depreciation line is attributed to the unit that holds the asset at the end of that line's period. Consolidated expense is the sum of the lines and does not change because of transfers.
+3. For each scope and period: closing value = opening value + additions + transfers in − transfers out − reductions; closing accumulated = opening accumulated + period expense + accumulated transferred in − accumulated transferred out − accumulated on reductions. For UNY as a whole the transfer terms are zero.
+4. The sum of the closing positions of all units equals the UNY closing position, on every date.
+
 Every number produced under a DRAFT version carries the simulation label until a version of `reporting.formats` and `asset.depreciation` is officially effective on the report's reference date (D-28). Official activation needs the GAP-024 format authority and the GAP-007/009 accounting answers.
 
 ## 10. Parity checks
 
-1. **Test oracle in code.** Tests implement §3–§7 from this record (the HTML is never copied into the repository) and compare V1 against the oracle on synthetic data, including mixed-flag codes, back-dated acquisitions, life 0, acquisitions after the report year, Q3 and S2 openings, and disposals.
+1. **Test oracle in code.** Tests implement §3–§7 from this record (the HTML is never copied into the repository) and compare V1 against the oracle on synthetic data, including mixed-flag codes, back-dated acquisitions, life 0, acquisitions after the report year, Q3 and S2 openings, and disposals. Internal transfers have no legacy equivalent; they are tested against the identities of §9.1.
 2. **Local parity with real outputs.** On the Owner's machine and outside the repository, the executor runs the same comparison against the Owner's source CSV export and the 84-page Q3 2026 BMU PDF supplied locally. Only the outcome is recorded: pass/fail per report variant, and the count and category of differences (rounding, cutoff, classification key, disposal, data quality). No amounts, item names or personal data are recorded.
 3. A difference explained by a §9 correction is accepted. Any other difference is reported to the Owner as a finding, not adjusted silently.
 

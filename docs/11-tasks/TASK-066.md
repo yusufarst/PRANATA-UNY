@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: BLOCKED
+EXECUTION STAGE: — (BLOCKED: gerbang publikasi PCR-001 — menunggu penerimaan Second Review, terbit di `origin/main` dan commit transisi status)
 RISK CLASS: HIGH
 MILESTONE: M7 — Nilai aset, KDP, intake dan rekonsiliasi
 PARALLEL SAFE: NO

@@ -61,13 +61,15 @@ Dipakai Owner sekali di sesi interaktif Claude Code pada klon PRANATA di PC Wind
 ```text
 Peran: EXECUTION AGENT. Otorisasi: AUTH-013 (TASK-001–TASK-078, otonomi maksimum yang aman).
 Verifikasi dulu: `git fetch origin`, cabang main = origin/main, working tree bersih, git config
-user.name/user.email = identitas Owner di GIT_WORKFLOW, dan APPROVAL_RECORDS memuat FRZ-001 serta AUTH-013.
+user.name/user.email = identitas Owner di GIT_WORKFLOW, origin/main memuat `851013f`
+(`git merge-base --is-ancestor 851013ff2dc33bf75a1973089f09e38c7512c058 origin/main`), dan APPROVAL_RECORDS
+di origin/main memuat FRZ-001 serta AUTH-013. Hanya origin/main yang berlaku; cabang yang belum terbit tidak mengikat.
 Bila salah satu tidak cocok: berhenti dan laporkan.
 Lalu ikuti AGENTS.md → EXECUTION_CONTEXT → CURRENT_HANDOFF → TASK_PLAN → TASK-001 dan EXECUTOR_OPERATING_MODEL.
 Kerjakan TASK-001–TASK-005 berurutan dalam mode bootstrap tanpa meminta persetujuan per Task; tanyakan hanya
 izin alat yang belum ada di allowlist dan langkah GitHub yang hanya dapat dilakukan Owner (ruleset, token D-27).
 Sesudah prasyarat mode otonom terpenuhi, aktifkan runner dan watcher (scripts/executor/runner.ps1 -Start) dan
-lanjutkan TASK-006–TASK-078 menurut dependensi. Jangan memulai Task BLOCKED.
+lanjutkan TASK-006–TASK-078 menurut dependensi. Jangan memulai Task BLOCKED (termasuk yang ditahan PCR-001).
 Eskalasi hanya hal yang dicadangkan EXECUTOR_OPERATING_MODEL §12. Tanpa atribusi AI di commit/PR/dokumen.
 Laporan dalam Bahasa Indonesia, ringkas, diakhiri footer EXECUTION PROGRESS.
 ```

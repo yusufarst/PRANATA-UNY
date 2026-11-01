@@ -4,7 +4,7 @@ Updated: 2026-11-01 (Asia/Jakarta) | Canonical owner of phase progress: this fil
 
 - Approved baseline: **P0–P11 DONE — APPROVED** at `851013ff2dc33bf75a1973089f09e38c7512c058` — APPR-001–APPR-004 (P0–P3), APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment, U-011 procurement amendment, P4–P11, ADR-0001–ADR-0010 ACCEPTED, 78 Tasks). Independent Second Review: READY_FOR_OWNER_APPROVAL (reported by the Owner, U-012).
 - Publication: AUTH-011 — `main` fast-forwarded from `0e3f7de` to the baseline commit carrying FRZ-001 (D-08 option A); verify with `git ls-remote origin refs/heads/main`.
-- Planning Freeze: **REACHED — FRZ-001** (effective when live `main` contains it). Task Baseline: **78 Tasks**; TASK-001 READY; post-freeze change **PCR-001** published (focused Second Review recorded in APPROVAL_RECORDS); no Task blocked by it.
+- Planning Freeze: **REACHED — FRZ-001** (effective when live `main` contains it). Task Baseline: **78 Tasks**; TASK-001 READY; TASK-025, TASK-066, TASK-069 and TASK-071 BLOCKED by the pending post-freeze change **PCR-001** (branch `docs/pcr-001-legacy-reporting-and-intake`, focused Second Review pending).
 - Execution: **AUTHORIZED — AUTH-013**, standing autonomous execution of TASK-001–TASK-078 with maximum safe autonomy (bootstrap TASK-001–TASK-005, then AUTONOMOUS). Production, real institutional transactions, official policy activation with open GAPs, spending and GitHub administration remain Owner-only.
 - Authorizations: AUTH-013 ACTIVE; AUTH-011 completes on verified publication; AUTH-002–AUTH-010 and AUTH-012: HISTORICAL / COMPLETED.
 - Application implementation: NONE yet (starts with TASK-001).
