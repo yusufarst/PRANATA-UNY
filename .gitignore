@@ -29,3 +29,21 @@ Thumbs.db
 
 # Local-only Claude Code settings
 /.claude/settings.local.json
+
+# Laravel React starter kit
+/.phpunit.cache
+/bootstrap/ssr
+/node_modules
+/public/build
+/public/fonts-manifest.dev.json
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail
+/resources/js/actions
+/resources/js/routes
+/resources/js/wayfinder
+/vendor
+.phpactor.json
+.phpunit.result.cache
+/auth.json
