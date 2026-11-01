@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
-      - run: exit 1
+      - run: sleep 300
 
   bootstrap-gate:
     name: bootstrap-gate
