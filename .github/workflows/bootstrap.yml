@@ -15,6 +15,79 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Temporary: removed before the final HEAD of the TASK-004 PR.
+  prepare:
+    name: prepare
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          extensions: pgsql, pdo_pgsql
+          tools: composer:v2
+          coverage: none
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+
+      - name: List the named routes
+        run: |
+          composer install --no-interaction --prefer-dist --quiet
+          cp .env.example .env
+          php artisan key:generate --ansi
+          php artisan route:list --json | jq -r '.[] | [(.name // "-"), .method, .uri, .action, (.middleware | join(","))] | @tsv'
+
+      - name: Install the quality packages
+        run: |
+          npm install --save-dev --no-audit --no-fund eslint@^9 @eslint/js@^9 typescript-eslint eslint-plugin-react eslint-plugin-react-hooks eslint-config-prettier globals prettier prettier-plugin-tailwindcss
+          npm ls eslint prettier typescript-eslint eslint-plugin-react eslint-plugin-react-hooks --depth=0
+
+      - name: Generate the Wayfinder routes
+        run: npm run build
+
+      - name: Format with Prettier
+        run: npm run format
+
+      - name: Generate the literal text baseline
+        run: |
+          npx eslint resources/js --no-warn-ignored --format json > eslint.json || true
+          jq -r '[.[] | select(any(.messages[]; .ruleId == "react/jsx-no-literals")) | .filePath | sub("^.*/resources/"; "resources/")] | sort' eslint.json > eslint.literal-baseline.json
+          cat eslint.literal-baseline.json
+
+      - name: Report the remaining ESLint findings
+        run: |
+          npx eslint . --no-warn-ignored --format json > eslint.json || true
+          jq -r '.[] | .filePath as $f | .messages[] | select(.ruleId != "react/jsx-no-literals") | "\($f | sub("^.*/PRANATA-UNY/"; "")):\(.line) \(.ruleId) \(.message)"' eslint.json | head -n 60
+
+      - name: Report the documentation links
+        run: npm run docs:check || true
+
+      - name: Run Vitest
+        run: npm run test
+
+      - name: Upload the changed files
+        run: |
+          git status --short | grep -v 'eslint.json' || true
+          git diff --name-only -z > changed.txt
+          tar --null -T changed.txt -czf changed.tar.gz
+
+      - name: Upload the files
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: prepared-files
+          path: changed.tar.gz
+          if-no-files-found: error
+          retention-days: 3
+
   app-boot:
     name: app-boot
     runs-on: ubuntu-24.04

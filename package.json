@@ -6,9 +6,15 @@
         "build": "vp build",
         "build:ssr": "vp build && vp build --ssr",
         "dev": "vp dev",
-        "check": "vp check",
-        "check:fix": "vp check --fix",
-        "types:check": "tsc --noEmit"
+        "lint": "eslint . --max-warnings=0",
+        "format:check": "prettier --check resources",
+        "format": "prettier --write resources",
+        "check": "npm run lint && npm run format:check",
+        "types:check": "tsc --noEmit",
+        "test": "vp test run",
+        "translations:check": "node scripts/quality/check-translations.mjs",
+        "docs:check": "node scripts/docs/check-links.mjs",
+        "qa": "npm run check && npm run types:check && npm run test && npm run translations:check && npm run docs:check"
     },
     "dependencies": {
         "@inertiajs/react": "^3.0.0",
