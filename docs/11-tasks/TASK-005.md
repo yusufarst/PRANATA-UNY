@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: VERIFYING
+EXECUTION STAGE: VERIFYING
 RISK CLASS: STANDARD
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: YES
@@ -184,19 +184,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint: Pint, ESLint, Prettier di `ci-fast`
+- [x] Typecheck: Larastan dan `tsc` di `ci-fast`
+- [x] Relevant automated tests: run nyata pada PR uji, positif dan negatif
+- N/A Authorization: tanpa aksi pengguna baru
+- [x] Route integrity: dipindahkan ke `ci-fast`
+- N/A Interaction behavior: tanpa antarmuka
+- N/A Browser E2E: harness dibuat TASK-007; `ci-e2e` memuat asap HTTP dan Gotenberg
+- N/A Responsive/adaptive: tanpa antarmuka
+- N/A Visual breathing room/density: tanpa antarmuka
+- [x] Production build: `npm run build` di `ci-fast` dan `ci-e2e`
+- [x] Security checks: `composer audit`, `npm audit`, gitleaks; tanpa `pull_request_target`, secret atau runner self-hosted; semua action dipatok SHA
+- [x] Database safety review: pengaman reset dan `pranata_test` di `ci-fast`
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -211,18 +211,18 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41342512596](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41342512596) pada HEAD `9449672`: semua job sukses. Run push `main` 41342932721 sukses. TAC-01: `ci-fast` lulus 112 dtk pada run pertama 41341172993. TAC-02: [PR #17](https://github.com/yusufarst/PRANATA-UNY/pull/17), run 41342978443: `ci-fast` dan `ci-e2e` skipped, `docs-check` dan `ci-gate` success. TAC-03 dan TAC-06: [PR #13](https://github.com/yusufarst/PRANATA-UNY/pull/13) `ci-fast` failure, [PR #14](https://github.com/yusufarst/PRANATA-UNY/pull/14) `ci-e2e` failure, [PR #15](https://github.com/yusufarst/PRANATA-UNY/pull/15) `docs-check` failure; ketiganya `ci-gate` failure. TAC-04: dengan cache `ci-fast` 61 dtk dan `ci-e2e` 67 dtk pada run 41341485098; [PR #16](https://github.com/yusufarst/PRANATA-UNY/pull/16): run usang 41342163489 cancelled, run baru 41342183129 success. TAC-07: [PR #18](https://github.com/yusufarst/PRANATA-UNY/pull/18) hanya mengubah uji Gotenberg: `ci-e2e` berjalan dan success, `ci-gate` success; [PR #19](https://github.com/yusufarst/PRANATA-UNY/pull/19) dengan uji itu gagal: `ci-e2e` failure, `ci-gate` failure. **TAC-05 NOT RUN: menunggu Owner menerapkan ruleset.**
+- Build result: `npm run build` lulus di `ci-fast` dan `ci-e2e`.
+- Route evidence: `RouteIntegrityTest` di `ci-fast`; asap HTTP `/login` 200 dan `/register` 404 di `ci-e2e`.
+- Interaction evidence: N/A.
+- Browser evidence: N/A sampai TASK-007.
+- Localization evidence: pemeriksa kunci terjemahan di `ci-fast`.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Codex pada `9449672`: COMPLETED_NO_FINDINGS. Review independen tidak diwajibkan untuk kelas STANDARD.
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: `.github/workflows/ci.yml`, `.github/workflows/ci-nightly.yml`; `.github/workflows/bootstrap.yml` dihapus; `scripts/docs-check.mjs`, `scripts/executor/tests/ci.probe.ps1`, `tests/Feature/Documents/GotenbergSmokeTest.php`, `docs/09-operations/MAIN_RULESET.md`, `docs/00-governance/TOOLCHAIN.md`, `README.md`.
+- PR / CI run: [PR #12](https://github.com/yusufarst/PRANATA-UNY/pull/12) MERGED; run di atas. Pemetaan bootstrap menurut QUALITY_GATES §4.1: `app-boot` (install, build, migrasi, Pest, Pint, ESLint, tsc) ke `ci-fast`; boot server dan asap HTTP ke `ci-e2e`; screenshot tidak dipindahkan (bukti sekali TASK-002, diganti E2E TASK-007); `db-integration` (versi major, ekstensi, `numeric`/`timestamptz`, Pest paralel, DatabaseGuard) ke `ci-fast`; Gotenberg health dan konversi ke `ci-e2e` beserta Pest grup `gotenberg`; `quality` (qa, uji negatif, audit, gitleaks) ke `ci-fast`; pemeriksa tautan ke `docs-check`. `ci-nightly` memuat suite penuh dan migrasi, dan tidak diklaim dicakup `ci-gate`.
+- Commit SHA: `9449672aa7bad77defb55ec6c0677e09587f96ee`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`.
+- Notes: Task tetap VERIFYING sampai Owner menerapkan [MAIN_RULESET](../09-operations/MAIN_RULESET.md) dan eksekutor membuktikan TAC-05. PR uji #13–#19 ditutup tanpa merge; cabangnya tidak dihapus. Kode gerbang `-Bootstrap` dan `c16.probe.ps1` tidak terpakai lagi setelah `bootstrap.yml` dihapus; dibiarkan sebagai bukti C-16, dan `-Bootstrap` tidak menerima Task setelah TASK-004.
 
 ## SAFE NEXT TASK
 
