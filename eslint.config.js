@@ -54,6 +54,11 @@ export default tseslint.config(
         rules: { 'react/jsx-no-literals': 'off' },
     },
     {
+        // Declaration merging has to repeat the generics of the original interface.
+        files: ['resources/js/types/*.d.ts'],
+        rules: { '@typescript-eslint/no-unused-vars': 'off' },
+    },
+    {
         files: ['scripts/**/*.mjs', '*.config.{js,ts}'],
         languageOptions: { globals: { ...globals.node } },
     },

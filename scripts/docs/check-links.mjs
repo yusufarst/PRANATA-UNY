@@ -37,9 +37,9 @@ function slug(heading) {
     return heading
         .trim()
         .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
-        .replace(/[*_`]/g, '')
+        .replace(/[*`]/g, '')
         .toLowerCase()
-        .replace(/[^\p{L}\p{N}\s-]/gu, '')
+        .replace(/[^\p{L}\p{N}\s_-]/gu, '')
         .replace(/\s/g, '-');
 }
 

@@ -39,16 +39,15 @@ jobs:
         with:
           node-version: '24'
 
-      - name: List the named routes
+      - name: Prepare PHP for the Wayfinder routes
         run: |
           composer install --no-interaction --prefer-dist --quiet
           cp .env.example .env
           php artisan key:generate --ansi
-          php artisan route:list --json | jq -r '.[] | [(.name // "-"), .method, .uri, .action, (.middleware | join(","))] | @tsv'
 
       - name: Install the quality packages
         run: |
-          npm install --save-dev --no-audit --no-fund eslint@^9 @eslint/js@^9 typescript-eslint eslint-plugin-react eslint-plugin-react-hooks eslint-config-prettier globals prettier prettier-plugin-tailwindcss
+          npm install --save-dev --no-audit --no-fund eslint@latest @eslint/js@latest typescript-eslint eslint-plugin-react eslint-plugin-react-hooks eslint-config-prettier globals prettier prettier-plugin-tailwindcss
           npm ls eslint prettier typescript-eslint eslint-plugin-react eslint-plugin-react-hooks --depth=0
 
       - name: Generate the Wayfinder routes
@@ -71,9 +70,6 @@ jobs:
       - name: Report the documentation links
         run: npm run docs:check || true
 
-      - name: Run Vitest
-        run: npm run test
-
       - name: Upload the changed files
         run: |
           git status --short | grep -v 'eslint.json' || true
@@ -87,6 +83,9 @@ jobs:
           path: changed.tar.gz
           if-no-files-found: error
           retention-days: 3
+
+      - name: Run Vitest
+        run: npm run test
 
   app-boot:
     name: app-boot
@@ -312,10 +311,170 @@ jobs:
           test "$(head -c 4 synthetic.pdf)" = '%PDF'
           ls -l synthetic.pdf
 
+  quality:
+    name: quality
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:18.6@sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81
+        # Throwaway database on the runner, without any credential.
+        env:
+          POSTGRES_USER: pranata
+          POSTGRES_DB: pranata_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 127.0.0.1:5432:5432
+        options: >-
+          --health-cmd "pg_isready -U pranata -d pranata_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: '5432'
+      DB_DATABASE: pranata_test
+      DB_USERNAME: pranata
+      GITLEAKS_VERSION: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - name: Check out with the full history for the secret scan
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          extensions: pgsql, pdo_pgsql
+          tools: composer:v2
+          coverage: none
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction --prefer-dist
+          npm ci
+
+      - name: Create the environment file and test key
+        run: |
+          cp .env.example .env
+          php artisan key:generate --ansi
+
+      - name: Production build
+        run: npm run build
+
+      - name: composer qa
+        run: composer qa
+
+      - name: npm run qa
+        run: npm run qa
+
+      - name: A forbidden module import must fail the architecture test
+        run: |
+          mkdir -p app/Modules/Platform/Actions
+          cat > app/Modules/Platform/Actions/ForbiddenProbe.php <<'PHP'
+          <?php
+
+          namespace App\Modules\Platform\Actions;
+
+          use App\Modules\Identity\Models\Account;
+
+          class ForbiddenProbe
+          {
+              public function __construct(public Account $account) {}
+          }
+          PHP
+          if php artisan test tests/Arch > arch.log 2>&1; then
+            cat arch.log
+            echo 'the architecture test did not fail'
+            exit 1
+          fi
+          grep -q 'Platform' arch.log
+          rm -r app/Modules/Platform/Actions
+
+      - name: A route without sign-in or authorization must fail the route test
+        run: |
+          cp routes/web.php routes/web.php.orig
+          echo "Route::get('probe-open', fn () => 'x')->name('probe.open');" >> routes/web.php
+          if php artisan test tests/Feature/RouteIntegrityTest.php > open.log 2>&1; then
+            cat open.log
+            echo 'an open route was not refused'
+            exit 1
+          fi
+          grep -q 'probe.open' open.log
+          cp routes/web.php.orig routes/web.php
+          echo "Route::middleware('auth')->get('probe-unchecked', fn () => 'x')->name('probe.unchecked');" >> routes/web.php
+          if php artisan test tests/Feature/RouteIntegrityTest.php > unchecked.log 2>&1; then
+            cat unchecked.log
+            echo 'a route without authorization was not refused'
+            exit 1
+          fi
+          grep -q 'probe.unchecked' unchecked.log
+          mv routes/web.php.orig routes/web.php
+
+      - name: Literal JSX text must fail ESLint
+        run: |
+          mkdir -p resources/js/pages/probe
+          printf "export default function Probe() {\n    return <p>Teks tetap</p>;\n}\n" > resources/js/pages/probe/literal.tsx
+          if npx eslint resources/js/pages/probe/literal.tsx > eslint.log 2>&1; then
+            cat eslint.log
+            echo 'literal text was not refused'
+            exit 1
+          fi
+          grep -q 'react/jsx-no-literals' eslint.log
+          rm -r resources/js/pages/probe
+
+      - name: A missing translation key must fail the checker
+        run: |
+          mkdir -p probe/lang/id probe/lang/en
+          echo '{"masuk": "Masuk", "keluar": "Keluar"}' > probe/lang/id/auth.json
+          echo '{"masuk": "Sign in"}' > probe/lang/en/auth.json
+          if node scripts/quality/check-translations.mjs probe > translations.log 2>&1; then
+            cat translations.log
+            echo 'a missing key was not refused'
+            exit 1
+          fi
+          grep -q 'missing keluar' translations.log
+          rm -r probe
+
+      - name: A broken link or anchor must fail the checker
+        run: |
+          mkdir -p probe
+          printf '# Judul\n\n[ada](#judul) [tautan](lain.md) [anchor](#tidak-ada)\n' > probe/a.md
+          if node scripts/docs/check-links.mjs probe > links.log 2>&1; then
+            cat links.log
+            echo 'a broken link was not refused'
+            exit 1
+          fi
+          grep -q 'missing file lain.md' links.log
+          grep -q 'missing anchor #tidak-ada' links.log
+          rm -r probe
+
+      - name: Dependency audits
+        run: |
+          composer audit
+          npm audit --audit-level=high
+
+      - name: Secret scan of the whole history
+        run: |
+          curl -fsSL -o gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          mkdir -p .gitleaks-bin
+          tar -xzf gitleaks.tar.gz -C .gitleaks-bin gitleaks
+          .gitleaks-bin/gitleaks git --redact --no-banner --exit-code 1 .
+
   bootstrap-gate:
     name: bootstrap-gate
     if: always()
-    needs: [app-boot, db-integration]
+    needs: [app-boot, db-integration, quality]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
