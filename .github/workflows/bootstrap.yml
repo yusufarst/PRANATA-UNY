@@ -221,7 +221,8 @@ jobs:
         run: php artisan test --parallel --processes=4
 
       - name: PostgreSQL server version
-        run: php artisan db:show --json | jq '.platform | {name, version, database: .config.database}'
+        run: |
+          php artisan db:show --json | jq '.platform | {name, version, database: .config.database}'
 
       - name: Gotenberg health
         run: |
