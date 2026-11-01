@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: STANDARD
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: NO
@@ -191,19 +191,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint: Pint dan `vp check`; ESLint NOT RUN, dipasang TASK-004
+- [x] Typecheck: Larastan dan `tsc`
+- [x] Relevant automated tests: 89 lulus di `app-boot` dan `db-integration`
+- N/A Authorization: tanpa aksi pengguna baru
+- N/A Route integrity: tanpa rute baru; uji dibuat TASK-004
+- N/A Interaction behavior: tanpa antarmuka
+- N/A Browser E2E: tidak diwajibkan kontrak
+- N/A Responsive/adaptive: tanpa antarmuka
+- N/A Visual breathing room/density: tanpa antarmuka
+- [x] Production build: `npm run build`
+- [x] Security checks: `composer audit`, `npm audit`, pengaman reset, uji guard eksekutor; gitleaks NOT RUN, dipasang TASK-004
+- [x] Database safety review: `DatabaseGuard` dan `DatabaseResetGuard`, positif dan negatif
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -218,18 +218,18 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41336663069](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41336663069) pada HEAD `935710d`, attempt 1, uji-merge `1a1a057`, base `5138a3c`. `app-boot` success (67 dtk), `db-integration` success (61 dtk), `bootstrap-gate` success (7 dtk). Pest 89 lulus di `app-boot` dan 89 lulus dengan `--parallel` di `db-integration`. Larastan, Pint, `vp check`, `tsc`, `composer audit` dan `npm audit` lulus. Uji guard eksekutor lokal: PASS, termasuk 12 kasus `database-local`.
+- Build result: `npm run build` lulus di kedua job; PostgreSQL `18.6 (Debian 18.6-1.pgdg13+2)`, ekstensi `pg_trgm`, `ltree`, `btree_gist`, semantik `numeric` dan `timestamptz` UTC, `migrate:fresh` dan rollback lulus.
+- Route evidence: N/A, tanpa rute baru.
+- Interaction evidence: N/A.
+- Browser evidence: N/A.
+- Localization evidence: N/A.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Codex pada `1d437ca`: dua P1, keduanya valid (`DB_URL` dapat mengarahkan perintah ke basis data lain; `--database` eksplisit tidak dijaga pada `APP_ENV=testing`), diperbaiki di `13803f7` dan `935710d` beserta uji subproses nyata. Codex ulang pada `935710d`: COMPLETED_NO_FINDINGS. Review independen tidak diwajibkan untuk kelas STANDARD.
+- Cost evidence/exception if applicable: tanpa biaya.
+- Files changed: `.github/workflows/bootstrap.yml`, `.env.example` tetap, `phpunit.xml` tetap, `tests/Support/DatabaseGuard.php`, `tests/TestCase.php`, `tests/Feature/Database/`, `app/Modules/Platform/` (pengaman perintah CLI), `config/database.php` (zona waktu UTC), `.claude/hooks/lib/policy.ps1`, `scripts/executor/tests/guard.tests.ps1`, `README.md`, `docs/00-governance/TOOLCHAIN.md`, `composer.json` dan `composer.lock` (tanpa `laravel/sail`), `.editorconfig`.
+- PR / CI run: [PR #8](https://github.com/yusufarst/PRANATA-UNY/pull/8) MERGED; run di atas.
+- Commit SHA: `935710d7bca9d5431f8520ba9b2021d1aaf4a3c2`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1 -Bootstrap`.
+- Notes: TAC-01–TAC-05 terbukti. `app/Modules/Platform/` di luar daftar berkas perkiraan kontrak, tetapi diperlukan agar perintah `php artisan` ikut dijaga; `tests/Support` tidak dimuat di luar uji. Nama basis data paralel adalah `pranata_test_test_<n>`, sesuai pola `pranata_test_<token>`. Batas dan fakta platform dicatat di [TOOLCHAIN](../00-governance/TOOLCHAIN.md#integration-environment--task-003-2026-11-02). NOT RUN: ESLint dan gitleaks (TASK-004).
 
 ## SAFE NEXT TASK
 
