@@ -33,15 +33,12 @@ jobs:
         with:
           node-version: '24'
 
-      # --no-scripts keeps .env and APP_KEY out of the tree: the kit's scripts create both.
-      - name: Create the application from the official React starter kit
-        run: composer create-project laravel/react-starter-kit app --no-interaction --prefer-dist --no-install --no-scripts
-
-      - name: Resolve lockfiles
-        working-directory: app
+      # The kit's tagged Packagist release lags behind; the official installer takes its current branch.
+      - name: Create the application with the official Laravel installer
         run: |
-          composer update --no-interaction --no-scripts --no-autoloader --no-install
-          npm install --package-lock-only --no-audit --no-fund
+          composer global require laravel/installer --no-interaction
+          "$(composer global config bin-dir --absolute --quiet)/laravel" new --help
+          "$(composer global config bin-dir --absolute --quiet)/laravel" new app --react --pest --npm --no-boost --no-interaction
 
       - name: Record versions
         working-directory: app
@@ -51,14 +48,16 @@ jobs:
             composer --version
             node --version
             npm --version
+            composer global show laravel/installer --format=json | jq -r '"installer " + .versions[0]'
+            git ls-remote https://github.com/laravel/react-starter-kit.git refs/heads/main
             composer show --locked --format=json
           } > ../scaffold-versions.txt
 
+      # The installer writes .env with a key and a SQLite file; neither may reach a public artifact.
       - name: Refuse dependencies, environment files and keys in the artifact
         working-directory: app
         run: |
-          rm -rf vendor node_modules
-          if [ -e .env ]; then echo '.env must not exist'; exit 1; fi
+          rm -rf vendor node_modules public/build public/hot .env database/database.sqlite
           if grep -rIlE 'base64:[A-Za-z0-9+/]{20,}' .; then echo 'key material found'; exit 1; fi
 
       - name: Pack
