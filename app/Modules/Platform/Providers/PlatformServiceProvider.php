@@ -5,8 +5,7 @@ namespace App\Modules\Platform\Providers;
 use App\Modules\ModuleServiceProvider;
 use App\Modules\Platform\Support\DatabaseResetGuard;
 use Illuminate\Console\Events\CommandStarting;
-use Illuminate\Contracts\Console\Kernel as KernelContract;
-use Illuminate\Foundation\Console\Kernel;
+use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\Event;
 
 class PlatformServiceProvider extends ModuleServiceProvider
@@ -27,10 +26,8 @@ class PlatformServiceProvider extends ModuleServiceProvider
     private function guardDestructiveCommands(): void
     {
         // Laravel forwards console events only outside unit tests; APP_ENV=testing needs the guard as well.
-        $kernel = $this->app->make(KernelContract::class);
-
-        if ($this->app->runningUnitTests() && $kernel instanceof Kernel) {
-            $kernel->rerouteSymfonyCommandEvents();
+        if ($this->app->runningUnitTests()) {
+            $this->app->make(Kernel::class)->rerouteSymfonyCommandEvents();
         }
 
         Event::listen(CommandStarting::class, function (CommandStarting $event): void {
