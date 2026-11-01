@@ -19,5 +19,5 @@ test('Gotenberg converts a synthetic file through LibreOffice', function () {
         ->post('/forms/libreoffice/convert');
 
     expect($response->successful())->toBeTrue()
-        ->and(substr($response->body(), 0, 4))->toBe('%PDF');
+        ->and(substr($response->body(), 0, 4))->toBe('%NOPE');
 })->group('gotenberg')->skip($withoutGotenberg, 'No Gotenberg service in this job.');
