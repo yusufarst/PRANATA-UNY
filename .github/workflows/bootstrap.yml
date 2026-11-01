@@ -355,6 +355,14 @@ jobs:
             exit 1
           fi
           grep -q 'probe.unchecked' unchecked.log
+          cp routes/web.php.orig routes/web.php
+          echo "Route::middleware('auth')->get('probe-boolean', function () { Illuminate\\Support\\Facades\\Gate::allows('x'); return 'x'; })->name('probe.boolean');" >> routes/web.php
+          if php artisan test tests/Feature/RouteIntegrityTest.php > boolean.log 2>&1; then
+            cat boolean.log
+            echo 'an ignored boolean gate result was not refused'
+            exit 1
+          fi
+          grep -q 'probe.boolean' boolean.log
           mv routes/web.php.orig routes/web.php
 
       - name: Literal JSX text must fail ESLint
@@ -380,6 +388,16 @@ jobs:
             exit 1
           fi
           grep -q 'missing keluar' translations.log
+          rm -r probe
+          mkdir -p probe/lang/id probe/lang/en
+          echo "<?php return ['masuk' => 'Masuk', 'pesan' => ['keluar' => 'Keluar']];" > probe/lang/id/auth.php
+          echo "<?php return ['masuk' => 'Sign in'];" > probe/lang/en/auth.php
+          if node scripts/quality/check-translations.mjs probe > translations.log 2>&1; then
+            cat translations.log
+            echo 'a missing key in a PHP catalog was not refused'
+            exit 1
+          fi
+          grep -q 'missing pesan.keluar' translations.log
           rm -r probe
 
       - name: A broken link or anchor must fail the checker

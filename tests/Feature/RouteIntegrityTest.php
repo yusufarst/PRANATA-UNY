@@ -84,7 +84,8 @@ function checksAuthorization(AppRoute $route): bool
         $reflection->getEndLine() - $reflection->getStartLine() + 1,
     ));
 
-    return preg_match('/->authorize\(|Gate::(allows|denies|authorize|check)\(/', $source) === 1;
+    // Only calls that stop the request count: Gate::allows() and its like merely return a boolean.
+    return preg_match('/->authorize\(|Gate::authorize\(/', $source) === 1;
 }
 
 test('every named route outside the public list requires sign-in', function () {
