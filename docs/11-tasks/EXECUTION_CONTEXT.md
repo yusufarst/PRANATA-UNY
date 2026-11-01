@@ -59,15 +59,18 @@ Pemilik: [SECURITY_MODEL](../05-security/SECURITY_MODEL.md), [ACCESS_CONTROL](..
 | Git | Identitas Owner saja; tanpa atribusi AI; tanpa force push; cabang netral | [GIT_WORKFLOW](../00-governance/GIT_WORKFLOW.md) (GOV-08/GOV-09), [RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang) |
 | Isolasi | Hanya sumber daya `pranata`; MULTIPLECORP, BantuKasir, ELLIGBLE tidak disentuh | [INFRASTRUCTURE §2](../09-operations/INFRASTRUCTURE.md#2-pengembangan-lokal-terisolasi), [EXECUTOR_OPERATING_MODEL §11](EXECUTOR_OPERATING_MODEL.md#11-isolasi-multi-proyek-dan-keamanan-sumber-daya) |
 
-## 5. Lingkungan lokal
+## 5. Lingkungan pengembangan dan uji
 
 ```text
-Compose project: pranata (kontainer pranata-*)
-Port host: web 8180, Vite 5183, PostgreSQL 55432, Mailpit 8125
-Basis data: pranata_dev, pranata_test(_N), pranata_e2e_<run>, pranata_perf — hanya di pranata-postgres
-Volume: pranata_pgdata, pranata_storage, pranata_composer_cache, pranata_node_modules
-Perintah dev/uji: ditetapkan TASK-003/TASK-004 dan dicatat di TOOLCHAIN; sampai saat itu belum ada
+Topologi (OD-37): tanpa Docker/Compose, basis data atau layanan PRANATA di PC Owner
+Lokal: penyuntingan, Git, gh, Node/npm, PowerShell, Claude Code + pengaman; alat ringan lingkup proyek saja
+Uji berat: runner GitHub-hosted; PHP, PostgreSQL dan Gotenberg sebagai service container
+Sebelum TASK-005: workflow bootstrap.yml (QUALITY_GATES §4.1); sesudahnya ci.yml + ci-gate
+Basis data: pranata_test(_N), pranata_e2e_<run>, pranata_perf; hanya di service container CI
+Perintah dev/uji: ditetapkan TASK-002–TASK-004 dan dicatat di TOOLCHAIN
 ```
+
+Rujukan generik dalam Task pada kontainer dev atau pemeriksaan lokal dibaca menurut OD-37: pemeriksaan yang memerlukan PHP, PostgreSQL, Gotenberg atau browser dijalankan di runner GitHub-hosted ([INFRASTRUCTURE §2](../09-operations/INFRASTRUCTURE.md#2-pengembangan-lokal-terisolasi)); uji yang tidak dijalankan dicatat NOT RUN, bukan lulus.
 
 ## 6. Masuk eksekusi
 

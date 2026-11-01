@@ -37,13 +37,13 @@ Boleh dijalankan kapan saja; **tidak mengubah apa pun**.
 - [ ] Planning Freeze dan baseline Task tercatat; TASK_PLAN menyatakan TASK-001 READY.
 - [ ] Otorisasi eksekusi berdiri tercatat dengan ruang lingkupnya.
 - [ ] Keputusan metode merge D-08 ([EXECUTOR_OPERATING_MODEL §8.2](EXECUTOR_OPERATING_MODEL.md#82-metode-merge-keputusan-owner)), cakupan token eksekutor D-27 dan model gerbang GAP D-28.
-- [ ] Mesin Owner: Claude Code terbaru, Git, GitHub CLI terautentikasi akun Owner, Docker Desktop, Node, PowerShell; proyek lain tetap berjalan tanpa gangguan.
+- [ ] Mesin Owner: Claude Code terbaru, Git, GitHub CLI terautentikasi akun Owner, Node, PowerShell; tanpa Docker, PHP, Composer atau PostgreSQL untuk PRANATA (OD-37); proyek lain tetap berjalan tanpa gangguan.
 
 ## 4. Urutan aktivasi
 
 1. **Verifikasi otoritas** — bootstrap bagian 2 dengan hasil `SAFE TO IMPLEMENT: YES` hanya untuk TASK-001 dalam mode SUPERVISED.
 2. **TASK-001 (SUPERVISED, mode bootstrap)** — Owner hadir; eksekutor membangun pengaman, runner/watcher dan penjaga atribusi, menguji kemampuan C-01–C-15, dan menulis laporan kemampuan. Setiap izin baru ditanyakan kepada Owner.
-3. **TASK-002–TASK-005 (SUPERVISED, mode bootstrap)** — tanpa `ci-gate` sampai TASK-005 membuat `ci.yml`; bukti verifikasi lokal dan metadata commit disaksikan Owner ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada)).
+3. **TASK-002–TASK-005 (SUPERVISED, mode bootstrap)** — tanpa `ci-gate` sampai TASK-005 membuat `ci.yml`; bukti uji TASK-002–TASK-004 berasal dari workflow bootstrap GitHub-hosted pada SHA HEAD PR ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)); bukti dan metadata commit disaksikan Owner ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada)).
 4. **Proteksi repositori** — setelah `ci-gate` terbukti pada PR TASK-005, Owner menerapkan ruleset `main` dan perlindungan tag sesuai D-08; eksekutor hanya memverifikasinya dengan `gh api` baca.
 5. **Token runner** — Owner memasang token sesuai D-27 khusus untuk proses runner (C-15).
 6. **Mode otonom** — sudah diotorisasi untuk TASK-006–TASK-078 oleh AUTH-013; berlaku begitu laporan kemampuan menunjukkan kemampuan pengaman VERIFIED, ruleset dan token terpasang. Bila kemampuan pengaman gagal, eksekutor tetap SUPERVISED dan melapor.

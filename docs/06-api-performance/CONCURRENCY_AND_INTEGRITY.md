@@ -130,7 +130,7 @@ Job `maintenance` harian: (a) membandingkan `inv_stock_balances` dengan jumlah l
 
 - Basis data pengujian tidak pernah sama dengan basis data pengembangan atau produksi; nama selalu berprefiks `pranata_` (`pranata_dev`, `pranata_test`, `pranata_test_<token>` untuk worker paralel, `pranata_e2e_<run>`).
 - Uji paralel Pest memakai satu basis data per proses; E2E memakai basis data khusus run yang dimigrasi dan di-seed ulang, lalu dihapus.
-- Tidak ada uji yang berjalan terhadap basis data proyek lain di mesin pengembang (MULTIPLECORP, BantuKasir, ELLIGBLE); konfigurasi mengikat host/port/kontainer proyek `pranata` ([INFRASTRUCTURE](../09-operations/INFRASTRUCTURE.md)).
+- Tidak ada basis data PRANATA di mesin pengembang (OD-37); uji berbasis data hanya berjalan pada service container PostgreSQL runner GitHub-hosted, dan basis data proyek lain (MULTIPLECORP, BantuKasir, ELLIGBLE) tidak pernah dijangkau ([INFRASTRUCTURE §2](../09-operations/INFRASTRUCTURE.md#2-pengembangan-lokal-terisolasi)).
 - Sebelum menjalankan perintah destruktif (`migrate:fresh`, `db:wipe`), skrip memastikan nama basis data cocok `^pranata_(dev|test|e2e|perf)(_[a-z0-9_]+)?$` dan `APP_ENV` bukan `production`; selain itu berhenti. Skrip uji otomatis memakai pola yang lebih sempit tanpa `dev` ([TEST_STRATEGY §4](../08-testing/TEST_STRATEGY.md#4-isolasi-basis-data-uji)).
 
 ## 9. Pengujian konkurensi

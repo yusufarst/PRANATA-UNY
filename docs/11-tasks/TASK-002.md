@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: BLOCKED
+EXECUTION STAGE: — (BLOCKED: gerbang publikasi PCR-002 — menunggu penerimaan Second Review, terbit di `origin/main` dan commit transisi status)
 RISK CLASS: HIGH
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: NO
@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Membuat kerangka aplikasi dari Laravel React starter kit resmi versi stabil terkini di root repositori tanpa menimpa dokumen tata kelola, mematikan registrasi publik, membentuk struktur `app/Modules`, dan mencatat versi aktual di TOOLCHAIN.
+Membuat kerangka aplikasi dari Laravel React starter kit resmi versi stabil terkini di root repositori tanpa menimpa dokumen tata kelola, mematikan registrasi publik, membentuk struktur `app/Modules`, dan mencatat versi aktual di TOOLCHAIN. Sesuai OD-37, kerangka dibuat dan diverifikasi tanpa PHP, Composer, PostgreSQL atau Docker lokal: pembangkitan dan bukti boot berjalan di runner GitHub-hosted melalui workflow bootstrap sementara ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)).
 
 ## WHY THIS EXISTS
 
@@ -36,6 +36,9 @@ Semua Task berikutnya membutuhkan fondasi yang sesuai ADR-0001 dan versi yang di
 
 - Verifikasi versi Laravel, PHP, Inertia, React, TypeScript, Tailwind, shadcn/ui yang didukung saat ini dari dokumentasi resmi
 - Pembuatan aplikasi dari starter kit React; penggabungan aman dengan berkas yang ada (AGENTS.md, CLAUDE.md, README, docs/, .gitignore) tanpa kehilangan isi
+- Pembangkitan kerangka tanpa PHP lokal (OD-37): job sementara `scaffold` di `.github/workflows/bootstrap.yml` membuat aplikasi dari starter kit pada runner GitHub-hosted dan mengunggah artefak berisi sumber dan lockfile (tanpa `vendor/`, `node_modules/`, `.env` atau kunci); eksekutor mengunduhnya (`gh run download`), memeriksa dan menggabungkannya, lalu meng-commit dengan identitas Owner. Workflow tidak pernah commit atau push (GOV-08). Job `scaffold` dihapus sebelum HEAD akhir PR. Jalan cadangan hanya bila cara ini tidak dapat dipakai: PHP CLI dan Composer portabel lingkup proyek menurut [TOOLCHAIN](../00-governance/TOOLCHAIN.md#docker-free-development-topology-pcr-002-od-37)
+- Job `app-boot` di `bootstrap.yml`: PostgreSQL service container, `composer install`, `npm ci`, `npm run build`, `migrate:fresh` + rollback, server uji di runner, pemeriksaan HTTP rute masuk dan registrasi, Pest, Pint, ESLint, tsc, serta screenshot halaman masuk pada dua viewport sebagai artefak run
+- Perluasan gerbang `-Bootstrap` pada `scripts/executor/merge-verified.ps1` dan `scripts/executor/lib/merge-gate.ps1` beserta ujinya: merge bootstrap hanya bila setiap job workflow `bootstrap` pada SHA HEAD PR berakhir `success`, tanpa yang hilang, dilewati atau dibatalkan
 - Penonaktifan registrasi publik dan fitur yang bertentangan dengan OD-11 (registrasi terbuka, login sosial)
 - Kerangka modul `app/Modules/<Module>` dengan service provider pemuat rute, migrasi dan policy per modul
 - Konfigurasi dasar: zona waktu aplikasi UTC, lokal default `id`, fallback `en`, PostgreSQL sebagai koneksi default
@@ -44,8 +47,8 @@ Semua Task berikutnya membutuhkan fondasi yang sesuai ADR-0001 dan versi yang di
 ## OUT OF SCOPE
 
 - Fitur bisnis
-- Lingkungan Docker (TASK-003)
-- CI (TASK-005)
+- Pengaman basis data uji dan verifikasi integrasi PostgreSQL/Gotenberg (TASK-003); Docker lokal tidak dipakai sama sekali (OD-37)
+- `ci.yml`, `ci-gate` dan ruleset (TASK-005)
 
 ## REFERENCES
 
@@ -53,6 +56,8 @@ Semua Task berikutnya membutuhkan fondasi yang sesuai ADR-0001 dan versi yang di
 - [ARCHITECTURE §3–6](../04-architecture/ARCHITECTURE.md)
 - [ADR-0001](../adr/ADR-0001-modular-monolith-stack.md)
 - [TOOLCHAIN](../00-governance/TOOLCHAIN.md)
+- [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)
+- [EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada)
 - [ENGINEERING_PRINCIPLES](../00-governance/ENGINEERING_PRINCIPLES.md)
 
 ## TRACEABILITY
@@ -74,6 +79,8 @@ Semua Task berikutnya membutuhkan fondasi yang sesuai ADR-0001 dan versi yang di
 - `routes/`
 - `resources/js/`
 - `docs/00-governance/TOOLCHAIN.md`
+- `.github/workflows/bootstrap.yml`
+- `scripts/executor/merge-verified.ps1`, `scripts/executor/lib/merge-gate.ps1`, `scripts/executor/tests/` (gerbang bootstrap saja)
 
 ## BUSINESS RULES
 
@@ -89,6 +96,7 @@ Semua Task berikutnya membutuhkan fondasi yang sesuai ADR-0001 dan versi yang di
 
 - Registrasi publik tidak tersedia (uji rute)
 - APP_KEY tidak dikomit; `.env` diabaikan Git
+- Workflow bootstrap mengikuti aturan keamanan [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara): pemicu `pull_request`, `permissions: contents: read`, tanpa secret repositori, action dan image dipatok, data sintetis; `APP_KEY` uji dibuat per job dan tidak masuk artefak
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
@@ -134,24 +142,24 @@ Semua Task berikutnya membutuhkan fondasi yang sesuai ADR-0001 dan versi yang di
 - Required MCP servers: tidak ada; Context7 bila tersedia untuk topik versi
 - MCP servers that should remain OFF: cloud/infra, Figma, basis data jarak jauh, browser MCP (E2E memakai paket Playwright proyek)
 - Native CLI/package preferred over MCP: YES (artisan, composer, npm, Playwright, gh)
-- Post-Task deactivation/cleanup: tutup proses/kontainer dev yang dimulai Task; jangan sentuh proyek lain
+- Post-Task deactivation/cleanup: tutup proses lokal yang dimulai Task; tidak ada kontainer lokal (OD-37); jangan sentuh proyek lain
 
 ## TOOL REQUIREMENTS
 
 - Context7: REQUIRED (fallback: dokumentasi resmi terkini)
 - Graphify: OPTIONAL (belum terverifikasi; gunakan analisis terarah `rg`)
 - Browser E2E: REQUIRED
-- Missing safe tool behavior: AUTO-INSTALL/AUTO-CONFIGURE dalam lingkup proyek, catat di TOOLCHAIN
+- Missing safe tool behavior: AUTO-INSTALL/AUTO-CONFIGURE dalam lingkup proyek saja (tanpa instalasi global, perubahan PATH, variabel lingkungan sistem atau layanan; OD-37), catat di TOOLCHAIN
 
 ## GRAPHIFY / IMPACT ANALYSIS
 
 - Graph freshness: N/A bila Graphify tidak tersedia
 - Pre-change questions: modul/tabel/rute/izin mana yang disentuh; uji mana yang terdampak
-- Expected affected areas: composer.json, package.json, app/Modules/*, bootstrap/, config/, routes/, resources/js/, docs/00-governance/TOOLCHAIN.md
+- Expected affected areas: composer.json, package.json, app/Modules/*, bootstrap/, config/, routes/, resources/js/, docs/00-governance/TOOLCHAIN.md, .github/workflows/bootstrap.yml, scripts/executor/ (gerbang bootstrap)
 
 ## CONTEXT7
 
-- Topics to verify: Laravel installer/starter kit React terkini; Inertia 2 + React; Tailwind CSS 4 + shadcn/ui
+- Topics to verify: Laravel installer/starter kit React terkini; Inertia 2 + React; Tailwind CSS 4 + shadcn/ui; GitHub Actions (service container PostgreSQL, artefak, pin SHA action)
 - Version-sensitive assumptions: API framework/paket diverifikasi terhadap versi terpasang sebelum dipakai
 
 ## UI / UX REQUIREMENTS
@@ -194,25 +202,28 @@ Semua Task berikutnya membutuhkan fondasi yang sesuai ADR-0001 dan versi yang di
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 Aplikasi berjalan lokal dan halaman masuk bawaan tampil
+- TAC-01 Aplikasi boot di runner GitHub-hosted dengan PostgreSQL service container: `migrate:fresh` dan rollback lulus, server uji merespons, `GET /login` 200 dengan formulir masuk bawaan, dan screenshot halaman masuk 390×844 dan 1440×900 tersedia sebagai artefak run; bukti: URL run, ID run dan SHA HEAD; tanpa PHP, Composer, PostgreSQL atau Docker lokal
 - TAC-02 Rute registrasi publik tidak ada (404) dan tidak ada tautan ke sana
 - TAC-03 Dokumen tata kelola tidak berubah isinya selain penambahan yang dimaksud (diff ditinjau)
 - TAC-04 Struktur `app/Modules` dengan minimal satu modul contoh terdaftar dan teruji
 - TAC-05 TOOLCHAIN mencatat versi aktual dan sumber verifikasinya
+- TAC-06 `bootstrap.yml` memenuhi aturan [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara), job `scaffold` tidak ada pada HEAD akhir, dan gerbang `-Bootstrap` menolak merge bila job `bootstrap` gagal, hilang, dilewati atau dibatalkan (uji positif dan negatif skrip merge)
 
 ## TEST REQUIREMENTS
 
+- Lokasi (OD-37): pemeriksaan yang memerlukan PHP, PostgreSQL, Gotenberg atau browser hanya berjalan di runner GitHub-hosted ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)); pemeriksaan Node ringan boleh lokal; uji yang tidak dijalankan dicatat NOT RUN, bukan lulus
 - Lint: Pint, ESLint dasar
 - Typecheck: tsc
-- Feature: Uji rute masuk ada, registrasi tidak ada
+- Feature: Uji rute masuk ada, registrasi tidak ada (job `app-boot`)
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
 - Route integrity: N/A — uji integritas rute dibuat TASK-004
 - Browser E2E: N/A — harness dibuat TASK-007 (uji asap halaman masuk)
 - Localization/language switch: N/A — infrastruktur i18n di TASK-006
-- Responsive: Pemeriksaan manual halaman masuk bawaan pada dua viewport
+- Responsive: Tinjauan visual screenshot halaman masuk bawaan pada dua viewport dari artefak run GitHub-hosted (Chrome headless image runner atau Chromium Playwright; bukan harness E2E TASK-007)
 - Accessibility: N/A — axe tersedia sejak TASK-007
 - Production build: npm run build
-- Migration: migrate:fresh + rollback migrasi baru + hak peran DB
+- Migration: migrate:fresh + rollback migrasi baru + hak peran DB (PostgreSQL service container, job `app-boot`)
+- Other: Uji skrip merge `-Bootstrap` positif dan negatif (PowerShell lokal, ringan)
 
 ## TEST CHECKLIST
 
@@ -240,7 +251,7 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 - Semua ACCEPTANCE CRITERIA terbukti dengan bukti tercatat
 - Definition of Done [QUALITY_GATES §2](../08-testing/QUALITY_GATES.md#2-definition-of-done) untuk semua Task + §2.2 UI + §2.3 HIGH
-- PR ke `main` dengan bukti verifikasi lokal lengkap dan review sesuai REVIEW REQUIREMENT; merge mode bootstrap disaksikan Owner karena `ci-gate` belum ada ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada))
+- PR ke `main` dengan setiap job workflow `bootstrap` sukses pada SHA HEAD PR terakhir (bukti run GitHub-hosted, [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)) dan review sesuai REVIEW REQUIREMENT; merge mode bootstrap disaksikan Owner karena `ci-gate` belum ada ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada))
 - TASK_PLAN dan CURRENT_HANDOFF diperbarui; checklist dicentang hanya bila DONE
 
 ## COMPLETION EVIDENCE
@@ -268,4 +279,6 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 - Jangan memasang Sanctum/Passport/Socialite
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
+- Jangan memakai Docker lokal (termasuk perintah baca-saja), memasang PHP/Composer/PostgreSQL global, atau mengubah PATH, variabel lingkungan sistem atau layanan (OD-37)
+- Jangan memakai runner GitHub Actions self-hosted; workflow tidak commit, push atau memakai data riil
 - Jangan menambahkan atribusi AI pada commit/PR

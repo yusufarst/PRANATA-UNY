@@ -1,6 +1,6 @@
 # Current handoff
 
-Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-001 DONE | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
+Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · PCR-002 pending review (not on `main`) · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-001 DONE | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
 
 ## Current state
 
@@ -9,7 +9,7 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 - P0–P11 **DONE — APPROVED** (APPR-005, APPR-006); Planning Freeze **FRZ-001** effective; PCR-001 published; execution authorized by **AUTH-013**.
 - **TASK-001 DONE** (1/78): executor guardrails, runner, watcher and capability report on `main` at `170c1f1`. Application implementation: NONE yet.
 - Executor mode: **SUPERVISED**. AUTONOMOUS is not active: it needs TASK-002–TASK-005 DONE, the `main` ruleset and the runner token (C-15).
-- **Execution is paused for planning:** Owner decision 2026-11-01 forbids local Docker, which changes TASK-002 and TASK-003. See the proposal below.
+- **Execution is paused for planning:** Owner decision OD-37 (2026-11-01) forbids local Docker. Claude Planning incorporated the proposal below into **PCR-002** on branch `docs/pcr-002-docker-free-development`; it awaits one focused Second Review and is not on `main`. Only `origin/main` binds the executor.
 - GAP-001–GAP-029: OPEN (resolved NONE).
 
 ## Handoff (AICWDF §36)
@@ -17,24 +17,24 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Field | Current value |
 |---|---|
 | Current phase | Execution; approved phases 12/12. |
-| Current Task / status | None active. TASK-002 and TASK-003 BLOCKED pending the plan change below. |
+| Current Task / status | None active. TASK-002 and TASK-003 BLOCKED by the PCR-002 publication gate. |
 | Last completed action | 2026-11-01: TASK-001 merged by verified fast-forward (PR #2, PR #3) and reconciled. |
 | Evidence | [TASK-001 COMPLETION EVIDENCE](../11-tasks/TASK-001.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
 | Task plan | Baseline 78 · Current 78 · DONE 1 · READY 0 · IN_PROGRESS 0 · BLOCKED 2 · VERIFYING 0 · TODO 75 · SUPERSEDED 0 · 1%. |
-| Open blockers | (1) Claude Planning: publish the plan change below. (2) Owner, after TASK-005: apply the `main` ruleset. (3) Owner: install the restricted runner token with `scripts/executor/install-runner-token.ps1`, then `scripts/executor/tests/c15.probe.ps1` proves C-15. |
+| Open blockers | (1) PCR-002: focused Second Review, then verified fast-forward of `main` and the state-transition commit. (2) Owner, after TASK-005: apply the `main` ruleset. (3) Owner: install the restricted runner token with `scripts/executor/install-runner-token.ps1`, then `scripts/executor/tests/c15.probe.ps1` proves C-15. |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
-| Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, plus the Owner decision below (not yet in DECISION_INDEX; owned by Planning). |
-| Decisions pending | None for the Owner on this change unless Planning raises one. |
+| Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, and OD-37 (no local Docker; GitHub-hosted testing). |
+| Decisions pending | None for TASK-002–TASK-005. Before TASK-040: where staging runs (D-19 as limited by OD-37). |
 | Toolchain | See [TOOLCHAIN — Executor machine facts](../00-governance/TOOLCHAIN.md). Stage with `scripts/executor/stage.ps1`; a bulk add under `core.autocrlf=false` rewrites line endings on this machine. |
 | Machine | RAM 7.2 GB, 0.1–1.1 GB free during TASK-001 without any PRANATA container; PHP, Composer and psql not installed. Other projects were not touched. |
 | Cost | New recurring cost: NONE. Paid exception: NONE. |
 | Database | Direct production DB touched: NO. Schema/migrations: none yet. |
 | Cleanup for the Owner | Public synthetic sandbox `yusufarst/pranata-uny-sandbox-c10` may be deleted by the Owner; the executor token cannot delete repositories. |
-| Next READY Task | None until the plan change is published; then TASK-002. |
+| Next READY Task | None until PCR-002 is published; then TASK-002. |
 
 ## TASK PLAN CHANGE proposal — Docker-free local development (for Claude Planning)
 
-Status: **PROPOSED**, not applied. No contract was changed by the executor. Owner decision 2026-11-01: no local Docker or Docker Compose for PRANATA (not even read-only), no self-hosted runner on the Owner's PC. GitHub-hosted runners are the primary environment for resource-heavy verification; their service containers are allowed. Synthetic data only in public Actions. No paid service. Gates and acceptance criteria stay.
+Status: **INCORPORATED into PCR-002** (pending review; mapping in [PCR-002_REVIEW_HANDOFF](PCR-002_REVIEW_HANDOFF.md)); kept for provenance. No contract was changed by the executor. Owner decision 2026-11-01: no local Docker or Docker Compose for PRANATA (not even read-only), no self-hosted runner on the Owner's PC. GitHub-hosted runners are the primary environment for resource-heavy verification; their service containers are allowed. Synthetic data only in public Actions. No paid service. Gates and acceptance criteria stay.
 
 **Sequencing problem to solve.** PHP, Composer and PostgreSQL are absent locally, and §8.4 expects the full verification pyramid locally for TASK-001–TASK-004, while `ci.yml` only arrives in TASK-005. So TASK-002 and TASK-004 are affected as well as TASK-003.
 
@@ -57,7 +57,7 @@ Status: **PROPOSED**, not applied. No contract was changed by the executor. Owne
 
 ## Exact next safe action
 
-**Owner:** pass this proposal to Claude Planning. **Claude Planning:** publish the plan change under FRZ-001 change control. **Executor, after publication:** verify `origin/main`, mark TASK-002 READY and continue in SUPERVISED bootstrap mode. Do not start TASK-002 or TASK-003 before that.
+**Owner:** forward [PCR-002_REVIEW_HANDOFF](PCR-002_REVIEW_HANDOFF.md) to the Second Review Agent. **Claude Planning:** after an acceptable verdict, verified fast-forward of `main` and the state-transition commit that sets TASK-002 READY. **Executor, once that commit is on `origin/main`:** verify it and start TASK-002 in SUPERVISED bootstrap mode. Do not start TASK-002 or TASK-003 before that.
 
 ## DO NOT DO
 

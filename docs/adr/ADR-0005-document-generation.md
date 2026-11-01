@@ -16,12 +16,13 @@ OD-08/OD-29 meminta dokumen terkait dihasilkan dari data sekali-input; contoh hi
 
 ## Keputusan dan alasan
 
-Template DOCX berversi dengan validasi placeholder, snapshot data bertipe, generasi di antrean, konversi PDF oleh kontainer Gotenberg lokal, banner DRAF/SIMULASI wajib, nomor dari layanan Numbering, revisi tanpa penimpaan, bukti tanda tangan berupa unggahan ([DOCUMENT_ENGINE](../04-architecture/DOCUMENT_ENGINE.md)).
+Template DOCX berversi dengan validasi placeholder, snapshot data bertipe, generasi di antrean, konversi PDF oleh kontainer Gotenberg self-hosted di server aplikasi, banner DRAF/SIMULASI wajib, nomor dari layanan Numbering, revisi tanpa penimpaan, bukti tanda tangan berupa unggahan ([DOCUMENT_ENGINE](../04-architecture/DOCUMENT_ENGINE.md)).
 
 ## Risiko
 
 - Gotenberg tidak tersedia → DOCX tetap tersedia, konversi dapat diulang.
 - Template rusak/placeholder salah → validasi saat unggah.
+- Pengujian (OD-37, PCR-002): Gotenberg diuji sebagai service container di runner GitHub-hosted dengan data sintetis, tidak di mesin pengembang; ini tidak menetapkan cara deploy produksi.
 
 ## Biaya
 

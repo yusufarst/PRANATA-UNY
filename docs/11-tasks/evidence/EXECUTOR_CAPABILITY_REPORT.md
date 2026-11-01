@@ -23,7 +23,7 @@ Ulangi dengan: `scripts/executor/tests/guard.tests.ps1`, `scripts.tests.ps1` (ke
 | C-11 | Subagen dalam headless | VERIFIED | Subagen membaca berkas dan melaporkan isinya, exit 0 | — |
 | C-12 | Deteksi batas pemakaian | VERIFIED (simulasi) | Stub: batas terdeteksi hanya pada langkah gagal, `wait_until` diisi, tanpa panggilan model selama menunggu. Galat autentikasi nyata (`is_error=true`, `subtype=success`) kini menghentikan loop | Pesan batas pemakaian yang asli belum teramati; pola dikalibrasi saat terjadi |
 | C-13 | Worktree Git di Windows | VERIFIED | Worktree dibuat dan dihapus pada repositori sekali pakai | — |
-| C-14 | Bind mount Docker Desktop | NOT AVAILABLE | Dibatalkan oleh keputusan Owner 2026-11-01 (tanpa Docker lokal); lihat usulan perubahan rencana di CURRENT_HANDOFF | — |
+| C-14 | Bind mount Docker Desktop | SUPERSEDED / NOT APPLICABLE | Keputusan Owner OD-37 (2026-11-01, tanpa Docker lokal); diklasifikasi ulang oleh PCR-002; tidak diuji | — |
 | C-15 | Token runner terpisah | NOT AVAILABLE — menunggu Owner | Kode dan `c15.probe.ps1` siap; token DPAPI hanya masuk proses anak (diuji dengan nilai palsu, tidak muncul di argumen atau log). Uji nyata setelah Owner memasang token | Wajib VERIFIED sebelum mode otonom |
 
 ## C-09

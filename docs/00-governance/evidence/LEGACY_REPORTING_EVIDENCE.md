@@ -1,6 +1,6 @@
 # Legacy reporting and depreciation evidence
 
-Status: APPROVED under PCR-001 (FRZ-001 change control; focused review `6b880b4` APPROVED WITH CONDITIONS, conditions applied) | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent
+Status: APPROVED under PCR-001 (FRZ-001 change control; focused review `6b880b4` APPROVED WITH CONDITIONS, conditions applied); §10 amended by PCR-002 (state in APPROVAL_RECORDS) | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent
 
 This record states the calculation behaviour of the legacy PRANATA page `index (1).html` ([SRC-027 / ASSET-12](ASSET_SOURCE_REVIEW.md)), re-read in full on 2026-11-01 at the Owner's direction (U-012 §5), and how V1 uses it. The page is the **primary legacy behavioural reference**. It is not accounting or legal authority, so GAP-007, GAP-009 and GAP-024 stay OPEN. Its formulas are the provisional DRAFT defaults of `asset.depreciation.uny` and `reporting.formats.uny` ([POLICY_REGISTRY §5](../../04-architecture/POLICY_REGISTRY.md#5-contoh-isi-lain-bentuk-bukan-nilai-resmi)), except where §9 records a correction.
 
@@ -9,7 +9,7 @@ This record states the calculation behaviour of the legacy PRANATA page `index (
 | Item | Value |
 |---|---|
 | Inspected | Complete static reading of the HTML and inline JavaScript (CSV import, period engine, depreciation, BMU, Neraca BMU, five-year history, PDF and Excel export). The page was not executed against institutional data. |
-| Comparison output | The Owner names an 84-page "Laporan Barang Milik Universitas (Gabungan)" for the third quarter of 2026 (U-012). It was **not available** to the planning session; the comparison is the local parity check of §10. |
+| Comparison output | The Owner names an 84-page "Laporan Barang Milik Universitas (Gabungan)" for the third quarter of 2026 (U-012). It was **not available** to the planning session; the comparison is the private parity check of §10. |
 | Excluded | The page hard-codes a signatory title, personal name and staff identifier in the PDF signature block. None is reproduced here or anywhere in the repository; V1 takes signatories from configured roles and assignment snapshots ([DOCUMENT_ENGINE](../../04-architecture/DOCUMENT_ENGINE.md)). No amounts or records are copied. |
 
 ## 2. Input dialect
@@ -106,9 +106,11 @@ Every number produced under a DRAFT version carries the simulation label until a
 
 ## 10. Parity checks
 
-1. **Test oracle in code.** Tests implement §3–§7 from this record (the HTML is never copied into the repository) and compare V1 against the oracle on synthetic data, including mixed-flag codes, back-dated acquisitions, life 0, acquisitions after the report year, Q3 and S2 openings, and disposals. Internal transfers have no legacy equivalent; they are tested against the identities of §9.1.
-2. **Local parity with real outputs.** On the Owner's machine and outside the repository, the executor runs the same comparison against the Owner's source CSV export and the 84-page Q3 2026 BMU PDF supplied locally. Only the outcome is recorded: pass/fail per report variant, and the count and category of differences (rounding, cutoff, classification key, disposal, data quality). No amounts, item names or personal data are recorded.
-3. A difference explained by a §9 correction is accepted. Any other difference is reported to the Owner as a finding, not adjusted silently.
+1. **Test oracle in code.** The oracle implements §3–§7 from this record as a pure TypeScript module that runs on Node alone; the HTML is never copied into the repository. In public CI it generates golden outputs for synthetic datasets: mixed-flag codes, back-dated acquisitions, life 0, acquisitions after the report year, Q3 and S2 openings, and disposals. Vitest checks the oracle; Pest compares V1 reports computed on PostgreSQL with those golden outputs; CI fails when committed golden files differ from the oracle's output. Internal transfers have no legacy equivalent; they are tested against the identities of §9.1.
+2. **Private parity with real outputs (PCR-002).** No Docker, PHP or PostgreSQL is needed on the Owner's machine (OD-37). The Owner places the source CSV export and the 84-page Q3 2026 BMU PDF in `.pranata/private/parity/`, which Git ignores; preferably also the legacy page's own XLSX export of the same report, produced locally from the same CSV. The executor runs the oracle with Node on the CSV and compares each variant with the XLSX values, or else with text extracted from the PDF by an open-source Node library recorded in TOOLCHAIN. Where PDF extraction is unreliable, only group and grand totals are compared and that limit is recorded. These inputs never enter Git, a PR, an issue, a log or GitHub Actions.
+3. **Recorded outcome.** Only pass/fail per report variant, the count and category of differences (rounding, cutoff, classification key, disposal, data quality), and a pattern profile are recorded. The profile counts rows per §9 rule category, without amounts, item names or personal data. Every category present in the real data must have a synthetic case in item 1; a missing case is added before TASK-071 is DONE. Items 1–3 together show that V1 matches the oracle on every rule category present in the real data and that the oracle matches the legacy output on the real data.
+4. Real data is never processed by GitHub Actions. An end-to-end V1 run on real data, if the Owner wants one, happens only in an Owner-controlled private environment (for example staging under D-19) and is not a condition of TASK-071.
+5. A difference explained by a §9 correction is accepted. Any other difference is reported to the Owner as a finding, not adjusted silently.
 
 ## 11. GAP status
 

@@ -12,7 +12,7 @@ PARALLEL SAFE: YES
 
 ## OBJECTIVE
 
-Membuat workflow GitHub Actions `ci.yml` (job `changes`, `ci-fast`, `docs-check`, kerangka `ci-e2e`, dan agregat `ci-gate`) serta kerangka `ci-nightly.yml`, dengan cache, concurrency, filter path di dalam workflow dan service PostgreSQL, serta instruksi proteksi `main` untuk diterapkan Owner.
+Membuat workflow GitHub Actions `ci.yml` (job `changes`, `ci-fast`, `docs-check`, kerangka `ci-e2e`, dan agregat `ci-gate`) serta kerangka `ci-nightly.yml`, dengan cache, concurrency, filter path di dalam workflow dan service PostgreSQL, serta instruksi proteksi `main` untuk diterapkan Owner. Workflow bootstrap sementara (`bootstrap.yml`, [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)) digabung ke `ci.yml` lalu dihapus.
 
 ## WHY THIS EXISTS
 
@@ -38,6 +38,8 @@ Setiap PR Task harus diverifikasi otomatis dan cepat tanpa run ganda atau check 
 
 - `.github/workflows/ci.yml` dengan job `changes`, `ci-fast`, `docs-check`, kerangka `ci-e2e` dan `ci-gate` (selalu berjalan; gagal bila job yang diperlukan gagal/dibatalkan)
 - `.github/workflows/ci-nightly.yml` kerangka
+- Konsolidasi `bootstrap.yml`: setiap pemeriksaan job `app-boot`, `db-integration` dan `quality` dipetakan ke job `ci.yml` (`ci-fast`) atau `ci-nightly.yml` (integrasi Gotenberg) tanpa kehilangan cakupan; `bootstrap.yml` dihapus pada PR yang sama; pemetaan dicatat di COMPLETION EVIDENCE
+- Aturan keamanan workflow QUALITY_GATES §4 berlaku untuk `ci.yml` dan `ci-nightly.yml`: `pull_request` (bukan `pull_request_target`), permission minimum, action dipatok SHA, tanpa secret repositori untuk uji, runner GitHub-hosted saja (OD-37)
 - Pemicu: PR ke `main` dan push ke `main`; tidak pada setiap push cabang kerja
 - Cache Composer/npm, concurrency per PR dengan cancel-in-progress; run `main` tidak dibatalkan
 - PostgreSQL service versi sama dengan produksi; Pest paralel
@@ -77,7 +79,7 @@ Setiap PR Task harus diverifikasi otomatis dan cepat tanpa run ganda atau check 
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
-- Tidak ada rahasia di workflow; permission token minimum
+- Tidak ada rahasia di workflow; permission token minimum; tanpa `pull_request_target`; action dipatok SHA; tanpa runner self-hosted (OD-37)
 
 ## DATABASE IMPACT ASSESSMENT
 
@@ -122,14 +124,14 @@ Setiap PR Task harus diverifikasi otomatis dan cepat tanpa run ganda atau check 
 - Required MCP servers: tidak ada; Context7 bila tersedia untuk topik versi
 - MCP servers that should remain OFF: cloud/infra, Figma, basis data jarak jauh, browser MCP (E2E memakai paket Playwright proyek)
 - Native CLI/package preferred over MCP: YES (artisan, composer, npm, Playwright, gh)
-- Post-Task deactivation/cleanup: tutup proses/kontainer dev yang dimulai Task; jangan sentuh proyek lain
+- Post-Task deactivation/cleanup: tutup proses lokal yang dimulai Task; tidak ada kontainer lokal (OD-37); jangan sentuh proyek lain
 
 ## TOOL REQUIREMENTS
 
 - Context7: REQUIRED (fallback: dokumentasi resmi terkini)
 - Graphify: OPTIONAL (belum terverifikasi; gunakan analisis terarah `rg`)
 - Browser E2E: N/A
-- Missing safe tool behavior: AUTO-INSTALL/AUTO-CONFIGURE dalam lingkup proyek, catat di TOOLCHAIN
+- Missing safe tool behavior: AUTO-INSTALL/AUTO-CONFIGURE dalam lingkup proyek saja (tanpa instalasi global, perubahan PATH, variabel lingkungan sistem atau layanan; OD-37), catat di TOOLCHAIN
 
 ## GRAPHIFY / IMPACT ANALYSIS
 
@@ -167,6 +169,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 PR dengan job wajib yang gagal membuat `ci-gate` gagal (uji negatif)
 - TAC-04 Run kedua lebih cepat karena cache; run usang pada PR dibatalkan
 - TAC-05 Ruleset diterapkan Owner dan push ke `main` atas commit yang belum lulus `ci-gate` ditolak (uji)
+- TAC-06 `bootstrap.yml` tidak ada lagi; setiap pemeriksaan yang dibuktikan TASK-002–TASK-004 berjalan di `ci.yml` atau `ci-nightly.yml` (pemetaan dicatat) dan `ci-gate` gagal bila pemeriksaan wajib di antaranya gagal
 
 ## TEST REQUIREMENTS
 
@@ -230,4 +233,5 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 - Jangan menonaktifkan pemeriksaan wajib
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
+- Jangan memakai runner GitHub Actions self-hosted atau layanan CI berbayar (OD-37)
 - Jangan menambahkan atribusi AI pada commit/PR

@@ -74,5 +74,5 @@ Generasi dan konversi berjalan di antrean `documents` dengan concurrency terbata
 - Uji provider: snapshot sesuai DTO dan konsisten dengan data sumber.
 - Uji template emas: DOCX hasil dibuka, `word/document.xml` tidak memuat `${`, nilai terformat benar, baris berulang lengkap.
 - Uji terbilang dan format angka/tanggal berbasis tabel.
-- Uji integrasi Gotenberg di CI penuh (service container) dan uji gagal-konversi.
+- Uji integrasi Gotenberg di runner GitHub-hosted (service container dengan image dipatok, data sintetis; `ci-nightly` dan Task dokumen) dan uji gagal-konversi. Tidak ada Gotenberg di mesin pengembang (OD-37). Gotenberg staging/produksi adalah kontainer di server yang diputuskan Owner ([INFRASTRUCTURE §4](../09-operations/INFRASTRUCTURE.md#4-topologi-staging-dan-produksi)) dan tidak ditetapkan oleh pengujian ini.
 - Uji banner DRAF/SIMULASI, nomor unik, revisi/supersession dan otorisasi unduhan.

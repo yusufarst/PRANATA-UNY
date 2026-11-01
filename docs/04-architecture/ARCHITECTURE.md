@@ -216,7 +216,7 @@ Satu server produksi (VPS/server yang dibiayai klien) menjalankan Nginx, PHP-FPM
 | Kebijakan resmi tidak kunjung divalidasi sehingga fitur tidak dapat aktif di produksi | Paket resolusi GAP ([OWNER_DECISION_PACKAGE](../handoff/OWNER_DECISION_PACKAGE.md)); kebijakan sebagai data sehingga jawaban tidak memerlukan pengembangan ulang |
 | Kompleksitas lima metode × dua rezim × empat jenis pengadaan | Satu kerangka paket + ekstensi metode yang dikendalikan kebijakan; pengujian matriks dengan data sintetis |
 | Driver database untuk antrean menjadi bottleneck | Beban diperkirakan rendah; antrean terpisah per jenis; pemantauan Pulse; ADR-0006 mencatat kriteria pindah ke Redis/Valkey |
-| Ketergantungan Gotenberg untuk PDF | Kontainer lokal; DOCX tetap dapat diunduh bila PDF gagal; health check |
+| Ketergantungan Gotenberg untuk PDF | Kontainer self-hosted di server aplikasi (diuji di runner GitHub-hosted, OD-37); DOCX tetap dapat diunduh bila PDF gagal; health check |
 | Versi framework berubah sebelum eksekusi | TASK-002 memverifikasi versi terkini via dokumentasi resmi dan mencatatnya di TOOLCHAIN |
 
 ## 13. Verifikasi yang ditunda ke eksekusi

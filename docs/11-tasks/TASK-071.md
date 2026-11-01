@@ -46,7 +46,7 @@ CAP-13/17/18, AC-16/17/20.
 - Uji kebenaran terhadap data sintetis dengan nilai yang dihitung independen
 - Keluarga laporan BMU sebagai format DRAFT `reporting.formats.uny` (POLICY_REGISTRY §5) dari perilaku legacy dengan koreksi LEGACY_REPORTING_EVIDENCE §9: Laporan BMU (saldo awal, mutasi bersih dengan rincian tambah/kurang, saldo akhir; kuantitas dan nilai perolehan), Laporan Penyusutan (nilai, akumulasi awal, beban periode, akumulasi, nilai buku) dan Neraca BMU (nilai, akumulasi, netto per kode klasifikasi 7 karakter); varian Intra, Ekstra dan Gabungan; periode Y, S1, S2, Q1–Q4 dan per tanggal; kunci (kode klasifikasi, kode barang, flag); unit pada tanggal laporan
 - Ekspor PDF dan XLSX per varian melalui antrean ekspor TASK-023, dengan blok penanda tangan dari peran dan snapshot penugasan (tanpa nama tetap) dan label simulasi selama format belum berlaku resmi
-- Oracle uji legacy (LEGACY_REPORTING_EVIDENCE §3–§7) dan prosedur pemeriksaan paritas lokal §10
+- Oracle uji legacy (LEGACY_REPORTING_EVIDENCE §3–§7) sebagai modul TypeScript murni yang berjalan dengan Node saja; golden output sintetis untuk uji CI dan prosedur paritas privat §10 (tanpa Docker, PHP atau PostgreSQL lokal; OD-37)
 
 ## OUT OF SCOPE
 
@@ -215,13 +215,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-11 Satu aset sintetis yang memiliki peristiwa `REGISTER` dan `RECOGNIZE` (dan aset migrasi dengan `IMPORT` lalu `RECOGNIZE`) hanya menghasilkan satu penambahan pada peristiwa inklusinya; saldo akhir sama dengan posisi aset per tanggal yang sama pada tampilan unit maupun konsolidasi; pembalikan peristiwa inklusi menghapus penambahan itu (LEGACY_REPORTING_EVIDENCE §9.1)
 - TAC-06 Kode barang dengan baris intra dan ekstra atau klasifikasi berbeda dihitung pada kelompok dan flag masing-masing
 - TAC-07 PDF dan XLSX memuat judul varian, periode atau tanggal posisi, kelompok dan total, serta penanda tangan dari peran terkonfigurasi; tidak ada nama atau nomor identitas tetap di kode, fixture atau dokumentasi
-- TAC-08 Pemeriksaan paritas lokal terhadap CSV sumber dan PDF BMU triwulan III 2026 milik Owner dijalankan di luar repositori; hanya hasil lulus/gagal per varian dan jumlah serta kategori selisih yang dicatat
+- TAC-08 Pemeriksaan paritas privat LEGACY_REPORTING_EVIDENCE §10 dijalankan di mesin Owner dengan Node saja terhadap CSV sumber dan BMU triwulan III 2026 milik Owner (ekspor XLSX halaman legacy dari CSV yang sama, atau teks PDF 84 halaman), dengan masukan di `.pranata/private/parity/` dan tidak pernah di Git, PR, issue, log atau GitHub Actions; hanya hasil lulus/gagal per varian, jumlah dan kategori selisih, serta profil pola tanpa nilai yang dicatat; setiap kategori pola yang ada di data riil memiliki kasus sintetis di uji CI
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Unit: Oracle legacy LEGACY_REPORTING_EVIDENCE §3–§7
+- Unit: Oracle legacy LEGACY_REPORTING_EVIDENCE §3–§7 (Vitest) dan kecocokan golden output yang dibangkitkan oracle; Pest membandingkan laporan V1 (PostgreSQL CI) dengan golden output sintetis
 - Feature: Kebenaran laporan, termasuk keluarga laporan BMU
 - Authorization: AUTHZ-43
 - Route integrity: Rute baru terdaftar di uji integritas rute

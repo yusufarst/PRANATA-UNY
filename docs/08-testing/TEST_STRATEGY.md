@@ -49,12 +49,12 @@ Dokumen ini memiliki **lapisan uji, alat, data uji, isolasi basis data uji, uji 
 
 | Konteks | Basis data | Aturan |
 |---|---|---|
-| Pest lokal | `pranata_test` (+ `_N` per proses paralel) pada kontainer `pranata-postgres` proyek | Konfigurasi `.env.testing`; `RefreshDatabase`/`LazilyRefreshDatabase` |
+| Pest bootstrap (TASK-002–TASK-004) | `pranata_test` (+ `_N` per proses paralel) pada service container PostgreSQL runner GitHub-hosted (workflow bootstrap) | Konfigurasi pengujian; `RefreshDatabase`/`LazilyRefreshDatabase`; tidak ada basis data lokal (OD-37) |
 | Pest CI | Service container PostgreSQL per job | Basis data dibuat ulang per job |
-| E2E lokal/CI | `pranata_e2e_<run_id>` | Migrate + `ScenarioSeeder` sebelum suite; dihapus setelahnya; worker Playwright berbagi data hanya-baca dan membuat objek uji sendiri dengan nama unik untuk perubahan |
-| Performa | `pranata_perf` di staging/mesin uji | Tidak pernah produksi |
+| E2E CI | `pranata_e2e_<run_id>` | Migrate + `ScenarioSeeder` sebelum suite; dihapus setelahnya; worker Playwright berbagi data hanya-baca dan membuat objek uji sendiri dengan nama unik untuk perubahan |
+| Performa | `pranata_perf` di runner GitHub-hosted atau staging | Tidak pernah produksi |
 
-Pengaman wajib: skrip uji menolak berjalan bila nama basis data tidak cocok `^pranata_(test|e2e|perf)(_[a-z0-9_]+)?$` atau `APP_ENV=production`; perintah destruktif di luar uji (misalnya reset `pranata_dev`) memakai pengaman [CONCURRENCY_AND_INTEGRITY §8](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#8-isolasi-basis-data-uji). Uji tidak pernah memakai basis data proyek lain di mesin yang sama (port, nama kontainer dan volume khusus `pranata`, [INFRASTRUCTURE](../09-operations/INFRASTRUCTURE.md)).
+Pengaman wajib: skrip uji menolak berjalan bila nama basis data tidak cocok `^pranata_(test|e2e|perf)(_[a-z0-9_]+)?$` atau `APP_ENV=production`; perintah destruktif di luar uji (misalnya reset `pranata_dev`) memakai pengaman [CONCURRENCY_AND_INTEGRITY §8](../06-api-performance/CONCURRENCY_AND_INTEGRITY.md#8-isolasi-basis-data-uji). Uji tidak pernah berjalan di mesin Owner dan tidak pernah menjangkau basis data proyek lain; basis data uji hanya ada di service container CI ([INFRASTRUCTURE §2](../09-operations/INFRASTRUCTURE.md#2-pengembangan-lokal-terisolasi)).
 
 ## 5. E2E browser
 
@@ -79,17 +79,18 @@ Urutan verifikasi per Task (U-007 §10.3): **berkas berubah → pemeriksaan stat
 
 | Langkah | Kapan | Isi minimum |
 |---|---|---|
-| Statis cepat | Setiap siklus edit | `pint --dirty`, ESLint/Prettier pada berkas berubah, `tsc --noEmit` (inkremental), Larastan dengan cache hasil |
-| Uji terarah | Setelah perilaku berubah | Pest untuk berkas/grup yang menyentuh perilaku (`--filter`, `--group`), Vitest berkas terkait |
-| Relevan | Sebelum membuka/memperbarui PR | Uji otorisasi dan integritas rute modul yang disentuh; `migrate:fresh` + rollback bila migrasi berubah; build produksi bila frontend berubah; E2E lokal hanya perjalanan yang disentuh pada Chromium |
+| Statis cepat | Setiap siklus edit | Lokal dengan Node: ESLint/Prettier pada berkas berubah, `tsc --noEmit` (inkremental). Pint dan Larastan di run GitHub-hosted; lokal hanya bila PHP portabel lingkup proyek dipakai ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#docker-free-development-topology-pcr-002-od-37)) |
+| Uji terarah | Setelah perilaku berubah | Vitest berkas terkait secara lokal; Pest untuk perilaku yang berubah di run GitHub-hosted pada PR draft |
+| Relevan | Sebelum PR siap review | Di run GitHub-hosted: uji otorisasi dan integritas rute modul yang disentuh; `migrate:fresh` + rollback bila migrasi berubah; build produksi bila frontend berubah (lokal boleh bila memori cukup); E2E perjalanan yang disentuh |
 | CI final | Setiap pembaruan PR | `ci-gate` pada HEAD PR terakhir ([QUALITY_GATES §4](QUALITY_GATES.md#4-pipeline-ci-github-actions)); WebKit, E2E penuh yang terpicu dan audit dependensi dijalankan di CI |
 
 Aturan bukti:
 
 - Bukti lokal hanya berlaku untuk SHA tempat bukti itu dihasilkan. Setelah perbaikan, uji terarah untuk area yang berubah dijalankan ulang; suite yang tidak terdampak tidak perlu diulang secara lokal karena CI final menjalankannya pada HEAD terakhir.
 - Bukti CI yang dipakai untuk merge selalu dari HEAD PR terakhir; hasil run lama tidak berlaku untuk kode yang berubah.
-- Suite lengkap tidak dijalankan setelah setiap edit kecil; suite yang berat (E2E penuh, performa) tidak dijalankan lokal pada stasiun kerja yang terbatas kecuali Task menuntutnya.
-- Sumber daya lokal diukur (durasi, CPU/RAM) pada TASK-003/TASK-007; paralelisme lokal hanya dipakai bila terbukti lebih cepat tanpa mengganggu proyek lain.
+- Suite lengkap tidak dijalankan setelah setiap edit kecil. Suite yang memerlukan PHP, PostgreSQL, Gotenberg atau browser tidak dijalankan di mesin Owner (OD-37). PR draft dibuka lebih awal agar run GitHub-hosted menjadi umpan balik; commit dikumpulkan sebelum push agar run tidak berlebihan.
+- Uji yang tidak dijalankan dicatat NOT RUN, tidak pernah lulus. Bukti GitHub-hosted mencatat URL run, ID run dan SHA.
+- Durasi job GitHub-hosted diukur pada TASK-003, TASK-005 dan TASK-007; alat lokal tetap ringan dan tidak mengganggu proyek lain.
 
 ## 9. Keandalan fixture dan kegagalan setup
 

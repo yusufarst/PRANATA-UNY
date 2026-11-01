@@ -42,6 +42,7 @@ This is a locator; [DECISION_LOG](DECISION_LOG.md) owns decision wording and pro
 | OD-34 | Visual identity: Deep Navy #172554, Ice Blue #EFF6FF, white surfaces | [OD-34](DECISION_LOG.md#od-34) |
 | OD-35 | Several winners per package by award scope (item/lot) where permitted | [OD-35](DECISION_LOG.md#od-35) |
 | OD-36 | Offer evaluation as top procurement priority; method/type/value-aware steps and documents | [OD-36](DECISION_LOG.md#od-36) |
+| OD-37 | No local Docker on the Owner's PC; GitHub-hosted runners for resource-intensive testing | [OD-37](DECISION_LOG.md#od-37) |
 | GOV-01 | Framework / authority / agents | [GOV-01](DECISION_LOG.md#gov-01--framework-and-durable-authority) |
 | GOV-02 | P0-only scope and final state | [GOV-02](DECISION_LOG.md#gov-02--p0-only-authorization-and-terminal-state) |
 | GOV-03 | Source/Git/privacy restrictions | [GOV-03](DECISION_LOG.md#gov-03--source-and-git-safety) |

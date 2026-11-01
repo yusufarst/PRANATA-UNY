@@ -26,8 +26,8 @@ Percentage: 1%
 
 ```text
 CURRENT TASK: —
-NEXT READY TASK: — (TASK-002 dan TASK-003 BLOCKED menunggu usulan TASK PLAN CHANGE di CURRENT_HANDOFF)
-LAST TASK PLAN CHANGE: PCR-001 — PUBLISHED 2026-11-01 (review `6b880b4` APPROVED WITH CONDITIONS; terverifikasi di `origin/main`): kontrak TASK-025, TASK-066, TASK-069, TASK-071 (TASK-071 bergantung pada TASK-066); jumlah Task tetap 78
+NEXT READY TASK: — (TASK-002 dan TASK-003 BLOCKED: gerbang publikasi PCR-002 — menunggu penerimaan Second Review, terbit di `origin/main` dan commit transisi status)
+LAST TASK PLAN CHANGE: PCR-002 — PENDING_SECOND_REVIEW / NOT_PUBLISHED (2026-11-01, cabang `docs/pcr-002-docker-free-development`): topologi pengembangan tanpa Docker lokal (OD-37); kontrak TASK-002, TASK-003, TASK-004, TASK-005, TASK-071; jumlah Task tetap 78 dan dependensi tidak berubah. Sebelumnya: PCR-001 — PUBLISHED 2026-11-01 (kontrak TASK-025, TASK-066, TASK-069, TASK-071)
 ADDITIONAL RECURRING PRODUCTION COST: 0 di luar infrastruktur yang dibiayai klien
 PAID SERVICE EXCEPTIONS: NONE
 ```
@@ -36,7 +36,7 @@ PAID SERVICE EXCEPTIONS: NONE
 
 | Milestone | Isi | Task | Increment rilis | Gerbang |
 |---|---|---|---|---|
-| M0 | Fondasi rekayasa | TASK-001–TASK-007 (7) | R0 | Mode bootstrap TASK-001–TASK-005; mode otonom sesudah prasyarat EXECUTOR_OPERATING_MODEL §1 (AUTH-013) |
+| M0 | Fondasi rekayasa | TASK-001–TASK-007 (7) | R0 | Mode bootstrap TASK-001–TASK-005 (bukti uji TASK-002–TASK-004 dari workflow bootstrap GitHub-hosted, OD-37); mode otonom sesudah prasyarat EXECUTOR_OPERATING_MODEL §1 (AUTH-013) |
 | M1 | Identitas, akses dan audit | TASK-008–TASK-016 (9) | R0 | — |
 | M2 | Platform lintas modul | TASK-017–TASK-023 (7) | R0 | — |
 | M3 | Pengadaan inti (R1 / UAT-1) | TASK-024–TASK-041 (18) | R1 | UAT-1 Pengadaan (OD-32) |
@@ -473,7 +473,7 @@ Graf asiklik: setiap dependensi menunjuk Task bernomor lebih kecil (diperiksa ot
 
 - Rantai dependensi terpanjang menuju kesiapan UAT-1 (28 Task): TASK-001 → 002 → 003 → 004 → 005 → 007 → 008 → 010 → 011 → 013 → 014 → 016 → 018 → 019 → 025 → 026 → 027 → 028 → 029 → 030 → 032 → 033 → 034 → 035 → 036 → 037 → 038 → 041.
 - Rantai dependensi terpanjang menuju kesiapan rilis V1 (31 Task): TASK-001 → 002 → 003 → 004 → 005 → 007 → 008 → 010 → 011 → 013 → 014 → 016 → 018 → 019 → 025 → 026 → 027 → 028 → 029 → 030 → 032 → 033 → 034 → 035 → 036 → 037 → 039 → 071 → 072 → 074 → 078.
-- TASK-040 (staging) bergantung pada keputusan Owner tentang hosting; tanpa keputusan itu UAT-1 tidak dapat dimulai walaupun Task fungsional selesai.
+- TASK-040 (staging) bergantung pada keputusan Owner tentang hosting; tanpa keputusan itu UAT-1 tidak dapat dimulai walaupun Task fungsional selesai. Sejak OD-37 staging tidak berjalan di PC Owner; lokasinya dikonfirmasi Owner sebelum TASK-040.
 
 ## Aturan perubahan rencana
 

@@ -96,3 +96,16 @@ Existing PowerShell/Node/Git only; exact corrected manifest/entries independentl
 ## P0–P11 planning candidate toolchain (AUTH-012)
 
 The cloud planning session used Git, GitHub CLI and Python 3 standard-library scripts kept in its session scratchpad (Task renderer; link, anchor, ID, coverage and dependency-graph checks). Nothing was installed in or added to the repository, no MCP configuration changed and no paid service was used. The application toolchain is a candidate owned by [ARCHITECTURE](../04-architecture/ARCHITECTURE.md) (stack), [TEST_STRATEGY](../08-testing/TEST_STRATEGY.md) and [QUALITY_GATES](../08-testing/QUALITY_GATES.md) (quality tools and CI) and [INFRASTRUCTURE](../09-operations/INFRASTRUCTURE.md) (containers); exact versions are verified at TASK-002/TASK-003 and recorded here then. Claude Code executor capabilities are verified at TASK-001 ([EXECUTOR_OPERATING_MODEL §13](../11-tasks/EXECUTOR_OPERATING_MODEL.md#13-kemampuan-platform-yang-wajib-diverifikasi)). Graphify stays OPTIONAL and unverified; Context7 is used on demand for version-sensitive work.
+
+## Docker-free development topology (PCR-002, OD-37)
+
+Owner decision [OD-37](DECISION_LOG.md#od-37) (2026-11-01): the Owner's Windows PC (about 7.2 GB RAM, shared with MULTIPLECORP, BantuKasir and ELLIGBLE) runs no Docker or Docker Compose for PRANATA, no self-hosted GitHub Actions runner and no PRANATA database or service. GitHub-hosted runners are the primary environment for resource-intensive testing; PostgreSQL and Gotenberg run there as service containers.
+
+| Scope | Tools | Rule |
+| --- | --- | --- |
+| Local, allowed | Editor, Git, GitHub CLI, Node/npm (project dependencies only), PowerShell, Claude Code and the executor safeguards | Lightweight checks only: ESLint, Prettier, `tsc` and Vitest on changed files, guard tests, link checks, the private parity check of TASK-071. A local `npm ci` is optional; when memory is short, rely on the GitHub-hosted run |
+| Local, optional fallback | Portable PHP CLI and Composer under `.pranata/tools/` (ignored by Git) | Only when the GitHub-hosted scaffold of TASK-002 cannot be used, or for light PHP CLI checks. Official download, checksum verified and recorded here; invoked by explicit path; no PATH, environment-variable, registry or service change; not used if it needs a system component that is not already present; never a database server |
+| Local, prohibited | Docker, Docker Compose, WSL changes, local PostgreSQL or Gotenberg, a self-hosted Actions runner, global PHP/Composer/PostgreSQL, PATH, system environment variables or services | A change needs separate Owner authorization |
+| GitHub-hosted | Ubuntu runner image; PHP through a SHA-pinned setup action; PostgreSQL major pinned here (≥ 16, also the staging and production target); Gotenberg image pinned here | Public repository: standard runners without minute cost; synthetic data only. Versions are verified at TASK-002/TASK-003 and recorded here |
+
+The Claude Code headless runner (`scripts/executor/runner.ps1`) is a local executor process, not a GitHub Actions runner. Its restricted token (C-15) is a later Owner prerequisite for AUTONOMOUS mode. Capability C-14 (Docker bind mount) is SUPERSEDED / NOT APPLICABLE. Exact versions, the runner image, job durations and any portable-tool checksum are recorded here by TASK-002–TASK-005.

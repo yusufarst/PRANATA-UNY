@@ -8,8 +8,8 @@ Dokumen ini memiliki **lingkungan, topologi, kontainer pengembangan yang terisol
 
 | Lingkungan | Tujuan | Data | Siapa mengakses |
 |---|---|---|---|
-| Lokal (mesin Owner/eksekutor) | Pengembangan dan uji Task | Sintetis | Eksekutor (Claude Code) dan Owner |
-| CI (GitHub Actions, runner GitHub) | Uji otomatis per PR | Sintetis, dibuat per job | GitHub |
+| Lokal (PC Windows Owner) | Penyuntingan, Git, pengaman eksekutor dan alat ringan saja; tanpa Docker, basis data atau layanan PRANATA (OD-37) | Sintetis; masukan privat paritas hanya di `.pranata/private/` | Eksekutor (Claude Code) dan Owner |
+| CI (GitHub Actions, runner GitHub-hosted) | Lingkungan utama uji berat per PR: PHP, PostgreSQL dan Gotenberg sebagai service container, build, E2E | Sintetis, dibuat per job | GitHub |
 | Staging | Integrasi, E2E penuh, uji performa, UAT | Sintetis atau teranonimkan yang disetujui | Tim UAT, operator |
 | Produksi | Operasi resmi | Riil | Pengguna; operator produksi yang ditunjuk Owner **[KEPUTUSAN OWNER]** |
 
@@ -19,22 +19,22 @@ Agen eksekusi tidak memiliki kredensial staging/produksi; deploy dilakukan oleh 
 
 Mesin Owner juga menjalankan MULTIPLECORP, BantuKasir dan ELLIGBLE. PRANATA wajib terisolasi penuh:
 
-| Aspek | Aturan |
+| Aspek | Aturan (OD-37) |
 |---|---|
-| Nama proyek Compose | `name: pranata` di `compose.yaml`; semua kontainer `pranata-*` |
-| Layanan | `pranata-app` (PHP-FPM + Composer + ekstensi pgsql/intl/gd/zip/bcmath), `pranata-web` (Nginx), `pranata-postgres` (major sama dengan produksi), `pranata-gotenberg`, `pranata-mailpit` (opsional, uji email), Node/Vite di host atau kontainer `pranata-node` |
-| Port host (khusus PRANATA) | Web `8180`, Vite `5183`, PostgreSQL `55432`, Mailpit UI `8125`; Gotenberg tidak diekspos ke host. Port dicek bebas sebelum start; bila bentrok, ubah di `.env` PRANATA saja |
-| Volume | `pranata_pgdata`, `pranata_storage`, `pranata_composer_cache`, `pranata_node_modules` |
-| Jaringan | `pranata_net` |
-| Batas sumber daya dev | postgres 1 GB, app 1 GB, gotenberg 1 GB, CPU dibatasi per layanan |
-| Larangan | Tidak menjalankan `docker system prune`, `docker volume prune`, `docker network prune`, restart Docker Desktop global, atau perintah yang menyentuh kontainer/volume/basis data/berkas `.env` proyek lain |
-| Basis data | `pranata_dev`, `pranata_test*`, `pranata_e2e_*` hanya di `pranata-postgres` |
+| Docker | Tidak ada Docker atau Docker Compose untuk PRANATA di PC Owner, termasuk perintah baca-saja; Docker, WSL dan proyek lain tidak di-restart, dihentikan, dikonfigurasi ulang atau diganggu |
+| Alat lokal | Penyunting, Git, GitHub CLI, Node/npm, PowerShell, Claude Code dan pengaman eksekutor; alat ringan lain hanya dalam lingkup proyek ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#docker-free-development-topology-pcr-002-od-37)) |
+| Perubahan sistem | Tanpa instalasi atau perubahan global PHP, Composer, PostgreSQL, variabel lingkungan, PATH atau layanan sistem kecuali dengan otorisasi Owner terpisah |
+| Uji berat | Runner GitHub-hosted: PHP, `composer install`, PostgreSQL dan Gotenberg sebagai service container, Pest, build, E2E ([QUALITY_GATES §4](../08-testing/QUALITY_GATES.md#4-pipeline-ci-github-actions)) |
+| Runner | Hanya runner GitHub-hosted; runner GitHub Actions self-hosted di PC Owner dilarang. Runner headless Claude Code lokal (`scripts/executor/runner.ps1`) bukan runner Actions |
+| Basis data | Tidak ada basis data PRANATA lokal; `pranata_test*`, `pranata_e2e_*` dan `pranata_perf` hanya pada service container CI yang dibuang setelah job (atau di staging bila diputuskan) |
+| Data | Hanya data sintetis di GitHub; data institusi, berkas privat dan kredensial tidak diunggah |
+| Biaya | Repositori publik: runner standar GitHub-hosted tanpa biaya menit; tanpa layanan berbayar |
 
-Kinerja bind mount dari sistem berkas Windows diverifikasi saat menyiapkan lingkungan (TASK-003); bila terlalu lambat, rekomendasi dicatat untuk keputusan Owner (mis. kloning di filesystem WSL2) tanpa mengubah lokasi repositori secara sepihak.
+Pengukuran sumber daya lokal (bind mount, batas kontainer) tidak berlaku lagi (C-14 SUPERSEDED). Durasi job GitHub-hosted diukur pada TASK-003 dan TASK-005.
 
 ## 3. CI
 
-GitHub Actions dengan runner GitHub (repositori publik — tanpa biaya menit). Desain workflow di [QUALITY_GATES](../08-testing/QUALITY_GATES.md). Rahasia CI hanya untuk uji. Cabang terlindungi: `main` (integrasi Task berbasis trunk) dengan status check wajib `ci-gate` dan larangan force push/penghapusan; aturan PR wajib hanya pada opsi merge B (D-08, [QUALITY_GATES §4](../08-testing/QUALITY_GATES.md#4-pipeline-ci-github-actions)); tag rilis `v*` dilindungi dan produksi hanya dari tag ([RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang)). Ruleset diterapkan Owner setelah `ci-gate` terbukti (TASK-005); eksekutor tidak mengubah ruleset.
+GitHub Actions dengan runner GitHub (repositori publik — tanpa biaya menit). Desain workflow di [QUALITY_GATES](../08-testing/QUALITY_GATES.md). Rahasia CI hanya untuk uji. Cabang terlindungi: `main` (integrasi Task berbasis trunk) dengan status check wajib `ci-gate` dan larangan force push/penghapusan; aturan PR wajib hanya pada opsi merge B (D-08, [QUALITY_GATES §4](../08-testing/QUALITY_GATES.md#4-pipeline-ci-github-actions)); tag rilis `v*` dilindungi dan produksi hanya dari tag ([RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang)). Ruleset diterapkan Owner setelah `ci-gate` terbukti (TASK-005); eksekutor tidak mengubah ruleset. Sebelum TASK-005, workflow bootstrap sementara memberi bukti untuk TASK-002–TASK-004 ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)). Tidak ada runner self-hosted (OD-37).
 
 ## 4. Topologi staging dan produksi
 
@@ -57,7 +57,7 @@ flowchart TB
 |---|---|---|
 | Penyedia server | VPS yang dibiayai klien atau server UNY | **[KEPUTUSAN OWNER]** |
 | Spesifikasi produksi | 4 vCPU / 8 GB RAM / SSD 160 GB (16 GB RAM bila ClamAV) | Usulan, divalidasi uji beban staging |
-| Staging | Server terpisah yang lebih kecil (2 vCPU / 4 GB) atau VM terpisah | **[KEPUTUSAN OWNER]** |
+| Staging | Server terpisah yang lebih kecil (2 vCPU / 4 GB) atau VM terpisah | **[KEPUTUSAN OWNER]** — D-19; tidak di PC Owner (OD-37); lokasi dikonfirmasi Owner sebelum TASK-040 |
 | Domain | Subdomain UNY atau domain klien; TLS otomatis | **[KEPUTUSAN OWNER]** |
 | Cara deploy | Skrip deploy idempoten (git pull tag → composer/npm build → migrate dengan peran pemilik → optimize → restart worker) dijalankan operator atau workflow GitHub manual dengan persetujuan lingkungan | Usulan |
 | Kontainer di produksi | Gotenberg (dan ClamAV bila diaktifkan) sebagai kontainer; aplikasi native atau kontainer — dipilih saat TASK infrastruktur | Usulan |

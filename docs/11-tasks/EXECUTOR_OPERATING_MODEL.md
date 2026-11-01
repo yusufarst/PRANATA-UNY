@@ -48,7 +48,7 @@ Siklus GOV-12: **READY → IN_PROGRESS → IMPLEMENTED → VERIFIED → REVIEWED
 | READY | Gerbang AICWDF §22.8: semua DEPENDS ON DONE, prasyarat Owner terpenuhi, referensi ada, tidak ada ambiguitas yang belum diputus | Catat READY di TASK_PLAN (lewat commit rekonsiliasi Task sebelumnya atau commit pertama cabang Task) | Baris TASK_PLAN, checkpoint |
 | IN_PROGRESS | Eksekutor mengklaim Task (kunci checkpoint) | Cabang dari `main` terbaru; analisis dampak terarah; implementasi terkecil yang koheren; uji ditulis bersama perilaku | Commit di cabang Task |
 | IMPLEMENTED | Seluruh IN SCOPE dikerjakan | Periksa diri terhadap daftar `TAC-nn` dan OUT OF SCOPE | Daftar periksa |
-| VERIFIED | Piramida verifikasi lokal lulus ([TEST_STRATEGY §8](../08-testing/TEST_STRATEGY.md#8-piramida-verifikasi-dan-pemeriksaan-sebelum-pr)) | Statis, uji terarah, uji relevan | Ringkasan perintah dan hasil di COMPLETION EVIDENCE |
+| VERIFIED | Piramida verifikasi lulus ([TEST_STRATEGY §8](../08-testing/TEST_STRATEGY.md#8-piramida-verifikasi-dan-pemeriksaan-sebelum-pr)): pemeriksaan ringan lokal dan, untuk pemeriksaan yang memerlukan PHP, PostgreSQL, Gotenberg atau browser, run GitHub-hosted pada PR draft untuk SHA yang sama (OD-37) | Statis, uji terarah, uji relevan | Ringkasan perintah dan hasil di COMPLETION EVIDENCE |
 | REVIEWED | Swa-review terstruktur selesai; review independen selesai untuk HIGH; temuan valid diperbaiki dan diverifikasi delta | Bagian 6 | Catatan review dengan tingkat temuan |
 | PR | PR siap review dibuka ke `main` dengan bukti terisi; review Codex diminta | Templat PR [EXECUTOR_BOOTSTRAP §6](EXECUTOR_BOOTSTRAP.md#6-konvensi-cabang-commit-dan-pr) | URL PR, SHA HEAD |
 | CI | `ci-gate` selesai pada HEAD terakhir; status Codex final atau jalan cadangan selesai | Bagian 6 dan 7 | URL run, SHA, status review |
@@ -100,7 +100,7 @@ Urutan baca per Task: [AGENTS.md](../../AGENTS.md) → [EXECUTION_CONTEXT](EXECU
 - Proses panjang (suite, migrasi, build) dijalankan dengan log di `.pranata/logs/` dan dipantau kemajuannya; proses hanya dihentikan bila terbukti macet (tanpa keluaran dan tanpa aktivitas CPU melebihi ambang bagian 14), dan hanya PID milik PRANATA.
 - Dependensi baru hanya bila dalam ruang lingkup Task, sumber terbuka/gratis, lolos `composer audit`/`npm audit`, dan dicatat di TOOLCHAIN.
 - **Commit (GOV-08).** Sebelum setiap commit: `git config user.name` dan `user.email` dibaca (tanpa diubah) dan dibandingkan dengan identitas Owner rujukan; ketidakcocokan = berhenti. Pesan: `<type>(task-0xx): <ringkasan>`; tanpa trailer atribusi apa pun. Setelah commit dan sebelum push: metadata mentah (`git cat-file -p HEAD`) dan pesan lengkap diperiksa — author dan committer Owner saja, tanpa co-author AI/alat, tanpa trailer atribusi. Penyimpangan = tidak push, tidak amend otomatis, laporkan ke Owner. Tanpa force push.
-- **Jalur pengaman.** `.github/workflows/**`, `.claude/**`, `.githooks/**` dan `scripts/executor/**` hanya diubah oleh Task yang kontraknya mencakupnya (TASK-001, TASK-005) atau dengan persetujuan Owner; pada mode otonom penulisan ke jalur ini ditolak hook dan aturan izin, dan merge PR yang menyentuhnya hanya dalam mode SUPERVISED (bagian 8.1).
+- **Jalur pengaman.** `.github/workflows/**`, `.claude/**`, `.githooks/**` dan `scripts/executor/**` hanya diubah oleh Task yang kontraknya mencakupnya (TASK-001, TASK-005) atau dengan persetujuan Owner; pada mode otonom penulisan ke jalur ini ditolak hook dan aturan izin, dan merge PR yang menyentuhnya hanya dalam mode SUPERVISED (bagian 8.1). **Izin PCR-002 (OD-37), hanya mode SUPERVISED:** TASK-002 boleh mengubah `.github/workflows/bootstrap.yml` serta gerbang `-Bootstrap` di `scripts/executor/merge-verified.ps1` dan `scripts/executor/lib/merge-gate.ps1` beserta ujinya; TASK-003 boleh mengubah `bootstrap.yml` serta aturan basis data lokal di `.claude/hooks/lib/policy.ps1` beserta `scripts/executor/tests/guard.tests.ps1`, hanya untuk memperketat; TASK-004 boleh mengubah `bootstrap.yml`. Berkas jalur pengaman lain tidak termasuk. Izin ini tidak melonggarkan larangan mode otonom.
 - **Penjaga atribusi berlapis.** (1) Pengaturan atribusi Claude Code proyek dinonaktifkan untuk commit dan PR; (2) hook Git `commit-msg` repositori yang menolak trailer atribusi AI/alat; (3) hook PreToolUse yang menolak perintah commit/PR yang memuat atribusi; (4) pemeriksaan metadata pasca-commit. Pengaturan alat perlu tetapi tidak pernah cukup.
 
 ## 6. Review berbasis risiko dan review PR Codex
@@ -143,7 +143,7 @@ Prosedur akar masalah (U-007 §11.2):
 3. Baca log dan artefak yang relevan (laporan Playwright, trace).
 4. Tentukan akar masalah. Kegagalan `globalSetup`/fixture bersama diklasifikasikan sebagai **kegagalan setup**, bukan puluhan cacat UI ([TEST_STRATEGY §9](../08-testing/TEST_STRATEGY.md#9-keandalan-fixture-dan-kegagalan-setup)).
 5. Terapkan perbaikan terarah.
-6. Jalankan uji regresi terfokus secara lokal.
+6. Jalankan uji regresi terfokus secara lokal bila alatnya tersedia di mesin; selain itu pada run GitHub-hosted berikutnya (OD-37).
 7. Push perbaikan.
 8. Verifikasi run CI baru pada SHA baru.
 
@@ -187,7 +187,7 @@ Task baru DONE setelah rekonsiliasi berada di `main`. Total di TASK_PLAN harus c
 
 ### 8.4 Mode bootstrap (sebelum CI ada)
 
-TASK-001–TASK-004 berjalan sebelum `ci.yml` ada, sehingga `ci-gate` tidak dapat dipersyaratkan. Untuk keempatnya: mode SUPERVISED; seluruh piramida verifikasi dijalankan lokal dan buktinya dicatat; PR tetap dibuka sebagai catatan; Owner menyaksikan bukti, diff dan metadata commit; merge memakai metode D-08 tanpa `ci-gate`. TASK-005 membuat `ci.yml`, sehingga PR-nya sendiri sudah menjalankan `ci-gate`; setelah TASK-005 ter-merge, Owner menerapkan ruleset `main`. Sejak TASK-006 setiap merge mensyaratkan `ci-gate`. Uji E2E browser tersedia sejak TASK-007; Task sebelumnya mencatatnya N/A dengan alasan.
+TASK-001–TASK-004 berjalan sebelum `ci.yml` ada, sehingga `ci-gate` tidak dapat dipersyaratkan. Untuk keempatnya: mode SUPERVISED; PR tetap dibuka sebagai catatan; Owner menyaksikan bukti, diff dan metadata commit; merge memakai metode D-08 tanpa `ci-gate`. TASK-001 diverifikasi lokal (PowerShell, tanpa PHP). Sejak TASK-002, bukti uji yang memerlukan PHP, PostgreSQL, Gotenberg atau browser berasal dari workflow bootstrap sementara di runner GitHub-hosted ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)), bukan dari mesin Owner (OD-37). Merge bootstrap mensyaratkan setiap job workflow `bootstrap` pada SHA HEAD PR berakhir `success`, tanpa yang hilang, dilewati atau dibatalkan; Owner memeriksanya, dan skrip merge `-Bootstrap` menegakkannya setelah TASK-002 memperluasnya. Uji yang tidak dijalankan dicatat NOT RUN, tidak pernah lulus. TASK-005 membuat `ci.yml`, sehingga PR-nya sendiri sudah menjalankan `ci-gate`; setelah TASK-005 ter-merge, Owner menerapkan ruleset `main`. Sejak TASK-006 setiap merge mensyaratkan `ci-gate`. Uji E2E browser tersedia sejak TASK-007; Task sebelumnya mencatatnya N/A dengan alasan.
 
 ## 9. Runner, watcher, checkpoint dan pemulihan
 
@@ -200,6 +200,8 @@ TASK-001–TASK-004 berjalan sebelum `ci.yml` ada, sehingga `ci-gate` tidak dapa
 | Watcher | `scripts/executor/watcher.ps1` dijalankan Penjadwal Tugas Windows berkala, kunci tunggal | Memeriksa sinyal murah (proses, umur heartbeat, mtime berkas, status PR/CI lewat `gh` dengan interval jarang), memulai ulang runner bila mati dan tidak ada hold, mencatat peringatan |
 | Checkpoint | `.pranata/executor/checkpoint.json` (diabaikan Git) | Status tahan lama: `authorization_id`, `mode`, `task_id`, `stage`, `branch`, `head_sha`, `pr_number`, `ci_run_ids`, `codex_status`, `review_status`, `last_action` + apakah idempoten, `next_action`, `session_id`, `updated_at` |
 | Heartbeat | `.pranata/executor/heartbeat` diperbarui hook PostToolUse | Bukti aktivitas yang murah |
+
+Runner di sini adalah runner headless Claude Code lokal, bukan runner GitHub Actions; runner GitHub Actions self-hosted tidak dipakai (OD-37).
 
 Tidak ada polling AI berkelanjutan dan tidak ada watcher ganda. Pemantauan tidak menghalangi pekerjaan coding.
 
@@ -226,7 +228,7 @@ Permintaan: Owner menjalankan `scripts/executor/hold.ps1 -Mode <MODE> -Reason "<
 
 **Batas aman**: tidak di tengah urutan commit/push/merge, migrasi atau uji yang menulis basis data; perintah yang sedang berjalan diselesaikan dahulu.
 
-Saat shutdown: perubahan yang belum di-commit disimpan sebagai commit lokal `wip(task-0xx): checkpoint <tahap>` di cabang Task (tidak di-push kecuali Owner meminta); checkpoint ditulis; runner, sesi eksekutor, proses uji PRANATA dan kontainer `pranata` dihentikan (`docker compose -p pranata stop`, tanpa menghapus volume); tugas terjadwal watcher PRANATA dinonaktifkan; proyek lain tidak disentuh; Task yang belum selesai tidak ditandai DONE; instruksi resume persis diberikan.
+Saat shutdown: perubahan yang belum di-commit disimpan sebagai commit lokal `wip(task-0xx): checkpoint <tahap>` di cabang Task (tidak di-push kecuali Owner meminta); checkpoint ditulis; runner, sesi eksekutor dan proses lokal PRANATA dihentikan (tidak ada kontainer lokal, OD-37); run GitHub Actions yang sedang berjalan dibiarkan selesai dan hasilnya dibaca saat resume; tugas terjadwal watcher PRANATA dinonaktifkan; proyek lain tidak disentuh; Task yang belum selesai tidak ditandai DONE; instruksi resume persis diberikan.
 
 Saat resume (hanya dengan instruksi Owner yang melepas hold): verifikasi status repositori; integritas checkpoint (SHA cabang = `head_sha`); sinkronisasi lokal/remote; pulihkan kunci watcher/runner yang basi dengan aman (PID mati); lepas hold; aktifkan kembali **satu** watcher; lanjutkan Task yang belum selesai. Hold selalu mengalahkan aturan melanjutkan Task lain (bagian 3). Shutdown tidak pernah disimpulkan dari jam atau lamanya Task.
 
@@ -236,10 +238,12 @@ Saat resume (hanya dengan instruksi Owner yang melepas hold): verifikasi status 
 |---|---|---|
 | Berkas | Repositori PRANATA, folder worktree PRANATA, `.pranata/` | Folder MULTIPLECORP, BantuKasir, ELLIGBLE dan folder pengguna lain di luar ruang lingkup |
 | Git | Perintah normal di repositori PRANATA; push cabang kerja; merge menurut bagian 8 lewat skrip terjaga | `push --force`/`--force-with-lease`, push langsung ke `main` di luar skrip merge, ubah `user.name`/`user.email`, konfigurasi global, penghapusan cabang remote |
-| Docker | `docker compose -p pranata …` dan kontainer `pranata-*` | `docker system/volume/network/builder prune`, restart Docker Desktop, `rm`/`stop` kontainer atau volume non-`pranata` |
-| Basis data | `pranata_dev`, `pranata_test*`, `pranata_e2e_*`, `pranata_perf` di `pranata-postgres` | Host/port/basis data lain; staging dan produksi |
+| Docker | — (OD-37: tidak ada Docker lokal untuk PRANATA) | Setiap perintah `docker`/`docker-compose`, termasuk baca-saja; restart, stop atau konfigurasi Docker Desktop, WSL atau layanan bersama |
+| Runner CI | Runner GitHub-hosted | Mendaftarkan atau menjalankan runner GitHub Actions self-hosted di mesin Owner (OD-37); runner headless Claude Code lokal bukan runner Actions |
+| Sistem | Alat ringan dalam lingkup proyek, dipanggil dengan path eksplisit | Instalasi atau perubahan global PHP, Composer, PostgreSQL, variabel lingkungan, PATH atau layanan sistem tanpa otorisasi Owner terpisah |
+| Basis data | `pranata_test*`, `pranata_e2e_*`, `pranata_perf` hanya pada service container runner GitHub-hosted | Setiap koneksi basis data dari mesin Owner (tidak ada PostgreSQL PRANATA lokal); host/basis data lain; staging dan produksi |
 | Proses | Menghentikan PID yang dicatat milik PRANATA setelah memeriksa direktori kerja/baris perintahnya | Menghentikan proses berdasarkan nama saja |
-| Jalur pengaman | Perubahan dalam Task yang kontraknya mencakupnya, dengan merge SUPERVISED | Penulisan ke `.github/workflows/**`, `.claude/**`, `.githooks/**`, `scripts/executor/**` pada mode otonom |
+| Jalur pengaman | Perubahan dalam Task yang kontraknya mencakupnya (bagian 5, termasuk izin PCR-002), dengan merge SUPERVISED | Penulisan ke `.github/workflows/**`, `.claude/**`, `.githooks/**`, `scripts/executor/**` pada mode otonom |
 | GitHub | Baca status PR/CI/review; membuat cabang, PR dan komentar; merge lewat skrip terjaga | `gh api` non-GET ke ruleset, proteksi cabang, ref, secret atau pengaturan repositori; `gh pr merge --admin`; `gh repo edit`; `gh secret`; `gh auth`; mengubah ruleset |
 | Token | Token runner sesuai D-27 (rekomendasi: token terbatas repositori ini tanpa hak Administration) | Memakai login admin Owner untuk langkah otonom bila D-27 memilih token terbatas |
 | Mode izin | Allowlist + hook deny | Mode bypass permissions dalam kondisi apa pun |
@@ -271,7 +275,7 @@ Eskalasi ke Owner hanya untuk hal yang dicadangkan (U-007 §22): ambiguitas kebi
 
 ## 13. Kemampuan platform yang wajib diverifikasi
 
-Semua berstatus **UNVERIFIED** sampai TASK-001 (C-14 pada TASK-003) mencatat VERIFIED, FAILED atau NOT AVAILABLE beserta bukti di laporan kemampuan.
+Semua berstatus **UNVERIFIED** sampai TASK-001 mencatat VERIFIED, FAILED, NOT AVAILABLE atau SUPERSEDED beserta bukti di laporan kemampuan.
 
 | # | Kemampuan yang diasumsikan | Dipakai untuk | Cara verifikasi (TASK-001) | Jalan cadangan bila gagal |
 |---|---|---|---|---|
@@ -288,10 +292,10 @@ Semua berstatus **UNVERIFIED** sampai TASK-001 (C-14 pada TASK-003) mencatat VER
 | C-11 | Subagen peninjau dapat dipakai dalam mode headless | Review independen | Uji subagen pada PR uji | Sesi headless terpisah sebagai peninjau |
 | C-12 | Deteksi galat batas pemakaian dan waktu reset | Runner | Simulasi/log nyata | Hold otomatis dan laporan |
 | C-13 | Worktree Git di Windows untuk Task paralel | Paralelisme | Uji worktree | Tanpa paralelisme |
-| C-14 | Kinerja bind mount Docker Desktop dan batas sumber daya | Lingkungan dev | TASK-003 | Rekomendasi ke Owner (mis. kloning di WSL2) |
-| C-15 | Runner memakai token GitHub terpisah (variabel lingkungan dan kredensial Git khusus proses runner) tanpa memengaruhi login Owner; token tanpa hak Administration ditolak saat mencoba mengubah ruleset | Pembatasan kewenangan eksekutor (D-27) | Uji pada repositori sekali pakai | Bila tidak dapat dipisahkan: mode otonom memakai login Owner hanya bila Owner menerimanya secara eksplisit |
+| C-14 | Kinerja bind mount Docker Desktop dan batas sumber daya — **SUPERSEDED / NOT APPLICABLE** sejak OD-37 (tanpa Docker lokal); tidak diverifikasi dan tidak dicatat VERIFIED | — | — | Uji berat di runner GitHub-hosted ([TEST_STRATEGY §8](../08-testing/TEST_STRATEGY.md#8-piramida-verifikasi-dan-pemeriksaan-sebelum-pr)) |
+| C-15 | Runner headless Claude Code lokal (bukan runner GitHub Actions self-hosted, yang dilarang OD-37) memakai token GitHub terpisah (variabel lingkungan dan kredensial Git khusus proses runner) tanpa memengaruhi login Owner; token tanpa hak Administration ditolak saat mencoba mengubah ruleset | Pembatasan kewenangan eksekutor (D-27) | Uji pada repositori sekali pakai | Bila tidak dapat dipisahkan: mode otonom memakai login Owner hanya bila Owner menerimanya secara eksplisit |
 
-**Status hasil TASK-001 (2026-11-01, bukti di [EXECUTOR_CAPABILITY_REPORT](evidence/EXECUTOR_CAPABILITY_REPORT.md)):** VERIFIED: C-01, C-02, C-03, C-05, C-09, C-10, C-11, C-13. VERIFIED dengan batas tercatat: C-04, C-06, C-12 (simulasi). NOT AVAILABLE: C-07, C-08, C-14 (Docker lokal dibatalkan keputusan Owner; lihat usulan di CURRENT_HANDOFF), C-15 (menunggu token Owner).
+**Status hasil TASK-001 (2026-11-01, bukti di [EXECUTOR_CAPABILITY_REPORT](evidence/EXECUTOR_CAPABILITY_REPORT.md)):** VERIFIED: C-01, C-02, C-03, C-05, C-09, C-10, C-11, C-13. VERIFIED dengan batas tercatat: C-04, C-06, C-12 (simulasi). NOT AVAILABLE: C-07, C-08, C-15 (menunggu token Owner; prasyarat Owner sebelum mode otonom). SUPERSEDED / NOT APPLICABLE: C-14 (OD-37, PCR-002).
 
 Kemampuan yang FAILED atau NOT AVAILABLE memicu jalan cadangannya dan, bila memengaruhi Task lain, TASK PLAN CHANGE. Model ini diperbarui dari hasil uji, bukan dari dugaan.
 

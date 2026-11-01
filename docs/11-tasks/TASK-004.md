@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Memasang dan mengonfigurasi Pint, Larastan, ESLint, Prettier, TypeScript strict, Vitest, Pest (paralel), uji arsitektur batas modul, uji integritas rute dasar, pemeriksa kunci terjemahan dan pemeriksa tautan dokumentasi.
+Memasang dan mengonfigurasi Pint, Larastan, ESLint, Prettier, TypeScript strict, Vitest, Pest (paralel), uji arsitektur batas modul, uji integritas rute dasar, pemeriksa kunci terjemahan dan pemeriksa tautan dokumentasi. Perintah gabungan dijalankan dan dibuktikan di runner GitHub-hosted melalui job `quality` workflow bootstrap (OD-37).
 
 ## WHY THIS EXISTS
 
@@ -42,10 +42,11 @@ Gerbang kualitas QUALITY_GATES membutuhkan perkakas yang konsisten sejak awal.
 - Skrip pemeriksa kunci terjemahan id/en
 - Skrip pemeriksa tautan/anchor dokumentasi (`scripts/docs/check-links`)
 - Perintah gabungan `composer qa` dan `npm run qa`
+- Job `quality` di `.github/workflows/bootstrap.yml` ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)) yang menjalankan `composer qa`, `npm run qa`, uji negatif arch/rute, `composer audit`, `npm audit` dan gitleaks (biner sumber terbuka tanpa lisensi berbayar); pemeriksaan Node ringan (ESLint/Prettier/tsc/Vitest berkas berubah) boleh dijalankan lokal
 
 ## OUT OF SCOPE
 
-- CI (TASK-005)
+- `ci.yml`, `ci-gate` dan ruleset (TASK-005)
 - E2E (TASK-007)
 
 ## REFERENCES
@@ -53,6 +54,7 @@ Gerbang kualitas QUALITY_GATES membutuhkan perkakas yang konsisten sejak awal.
 - [EXECUTION_CONTEXT](EXECUTION_CONTEXT.md)
 - [TEST_STRATEGY §1](../08-testing/TEST_STRATEGY.md#1-lapisan-dan-alat)
 - [QUALITY_GATES §2](../08-testing/QUALITY_GATES.md#2-definition-of-done)
+- [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)
 - [ARCHITECTURE §5](../04-architecture/ARCHITECTURE.md#5-aturan-dependensi-antar-modul)
 
 ## TRACEABILITY
@@ -68,6 +70,7 @@ Gerbang kualitas QUALITY_GATES membutuhkan perkakas yang konsisten sejak awal.
 - `tests/Arch/`
 - `tests/Feature/RouteIntegrityTest.php`
 - `scripts/`
+- `.github/workflows/bootstrap.yml`
 
 ## BUSINESS RULES
 
@@ -79,7 +82,7 @@ Gerbang kualitas QUALITY_GATES membutuhkan perkakas yang konsisten sejak awal.
 
 ## SECURITY / PERMISSION REQUIREMENTS
 
-- Pemindai rahasia lokal (gitleaks) disiapkan untuk CI
+- Pemindai rahasia (gitleaks) berjalan di job `quality` GitHub-hosted dan disiapkan untuk `ci-fast`
 
 ## DATABASE IMPACT ASSESSMENT
 
@@ -124,20 +127,20 @@ Gerbang kualitas QUALITY_GATES membutuhkan perkakas yang konsisten sejak awal.
 - Required MCP servers: tidak ada; Context7 bila tersedia untuk topik versi
 - MCP servers that should remain OFF: cloud/infra, Figma, basis data jarak jauh, browser MCP (E2E memakai paket Playwright proyek)
 - Native CLI/package preferred over MCP: YES (artisan, composer, npm, Playwright, gh)
-- Post-Task deactivation/cleanup: tutup proses/kontainer dev yang dimulai Task; jangan sentuh proyek lain
+- Post-Task deactivation/cleanup: tutup proses lokal yang dimulai Task; tidak ada kontainer lokal (OD-37); jangan sentuh proyek lain
 
 ## TOOL REQUIREMENTS
 
 - Context7: REQUIRED (fallback: dokumentasi resmi terkini)
 - Graphify: OPTIONAL (belum terverifikasi; gunakan analisis terarah `rg`)
 - Browser E2E: N/A
-- Missing safe tool behavior: AUTO-INSTALL/AUTO-CONFIGURE dalam lingkup proyek, catat di TOOLCHAIN
+- Missing safe tool behavior: AUTO-INSTALL/AUTO-CONFIGURE dalam lingkup proyek saja (tanpa instalasi global, perubahan PATH, variabel lingkungan sistem atau layanan; OD-37), catat di TOOLCHAIN
 
 ## GRAPHIFY / IMPACT ANALYSIS
 
 - Graph freshness: N/A bila Graphify tidak tersedia
 - Pre-change questions: modul/tabel/rute/izin mana yang disentuh; uji mana yang terdampak
-- Expected affected areas: pint.json, phpstan.neon, eslint.config.js, tests/Arch/, tests/Feature/RouteIntegrityTest.php, scripts/
+- Expected affected areas: pint.json, phpstan.neon, eslint.config.js, tests/Arch/, tests/Feature/RouteIntegrityTest.php, scripts/, .github/workflows/bootstrap.yml
 
 ## CONTEXT7
 
@@ -164,18 +167,19 @@ Gerbang kualitas QUALITY_GATES membutuhkan perkakas yang konsisten sejak awal.
 
 Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEABILITY.
 
-- TAC-01 `composer qa` dan `npm run qa` lulus pada kode saat ini
+- TAC-01 `composer qa` dan `npm run qa` lulus pada kode saat ini di job `quality` runner GitHub-hosted; bukti: URL run, ID run dan SHA HEAD
 - TAC-02 Arch test gagal bila modul mengimpor modul yang dilarang (uji contoh negatif)
 - TAC-03 Uji integritas rute gagal bila ada rute tanpa otorisasi (uji contoh negatif)
 - TAC-04 Pemeriksa terjemahan dan tautan dokumentasi berjalan dan lulus
 
 ## TEST REQUIREMENTS
 
+- Lokasi (OD-37): pemeriksaan yang memerlukan PHP, PostgreSQL, Gotenberg atau browser hanya berjalan di runner GitHub-hosted ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)); pemeriksaan Node ringan boleh lokal; uji yang tidak dijalankan dicatat NOT RUN, bukan lulus
 - Lint: Pint, ESLint, Prettier
 - Typecheck: tsc strict
 - Unit: Pest/Vitest contoh
 - Production build: npm run build
-- Other: Uji negatif arch/route
+- Other: Uji negatif arch/route (contoh pelanggaran yang wajib gagal) di job `quality`
 
 ## TEST CHECKLIST
 
@@ -203,7 +207,7 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 
 - Semua ACCEPTANCE CRITERIA terbukti dengan bukti tercatat
 - Definition of Done [QUALITY_GATES §2](../08-testing/QUALITY_GATES.md#2-definition-of-done) untuk semua Task
-- PR ke `main` dengan bukti verifikasi lokal lengkap dan review sesuai REVIEW REQUIREMENT; merge mode bootstrap disaksikan Owner karena `ci-gate` belum ada ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada))
+- PR ke `main` dengan setiap job workflow `bootstrap` sukses pada SHA HEAD PR terakhir (bukti run GitHub-hosted, [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)) dan review sesuai REVIEW REQUIREMENT; merge mode bootstrap disaksikan Owner karena `ci-gate` belum ada ([EXECUTOR_OPERATING_MODEL §8.4](EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada))
 - TASK_PLAN dan CURRENT_HANDOFF diperbarui; checklist dicentang hanya bila DONE
 
 ## COMPLETION EVIDENCE
@@ -232,4 +236,6 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 - Jangan menurunkan level analisis untuk meloloskan kode
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
+- Jangan memakai Docker lokal (termasuk perintah baca-saja), memasang PHP/Composer/PostgreSQL global, atau mengubah PATH, variabel lingkungan sistem atau layanan (OD-37)
+- Jangan memakai runner GitHub Actions self-hosted; workflow tidak commit, push atau memakai data riil
 - Jangan menambahkan atribusi AI pada commit/PR

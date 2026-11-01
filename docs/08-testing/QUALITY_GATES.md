@@ -31,6 +31,7 @@ Status resmi mengikuti AICWDF §19: `TODO`, `READY`, `IN_PROGRESS`, `BLOCKED`, `
 - [ ] Dokumentasi yang dirujuk Task diperbarui bila Task menuntutnya (TOOLCHAIN, catatan modul).
 - [ ] Penilaian dampak basis data dan biaya sesuai kontrak.
 - [ ] Bukti tercatat di Task (bagian COMPLETION EVIDENCE).
+- [ ] Bukti uji yang memerlukan PHP, PostgreSQL, Gotenberg atau browser berasal dari run GitHub-hosted pada SHA yang diklaim (OD-37); uji yang tidak dijalankan dicatat NOT RUN, bukan lulus.
 - [ ] Commit memakai identitas Git Owner tanpa atribusi AI; metadata mentah diperiksa sebelum push (GOV-08).
 
 ### 2.2 Tambahan Task UI
@@ -65,7 +66,7 @@ Tingkat temuan: **P0** kerusakan/kehilangan data, celah keamanan atau pelanggara
 
 ## 4. Pipeline CI (GitHub Actions)
 
-Dua workflow: `ci.yml` (PR dan `main`) dan `ci-nightly.yml` (terjadwal). Nama job di bawah dipakai sebagai nama check.
+Dua workflow: `ci.yml` (PR dan `main`) dan `ci-nightly.yml` (terjadwal). Nama job di bawah dipakai sebagai nama check. Sebelum TASK-005 hanya ada workflow bootstrap sementara (bagian 4.1). Semua job berjalan di runner GitHub-hosted; runner self-hosted tidak dipakai (OD-37).
 
 | Job | Workflow dan pemicu | Isi | Target durasi |
 |---|---|---|---|
@@ -78,17 +79,35 @@ Dua workflow: `ci.yml` (PR dan `main`) dan `ci-nightly.yml` (terjadwal). Nama jo
 
 Aturan kecepatan dan keandalan:
 
-- `ci.yml` tidak berjalan pada setiap push cabang kerja (menghindari run ganda push+PR); pemeriksaan sebelum PR dijalankan lokal menurut piramida verifikasi [TEST_STRATEGY](TEST_STRATEGY.md). PR draft boleh dibuka lebih awal; CI berjalan pada setiap pembaruan PR.
+- `ci.yml` tidak berjalan pada setiap push cabang kerja (menghindari run ganda push+PR); pemeriksaan ringan sebelum PR dijalankan lokal dan pemeriksaan berat pada run PR GitHub-hosted menurut piramida verifikasi [TEST_STRATEGY §8](TEST_STRATEGY.md#8-piramida-verifikasi-dan-pemeriksaan-sebelum-pr). PR draft boleh dibuka lebih awal; CI berjalan pada setiap pembaruan PR.
 - `concurrency` per PR dengan `cancel-in-progress: true` (run usang dibatalkan); run push ke `main` tidak dibatalkan agar setiap SHA `main` memiliki hasil.
 - Filter path di dalam `ci.yml` (job `changes`) agar perubahan dokumentasi tidak menjalankan suite aplikasi.
 - Cache Composer (`composer.lock`), npm (`package-lock.json`), browser Playwright (versi), dan build Vite antarjob dalam satu run (artefak).
 - Pest paralel (`--parallel`) dengan basis data per proses; Playwright sharding 2–4.
-- Service container `postgres` versi yang sama dengan produksi; Gotenberg hanya di `ci-nightly` dan Task dokumen.
+- Service container `postgres` dengan major yang dipatok di TOOLCHAIN (sama dengan target staging/produksi); Gotenberg (image dipatok) hanya di `ci-nightly`, job bootstrap TASK-003 dan Task dokumen. Pengujian ini tidak menetapkan cara deploy produksi ([INFRASTRUCTURE §4](../09-operations/INFRASTRUCTURE.md#4-topologi-staging-dan-produksi)).
 - Tidak ada rahasia produksi di CI; variabel hanya untuk uji.
+- Keamanan workflow: pemicu `pull_request` (bukan `pull_request_target`); `permissions` minimum (`contents: read` kecuali alasan tercatat); action dipatok SHA commit; image service dipatok; tanpa secret repositori untuk uji; data sintetis saja; workflow tidak commit, push atau membuat rilis (GOV-08). Artefak diunduh eksekutor dan di-commit dengan identitas Owner. Artefak repositori publik dapat diunduh pengguna GitHub lain, jadi tidak memuat rahasia, `APP_KEY` atau data riil.
 - Status check wajib sebelum merge ke `main` adalah satu job agregat **`ci-gate`** yang selalu berjalan pada setiap PR dan lulus hanya bila setiap job yang dipicu filter path (di dalam workflow, bukan filter tingkat workflow) lulus. Dengan begitu PR dokumentasi tidak menunggu check yang tidak dipicu, dan PR kode tidak dapat di-merge bila `ci-fast`/`ci-e2e` yang relevan gagal atau dilewati secara keliru.
 - Proteksi `main` mengikuti metode merge yang diputuskan Owner (D-08, [EXECUTOR_OPERATING_MODEL §8.2](../11-tasks/EXECUTOR_OPERATING_MODEL.md#82-metode-merge-keputusan-owner)): **opsi A** — ruleset dengan status check `ci-gate` wajib (commit harus lulus di ref lain lebih dahulu), riwayat linear, tanpa force push/penghapusan dan **tanpa** aturan PR wajib (PR-dahulu ditegakkan kebijakan, hook dan skrip merge eksekutor); **opsi B** — PR wajib + `ci-gate` wajib + cabang mutakhir. Tag `v*` dilindungi. Ruleset diterapkan setelah `ci-gate` terbukti (TASK-005); sebelum itu berlaku mode bootstrap ([EXECUTOR_OPERATING_MODEL §8.4](../11-tasks/EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada)). Produksi hanya dari tag rilis ([RELEASE_PLAN §4](../10-release/RELEASE_PLAN.md#4-versi-dan-cabang)).
 - Hasil run dapat dibedakan menurut pemicu (PR, push ke `main`, terjadwal, manual) melalui nama workflow/job dan ringkasan run; artefak kegagalan (log, laporan Playwright, trace) disimpan menurut [TEST_STRATEGY §5](TEST_STRATEGY.md#5-e2e-browser).
 - Penanganan kegagalan CI mengikuti prosedur akar masalah di [EXECUTOR_OPERATING_MODEL §7](../11-tasks/EXECUTOR_OPERATING_MODEL.md#7-kegagalan-ci); job wajib tidak pernah dinonaktifkan dan asersi valid tidak pernah dilemahkan untuk memperoleh status hijau.
+
+### 4.1 Workflow bootstrap sementara
+
+Berlaku untuk TASK-002–TASK-004 sebelum `ci.yml` ada (OD-37, PCR-002). Berkas: `.github/workflows/bootstrap.yml` (workflow `bootstrap`). TASK-002 membuatnya, TASK-003 dan TASK-004 memperluasnya, lalu TASK-005 menggabungkannya ke `ci.yml` dan menghapusnya.
+
+| Job | Ditambah | Isi minimum |
+|---|---|---|
+| `scaffold` | TASK-002, sementara | Membuat aplikasi dari starter kit di runner dan mengunggah artefak sumber + lockfile (tanpa `vendor/`, `node_modules/`, `.env` atau kunci); dihapus sebelum HEAD akhir PR TASK-002 |
+| `app-boot` | TASK-002 | PostgreSQL service; `composer install`, `npm ci`, `npm run build`; `migrate:fresh` + rollback; server uji; `GET /login` 200 dan registrasi 404; Pest; Pint, ESLint, tsc; screenshot halaman masuk 390×844 dan 1440×900 sebagai artefak |
+| `db-integration` | TASK-003 | Versi major PostgreSQL; ekstensi `pg_trgm`, `ltree`, `btree_gist`; `numeric`/`timestamptz`; Pest `--parallel` pada `pranata_test_<token>`; uji DatabaseGuard; Gotenberg service: health + konversi berkas sintetis |
+| `quality` | TASK-004 | `composer qa`, `npm run qa`, uji negatif arch/rute, `composer audit`, `npm audit`, gitleaks |
+
+- Pemicu `pull_request` ke `main` saja: run dimulai dari PR draft dan tidak memerlukan workflow di `main` lebih dahulu. `concurrency` per PR dengan `cancel-in-progress`; `timeout-minutes` per job; `runs-on` berlabel runner GitHub-hosted (misalnya `ubuntu-24.04`), tidak pernah `self-hosted`.
+- Aturan keamanan workflow bagian 4 berlaku penuh.
+- Gerbang merge bootstrap: setiap job yang didefinisikan `bootstrap.yml` pada SHA HEAD PR menghasilkan check-run `success` (`gh api repos/<owner>/<repo>/commits/<sha>/check-runs`), tanpa yang hilang, dilewati atau dibatalkan; ditambah review sesuai kelas risiko dan kesaksian Owner (mode SUPERVISED, [EXECUTOR_OPERATING_MODEL §8.4](../11-tasks/EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada)).
+- Bukti di COMPLETION EVIDENCE: URL dan ID run, SHA HEAD, kesimpulan dan durasi per job, tautan artefak. Run lama tidak berlaku untuk SHA baru. Pemeriksaan yang tidak dijalankan dicatat NOT RUN.
+- `bootstrap` bukan status check wajib ruleset; ruleset hanya memakai `ci-gate` (TASK-005).
 
 ## 5. Bukti di Task
 
