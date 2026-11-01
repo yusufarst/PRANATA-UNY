@@ -15,7 +15,7 @@ test('Gotenberg reports that it is healthy', function () {
 
 test('Gotenberg converts a synthetic file through LibreOffice', function () {
     $response = Http::baseUrl(getenv('GOTENBERG_URL'))
-        ->attach('files', 'Dokumen uji sintetis PRANATA.', 'synthetic.txt')
+        ->attach('files', 'Dokumen uji sintetis PRANATA, varian uji.', 'synthetic.txt')
         ->post('/forms/libreoffice/convert');
 
     expect($response->successful())->toBeTrue()
