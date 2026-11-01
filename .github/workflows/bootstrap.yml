@@ -1,0 +1,75 @@
+name: bootstrap
+
+# Temporary evidence workflow for TASK-002 to TASK-004 (QUALITY_GATES 4.1, OD-37).
+# TASK-005 folds it into ci.yml and removes it.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bootstrap-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  # Temporary: removed before the final HEAD of the TASK-002 PR.
+  scaffold:
+    name: scaffold
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          tools: composer:v2
+          coverage: none
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+
+      # --no-scripts keeps .env and APP_KEY out of the tree: the kit's scripts create both.
+      - name: Create the application from the official React starter kit
+        run: composer create-project laravel/react-starter-kit app --no-interaction --prefer-dist --no-install --no-scripts
+
+      - name: Resolve lockfiles
+        working-directory: app
+        run: |
+          composer update --no-interaction --no-scripts --no-autoloader --no-install
+          npm install --package-lock-only --no-audit --no-fund
+
+      - name: Record versions
+        working-directory: app
+        run: |
+          {
+            php --version | head -n 1
+            composer --version
+            node --version
+            npm --version
+            composer show --locked --format=json
+          } > ../scaffold-versions.txt
+
+      - name: Refuse dependencies, environment files and keys in the artifact
+        working-directory: app
+        run: |
+          rm -rf vendor node_modules
+          if [ -e .env ]; then echo '.env must not exist'; exit 1; fi
+          if grep -rIlE 'base64:[A-Za-z0-9+/]{20,}' .; then echo 'key material found'; exit 1; fi
+
+      - name: Pack
+        run: tar -czf scaffold.tar.gz -C app .
+
+      - name: Upload scaffold
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: scaffold
+          path: |
+            scaffold.tar.gz
+            scaffold-versions.txt
+          if-no-files-found: error
+          retention-days: 7
