@@ -9,6 +9,7 @@ param(
     [double]$StepTimeoutMinutes = 90,
     [int]$WaitPollSeconds = 300,
     [int]$MaxNoProgressSteps = 3,
+    [int]$MaxUnmovedSteps = 10,
     [string]$Root,
     [string]$ClaudeCommand = 'claude',
     [string]$Model,
@@ -209,6 +210,10 @@ function Save-WipCheckpoint($Checkpoint) {
     $branch = (& git -C $Root rev-parse --abbrev-ref HEAD)
     if ($branch -in @('main', 'HEAD') -or -not $Checkpoint.task_id) { return }
     if (-not (& git -C $Root status --porcelain)) { return }
+    if ($Checkpoint.branch -and $branch -ne $Checkpoint.branch) {
+        Write-RunnerLog "WIP commit skipped: on $branch, checkpoint names $($Checkpoint.branch); changes remain in the working tree"
+        return
+    }
     if (-not (Test-PranataIdentity $Root)) { Write-RunnerLog 'WIP commit skipped: Git identity mismatch (GOV-08)'; return }
     $taskSlug = ([string]$Checkpoint.task_id).ToLowerInvariant()
     & git -c core.autocrlf=false -C $Root add -A
@@ -239,11 +244,11 @@ try {
     }
     $steps = 0
     $noProgress = 0
+    $notMoved = 0
     while ($true) {
         $hold = Read-PranataJson $paths.Hold
         $checkpoint = Get-PranataCheckpoint $Root
         if ($hold -and $hold.mode -eq 'IMMEDIATE_SAFE_SHUTDOWN') {
-            Save-WipCheckpoint $checkpoint
             Write-RunnerLog "HOLD $($hold.mode): stopping"
             break
         }
@@ -293,12 +298,20 @@ try {
             $checkpoint.wait_until = $null
             if ($outcome.Next) { $checkpoint.next_action = $outcome.Next }
             $headAfter = (& git -C $Root rev-parse HEAD)
-            if ($headAfter -eq $headBefore -and $checkpoint.stage -eq $stageBefore -and $checkpoint.next_action -eq $nextBefore) { $noProgress++ } else { $noProgress = 0 }
-            if ($noProgress -ge $MaxNoProgressSteps) {
+            $moved = ($headAfter -ne $headBefore) -or ($checkpoint.stage -ne $stageBefore)
+            if ($moved -or $checkpoint.next_action -ne $nextBefore) { $noProgress = 0 } else { $noProgress++ }
+            if ($moved) { $notMoved = 0 } else { $notMoved++ }
+            # A step that only rewrites next_action is talking, not working; it gets a wider but finite budget.
+            if ($noProgress -ge $MaxNoProgressSteps -or $notMoved -ge $MaxUnmovedSteps) {
+                if ($checkpoint.stage -eq 'DONE') {
+                    Save-PranataCheckpoint $Root $checkpoint
+                    Write-RunnerLog 'Task is DONE and steps add nothing; stopping'
+                    break
+                }
                 $checkpoint.stage = 'BLOCKED'
-                $checkpoint.last_action = "no progress after $noProgress steps; stopped to protect usage"
+                $checkpoint.last_action = "no progress after $notMoved steps; stopped to protect usage"
                 Save-PranataCheckpoint $Root $checkpoint
-                Write-RunnerLog "BLOCKED: no progress after $noProgress steps"
+                Write-RunnerLog "BLOCKED: no progress after $notMoved steps"
                 break
             }
         }
@@ -310,6 +323,9 @@ try {
         }
         if ($Once) { break }
     }
+    # Every exit path passes here, so a hold raised during the last step still keeps the unfinished work.
+    $holdAtExit = Read-PranataJson $paths.Hold
+    if ($holdAtExit -and $holdAtExit.mode -eq 'IMMEDIATE_SAFE_SHUTDOWN') { Save-WipCheckpoint (Get-PranataCheckpoint $Root) }
 } finally {
     Exit-PranataLock $paths.RunnerLock
 }

@@ -180,6 +180,12 @@ $commands = @(
     @('guard-paths', 'deny', 'powershell -File scripts\executor\release-hold.ps1', 'AUTONOMOUS'),
     @('guard-paths', 'deny', 'powershell -File scripts\executor\merge-verified.ps1 -Pr 3 -Bootstrap', 'AUTONOMOUS'),
 
+    # Forms found by the PR review
+    @('review', 'deny', 'git -c core.autocrlf=false checkout abc123 -- .claude/settings.json', 'AUTONOMOUS'),
+    @('review', 'deny', 'git -C ../pranata-uny-worktrees/task-011 push origin HEAD'),
+    @('review', 'deny', 'git -C ../pranata-uny-worktrees/task-011 push'),
+    @('review', 'deny', 'cd ../pranata-uny-worktrees/task-011; git push origin HEAD'),
+    @('review', 'allow', 'git -C ../pranata-uny-worktrees/task-011 push origin feature/task-011-x'),
     # Forms found by the independent review
     @('review', 'deny', 'cat ../other/secrets.env'),
     @('review', 'deny', 'cd ../../Documents'),
@@ -196,6 +202,7 @@ $commands = @(
     @('review', 'deny', '[IO.File]::WriteAllText(".claude/settings.json","x")', 'AUTONOMOUS'),
     @('review', 'deny', 'Remove-Item -Recurse .pranata', 'AUTONOMOUS'),
     @('review', 'deny', 'Remove-Item -Recurse .pranata\executor', 'AUTONOMOUS'),
+    @('review', 'deny', 'Remove-Item .pranata\executor\*', 'AUTONOMOUS'),
     @('review', 'deny', 'git commit -m a -m "Co-Authored-By: Bot <a@b.test>"'),
     @('review', 'allow', 'git diff main...HEAD -- docs/x.md'),
     @('review', 'allow', 'git log origin/main..HEAD --oneline'),

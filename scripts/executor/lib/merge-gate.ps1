@@ -8,6 +8,8 @@ function Get-PranataMergeFailures {
 
     if (-not $Facts.TaskId) { [void]$failures.Add('task: PR branch does not name a Task') }
     if ($Facts.RiskClass -notin @('LOW', 'STANDARD', 'HIGH')) { [void]$failures.Add("task: risk class '$($Facts.RiskClass)' could not be read from the contract on main") }
+    # A branch name is chosen by the agent; a finished or not yet eligible Task on main cannot be merged under it.
+    if ($Facts.TaskStatus -notin @('READY', 'IN_PROGRESS', 'VERIFYING')) { [void]$failures.Add("task: contract status on main is '$($Facts.TaskStatus)'") }
     if ($Facts.Bootstrap) {
         if ($Facts.Mode -ne 'SUPERVISED') { [void]$failures.Add('bootstrap: only allowed in a SUPERVISED session') }
         if ($Facts.TaskId -notin $bootstrapTasks) { [void]$failures.Add("bootstrap: not allowed for $($Facts.TaskId) (only TASK-001 to TASK-004)") }
@@ -50,6 +52,12 @@ function Get-PranataTaskFromBranch([string]$Branch) {
     if ($Branch -match '^(feature|chore|fix)/task-(\d{3})-') { return @{ TaskId = "TASK-$($Matches[2])"; Reconcile = $false } }
     if ($Branch -match '^docs/reconcile-task-(\d{3})(-r\d+)?$') { return @{ TaskId = "TASK-$($Matches[1])"; Reconcile = $true } }
     return @{ TaskId = $null; Reconcile = $false }
+}
+
+# Section 8.3: exactly these three documents. Anything wider could rewrite a risk class or an authorization.
+function Test-PranataReconcileScope([string[]]$Changed, [string]$TaskId) {
+    $allowed = @("docs/11-tasks/$TaskId.md", 'docs/11-tasks/TASK_PLAN.md', 'docs/handoff/CURRENT_HANDOFF.md')
+    return (@($Changed | Where-Object { $_ -cnotin $allowed }).Count -eq 0)
 }
 
 function Test-PranataAuthorizationText([string]$Records, [string]$TaskId) {

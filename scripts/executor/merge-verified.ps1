@@ -40,11 +40,13 @@ $task = Get-PranataTaskFromBranch $prInfo.headRefName
 $mainIsAncestor = ($LASTEXITCODE -eq 0)
 
 $riskClass = $null
-if ($task.Reconcile) { $riskClass = 'LOW' }
-elseif ($task.TaskId) {
+$taskStatus = $null
+if ($task.TaskId) {
     $contract = (& git -C $Root show "${checkedMain}:docs/11-tasks/$($task.TaskId).md" 2>$null) -join "`n"
     if ($contract -match '(?m)^RISK CLASS: (\w+)') { $riskClass = $Matches[1] }
+    if ($contract -match '(?m)^STATUS: (\w+)') { $taskStatus = $Matches[1] }
 }
+if ($task.Reconcile) { $riskClass = 'LOW' }
 $records = (& git -C $Root show "${checkedMain}:docs/00-governance/APPROVAL_RECORDS.md" 2>$null) -join "`n"
 
 $ciConclusion = 'missing'
@@ -57,13 +59,13 @@ if (-not $Bootstrap) {
 $review = Read-PranataJson (Join-Path $paths.Dir "review-$VerifiedSha.json")
 $changed = @(& git -C $Root diff --name-only "$checkedMain...$VerifiedSha")
 $touched = @($changed | Where-Object { $_ -match $script:GuardPathRegex })
-$reconcileOk = (-not $task.Reconcile) -or (@($changed | Where-Object { $_ -notmatch '^docs/' }).Count -eq 0)
+$reconcileOk = (-not $task.Reconcile) -or (Test-PranataReconcileScope $changed $task.TaskId)
 
 # Read last: a move of main while the facts above were collected fails the 8.1.4 check.
 $remoteMain = ((& git -C $Root ls-remote origin refs/heads/main) -split '\s+')[0]
 
 $facts = @{
-    Bootstrap = [bool]$Bootstrap; Mode = $mode; TaskId = $task.TaskId; RiskClass = $riskClass
+    Bootstrap = [bool]$Bootstrap; Mode = $mode; TaskId = $task.TaskId; RiskClass = $riskClass; TaskStatus = $taskStatus
     Authorized = (Test-PranataAuthorizationText $records $task.TaskId); ReconcileScopeOk = $reconcileOk
     PrState = $prInfo.state; PrBase = $prInfo.baseRefName; IsDraft = [bool]$prInfo.isDraft; PrMergeable = $prInfo.mergeable
     PrHeadSha = $prInfo.headRefOid; VerifiedSha = $VerifiedSha

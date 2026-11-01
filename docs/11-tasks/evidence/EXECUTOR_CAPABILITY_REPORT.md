@@ -18,7 +18,7 @@ Ulangi dengan: `scripts/executor/tests/guard.tests.ps1`, `scripts.tests.ps1` (ke
 | C-06 | Penjadwal Tugas Windows | VERIFIED (terbatas) | Task berisolasi nama `PRANATA-UNY-*` dibuat, dijalankan, menulis log watcher, hasil 0, lalu dihapus | Tidur/bangun dan jadwal terlewat **tidak diuji** agar tidak mengganggu proyek lain; `StartWhenAvailable` aktif. Watcher belum didaftarkan |
 | C-07 | Tugas terjadwal aplikasi desktop | NOT AVAILABLE | Tidak diuji dan tidak diandalkan | — |
 | C-08 | Membangunkan giliran desktop | NOT AVAILABLE | Tidak ada mekanisme resmi yang ditemukan; tidak diandalkan | Resume manual atau headless |
-| C-09 | Review Codex | Lihat bagian C-09 | Diuji pada PR TASK-001 | — |
+| C-09 | Review Codex | VERIFIED | Diuji pada PR #2: lihat bagian C-09 | Durasi baru dari satu PR; kalibrasi §14 berlanjut |
 | C-10 | Fast-forward dan ruleset | VERIFIED | Sandbox `yusufarst/pranata-uny-sandbox-c10`: PR tercatat MERGED setelah fast-forward; commit tanpa hasil `ci-gate` ditolak; `ci-gate` lulus di cabang kerja lalu fast-forward diterima dan PR MERGED; `ci-gate` gagal ditolak; force push dan penghapusan `main` ditolak | Ruleset PRANATA sendiri tetap diverifikasi setelah Owner memasangnya |
 | C-11 | Subagen dalam headless | VERIFIED | Subagen membaca berkas dan melaporkan isinya, exit 0 | — |
 | C-12 | Deteksi batas pemakaian | VERIFIED (simulasi) | Stub: batas terdeteksi hanya pada langkah gagal, `wait_until` diisi, tanpa panggilan model selama menunggu. Galat autentikasi nyata (`is_error=true`, `subtype=success`) kini menghentikan loop | Pesan batas pemakaian yang asli belum teramati; pola dikalibrasi saat terjadi |
@@ -28,7 +28,14 @@ Ulangi dengan: `scripts/executor/tests/guard.tests.ps1`, `scripts.tests.ps1` (ke
 
 ## C-09
 
-Status akhir dicatat di bagian ini setelah PR TASK-001 dibuka, dengan mekanisme `@codex review` satu kali dan jendela konfirmasi §14.
+Terverifikasi pada [PR #2](https://github.com/yusufarst/PRANATA-UNY/pull/2) (2026-11-01), dibaca dengan `gh api`:
+
+- Akun bot: `chatgpt-codex-connector[bot]`.
+- Permintaan: review otomatis repositori berjalan saat PR dibuka. Pada PR #2 komentar `@codex review` juga terkirim, jadi keduanya terjadi; §6.3 menghendaki satu saja, dan mulai sekarang komentar hanya dipakai bila review otomatis tidak muncul dalam jendela konfirmasi.
+- Sinyal mulai: reaksi `eyes` pada PR atau komentar permintaan, serta komentar ringkasan dengan penanda `codex-review-state:v1` berisi JSON `status`, `commit_sha`, `has_any_findings`, `has_unresolved_findings`.
+- Sinyal selesai: `status: completed` pada penanda itu; temuan berupa komentar review berpenanda `codex-code-review-finding:v1`; tanpa temuan ditandai reaksi `+1`.
+- Durasi teramati: sekitar 5 menit (13:49:02 → 13:54:13 UTC), dalam batas §14.
+- Hasil pada `bafb717`: dua P1 dan satu P2, ketiganya valid dan diperbaiki.
 
 ## Sisa risiko yang diterima
 

@@ -28,7 +28,7 @@ try {
         CiGateConclusion = 'success'; ReviewSha = 'aaa'; ReviewStatus = 'PASS'; OpenBlockingFindings = 0
         IndependentReviewDone = $true; SubstituteReviewDone = $false; CodexStatus = 'COMPLETED_NO_FINDINGS'
         MainIsAncestor = $true; RemoteMainSha = 'mmm'; CheckedMainSha = 'mmm'; GuardPathsTouched = @(); CommitIdentityProblems = @()
-        PrMergeable = 'MERGEABLE'; PrTextProblem = $false; ReconcileScopeOk = $true
+        PrMergeable = 'MERGEABLE'; PrTextProblem = $false; ReconcileScopeOk = $true; TaskStatus = 'READY'
     }
     Assert ((Get-PranataMergeFailures -Facts $good).Count -eq 0) 'gate: all checks passing gives no failure'
     $negatives = @(
@@ -37,7 +37,7 @@ try {
         @('ReviewSha', 'old', '8.1.3'), @('ReviewStatus', 'PENDING', '8.1.3'), @('OpenBlockingFindings', 1, '8.1.3'), @('IndependentReviewDone', $false, '8.1.3'),
         @('CodexStatus', 'TIMEOUT', '8.1.3'), @('CodexStatus', 'FAILED', '8.1.3'), @('MainIsAncestor', $false, '8.1.4'), @('CheckedMainSha', 'old', '8.1.4'),
         @('GuardPathsTouched', @('.claude/settings.json'), '8.1.6'), @('CommitIdentityProblems', @('aaa author is x'), 'GOV-08'),
-        @('PrMergeable', 'CONFLICTING', '8.1.5'), @('PrTextProblem', $true, 'GOV-08'), @('ReconcileScopeOk', $false, '8.3'), @('TaskId', $null, 'task:'), @('RiskClass', $null, 'task:')
+        @('PrMergeable', 'CONFLICTING', '8.1.5'), @('PrTextProblem', $true, 'GOV-08'), @('ReconcileScopeOk', $false, '8.3'), @('TaskId', $null, 'task:'), @('RiskClass', $null, 'task:'), @('TaskStatus', 'DONE', 'task:'), @('TaskStatus', 'TODO', 'task:'), @('TaskStatus', $null, 'task:')
     )
     foreach ($row in $negatives) {
         $facts = $good.Clone()
@@ -59,6 +59,9 @@ try {
     $low = $good.Clone(); $low.RiskClass = 'LOW'; $low.CodexStatus = 'NOT_REQUESTED'; $low.IndependentReviewDone = $false
     Assert ((Get-PranataMergeFailures -Facts $low).Count -eq 0) 'gate: reconciliation (LOW) needs no Codex review'
     Assert ((Get-PranataTaskFromBranch 'chore/task-001-x').TaskId -eq 'TASK-001') 'gate: Task read from branch'
+    Assert (Test-PranataReconcileScope @('docs/11-tasks/TASK-020.md', 'docs/11-tasks/TASK_PLAN.md', 'docs/handoff/CURRENT_HANDOFF.md') 'TASK-020') 'gate: reconciliation of the three documents allowed'
+    Assert (-not (Test-PranataReconcileScope @('docs/11-tasks/TASK-030.md') 'TASK-020')) 'gate: reconciliation cannot touch another Task contract'
+    Assert (-not (Test-PranataReconcileScope @('docs/00-governance/APPROVAL_RECORDS.md') 'TASK-020')) 'gate: reconciliation cannot touch authorization records'
     Assert ((Get-PranataTaskFromBranch 'docs/reconcile-task-012').Reconcile) 'gate: reconciliation branch recognised'
     Assert (-not (Get-PranataTaskFromBranch 'feature/other').TaskId) 'gate: unrelated branch names no Task'
     Assert (Test-PranataAuthorizationText "## AUTH-013`n- State: **ACTIVE** from x`n## AUTH-012`n" 'TASK-078') 'gate: active authorization read'
@@ -121,6 +124,7 @@ Add-Content -LiteralPath $log -Value (($args -join ' ') + ' MODE=' + $env:PRANAT
 if (Test-Path (Join-Path $PWD '.pranata\stub-auth-error')) { Write-Output '{"type":"result","subtype":"success","is_error":true,"session_id":"s-auth","result":"Failed to authenticate"}'; exit 1 }
 if (Test-Path (Join-Path $PWD '.pranata\stub-rate-limit')) { Write-Output '{"type":"result","is_error":true,"session_id":"s-limit","result":"usage limit reached"}'; exit 1 }
 if (Test-Path (Join-Path $PWD '.pranata\stub-sleep')) { Start-Sleep -Seconds 120 }
+if (Test-Path (Join-Path $PWD '.pranata\stub-raise-hold')) { Set-Content -LiteralPath (Join-Path $PWD 'late.txt') -Value x -Encoding ASCII; Set-Content -LiteralPath (Join-Path $PWD '.pranata\executor\hold.json') -Value '{"mode":"IMMEDIATE_SAFE_SHUTDOWN"}' -Encoding ASCII }
 $status = '{\"task\":\"TASK-999\",\"stage\":\"IN_PROGRESS\",\"result\":\"progressed\",\"next\":\"lanjut langkah berikut\"}'
 Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":1,"result":"ok\n' + $status + '"}')
 '@ | Set-Content -LiteralPath $stub -Encoding ASCII
@@ -163,6 +167,7 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
 
     # IMMEDIATE hold keeps unfinished work as a local WIP commit on the Task branch.
     & git -C $clone switch --quiet -c chore/task-999-x
+    $cpW = Get-PranataCheckpoint $clone; $cpW.branch = 'chore/task-999-x'; Save-PranataCheckpoint $clone $cpW
     Set-Content -LiteralPath (Join-Path $clone 'unfinished.txt') -Value x -Encoding ASCII
     $originBefore = (& git -C $origin for-each-ref | Measure-Object).Count
     [void](Invoke-Script (Join-Path $scriptsDir 'hold.ps1') @('-Mode', 'IMMEDIATE_SAFE_SHUTDOWN', '-Reason', 'uji', '-Root', $clone))
@@ -172,6 +177,25 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
     Assert ((Get-PranataCheckpoint $clone).head_sha -eq (& git -C $clone rev-parse HEAD)) 'hold: checkpoint head_sha matches the WIP commit'
     Assert ((& git -C $origin for-each-ref | Measure-Object).Count -eq $originBefore) 'hold: WIP commit not pushed'
     [void](Invoke-Script (Join-Path $scriptsDir 'release-hold.ps1') @('-Root', $clone))
+    # A hold raised during the last step, with -Once: the unfinished work is still kept.
+    Set-Content -LiteralPath (Join-Path $clone '.pranata\stub-raise-hold') -Value x -Encoding ASCII
+    $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Once', '-Root', $clone, '-ClaudeCommand', $stub, '-TokenFile', $tokenFile)
+    Remove-Item -LiteralPath (Join-Path $clone '.pranata\stub-raise-hold')
+    Assert ((& git -C $clone log -1 --format=%s) -match '^wip\(task-999\)' -and (Test-Path -LiteralPath (Join-Path $clone 'late.txt'))) 'hold: raised during a step still gives a WIP commit'
+    [void](Invoke-Script (Join-Path $scriptsDir 'release-hold.ps1') @('-Root', $clone))
+
+    # WIP commit never lands on a branch the checkpoint does not name.
+    & git -C $clone switch --quiet -c chore/task-999-other
+    Set-Content -LiteralPath (Join-Path $clone 'stray.txt') -Value x -Encoding ASCII
+    [void](Invoke-Script (Join-Path $scriptsDir 'hold.ps1') @('-Mode', 'IMMEDIATE_SAFE_SHUTDOWN', '-Reason', 'uji', '-Root', $clone))
+    $head = (& git -C $clone rev-parse HEAD)
+    $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Root', $clone, '-ClaudeCommand', $stub, '-TokenFile', $tokenFile)
+    Assert ($r.Out -match 'WIP commit skipped' -and (& git -C $clone rev-parse HEAD) -eq $head) 'hold: no WIP commit on an unrelated branch'
+    [void](Invoke-Script (Join-Path $scriptsDir 'release-hold.ps1') @('-Root', $clone))
+    Remove-Item -LiteralPath (Join-Path $clone 'stray.txt')
+    & git -C $clone switch --quiet chore/task-999-x
+    $cpH = Get-PranataCheckpoint $clone; $cpH.head_sha = (& git -C $clone rev-parse HEAD); $cpH.next_action = 'lanjut langkah berikut'; Save-PranataCheckpoint $clone $cpH
+
     # Hold: both modes stop the runner; resume continues the same Task from the checkpoint.
     $h = Invoke-Script (Join-Path $scriptsDir 'hold.ps1') @('-Mode', 'IMMEDIATE_SAFE_SHUTDOWN', '-Reason', 'uji', '-Root', $clone)
     Assert ($h.Code -eq 0 -and (Test-Path -LiteralPath $state.Hold)) 'hold: IMMEDIATE written'
@@ -288,6 +312,22 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
     Assert ((@(Get-Content -LiteralPath (Join-Path $clone '.pranata\stub-calls.log')).Count - $before) -eq 3) 'runner: exactly three calls before giving up'
     Assert ((Get-PranataCheckpoint $clone).stage -eq 'BLOCKED') 'runner: no progress recorded as BLOCKED'
 
+    # A Task already DONE: steps that add nothing stop quietly and the stage stays DONE.
+    $cpD = Get-PranataCheckpoint $clone; $cpD.stage = 'DONE'; $cpD.next_action = 'lanjut langkah berikut'; Save-PranataCheckpoint $clone $cpD
+    $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Root', $clone, '-ClaudeCommand', $stub, '-TokenFile', $tokenFile)
+    Assert ($r.Out -match 'Task is DONE' -and (Get-PranataCheckpoint $clone).stage -eq 'DONE') 'runner: DONE is not rewritten to BLOCKED'
+
+    # A step that keeps rewriting next_action has a finite budget.
+    $talk = Join-Path $work 'claude-talk.ps1'
+    @(
+        '$null = [Console]::In.ReadToEnd()',
+        '$n = [guid]::NewGuid().ToString("N")',
+        'Write-Output (''{"type":"result","is_error":false,"session_id":"s-t","result":"ok\n{\"task\":\"TASK-999\",\"stage\":\"IN_PROGRESS\",\"result\":\"progressed\",\"next\":\"'' + $n + ''\"}"}'')'
+    ) | Set-Content -LiteralPath $talk -Encoding ASCII
+    $cpK = Get-PranataCheckpoint $clone; $cpK.stage = 'IN_PROGRESS'; Save-PranataCheckpoint $clone $cpK
+    $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Root', $clone, '-ClaudeCommand', $talk, '-TokenFile', $tokenFile, '-MaxUnmovedSteps', '4')
+    Assert ($r.Out -match 'BLOCKED: no progress after 4 steps') 'runner: endlessly rewriting next_action is bounded'
+
     # A healthy step that merely mentions a limit is not a usage limit.
     $mention = @'
 $null = [Console]::In.ReadToEnd()
@@ -375,6 +415,9 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         Set-GhFacts 'success' 'chore/task-010-x' 'Generated with Claude Code'
         $m = Invoke-Script $merge $mergeArgs
         Assert ($m.Code -ne 0 -and $m.Out -match 'PR title or body') 'merge: PR body attribution refused'
+        Set-GhFacts 'success' 'docs/reconcile-task-010'
+        $m = Invoke-Script $merge $mergeArgs
+        Assert ($m.Code -ne 0 -and $m.Out -match '8\.3') 'merge: reconciliation PR touching code refused'
         Set-GhFacts 'success'
         Set-Content -LiteralPath $stateM.Hold -Encoding ASCII -Value '{"mode":"IMMEDIATE_SAFE_SHUTDOWN"}'
         $m = Invoke-Script $merge $mergeArgs

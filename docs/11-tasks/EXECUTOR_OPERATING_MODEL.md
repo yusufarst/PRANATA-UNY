@@ -291,7 +291,7 @@ Semua berstatus **UNVERIFIED** sampai TASK-001 (C-14 pada TASK-003) mencatat VER
 | C-14 | Kinerja bind mount Docker Desktop dan batas sumber daya | Lingkungan dev | TASK-003 | Rekomendasi ke Owner (mis. kloning di WSL2) |
 | C-15 | Runner memakai token GitHub terpisah (variabel lingkungan dan kredensial Git khusus proses runner) tanpa memengaruhi login Owner; token tanpa hak Administration ditolak saat mencoba mengubah ruleset | Pembatasan kewenangan eksekutor (D-27) | Uji pada repositori sekali pakai | Bila tidak dapat dipisahkan: mode otonom memakai login Owner hanya bila Owner menerimanya secara eksplisit |
 
-**Status hasil TASK-001 (2026-11-01, bukti di [EXECUTOR_CAPABILITY_REPORT](evidence/EXECUTOR_CAPABILITY_REPORT.md)):** VERIFIED: C-01, C-02, C-03, C-05, C-10, C-11, C-13. VERIFIED dengan batas tercatat: C-04, C-06, C-12 (simulasi). NOT AVAILABLE: C-07, C-08, C-14 (Docker lokal dibatalkan keputusan Owner; lihat usulan di CURRENT_HANDOFF), C-15 (menunggu token Owner). C-09: lihat laporan.
+**Status hasil TASK-001 (2026-11-01, bukti di [EXECUTOR_CAPABILITY_REPORT](evidence/EXECUTOR_CAPABILITY_REPORT.md)):** VERIFIED: C-01, C-02, C-03, C-05, C-09, C-10, C-11, C-13. VERIFIED dengan batas tercatat: C-04, C-06, C-12 (simulasi). NOT AVAILABLE: C-07, C-08, C-14 (Docker lokal dibatalkan keputusan Owner; lihat usulan di CURRENT_HANDOFF), C-15 (menunggu token Owner).
 
 Kemampuan yang FAILED atau NOT AVAILABLE memicu jalan cadangannya dan, bila memengaruhi Task lain, TASK PLAN CHANGE. Model ini diperbarui dari hasil uji, bukan dari dugaan.
 

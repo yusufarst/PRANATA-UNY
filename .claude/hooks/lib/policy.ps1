@@ -7,8 +7,8 @@ $script:OtherProjects = 'multiplecorp|bantukasir|elligble'
 $script:OwnRepo = 'yusufarst/PRANATA-UNY'
 $script:SandboxRepo = 'yusufarst/pranata-uny-sandbox-[a-z0-9-]+'
 $script:GuardPaths = '(^|[\\/\s"''])(\.github[\\/]workflows|\.claude|\.githooks|scripts[\\/]executor)([\\/\s"'']|$)|\.pranata[\\/]executor[\\/]hold\.json'
-$script:RuntimeDir = '(?i)\.pranata([\\/]executor)?[\\/]?(["''\s]|$)'
-$script:WriteVerbs = '(?i)\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Expand-Archive|sc|ac|ni|ri|mi|cpi|rni|del|erase|rm|rmdir|mv|cp|ren|tee|touch|sed\s+-i|git\s+(rm|mv|checkout|restore|apply|add|update-index|stash))\b|>|::(Write|Delete|Move|Copy|Replace|Create|Append|Open)'
+$script:RuntimeDir = '(?i)\.pranata([\\/]executor)?[\\/]?\*?(["''\s]|$)'
+$script:WriteVerbs = '(?i)\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Expand-Archive|sc|ac|ni|ri|mi|cpi|rni|del|erase|rm|rmdir|mv|cp|ren|tee|touch|sed\s+-i|git\b.*\b(rm|mv|checkout|restore|apply|add|update-index|stash|reset|cherry-pick|merge|pull))\b|>|::(Write|Delete|Move|Copy|Replace|Create|Append|Open)'
 
 function New-PranataVerdict([string]$Decision, [string]$Category, [string]$Reason) {
     return @{ Decision = $Decision; Category = $Category; Reason = $Reason }
@@ -132,6 +132,8 @@ function Test-PranataGit {
     while ($i -lt $GitArgs.Count -and $GitArgs[$i] -like '-*') {
         $flag = $GitArgs[$i]
         if ($flag -in @('-C', '-c', '--git-dir', '--work-tree', '--namespace', '--exec-path')) {
+            # The branch fact describes the hook's cwd; another directory makes HEAD unknown.
+            if ($flag -eq '-C') { $SwitchesBranch = $true }
             if ($flag -eq '-c' -and $i + 1 -lt $GitArgs.Count) { $configOverrides += $GitArgs[$i + 1] }
             if ($flag -in @('--git-dir', '--work-tree', '--exec-path')) {
                 return (Deny 'git-repo-redirect' "git $flag is forbidden.")
@@ -462,7 +464,7 @@ function Test-PranataCommand {
         }
     }
 
-    $switchesBranch = $Command -match '(?i)\bgit(\.exe)?\b[^;|&]*\b(switch|checkout)\b'
+    $switchesBranch = $Command -match '(?i)\bgit(\.exe)?\b[^;|&]*\b(switch|checkout)\b|(^|[;&|{(\s])(cd|chdir|pushd|sl|Set-Location|Push-Location)(\s|$)'
     foreach ($segment in (Get-PranataSegments $Command)) {
         if ($segment -match '(?i)\bGIT_(AUTHOR|COMMITTER)_(NAME|EMAIL|DATE)\b|\bGIT_CONFIG_(GLOBAL|SYSTEM|COUNT|PARAMETERS|KEY|VALUE)|\bGIT_(DIR|WORK_TREE|SSH_COMMAND|ASKPASS)\b|\bGH_(HOST|REPO|ENTERPRISE_TOKEN)\b') {
             return (Deny 'git-env-override' 'Overriding Git or gh identity and location through the environment is forbidden.')
