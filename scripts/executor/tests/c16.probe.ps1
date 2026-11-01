@@ -86,7 +86,7 @@ function Invoke-Gate([int]$Pr, [string]$Sha) {
 function Test-Refused([string]$Name, [int]$Pr, [string]$Sha, [string]$Pattern, [string]$Detail) {
     $gate = Invoke-Gate $Pr $Sha
     $line = (($gate.Out -split "`n") | Where-Object { $_ -match $Pattern } | Select-Object -First 1)
-    Say $Name ($gate.Code -ne 0 -and [bool]$line) "$Detail; head=$Sha; refused=$($gate.Code -ne 0); line=$([string]$line.Trim())"
+    Say $Name ($gate.Code -ne 0 -and [bool]$line) "$Detail; head=$Sha; refused=$($gate.Code -ne 0); line=$("$line".Trim())"
 }
 
 $mainBefore = ((& git ls-remote origin refs/heads/main) -split '\s+')[0]
@@ -97,8 +97,6 @@ try {
     & git worktree add --quiet -b $branch $wt origin/main 2>$null
     if (-not (Test-Path -LiteralPath (Join-Path $wt '.git'))) { throw 'worktree could not be created' }
     [void](Initialize-PranataStateDirs $wt)
-    Add-Content -LiteralPath (Join-Path $wt '.git-c16-exclude-check') -Value '' -ErrorAction SilentlyContinue
-    Remove-Item -LiteralPath (Join-Path $wt '.git-c16-exclude-check') -ErrorAction SilentlyContinue
 
     Set-Workflow $wt (Get-Stub 'fail')
     $sha = Push-Commit $wt 'chore(task-002): c16 probe, failing job'
@@ -140,7 +138,7 @@ try {
     Start-Sleep -Seconds 10
     $gate = Invoke-Gate $pr $greenSha
     $line = (($gate.Out -split "`n") | Where-Object { $_ -match 'Bootstrap evidence' } | Select-Object -First 1)
-    Say 'green-accepted' ($gate.Code -eq 0 -and $gate.Out -match 'Gate PASS') "run=$($r.id) attempt=$($r.run_attempt) conclusion=$($r.conclusion); $([string]$line.Trim()); refusals=$(if ($gate.Code -ne 0) { $gate.Out -replace '\s+', ' ' } else { 'none' })"
+    Say 'green-accepted' ($gate.Code -eq 0 -and $gate.Out -match 'Gate PASS') "run=$($r.id) attempt=$($r.run_attempt) conclusion=$($r.conclusion); $("$line".Trim()); refusals=$(if ($gate.Code -ne 0) { $gate.Out -replace '\s+', ' ' } else { 'none' })"
 
     # The head_sha filter, judged on real results: the PR HEAD finds the run, the synthetic merge SHA and another SHA find none.
     $evidenceRun = Get-PranataBootstrapRun -Repo $ownRepo -Pr $pr -HeadSha $greenSha -WorkDir (Join-Path $wt '.pranata\executor')
