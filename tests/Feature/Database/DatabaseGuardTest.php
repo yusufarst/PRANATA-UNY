@@ -110,8 +110,8 @@ test('artisan migrate:fresh stops on a foreign database', function () {
         ->env(['DB_DATABASE' => 'other_app'])
         ->run([PHP_BINARY, 'artisan', 'migrate:fresh', '--force']);
 
-    expect($result->failed())->toBeTrue()
-        ->and($result->output().$result->errorOutput())->toContain('forbidden on database [other_app]');
+    expect($result->output().$result->errorOutput())->toContain('forbidden on database [other_app]')
+        ->and($result->failed())->toBeTrue();
 });
 
 test('artisan db:wipe stops in production', function () {
@@ -119,6 +119,6 @@ test('artisan db:wipe stops in production', function () {
         ->env(['APP_ENV' => 'production'])
         ->run([PHP_BINARY, 'artisan', 'db:wipe', '--force']);
 
-    expect($result->failed())->toBeTrue()
-        ->and($result->output().$result->errorOutput())->toContain('forbidden in production');
+    expect($result->output().$result->errorOutput())->toContain('forbidden in production')
+        ->and($result->failed())->toBeTrue();
 });
