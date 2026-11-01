@@ -9,15 +9,25 @@ $ErrorActionPreference = 'Stop'
 if (-not $Root) { $Root = Get-PranataRepoRoot }
 # powershell -File passes a comma list as one string.
 $Paths = @($Paths | ForEach-Object { $_ -split ',' } | Where-Object { $_ })
+$mode = Get-PranataEffectiveMode $Root
 
 foreach ($path in $Paths) {
+    if ($path -match '[*?\[\]]|^:') { throw "Explicit file paths only, no patterns: $path" }
+    $relative = $path -replace '\\', '/'
+    if ($relative -match '(^|/)\.\.(/|$)|^/|^[A-Za-z]:') { throw "Repository-relative paths only: $path" }
+    # Section 11: guardrail paths stay read-only in AUTONOMOUS mode, also through this script.
+    if ($mode -eq 'AUTONOMOUS' -and ($relative -cmatch $script:GuardPathRegex -or $relative -match '^\.pranata/')) {
+        throw "Guardrail path is read-only in AUTONOMOUS mode: $path"
+    }
     $full = Join-Path $Root $path
     if (Test-Path -LiteralPath $full -PathType Container) { throw "Explicit file paths only, not a folder: $path" }
+    # Literal pathspecs: Git must never expand anything passed here.
+    $literal = ":(literal)$path"
     if (-not (Test-Path -LiteralPath $full)) {
-        & git -C $Root rm --cached --quiet --ignore-unmatch -- $path
+        & git -C $Root rm --cached --quiet --ignore-unmatch -- $literal
         continue
     }
-    $eol = (& git -C $Root ls-files --eol --cached --others --exclude-standard -- $path) | Select-Object -First 1
+    $eol = (& git -C $Root ls-files --eol --cached --others --exclude-standard -- $literal) | Select-Object -First 1
     if (-not $eol) { throw "Ignored by Git, not staged: $path" }
     if ($eol -notmatch '^i/(\S*)\s+w/(\S*)') { throw "Unexpected eol report: $eol" }
     $index = $Matches[1]
@@ -32,7 +42,7 @@ foreach ($path in $Paths) {
         }
         [IO.File]::WriteAllBytes($full, $output.ToArray())
     }
-    & git -c core.autocrlf=false -C $Root add -- $path
+    & git -c core.autocrlf=false -C $Root add -- $literal
     if ($LASTEXITCODE -ne 0) { throw "git add failed: $path" }
 }
 & git -C $Root diff --cached --stat

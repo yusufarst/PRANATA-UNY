@@ -20,7 +20,6 @@
       "PowerShell(git fetch*)",
       "PowerShell(git cat-file*)",
       "PowerShell(git config user.*)",
-      "PowerShell(git -c core.autocrlf=false add *)",
       "PowerShell(git -c core.autocrlf=false commit *)",
       "PowerShell(git -c commit.gpgsign=false -c core.autocrlf=false commit *)",
       "PowerShell(git push -u origin *)",

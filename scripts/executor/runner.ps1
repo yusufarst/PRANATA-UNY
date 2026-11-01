@@ -210,6 +210,7 @@ function Get-StepOutcome($Step) {
 function Save-WipCheckpoint($Checkpoint) {
     $branch = (& git -C $Root rev-parse --abbrev-ref HEAD)
     if ($branch -in @('main', 'HEAD') -or -not $Checkpoint.task_id) { return }
+    if (Get-PranataLockHolder $paths.StepLock) { Write-RunnerLog 'WIP commit skipped: the step is still alive'; return }
     if (-not (& git -C $Root status --porcelain)) { return }
     if ($Checkpoint.branch -and $branch -ne $Checkpoint.branch) {
         Write-RunnerLog "WIP commit skipped: on $branch, checkpoint names $($Checkpoint.branch); changes remain in the working tree"

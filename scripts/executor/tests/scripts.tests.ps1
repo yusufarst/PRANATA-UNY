@@ -37,7 +37,7 @@ try {
         @('ReviewSha', 'old', '8.1.3'), @('ReviewStatus', 'PENDING', '8.1.3'), @('OpenBlockingFindings', 1, '8.1.3'), @('IndependentReviewDone', $false, '8.1.3'),
         @('CodexStatus', 'TIMEOUT', '8.1.3'), @('CodexStatus', 'FAILED', '8.1.3'), @('MainIsAncestor', $false, '8.1.4'), @('CheckedMainSha', 'old', '8.1.4'),
         @('GuardPathsTouched', @('.claude/settings.json'), '8.1.6'), @('CommitIdentityProblems', @('aaa author is x'), 'GOV-08'),
-        @('PrMergeable', 'CONFLICTING', '8.1.5'), @('PrTextProblem', $true, 'GOV-08'), @('ReconcileScopeOk', $false, '8.3'), @('TaskId', $null, 'task:'), @('RiskClass', $null, 'task:'), @('TaskStatus', 'DONE', 'task:'), @('TaskStatus', 'BLOCKED', 'task:'), @('TaskStatus', $null, 'task:')
+        @('PrMergeable', 'CONFLICTING', '8.1.5'), @('PrTextProblem', $true, 'GOV-08'), @('ReconcileScopeOk', $false, '8.3'), @('TaskId', $null, 'task:'), @('RiskClass', $null, 'task:'), @('TaskStatus', 'DONE', 'task:'), @('TaskStatus', 'BLOCKED', 'task:'), @('CheckpointTaskId', 'TASK-999', 'task:'), @('TaskStatus', $null, 'task:')
     )
     foreach ($row in $negatives) {
         $facts = $good.Clone()
@@ -123,6 +123,7 @@ $log = Join-Path $PWD '.pranata\stub-calls.log'
 Add-Content -LiteralPath $log -Value (($args -join ' ') + ' MODE=' + $env:PRANATA_EXECUTOR_MODE + ' TOKEN=' + [bool]$env:GH_TOKEN + ' GITCFG=' + $env:GIT_CONFIG_COUNT)
 if (Test-Path (Join-Path $PWD '.pranata\stub-auth-error')) { Write-Output '{"type":"result","subtype":"success","is_error":true,"session_id":"s-auth","result":"Failed to authenticate"}'; exit 1 }
 if (Test-Path (Join-Path $PWD '.pranata\stub-rate-limit')) { Write-Output '{"type":"result","is_error":true,"session_id":"s-limit","result":"usage limit reached"}'; exit 1 }
+if (Test-Path (Join-Path $PWD '.pranata\stub-critical')) { Start-Process -FilePath 'cmd.exe' -ArgumentList '/c ping -n 14 127.0.0.1 >nul & rem merge-verified' -NoNewWindow; Start-Sleep -Seconds 14 }
 if (Test-Path (Join-Path $PWD '.pranata\stub-sleep')) { Start-Sleep -Seconds 120 }
 if (Test-Path (Join-Path $PWD '.pranata\stub-raise-hold')) { Set-Content -LiteralPath (Join-Path $PWD 'late.txt') -Value x -Encoding ASCII; Set-Content -LiteralPath (Join-Path $PWD '.pranata\executor\hold.json') -Value '{"mode":"IMMEDIATE_SAFE_SHUTDOWN"}' -Encoding ASCII }
 $status = '{\"task\":\"TASK-999\",\"stage\":\"IN_PROGRESS\",\"result\":\"progressed\",\"next\":\"lanjut langkah berikut\"}'
@@ -295,6 +296,21 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
     Assert (@(Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'claude-stub' }).Count -eq 0) 'runner: step process tree is gone after timeout'
     Remove-Item -LiteralPath (Join-Path $clone '.pranata\stub-sleep')
 
+    # A step stuck inside commit, push or merge: left alone, hold raised, and no WIP commit while it lives.
+    $cpC = Get-PranataCheckpoint $clone; $cpC.mode = 'AUTONOMOUS'; $cpC.stage = 'IN_PROGRESS'; $cpC.wait_until = $null; $cpC.branch = (& git -C $clone rev-parse --abbrev-ref HEAD); Save-PranataCheckpoint $clone $cpC
+    Set-Content -LiteralPath (Join-Path $clone '.pranata\stub-critical') -Value x -Encoding ASCII
+    Set-Content -LiteralPath (Join-Path $clone 'dirty-during-step.txt') -Value x -Encoding ASCII
+    $headBefore = (& git -C $clone rev-parse HEAD)
+    $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Root', $clone, '-ClaudeCommand', $stub, '-TokenFile', $tokenFile, '-StepTimeoutMinutes', '0.05')
+    Assert ($r.Out -match 'HOLD written') "runner: stuck critical step raises a hold ($($r.Out))"
+    Assert ($r.Out -match 'WIP commit skipped: the step is still alive' -and (& git -C $clone rev-parse HEAD) -eq $headBefore) 'runner: no WIP commit while the step lives'
+    # The harness returns only once the step closed its output, so the live check above is the proof; the file must remain.
+    Assert (Test-Path -LiteralPath $state.StepLock) 'runner: step.lock is left in place for a stuck step'
+    Remove-Item -LiteralPath (Join-Path $clone '.pranata\stub-critical')
+    Remove-Item -LiteralPath (Join-Path $clone 'dirty-during-step.txt')
+    Remove-Item -LiteralPath $state.StepLock -ErrorAction SilentlyContinue
+    [void](Invoke-Script (Join-Path $scriptsDir 'release-hold.ps1') @('-Root', $clone))
+
     # A live step outliving a dead runner blocks both a new runner and the watcher. This process stands in for the step.
     Write-PranataFileAtomic $state.StepLock (New-PranataProcessStamp $PID)
     $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Once', '-Root', $clone, '-ClaudeCommand', $stub, '-TokenFile', $tokenFile)
@@ -447,6 +463,25 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
     Assert (((& git -C $eolRepo ls-files --eol lf.txt) -match '^i/lf') -and ((& git -C $eolRepo ls-files --eol new.txt) -match '^i/lf')) 'stage: blobs stay LF'
     $s = Invoke-Script (Join-Path $scriptsDir 'stage.ps1') @('-Paths', '.', '-Root', $eolRepo)
     Assert ($s.Code -ne 0) 'stage: a folder is refused'
+
+    $s = Invoke-Script (Join-Path $scriptsDir 'stage.ps1') @('-Paths', '*.txt', '-Root', $eolRepo)
+    Assert ($s.Code -ne 0) 'stage: a wildcard is refused'
+    $s = Invoke-Script (Join-Path $scriptsDir 'stage.ps1') @('-Paths', '../outside.txt', '-Root', $eolRepo)
+    Assert ($s.Code -ne 0) 'stage: a path outside the repository is refused'
+    [void](New-Item -ItemType Directory -Path (Join-Path $eolRepo '.claude') -Force)
+    Set-Content -LiteralPath (Join-Path $eolRepo '.claude\settings.json') -Value '{}' -Encoding ASCII
+    $savedStageMode = $env:PRANATA_EXECUTOR_MODE
+    $env:PRANATA_EXECUTOR_MODE = 'AUTONOMOUS'
+    $s = Invoke-Script (Join-Path $scriptsDir 'stage.ps1') @('-Paths', '.claude/settings.json', '-Root', $eolRepo)
+    $env:PRANATA_EXECUTOR_MODE = $savedStageMode
+    Assert ($s.Code -ne 0 -and -not ((& git -C $eolRepo diff --cached --name-only) -contains '.claude/settings.json')) 'stage: guardrail path refused in AUTONOMOUS mode'
+    Remove-Item -LiteralPath (Join-Path $eolRepo '.claude') -Recurse -Force
+    Assert (((& git -C $eolRepo diff --cached --name-only --diff-filter=D) | Measure-Object).Count -eq 0) 'stage: a wildcard deletes nothing from the index'
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'gone.txt'), "x`n")
+    & git -c core.autocrlf=false -C $eolRepo add gone.txt 2>$null
+    Remove-Item -LiteralPath (Join-Path $eolRepo 'gone.txt')
+    $s = Invoke-Script (Join-Path $scriptsDir 'stage.ps1') @('-Paths', 'gone.txt', '-Root', $eolRepo)
+    Assert ($s.Code -eq 0 -and -not ((& git -C $eolRepo diff --cached --name-only) -contains 'gone.txt')) 'stage: a really deleted file is staged as such'
 
     # WIP commit on a CRLF working copy touches only the real change.
     $state2 = Initialize-PranataStateDirs $eolRepo

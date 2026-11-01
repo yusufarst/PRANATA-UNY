@@ -8,7 +8,7 @@ $script:OwnRepo = 'yusufarst/PRANATA-UNY'
 $script:SandboxRepo = 'yusufarst/pranata-uny-sandbox-[a-z0-9-]+'
 $script:GuardPaths = '(^|[\\/\s"''])(\.github[\\/]workflows|\.claude|\.githooks|scripts[\\/]executor)([\\/\s"'']|$)|\.pranata[\\/]executor[\\/]hold\.json'
 $script:RuntimeDir = '(?i)\.pranata([\\/]executor)?[\\/]?\*?(["''\s]|$)'
-$script:WriteVerbs = '(?i)\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Expand-Archive|sc|ac|ni|ri|mi|cpi|rni|del|erase|rm|rmdir|mv|cp|ren|tee|touch|sed\s+-i|git\b.*\b(rm|mv|checkout|restore|apply|add|update-index|stash|reset|cherry-pick|merge|pull))\b|>|::(Write|Delete|Move|Copy|Replace|Create|Append|Open)'
+$script:WriteVerbs = '(?i)\b(Set-Content|Add-Content|Out-File|New-Item|Remove-Item|Move-Item|Copy-Item|Rename-Item|Clear-Content|Expand-Archive|sc|ac|ni|ri|mi|cpi|rni|del|erase|rm|rmdir|mv|cp|ren|tee|touch|sed\s+-i|git\b.*\b(rm|mv|checkout|restore|apply|add|update-index|stash|reset|cherry-pick|merge|pull))\b|stage\.ps1|>|::(Write|Delete|Move|Copy|Replace|Create|Append|Open)'
 
 function New-PranataVerdict([string]$Decision, [string]$Category, [string]$Reason) {
     return @{ Decision = $Decision; Category = $Category; Reason = $Reason }
@@ -133,8 +133,8 @@ function Test-PranataGit {
         $flag = $GitArgs[$i]
         if ($flag -in @('-C', '-c', '--git-dir', '--work-tree', '--namespace', '--exec-path')) {
             # The branch fact describes the hook's cwd; another directory makes HEAD unknown.
-            if ($flag -eq '-C') { $SwitchesBranch = $true }
-            if ($flag -eq '-c' -and $i + 1 -lt $GitArgs.Count) { $configOverrides += $GitArgs[$i + 1] }
+            if ($flag -ceq '-C') { $SwitchesBranch = $true }
+            if ($flag -ceq '-c' -and $i + 1 -lt $GitArgs.Count) { $configOverrides += $GitArgs[$i + 1] }
             if ($flag -in @('--git-dir', '--work-tree', '--exec-path')) {
                 return (Deny 'git-repo-redirect' "git $flag is forbidden.")
             }
@@ -187,6 +187,9 @@ function Test-PranataGit {
             }
         }
         'commit' {
+            if (($configOverrides -match '(?i)^core\.autocrlf=false') -and ($rest -match '^(-[a-zA-Z]*a[a-zA-Z]*|--all)$')) {
+                return (Deny 'git-unsafe-stage' 'commit -a with core.autocrlf=false rewrites line endings; use scripts\executor\stage.ps1.')
+            }
             foreach ($a in $rest) {
                 if ($a -match '^(--no-verify|--amend|--author.*|--reset-author)$' -or $a -match '^-[a-zA-Z]*n[a-zA-Z]*$') {
                     return (Deny 'git-commit-forbidden' "git commit $a is forbidden.")
@@ -194,8 +197,8 @@ function Test-PranataGit {
             }
         }
         'add' {
-            if (($configOverrides -match '(?i)^core\.autocrlf=false') -and ($rest -match '^(-A|--all|-u|--update|\.|:/|\*)$')) {
-                return (Deny 'git-bulk-stage' 'Bulk add with core.autocrlf=false rewrites line endings; use scripts\executor\stage.ps1.')
+            if ($configOverrides -match '(?i)^core\.autocrlf=false') {
+                return (Deny 'git-unsafe-stage' 'Staging a CRLF working copy with core.autocrlf=false rewrites line endings; use scripts\executor\stage.ps1.')
             }
         }
         'reset' { if ($rest -contains '--hard') { return (Deny 'git-destructive' 'git reset --hard is forbidden.') } }

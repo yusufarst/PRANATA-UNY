@@ -65,6 +65,7 @@ $reconcileOk = (-not $task.Reconcile) -or (Test-PranataReconcileScope $changed $
 $remoteMain = ((& git -C $Root ls-remote origin refs/heads/main) -split '\s+')[0]
 
 $facts = @{
+    CheckpointTaskId = (Get-PranataCheckpoint $Root).task_id
     Bootstrap = [bool]$Bootstrap; Mode = $mode; TaskId = $task.TaskId; RiskClass = $riskClass; TaskStatus = $taskStatus
     Authorized = (Test-PranataAuthorizationText $records $task.TaskId); ReconcileScopeOk = $reconcileOk
     PrState = $prInfo.state; PrBase = $prInfo.baseRefName; IsDraft = [bool]$prInfo.isDraft; PrMergeable = $prInfo.mergeable

@@ -11,6 +11,7 @@ function Get-PranataMergeFailures {
     # A branch name is chosen by the agent; a finished or stopped Task cannot be merged under it. TODO stays valid
     # because section 2 records READY in TASK_PLAN, so the contract on main still says TODO during the Task.
     if ($Facts.TaskStatus -notin @('TODO', 'READY', 'IN_PROGRESS', 'VERIFYING')) { [void]$failures.Add("task: contract status on main is '$($Facts.TaskStatus)'") }
+    if ($Facts.CheckpointTaskId -and $Facts.CheckpointTaskId -ne $Facts.TaskId) { [void]$failures.Add("task: PR names $($Facts.TaskId), checkpoint names $($Facts.CheckpointTaskId)") }
     if ($Facts.Bootstrap) {
         if ($Facts.Mode -ne 'SUPERVISED') { [void]$failures.Add('bootstrap: only allowed in a SUPERVISED session') }
         if ($Facts.TaskId -notin $bootstrapTasks) { [void]$failures.Add("bootstrap: not allowed for $($Facts.TaskId) (only TASK-001 to TASK-004)") }
