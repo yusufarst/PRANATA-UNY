@@ -8,8 +8,9 @@ function Get-PranataMergeFailures {
 
     if (-not $Facts.TaskId) { [void]$failures.Add('task: PR branch does not name a Task') }
     if ($Facts.RiskClass -notin @('LOW', 'STANDARD', 'HIGH')) { [void]$failures.Add("task: risk class '$($Facts.RiskClass)' could not be read from the contract on main") }
-    # A branch name is chosen by the agent; a finished or not yet eligible Task on main cannot be merged under it.
-    if ($Facts.TaskStatus -notin @('READY', 'IN_PROGRESS', 'VERIFYING')) { [void]$failures.Add("task: contract status on main is '$($Facts.TaskStatus)'") }
+    # A branch name is chosen by the agent; a finished or stopped Task cannot be merged under it. TODO stays valid
+    # because section 2 records READY in TASK_PLAN, so the contract on main still says TODO during the Task.
+    if ($Facts.TaskStatus -notin @('TODO', 'READY', 'IN_PROGRESS', 'VERIFYING')) { [void]$failures.Add("task: contract status on main is '$($Facts.TaskStatus)'") }
     if ($Facts.Bootstrap) {
         if ($Facts.Mode -ne 'SUPERVISED') { [void]$failures.Add('bootstrap: only allowed in a SUPERVISED session') }
         if ($Facts.TaskId -notin $bootstrapTasks) { [void]$failures.Add("bootstrap: not allowed for $($Facts.TaskId) (only TASK-001 to TASK-004)") }

@@ -37,7 +37,7 @@ try {
         @('ReviewSha', 'old', '8.1.3'), @('ReviewStatus', 'PENDING', '8.1.3'), @('OpenBlockingFindings', 1, '8.1.3'), @('IndependentReviewDone', $false, '8.1.3'),
         @('CodexStatus', 'TIMEOUT', '8.1.3'), @('CodexStatus', 'FAILED', '8.1.3'), @('MainIsAncestor', $false, '8.1.4'), @('CheckedMainSha', 'old', '8.1.4'),
         @('GuardPathsTouched', @('.claude/settings.json'), '8.1.6'), @('CommitIdentityProblems', @('aaa author is x'), 'GOV-08'),
-        @('PrMergeable', 'CONFLICTING', '8.1.5'), @('PrTextProblem', $true, 'GOV-08'), @('ReconcileScopeOk', $false, '8.3'), @('TaskId', $null, 'task:'), @('RiskClass', $null, 'task:'), @('TaskStatus', 'DONE', 'task:'), @('TaskStatus', 'TODO', 'task:'), @('TaskStatus', $null, 'task:')
+        @('PrMergeable', 'CONFLICTING', '8.1.5'), @('PrTextProblem', $true, 'GOV-08'), @('ReconcileScopeOk', $false, '8.3'), @('TaskId', $null, 'task:'), @('RiskClass', $null, 'task:'), @('TaskStatus', 'DONE', 'task:'), @('TaskStatus', 'BLOCKED', 'task:'), @('TaskStatus', $null, 'task:')
     )
     foreach ($row in $negatives) {
         $facts = $good.Clone()
