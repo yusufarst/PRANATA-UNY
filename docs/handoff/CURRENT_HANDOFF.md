@@ -1,38 +1,63 @@
 # Current handoff
 
-Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: LEAD PLANNING AGENT (GOV-10) | Phase: execution start | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
+Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-001 DONE | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
 
 ## Current state
 
 Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRANATA-UNY`, specifically published `main`, is the durable shared Source of Truth; confirm it with `git ls-remote origin refs/heads/main` before acting.
 
-- P0–P11 **DONE — APPROVED** at `851013f` (APPR-005, APPR-006); Owner answers D-01–D-29 in [OWNER_DECISION_PACKAGE §0](OWNER_DECISION_PACKAGE.md#0-jawaban-owner-2026-11-01).
-- Publication (AUTH-011, COMPLETED): Verified on 2026-11-01 with `git ls-remote origin refs/heads/main`: `main` fast-forwarded `0e3f7de` → `167864c` (approved baseline with FRZ-001/AUTH-013; GitHub shows PR #1 merged at 2026-11-01T11:32:25Z with merge commit `851013f`, i.e. no merge commit) → `6b880b4` (PCR-001 as reviewed) → the follow-up state-transition commit carrying the [publication record](../00-governance/APPROVAL_RECORDS.md#auth-011-and-pcr-001-publication-record).
-- Planning Freeze **FRZ-001** effective; Task Baseline 78 Tasks; TASK-001 READY; PCR-001 PUBLISHED; no Task blocked.
-- Execution **AUTHORIZED — AUTH-013** (TASK-001–TASK-078, maximum safe autonomy). Application implementation: NONE yet.
+- P0–P11 **DONE — APPROVED** (APPR-005, APPR-006); Planning Freeze **FRZ-001** effective; PCR-001 published; execution authorized by **AUTH-013**.
+- **TASK-001 DONE** (1/78): executor guardrails, runner, watcher and capability report on `main` at `170c1f1`. Application implementation: NONE yet.
+- Executor mode: **SUPERVISED**. AUTONOMOUS is not active: it needs TASK-002–TASK-005 DONE, the `main` ruleset and the runner token (C-15).
+- **Execution is paused for planning:** Owner decision 2026-11-01 forbids local Docker, which changes TASK-002 and TASK-003. See the proposal below.
 - GAP-001–GAP-029: OPEN (resolved NONE).
 
 ## Handoff (AICWDF §36)
 
 | Field | Current value |
 |---|---|
-| Current phase | Execution start; approved phases 12/12. |
-| Current Task / status | TASK-001 READY (bootstrap, SUPERVISED). |
-| Last completed action | 2026-11-01: baseline and PCR-001 published by verified fast-forward; PCR-001 delta review APPROVED WITH CONDITIONS recorded; conditions C1 (publication statements reconciled) and C2 (single inclusion event, TASK-071 TAC-11) applied; TASK-025, TASK-066, TASK-069, TASK-071 unblocked. |
-| Evidence | [APPROVAL_RECORDS](../00-governance/APPROVAL_RECORDS.md#pcr-001); [P0_P11_PLANNING_QUALITY_GATE](../00-governance/evidence/P0_P11_PLANNING_QUALITY_GATE.md#final-review-and-owner-approval). |
-| Task plan | Baseline 78 · Current 78 · DONE 0 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 77 · SUPERSEDED 0 · 0%. |
-| Open blockers | One-time Owner steps during bootstrap only: start the Claude Code session, answer permission prompts, apply the `main` ruleset after `ci-gate` is proven on TASK-005, install the restricted runner token (D-27). The 84-page BMU PDF stays on the Owner's PC for the TASK-071 local parity check. |
+| Current phase | Execution; approved phases 12/12. |
+| Current Task / status | None active. TASK-002 and TASK-003 BLOCKED pending the plan change below. |
+| Last completed action | 2026-11-01: TASK-001 merged by verified fast-forward (PR #2, PR #3) and reconciled. |
+| Evidence | [TASK-001 COMPLETION EVIDENCE](../11-tasks/TASK-001.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
+| Task plan | Baseline 78 · Current 78 · DONE 1 · READY 0 · IN_PROGRESS 0 · BLOCKED 2 · VERIFYING 0 · TODO 75 · SUPERSEDED 0 · 1%. |
+| Open blockers | (1) Claude Planning: publish the plan change below. (2) Owner, after TASK-005: apply the `main` ruleset. (3) Owner: install the restricted runner token with `scripts/executor/install-runner-token.ps1`, then `scripts/executor/tests/c15.probe.ps1` proves C-15. |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
-| Decisions made | OD-01–OD-36, GOV-01–GOV-12 ([DECISION_INDEX](../00-governance/DECISION_INDEX.md)); D-01–D-29 answered (U-012). |
-| Decisions pending | None for executable Tasks. Production purchase, domain, go-live and paid services remain Owner decisions when reached. |
-| Toolchain | Planning used Git, GitHub CLI, official JDIH listings via web search and Python standard-library scripts outside the repository. |
-| Cost | New recurring cost: NONE (target Rp0). Paid exception: NONE. |
+| Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, plus the Owner decision below (not yet in DECISION_INDEX; owned by Planning). |
+| Decisions pending | None for the Owner on this change unless Planning raises one. |
+| Toolchain | See [TOOLCHAIN — Executor machine facts](../00-governance/TOOLCHAIN.md). Stage with `scripts/executor/stage.ps1`; a bulk add under `core.autocrlf=false` rewrites line endings on this machine. |
+| Machine | RAM 7.2 GB, 0.1–1.1 GB free during TASK-001 without any PRANATA container; PHP, Composer and psql not installed. Other projects were not touched. |
+| Cost | New recurring cost: NONE. Paid exception: NONE. |
 | Database | Direct production DB touched: NO. Schema/migrations: none yet. |
-| Next READY Task | TASK-001. |
+| Cleanup for the Owner | Public synthetic sandbox `yusufarst/pranata-uny-sandbox-c10` may be deleted by the Owner; the executor token cannot delete repositories. |
+| Next READY Task | None until the plan change is published; then TASK-002. |
+
+## TASK PLAN CHANGE proposal — Docker-free local development (for Claude Planning)
+
+Status: **PROPOSED**, not applied. No contract was changed by the executor. Owner decision 2026-11-01: no local Docker or Docker Compose for PRANATA (not even read-only), no self-hosted runner on the Owner's PC. GitHub-hosted runners are the primary environment for resource-heavy verification; their service containers are allowed. Synthetic data only in public Actions. No paid service. Gates and acceptance criteria stay.
+
+**Sequencing problem to solve.** PHP, Composer and PostgreSQL are absent locally, and §8.4 expects the full verification pyramid locally for TASK-001–TASK-004, while `ci.yml` only arrives in TASK-005. So TASK-002 and TASK-004 are affected as well as TASK-003.
+
+**Proposed minimum revisions:**
+
+| Document | Change |
+|---|---|
+| TASK-003 | Replace Compose scope with a Docker-free workflow: remove `compose.yaml`, `docker/`, `scripts/dev` up/down, the bind-mount measurement and the port checks. Keep `DatabaseGuard` and `.env.example`. Add a minimal GitHub Actions job with a PostgreSQL service that runs Pest on `pranata_test` and `migrate:fresh`, and a Gotenberg service reachable only from the job. Rewrite TAC-01 (no local container dependency), TAC-03 (Pest on `pranata_test`, run URL as evidence) and TAC-04 (Gotenberg reachable from the job, on GitHub infrastructure). Keep TAC-02 and TAC-05. |
+| TASK-002 | TAC-01 "berjalan lokal": prove boot and the login page on a GitHub-hosted runner with PostgreSQL. Decide how the skeleton is generated without a local PHP: project-scoped portable PHP and Composer under `.pranata/tools/` (no PATH or global change), or a workflow that generates it. Line 47 "Lingkungan Docker (TASK-003)" follows TASK-003. |
+| TASK-004 | TAC-01 `composer qa` and `npm run qa`: evidence from a GitHub-hosted run. |
+| TASK-005 | Absorb or replace the minimal workflow from TASK-002/TASK-003 into `ci.yml`. |
+| EXECUTOR_OPERATING_MODEL | §5 guardrail paths: allow `.github/workflows/**` for the Tasks that now need it. §8.4: bootstrap evidence may come from GitHub-hosted runs. §10: drop `docker compose -p pranata stop`. §11 Docker row: all local Docker denied; no self-hosted runner. §13: retire C-14. |
+| EXECUTION_CONTEXT §5, EXECUTOR_BOOTSTRAP §3, INFRASTRUCTURE §2, TEST_STRATEGY §4 (rows "Pest lokal", "E2E lokal/CI", resource note), TOOLCHAIN | Local environment without containers; `pranata_*` databases exist on CI service containers only. |
+| QUALITY_GATES §2.1 and §4, DOCUMENT_ENGINE, ADR-0005 | Keep the architecture. Document Tasks test Gotenberg on GitHub-hosted runners. Production deployment stays a separate Owner decision. |
+| TASK-071 local parity check | The private 84-page BMU PDF never goes to public Actions; confirm how the parity check runs without a local stack. |
+
+**Must stay true:** PostgreSQL behaviour (`pg_trgm`, `ltree`, `btree_gist`, numeric, `timestamptz`, roles), database safety, application functionality and every mandatory gate. Tests that did not run are never marked as passed.
+
+**Already applied in the guardrails (TASK-001):** the guard denies every local Docker call; the runner allowlist holds none.
 
 ## Exact next safe action
 
-**Owner — start execution (once):** on the Windows PC, `git clone https://github.com/yusufarst/PRANATA-UNY.git` if needed, then `git switch main && git pull --ff-only`, open Claude Code in that folder and paste the prompt of [EXECUTOR_BOOTSTRAP §5.0](../11-tasks/EXECUTOR_BOOTSTRAP.md#50-mulai-eksekusi-auth-013). The executor then runs TASK-001–TASK-005 in bootstrap mode and TASK-006–TASK-078 autonomously under AUTH-013.
+**Owner:** pass this proposal to Claude Planning. **Claude Planning:** publish the plan change under FRZ-001 change control. **Executor, after publication:** verify `origin/main`, mark TASK-002 READY and continue in SUPERVISED bootstrap mode. Do not start TASK-002 or TASK-003 before that.
 
 ## DO NOT DO
 

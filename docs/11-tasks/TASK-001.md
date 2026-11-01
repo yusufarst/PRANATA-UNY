@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: READY
-EXECUTION STAGE: READY
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: NO
@@ -197,19 +197,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint — PSScriptAnalyzer tidak terpasang; parser AST dan pemeriksaan ASCII pada semua skrip
+- Typecheck: N/A, aplikasi belum ada
+- [x] Relevant automated tests
+- [x] Authorization — uji tolak guard dan kewenangan GitHub
+- Route integrity: N/A, tanpa rute
+- Interaction behavior: N/A, tanpa UI
+- Browser E2E if required: N/A, tanpa UI
+- Responsive/adaptive if required: N/A, tanpa UI
+- Visual breathing room/density if UI: N/A, tanpa UI
+- Production build: N/A, aplikasi belum ada
+- [x] Security checks if required
+- Database safety review: N/A, tanpa basis data; uji keputusan guard saja
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -224,18 +224,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: pada `170c1f1`, Windows PowerShell 5.1: `guard.tests.ps1` PASS (TAC-01, TAC-06: daftar perintah terlarang, kontrak hook, gagal-tertutup); `scripts.tests.ps1` 141 lulus, 0 gagal (TAC-02, TAC-03, TAC-05, TAC-06: gerbang merge, `merge-verified` end to end ke origin lokal, runner, hold kedua mode, resume, kunci, watcher, commit-msg). Probe nyata dijalankan sebelum perbaikan review terakhir dan tidak diulang.
+- Build result: N/A, aplikasi belum ada.
+- Route evidence: N/A.
+- Interaction evidence: N/A.
+- Browser evidence: N/A.
+- Localization evidence: N/A.
+- Review status (Codex / independen, temuan P0–P3): tanpa P0. Independen: 7 P1, 6 P2, 2 P3, lalu dua verifikasi delta (1 P1 + 2 P2 + 1 P3, lalu 1 P1 + 2 P2 + 1 P3). Codex `COMPLETED_WITH_FINDINGS`: 2 P1 + 1 P2 pada `bafb717`, 1 P1 pada `7ca911a`. Semua valid dan diperbaiki beserta uji. Tidak ada run review baru pada commit perbaikan terakhir `72b4250` dan `170c1f1`; keduanya diverifikasi uji. Dua hal tersisa dan diterima: nama cabang dipilih agen (dicocokkan dengan checkpoint bila ada, status kontrak diperiksa, ruleset menyusul), dan satu langkah `done` dapat memakai sampai 3 giliran sebelum berhenti.
+- Cost evidence/exception if applicable: tanpa biaya baru; panggilan model uji memakai paket yang ada.
+- Files changed: `.claude/**`, `.githooks/commit-msg`, `.github/pull_request_template.md`, `.gitignore`, `scripts/executor/**`, `docs/11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md`, status C-xx di EXECUTOR_OPERATING_MODEL, fakta di TOOLCHAIN.
+- PR / CI run: [PR #2](https://github.com/yusufarst/PRANATA-UNY/pull/2), [PR #3](https://github.com/yusufarst/PRANATA-UNY/pull/3); keduanya MERGED lewat `merge-verified.ps1 -Bootstrap`. CI: belum ada menurut §8.4.
+- Commit SHA: `main` = `170c1f126b801f1ae0294e4f4dd79296443d925c`.
+- Notes: TAC-04 dan TAC-07: [EXECUTOR_CAPABILITY_REPORT](evidence/EXECUTOR_CAPABILITY_REPORT.md). C-15 belum terbukti (menunggu token Owner), jadi mode otonom belum aktif. Tidur/bangun pada C-06 sengaja tidak diuji. Docker lokal tidak pernah dijalankan untuk PRANATA. `core.hooksPath` tingkat repositori diaktifkan dengan persetujuan Owner. Repositori sandbox `yusufarst/pranata-uny-sandbox-c10` masih ada dan menunggu dihapus Owner.
 
 ## SAFE NEXT TASK
 
