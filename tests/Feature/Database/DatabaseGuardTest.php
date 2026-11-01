@@ -1,9 +1,10 @@
 <?php
 
 use App\Modules\Platform\Support\DatabaseResetGuard;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Console\Events\CommandStarting;
+use Illuminate\Support\Facades\Process;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Tests\Support\DatabaseGuard;
 
 test('the test guard accepts only PRANATA test databases', function (string $database) {
@@ -62,29 +63,62 @@ test('the reset guard recognises destructive commands and their abbreviations', 
     [':', false],
 ]);
 
-test('migrate:fresh stops before touching a database outside the PRANATA set', function () {
-    Schema::create('guard_probe', fn ($table) => $table->id());
+/**
+ * Dispatch the event Artisan fires before a command, without running the command.
+ *
+ * @param  array<string, string>  $parameters
+ */
+function startCommand(string $command, array $parameters = []): void
+{
+    event(new CommandStarting($command, new ArrayInput($parameters), new NullOutput));
+}
+
+test('the reset guard listens for a destructive command on a foreign database', function () {
+    $original = config('database.connections.pgsql.database');
     config(['database.connections.pgsql.database' => 'other_app']);
 
-    expect(fn () => Artisan::call('migrate:fresh', ['--force' => true]))
-        ->toThrow(RuntimeException::class, 'other_app');
+    expect(fn () => startCommand('migrate:fresh'))
+        ->toThrow(RuntimeException::class, 'forbidden on database [other_app]');
 
-    expect(DB::table('information_schema.tables')->where('table_name', 'guard_probe')->exists())->toBeTrue();
+    config(['database.connections.pgsql.database' => $original]);
 });
 
-test('db:wipe through another connection name stops as well', function () {
-    expect(fn () => Artisan::call('db:wipe', ['--database' => 'missing_connection', '--force' => true]))
-        ->toThrow(RuntimeException::class);
+test('the reset guard listens for a destructive command through another connection', function () {
+    expect(fn () => startCommand('db:wipe', ['--database' => 'missing_connection']))
+        ->toThrow(RuntimeException::class, 'forbidden on database []');
 });
 
-test('destructive commands stop in production', function () {
-    Schema::create('guard_probe', fn ($table) => $table->id());
+test('the reset guard listens for a destructive command in production', function () {
     app()->detectEnvironment(fn () => 'production');
 
-    expect(fn () => Artisan::call('db:wipe', ['--force' => true]))
-        ->toThrow(RuntimeException::class, 'production');
+    expect(fn () => startCommand('db:wipe'))
+        ->toThrow(RuntimeException::class, 'forbidden in production');
 
     app()->detectEnvironment(fn () => 'testing');
+});
 
-    expect(Schema::hasTable('guard_probe'))->toBeTrue();
+test('the reset guard lets other commands and allowed databases through', function () {
+    startCommand('migrate:status');
+    startCommand('migrate:fresh');
+
+    expect(true)->toBeTrue();
+});
+
+// The event only fires for a real console run, so these two go through the artisan script itself.
+test('artisan migrate:fresh stops on a foreign database', function () {
+    $result = Process::path(base_path())
+        ->env(['DB_DATABASE' => 'other_app'])
+        ->run([PHP_BINARY, 'artisan', 'migrate:fresh', '--force']);
+
+    expect($result->failed())->toBeTrue()
+        ->and($result->output().$result->errorOutput())->toContain('forbidden on database [other_app]');
+});
+
+test('artisan db:wipe stops in production', function () {
+    $result = Process::path(base_path())
+        ->env(['APP_ENV' => 'production'])
+        ->run([PHP_BINARY, 'artisan', 'db:wipe', '--force']);
+
+    expect($result->failed())->toBeTrue()
+        ->and($result->output().$result->errorOutput())->toContain('forbidden in production');
 });
