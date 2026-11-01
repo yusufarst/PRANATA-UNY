@@ -180,6 +180,10 @@ $commands = @(
     @('guard-paths', 'deny', 'powershell -File scripts\executor\release-hold.ps1', 'AUTONOMOUS'),
     @('guard-paths', 'deny', 'powershell -File scripts\executor\merge-verified.ps1 -Pr 3 -Bootstrap', 'AUTONOMOUS'),
 
+    @('review', 'deny', 'git -c core.autocrlf=false add -A'),
+    @('review', 'deny', 'git -c core.autocrlf=false add .'),
+    @('review', 'allow', 'git add -A'),
+    @('review', 'allow', 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts\executor\stage.ps1 -Paths docs/x.md'),
     # Forms found by the PR review
     @('review', 'deny', 'git -c core.autocrlf=false checkout abc123 -- .claude/settings.json', 'AUTONOMOUS'),
     @('review', 'deny', 'git -C ../pranata-uny-worktrees/task-011 push origin HEAD'),

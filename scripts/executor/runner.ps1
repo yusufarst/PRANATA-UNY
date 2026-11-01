@@ -26,6 +26,7 @@ $allowedTools = @(
     'PowerShell(git *)', 'PowerShell(gh *)',
     'PowerShell(php artisan *)', 'PowerShell(composer *)', 'PowerShell(npm *)', 'PowerShell(npx *)',
     'PowerShell(powershell -NoProfile -File scripts\executor\status.ps1*)',
+    'PowerShell(powershell -NoProfile -File scripts\executor\stage.ps1*)',
     'PowerShell(powershell -NoProfile -File scripts\executor\merge-verified.ps1*)',
     'Bash(git *)', 'Bash(gh *)', 'Bash(php artisan *)', 'Bash(composer *)', 'Bash(npm *)', 'Bash(npx *)'
 ) -join ','
@@ -216,8 +217,9 @@ function Save-WipCheckpoint($Checkpoint) {
     }
     if (-not (Test-PranataIdentity $Root)) { Write-RunnerLog 'WIP commit skipped: Git identity mismatch (GOV-08)'; return }
     $taskSlug = ([string]$Checkpoint.task_id).ToLowerInvariant()
-    & git -c core.autocrlf=false -C $Root add -A
-    & git -c core.autocrlf=false -C $Root commit --quiet -m "wip(${taskSlug}): checkpoint $($Checkpoint.stage)"
+    # No autocrlf override here: with a bulk add it would rewrite every line of every CRLF working copy.
+    & git -C $Root add -A
+    & git -C $Root commit --quiet -m "wip(${taskSlug}): checkpoint $($Checkpoint.stage)"
     if ($LASTEXITCODE -ne 0) { Write-RunnerLog 'WIP commit failed; changes remain in the working tree'; return }
     $Checkpoint.head_sha = (& git -C $Root rev-parse HEAD)
     $Checkpoint.last_action = 'wip checkpoint commit during hold'

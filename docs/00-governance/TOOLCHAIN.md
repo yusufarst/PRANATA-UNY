@@ -43,9 +43,9 @@ Metadata/version probes only; these are machine capabilities, not installed PRAN
 
 The Codex workspace dependency bundle reported by the app is version `26.909.12148`; use its resolved paths for authorized document/source inspection as needed. Do not confuse bundled Python/document libraries with an application runtime or a verified Playwright setup.
 
-## Executor machine facts â€” TASK-001 (2026-11-01)
+## Executor machine facts — TASK-001 (2026-11-01)
 
-Windows PowerShell 5.1.26100, Git 2.55.0.windows.3 with global `core.autocrlf=true`, GitHub CLI 2.96.0, Claude Code 2.1.310, Node 24.18.0, npm 11.16.0; PHP, Composer and psql not installed; PSScriptAnalyzer not installed (AST parse and ASCII check used instead). RAM 7.2 GB. Local Docker is not used for PRANATA (Owner decision 2026-11-01). Claude Code hook and headless facts verified against the official docs on 2026-11-01 and by test: see [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). Windows PowerShell 5.1 mangles double quotes inside native arguments such as `gh --jq`: filter in PowerShell instead. Scripts stay ASCII only because 5.1 reads BOM-less files with the ANSI code page.
+Windows PowerShell 5.1.26100, Git 2.55.0.windows.3 with global `core.autocrlf=true`, GitHub CLI 2.96.0, Claude Code 2.1.310, Node 24.18.0, npm 11.16.0; PHP, Composer and psql not installed; PSScriptAnalyzer not installed (AST parse and ASCII check used instead). RAM 7.2 GB. Local Docker is not used for PRANATA (Owner decision 2026-11-01). Claude Code hook and headless facts verified against the official docs on 2026-11-01 and by test: see [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). Windows PowerShell 5.1 mangles double quotes inside native arguments such as `gh --jq`: filter in PowerShell instead. Stage with `scripts/executor/stage.ps1`: with global `core.autocrlf=true` the working copy of an LF blob is CRLF, and staging it unchanged under `core.autocrlf=false` would rewrite every line. Scripts stay ASCII only because 5.1 reads BOM-less files with the ANSI code page.
 
 ## Safe bootstrap policy
 

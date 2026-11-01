@@ -429,6 +429,37 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         Assert ($m.Code -eq 0 -and $m.Out -match 'MERGED: remote main') "merge: fast-forward performed ($($m.Out))"
         Assert ((& git -C $originM rev-parse refs/heads/main) -eq $shaM) 'merge: remote main equals the verified SHA'
     } finally { $env:PATH = $savedPath }
+    # GOV-09 on this machine: a CRLF working copy of an LF blob must not rewrite the blob.
+    $eolRepo = Join-Path $work 'eol'
+    & git init --quiet --initial-branch=main $eolRepo
+    & git -C $eolRepo config core.autocrlf true
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'lf.txt'), "one`ntwo`n")
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'other.txt'), "alpha`nbeta`n")
+    & git -c core.autocrlf=false -C $eolRepo add lf.txt other.txt 2>$null
+    & git -c core.autocrlf=false -C $eolRepo commit --quiet -m 'chore: seed'
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'lf.txt'), "one`r`ntwo`r`nthree`r`n")
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'other.txt'), "alpha`r`nbeta`r`n")
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'new.txt'), "fresh`r`n")
+    $s = Invoke-Script (Join-Path $scriptsDir 'stage.ps1') @('-Paths', 'lf.txt,new.txt', '-Root', $eolRepo)
+    Assert ($s.Code -eq 0) "stage: explicit paths accepted ($($s.Out))"
+    $num = (& git -C $eolRepo diff --cached --numstat) -join '|'
+    Assert ($num -match "^1\s+0\s+lf\.txt" -and $num -match "1\s+0\s+new\.txt" -and $num -notmatch 'other\.txt') "stage: only the real line changes are staged ($num)"
+    Assert (((& git -C $eolRepo ls-files --eol lf.txt) -match '^i/lf') -and ((& git -C $eolRepo ls-files --eol new.txt) -match '^i/lf')) 'stage: blobs stay LF'
+    $s = Invoke-Script (Join-Path $scriptsDir 'stage.ps1') @('-Paths', '.', '-Root', $eolRepo)
+    Assert ($s.Code -ne 0) 'stage: a folder is refused'
+
+    # WIP commit on a CRLF working copy touches only the real change.
+    $state2 = Initialize-PranataStateDirs $eolRepo
+    Add-Content -LiteralPath (Join-Path $eolRepo '.git\info\exclude') -Value '/.pranata/'
+    & git -C $eolRepo reset --quiet
+    & git -C $eolRepo switch --quiet -c chore/task-999-eol 2>$null
+    $cpE = New-PranataCheckpoint; $cpE.mode = 'AUTONOMOUS'; $cpE.task_id = 'TASK-999'; $cpE.stage = 'IN_PROGRESS'; $cpE.branch = 'chore/task-999-eol'; $cpE.next_action = 'x'
+    Save-PranataCheckpoint $eolRepo $cpE
+    [void](Invoke-Script (Join-Path $scriptsDir 'hold.ps1') @('-Mode', 'IMMEDIATE_SAFE_SHUTDOWN', '-Reason', 'uji', '-Root', $eolRepo))
+    $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Root', $eolRepo, '-ClaudeCommand', $stub, '-TokenFile', $tokenFile)
+    $wip = (& git -C $eolRepo show --numstat --format= HEAD) -join '|'
+    Assert ($wip -notmatch 'other\.txt' -and $wip -match 'lf\.txt') "hold: WIP commit does not rewrite line endings ($wip)"
+
     # Worktree in the disposable repo (C-13).
     $worktree = Join-Path $work 'pranata-uny-worktrees\task-011'
     & git -C $clone worktree add --quiet $worktree -b feature/task-011-x 2>$null

@@ -193,6 +193,11 @@ function Test-PranataGit {
                 }
             }
         }
+        'add' {
+            if (($configOverrides -match '(?i)^core\.autocrlf=false') -and ($rest -match '^(-A|--all|-u|--update|\.|:/|\*)$')) {
+                return (Deny 'git-bulk-stage' 'Bulk add with core.autocrlf=false rewrites line endings; use scripts\executor\stage.ps1.')
+            }
+        }
         'reset' { if ($rest -contains '--hard') { return (Deny 'git-destructive' 'git reset --hard is forbidden.') } }
         'clean' { return (Deny 'git-destructive' 'git clean is forbidden.') }
         'clone' { return (Deny 'git-clone' 'Cloning repositories is forbidden; only this repository is in scope.') }
