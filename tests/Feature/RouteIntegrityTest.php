@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\Route;
 
 /*
  * Routes that need no sign-in. The storage routes come from the framework and validate a signature themselves.
+ * The language choice only changes the caller's own session.
  */
 const PUBLIC_ROUTES = [
     'home',
+    'locale.update',
     'login',
     'login.store',
     'password.email',
@@ -25,7 +27,6 @@ const PUBLIC_ROUTES = [
  * Routes that act only on the signed-in user's own account, so they have no object to authorize.
  */
 const OWN_ACCOUNT_ROUTES = [
-    'appearance.edit',
     'dashboard',
     'logout',
     'password.confirm',

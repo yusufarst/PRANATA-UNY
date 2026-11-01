@@ -1,6 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { useIsTablet } from '@/hooks/use-mobile';
 import type { AppVariant } from '@/types';
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 
 export function AppShell({ children, variant = 'sidebar' }: Props) {
     const isOpen = usePage().props.sidebarOpen;
+    const isTablet = useIsTablet();
 
     if (variant === 'header') {
         return (
@@ -17,5 +19,12 @@ export function AppShell({ children, variant = 'sidebar' }: Props) {
         );
     }
 
-    return <SidebarProvider defaultOpen={isOpen}>{children}</SidebarProvider>;
+    return (
+        <SidebarProvider
+            defaultOpen={isOpen}
+            open={isTablet ? false : undefined}
+        >
+            {children}
+        </SidebarProvider>
+    );
 }

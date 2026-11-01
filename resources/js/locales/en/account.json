@@ -1,0 +1,66 @@
+{
+    "settings": {
+        "title": "Settings",
+        "intro": "Manage your profile and account settings",
+        "nav_label": "Settings",
+        "profile": "Profile",
+        "security": "Security"
+    },
+    "profile": {
+        "page_title": "Profile settings",
+        "heading": "Profile",
+        "intro": "Update your name and email address",
+        "name": "Name",
+        "name_placeholder": "Full name",
+        "email": "Email address",
+        "unverified": "Your email address is unverified.",
+        "resend": "Click here to resend the verification email.",
+        "sent": "A new verification link has been sent to your email address."
+    },
+    "delete": {
+        "heading": "Delete account",
+        "intro": "Delete your account and all of its data",
+        "warning": "Warning",
+        "caution": "Proceed with caution, this cannot be undone.",
+        "submit": "Delete account",
+        "confirm_title": "Are you sure you want to delete your account?",
+        "confirm_description": "Once the account is deleted, all of its data is permanently deleted too. Enter your password to confirm."
+    },
+    "security": {
+        "page_title": "Security settings",
+        "heading": "Change password",
+        "intro": "Make sure your account uses a long, random password",
+        "current": "Current password",
+        "new": "New password"
+    },
+    "two_factor": {
+        "heading": "Two-factor authentication",
+        "intro": "Manage your two-factor authentication settings",
+        "enabled_note": "When you log in, you will be asked for a code from the authenticator app on your phone.",
+        "disabled_note": "When two-factor authentication is enabled, you will be asked for a code from the authenticator app on your phone when you log in.",
+        "disable": "Disable 2FA",
+        "enable": "Enable 2FA",
+        "continue_setup": "Continue setup",
+        "modal_enabled_title": "Two-factor authentication enabled",
+        "modal_enabled_description": "Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.",
+        "modal_verify_title": "Verify the authentication code",
+        "modal_verify_description": "Enter the 6-digit code from your authenticator app",
+        "modal_setup_title": "Enable two-factor authentication",
+        "modal_setup_description": "To finish, scan the QR code or enter the setup key in your authenticator app",
+        "manual": "or enter the code manually",
+        "copy_key": "Copy the setup key",
+        "fetch_qr_failed": "The QR code could not be fetched.",
+        "fetch_key_failed": "The setup key could not be fetched.",
+        "fetch_codes_failed": "The recovery codes could not be fetched."
+    },
+    "recovery": {
+        "title": "2FA recovery codes",
+        "intro": "Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.",
+        "view": "View recovery codes",
+        "hide": "Hide recovery codes",
+        "regenerate": "Regenerate codes",
+        "list": "Recovery codes",
+        "loading": "Loading recovery codes",
+        "note": "Each code can be used once and is removed after use. If you need new codes, use the regenerate button above."
+    }
+}

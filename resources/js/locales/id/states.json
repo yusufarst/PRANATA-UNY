@@ -1,0 +1,13 @@
+{
+    "category": {
+        "draft": "Draf",
+        "waiting": "Menunggu",
+        "action": "Perlu tindakan Anda",
+        "revision": "Perlu perbaikan",
+        "approved": "Disetujui",
+        "completed": "Selesai",
+        "rejected": "Ditolak",
+        "blocked": "Menunggu pengesahan kebijakan",
+        "simulation": "Simulasi"
+    }
+}

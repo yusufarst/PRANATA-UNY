@@ -1,0 +1,66 @@
+{
+    "settings": {
+        "title": "Pengaturan",
+        "intro": "Kelola profil dan pengaturan akun Anda",
+        "nav_label": "Pengaturan",
+        "profile": "Profil",
+        "security": "Keamanan"
+    },
+    "profile": {
+        "page_title": "Pengaturan profil",
+        "heading": "Profil",
+        "intro": "Perbarui nama dan alamat email Anda",
+        "name": "Nama",
+        "name_placeholder": "Nama lengkap",
+        "email": "Alamat email",
+        "unverified": "Alamat email Anda belum terverifikasi.",
+        "resend": "Klik di sini untuk mengirim ulang email verifikasi.",
+        "sent": "Tautan verifikasi baru sudah dikirim ke alamat email Anda."
+    },
+    "delete": {
+        "heading": "Hapus akun",
+        "intro": "Hapus akun Anda beserta seluruh datanya",
+        "warning": "Peringatan",
+        "caution": "Lanjutkan dengan hati-hati, tindakan ini tidak dapat dibatalkan.",
+        "submit": "Hapus akun",
+        "confirm_title": "Yakin ingin menghapus akun Anda?",
+        "confirm_description": "Setelah akun dihapus, seluruh data di dalamnya ikut terhapus permanen. Masukkan password Anda untuk mengonfirmasi."
+    },
+    "security": {
+        "page_title": "Pengaturan keamanan",
+        "heading": "Ganti password",
+        "intro": "Pastikan akun Anda memakai password yang panjang dan acak",
+        "current": "Password saat ini",
+        "new": "Password baru"
+    },
+    "two_factor": {
+        "heading": "Autentikasi dua faktor",
+        "intro": "Kelola pengaturan autentikasi dua faktor Anda",
+        "enabled_note": "Saat masuk, Anda akan diminta memasukkan kode dari aplikasi autentikator di ponsel Anda.",
+        "disabled_note": "Bila autentikasi dua faktor diaktifkan, Anda akan diminta memasukkan kode dari aplikasi autentikator di ponsel saat masuk.",
+        "disable": "Nonaktifkan 2FA",
+        "enable": "Aktifkan 2FA",
+        "continue_setup": "Lanjutkan penyiapan",
+        "modal_enabled_title": "Autentikasi dua faktor aktif",
+        "modal_enabled_description": "Autentikasi dua faktor kini aktif. Pindai kode QR atau masukkan kunci penyiapan di aplikasi autentikator Anda.",
+        "modal_verify_title": "Verifikasi kode autentikasi",
+        "modal_verify_description": "Masukkan kode 6 angka dari aplikasi autentikator Anda",
+        "modal_setup_title": "Aktifkan autentikasi dua faktor",
+        "modal_setup_description": "Untuk menyelesaikan, pindai kode QR atau masukkan kunci penyiapan di aplikasi autentikator Anda",
+        "manual": "atau masukkan kode secara manual",
+        "copy_key": "Salin kunci penyiapan",
+        "fetch_qr_failed": "Kode QR gagal diambil.",
+        "fetch_key_failed": "Kunci penyiapan gagal diambil.",
+        "fetch_codes_failed": "Kode pemulihan gagal diambil."
+    },
+    "recovery": {
+        "title": "Kode pemulihan 2FA",
+        "intro": "Kode pemulihan memungkinkan Anda masuk kembali bila perangkat 2FA hilang. Simpan di pengelola password yang aman.",
+        "view": "Lihat kode pemulihan",
+        "hide": "Sembunyikan kode pemulihan",
+        "regenerate": "Buat ulang kode",
+        "list": "Kode pemulihan",
+        "loading": "Memuat kode pemulihan",
+        "note": "Setiap kode hanya dapat dipakai sekali dan akan dihapus setelah dipakai. Bila perlu kode baru, gunakan tombol buat ulang kode di atas."
+    }
+}

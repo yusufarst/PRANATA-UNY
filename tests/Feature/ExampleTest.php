@@ -1,7 +1,7 @@
 <?php
 
-test('returns a successful response', function () {
+test('the root address leads to the home page', function () {
     $response = $this->get(route('home'));
 
-    $response->assertOk();
+    $response->assertRedirect('/home');
 });
