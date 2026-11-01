@@ -1,0 +1,502 @@
+name: ci
+
+# Job names are the check names of QUALITY_GATES section 4. ci-gate is the only required status check.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  changes:
+    name: changes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+      e2e: ${{ steps.filter.outputs.e2e }}
+      docs: ${{ steps.filter.outputs.docs }}
+    steps:
+      - name: Check out with history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Fails closed: an unknown range or an empty diff runs everything, and any file that is not a document is code.
+      - name: Classify the changed files
+        id: filter
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          PUSH_AFTER: ${{ github.sha }}
+        run: |
+          if [ "$EVENT" = pull_request ]; then
+            range="$PR_BASE...$PR_HEAD"
+          else
+            range="$PUSH_BEFORE..$PUSH_AFTER"
+          fi
+
+          if ! files="$(git diff --name-only "$range")" || [ -z "$files" ]; then
+            echo "Range $range is not usable; running everything."
+            { echo code=true; echo e2e=true; echo docs=true; } >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          printf '%s\n' "$files"
+
+          docs_paths='^(docs/|[^/]+\.md$)'
+          e2e_paths='^(app/|bootstrap/|config/|database/|lang/|public/|resources/|routes/|tests/|\.github/workflows/|composer\.(json|lock)$|package(-lock)?\.json$|phpunit\.xml$|playwright\.config\.|tsconfig[^/]*\.json$|vite\.config\.|vitest\.config\.|\.env\.example$)'
+
+          code=false
+          e2e=false
+          docs=false
+          if printf '%s\n' "$files" | grep -Eqv "$docs_paths"; then code=true; fi
+          if printf '%s\n' "$files" | grep -Eq "$e2e_paths"; then e2e=true; fi
+          if printf '%s\n' "$files" | grep -Eq "$docs_paths"; then docs=true; fi
+
+          echo "code=$code e2e=$e2e docs=$docs"
+          { echo "code=$code"; echo "e2e=$e2e"; echo "docs=$docs"; } >> "$GITHUB_OUTPUT"
+
+  ci-fast:
+    name: ci-fast
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18.6@sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81
+        # Throwaway database on the runner, without any credential.
+        env:
+          POSTGRES_USER: pranata
+          POSTGRES_DB: pranata_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 127.0.0.1:5432:5432
+        options: >-
+          --health-cmd "pg_isready -U pranata -d pranata_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: '5432'
+      DB_DATABASE: pranata_test
+      DB_USERNAME: pranata
+      PRANATA_POSTGRES_MAJOR: '18'
+      GITLEAKS_VERSION: 8.30.1
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - name: Check out with the full history for the secret scan
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          extensions: pgsql, pdo_pgsql
+          tools: composer:v2
+          coverage: none
+
+      - name: Set up Node with the npm cache
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Find the Composer cache
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore the Composer cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction --prefer-dist
+          npm ci
+
+      # The key lives only in this job's .env, which never reaches an artifact.
+      - name: Create the environment file and test key
+        run: |
+          cp .env.example .env
+          php artisan key:generate --ansi
+
+      - name: Production build
+        run: npm run build
+
+      - name: Pint
+        run: composer lint:check
+
+      - name: Larastan
+        run: composer types:check
+
+      - name: ESLint and Prettier
+        run: npm run check
+
+      - name: TypeScript
+        run: npm run types:check
+
+      - name: Vitest
+        run: npm run test
+
+      - name: Translation keys
+        run: npm run translations:check
+
+      - name: Migrations (fresh and rollback)
+        run: |
+          php artisan migrate:fresh --force
+          php artisan migrate:rollback --force
+
+      - name: The reset guard stops a foreign database
+        run: |
+          if DB_DATABASE=other_app php artisan migrate:fresh --force > guard.log 2>&1; then
+            cat guard.log
+            echo 'migrate:fresh was not refused'
+            exit 1
+          fi
+          cat guard.log
+          grep -q 'forbidden on database \[other_app\]' guard.log
+
+      - name: Pest in parallel, with architecture and route tests
+        run: php artisan test --parallel --processes=4
+
+      - name: A forbidden module import must fail the architecture test
+        run: |
+          # Pest ignores a dependency on a class that does not exist, so the probe needs a real one.
+          mkdir -p app/Modules/Platform/Actions app/Modules/Identity/Models
+          cat > app/Modules/Identity/Models/Account.php <<'PHP'
+          <?php
+
+          namespace App\Modules\Identity\Models;
+
+          class Account {}
+          PHP
+          cat > app/Modules/Platform/Actions/ForbiddenProbe.php <<'PHP'
+          <?php
+
+          namespace App\Modules\Platform\Actions;
+
+          use App\Modules\Identity\Models\Account;
+
+          class ForbiddenProbe
+          {
+              public function __construct(public Account $account) {}
+          }
+          PHP
+          if php artisan test tests/Arch > arch.log 2>&1; then
+            cat arch.log
+            echo 'the architecture test did not fail'
+            exit 1
+          fi
+          grep -E 'FAILED|Tests:' arch.log
+          grep -q 'Platform uses no' arch.log
+          rm -r app/Modules/Platform/Actions app/Modules/Identity
+
+      - name: A route without sign-in or authorization must fail the route test
+        run: |
+          cp routes/web.php routes/web.php.orig
+          echo "Route::get('probe-open', fn () => 'x')->name('probe.open');" >> routes/web.php
+          if php artisan test tests/Feature/RouteIntegrityTest.php > open.log 2>&1; then
+            cat open.log
+            echo 'an open route was not refused'
+            exit 1
+          fi
+          grep -q 'probe.open' open.log
+          cp routes/web.php.orig routes/web.php
+          echo "Route::middleware('auth')->get('probe-unchecked', fn () => 'x')->name('probe.unchecked');" >> routes/web.php
+          if php artisan test tests/Feature/RouteIntegrityTest.php > unchecked.log 2>&1; then
+            cat unchecked.log
+            echo 'a route without authorization was not refused'
+            exit 1
+          fi
+          grep -q 'probe.unchecked' unchecked.log
+          cp routes/web.php.orig routes/web.php
+          echo "Route::middleware('auth')->get('probe-boolean', function () { Illuminate\\Support\\Facades\\Gate::allows('x'); return 'x'; })->name('probe.boolean');" >> routes/web.php
+          if php artisan test tests/Feature/RouteIntegrityTest.php > boolean.log 2>&1; then
+            cat boolean.log
+            echo 'an ignored boolean gate result was not refused'
+            exit 1
+          fi
+          grep -q 'probe.boolean' boolean.log
+          mv routes/web.php.orig routes/web.php
+
+      - name: Literal JSX text must fail ESLint
+        run: |
+          mkdir -p resources/js/pages/probe
+          printf "export default function Probe() {\n    return <p>Teks tetap</p>;\n}\n" > resources/js/pages/probe/literal.tsx
+          if npx eslint resources/js/pages/probe/literal.tsx > eslint.log 2>&1; then
+            cat eslint.log
+            echo 'literal text was not refused'
+            exit 1
+          fi
+          grep -q 'react/jsx-no-literals' eslint.log
+          rm -r resources/js/pages/probe
+
+      - name: A missing translation key must fail the checker
+        run: |
+          mkdir -p probe/lang/id probe/lang/en
+          echo '{"masuk": "Masuk", "keluar": "Keluar"}' > probe/lang/id/auth.json
+          echo '{"masuk": "Sign in"}' > probe/lang/en/auth.json
+          if node scripts/quality/check-translations.mjs probe > translations.log 2>&1; then
+            cat translations.log
+            echo 'a missing key was not refused'
+            exit 1
+          fi
+          grep -q 'missing keluar' translations.log
+          rm -r probe
+          mkdir -p probe/lang/id probe/lang/en
+          echo "<?php return ['masuk' => 'Masuk', 'pesan' => ['keluar' => 'Keluar']];" > probe/lang/id/auth.php
+          echo "<?php return ['masuk' => 'Sign in'];" > probe/lang/en/auth.php
+          if node scripts/quality/check-translations.mjs probe > translations.log 2>&1; then
+            cat translations.log
+            echo 'a missing key in a PHP catalog was not refused'
+            exit 1
+          fi
+          grep -q 'missing pesan.keluar' translations.log
+          rm -r probe
+
+      - name: Dependency audits
+        run: |
+          composer audit
+          npm audit --audit-level=high
+
+      - name: Secret scan of the whole history
+        run: |
+          curl -fsSL -o gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          mkdir -p .gitleaks-bin
+          tar -xzf gitleaks.tar.gz -C .gitleaks-bin gitleaks
+          .gitleaks-bin/gitleaks git --redact --verbose --no-banner --exit-code 1 .
+
+      # The token is random and made here, so nothing resembling a credential is ever committed.
+      - name: A token must fail the secret scan with this configuration
+        run: |
+          mkdir -p probe
+          printf 'token = "ghp_%s"\n' "$(head -c 18 /dev/urandom | od -An -tx1 | tr -d ' \n')" > probe/token.txt
+          if .gitleaks-bin/gitleaks dir probe --config .gitleaks.toml --redact --no-banner --exit-code 1 > leaks.log 2>&1; then
+            cat leaks.log
+            echo 'the token was not found'
+            exit 1
+          fi
+          grep -q 'leaks found: 1' leaks.log
+          rm -r probe
+
+  ci-e2e:
+    name: ci-e2e
+    needs: changes
+    if: needs.changes.outputs.e2e == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:18.6@sha256:3a4264520e121176619f54ff867d12774bc81e95e7b84db58d63bccdb6144b81
+        # Throwaway database on the runner, without any credential.
+        env:
+          POSTGRES_USER: pranata
+          POSTGRES_DB: pranata_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 127.0.0.1:5432:5432
+        options: >-
+          --health-cmd "pg_isready -U pranata -d pranata_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+      gotenberg:
+        image: gotenberg/gotenberg:8.39.0@sha256:13672f317b443c793e972b1bd2155ec62a3e7b6891b411e8196442cc053ee5f5
+        ports:
+          - 127.0.0.1:3000:3000
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: '5432'
+      DB_DATABASE: pranata_test
+      DB_USERNAME: pranata
+      GOTENBERG_URL: http://127.0.0.1:3000
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          extensions: pgsql, pdo_pgsql
+          tools: composer:v2
+          coverage: none
+
+      - name: Set up Node with the npm cache
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Find the Composer cache
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore the Composer cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction --prefer-dist
+          npm ci
+
+      - name: Create the environment file and test key
+        run: |
+          cp .env.example .env
+          php artisan key:generate --ansi
+
+      - name: Production build
+        run: npm run build
+
+      - name: Start the test server
+        run: |
+          php artisan migrate:fresh --force
+          nohup php artisan serve --host=127.0.0.1 --port=8000 > server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -fsS -o /dev/null http://127.0.0.1:8000/up; then exit 0; fi
+            sleep 1
+          done
+          cat server.log
+          exit 1
+
+      - name: HTTP smoke of the login and registration routes
+        run: |
+          login_code="$(curl -s -o login.html -w '%{http_code}' http://127.0.0.1:8000/login)"
+          register_code="$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8000/register)"
+          echo "GET /login = $login_code, GET /register = $register_code"
+          test "$login_code" = 200
+          test "$register_code" = 404
+          # The page JSON may escape the slash in the Inertia component name.
+          grep -Eq 'auth\\?/login' login.html
+
+      - name: Gotenberg health
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3000/health -o health.json; then break; fi
+            sleep 2
+          done
+          jq -e '.status == "up" and .details.libreoffice.status == "up"' health.json
+
+      - name: Gotenberg LibreOffice conversion of a synthetic file
+        run: |
+          printf 'Dokumen uji sintetis PRANATA.\n' > synthetic.txt
+          curl -fsS --form files=@synthetic.txt http://127.0.0.1:3000/forms/libreoffice/convert -o synthetic.pdf
+          test "$(head -c 4 synthetic.pdf)" = '%PDF'
+
+      - name: Pest group gotenberg
+        run: php artisan test --group=gotenberg --fail-on-skipped --fail-on-empty-test-suite
+
+  docs-check:
+    name: docs-check
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+
+      - name: Links, anchors, identifiers and the Task plan
+        run: node scripts/docs-check.mjs
+
+      - name: A wrong Task counter must fail the checker
+        run: |
+          cp docs/11-tasks/TASK_PLAN.md TASK_PLAN.orig
+          sed -i -E 's/^TODO: ([0-9]+)$/TODO: 999/' docs/11-tasks/TASK_PLAN.md
+          if node scripts/docs-check.mjs > docs.log 2>&1; then
+            cat docs.log
+            echo 'a wrong counter was not refused'
+            exit 1
+          fi
+          grep -q 'TASK_PLAN' docs.log
+          mv TASK_PLAN.orig docs/11-tasks/TASK_PLAN.md
+
+      - name: A broken link or anchor must fail the checker
+        run: |
+          mkdir -p probe
+          printf '# Judul\n\n[ada](#judul) [tautan](lain.md) [anchor](#tidak-ada)\n' > probe/a.md
+          if node scripts/docs/check-links.mjs probe > links.log 2>&1; then
+            cat links.log
+            echo 'a broken link was not refused'
+            exit 1
+          fi
+          grep -q 'missing file lain.md' links.log
+          grep -q 'missing anchor #tidak-ada' links.log
+          rm -r probe
+
+  ci-gate:
+    name: ci-gate
+    if: always()
+    needs: [changes, ci-fast, ci-e2e, docs-check]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      # A required job must succeed; a job the filter did not call must be skipped. Anything else fails, as does a failed filter.
+      - name: Judge the required jobs
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          echo "$NEEDS" | jq -c 'map_values(.result)'
+
+          result() { echo "$NEEDS" | jq -r --arg job "$1" '.[$job].result'; }
+          output() { echo "$NEEDS" | jq -r --arg key "$1" '.changes.outputs[$key] // "missing"'; }
+
+          if [ "$(result changes)" != success ]; then
+            echo 'changes did not succeed'
+            exit 1
+          fi
+
+          failed=0
+          judge() {
+            job="$1"
+            required="$(output "$2")"
+            actual="$(result "$job")"
+            case "$required/$actual" in
+              true/success | false/skipped) echo "$job: required=$required result=$actual ok" ;;
+              *)
+                echo "$job: required=$required result=$actual REFUSED"
+                failed=1
+                ;;
+            esac
+          }
+
+          judge ci-fast code
+          judge ci-e2e e2e
+          judge docs-check docs
+          exit "$failed"

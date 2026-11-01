@@ -17,7 +17,7 @@ Owner decision [OD-37](docs/00-governance/DECISION_LOG.md#od-37) applies: this m
 **Everything that needs PHP, PostgreSQL, Gotenberg or a browser** runs on GitHub-hosted runners, with synthetic data only:
 
 1. Create a branch from the latest `main` and stage with `scripts/executor/stage.ps1`.
-2. Open a draft PR. The `bootstrap` workflow starts on every PR update and uses its own disposable PostgreSQL and Gotenberg service containers.
+2. Open a draft PR. The `ci` workflow starts on every PR update and uses its own disposable PostgreSQL and Gotenberg service containers.
 3. Read the result:
 
    ```bash
@@ -26,10 +26,6 @@ Owner decision [OD-37](docs/00-governance/DECISION_LOG.md#od-37) applies: this m
 
    ```bash
    gh run view <run-id> --log-failed
-   ```
-
-   ```bash
-   gh run download <run-id> -n login-screenshots -D .pranata/screenshots
    ```
 
 4. Merge only through `scripts/executor/merge-verified.ps1`.
