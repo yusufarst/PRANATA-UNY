@@ -189,3 +189,17 @@ ESLint and Prettier replace `vp check`, which TASK-002 used in `app-boot`; Vite+
 - **Gotenberg group.** The two tests in `tests/Feature/Documents/GotenbergSmokeTest.php` skip in `ci-fast`, which has no Gotenberg service, and `ci-e2e` and `ci-nightly` refuse a skip with `--fail-on-skipped`.
 - **Probe.** `scripts/executor/tests/ci.probe.ps1` proves the gate and the filter on disposable draft PRs.
 - **Ruleset.** Instructions for the Owner: [MAIN_RULESET](../09-operations/MAIN_RULESET.md).
+
+## Design system and localization — TASK-006 (2026-11-02)
+
+| Package | Version | Note |
+| --- | --- | --- |
+| `i18next`, `react-i18next` | 26.7.1, 17.1.11 | Bring `html-parse-stringify` 4.0.1 and `use-sync-external-store` 1.7.0 |
+| `@fontsource-variable/plus-jakarta-sans`, `@fontsource-variable/jetbrains-mono` | 5.3.0, 5.3.0 | SIL OFL 1.1; self-hosted through the Vite build |
+| `axe-core` | 4.14.0 | MPL-2.0, development only |
+
+- **Lockfile without a local install.** `package-lock.json` entries were written from `npm view` data and proven by `npm ci` on the runner, because no workflow may be edited in AUTONOMOUS mode and local `npm install` is avoided for memory.
+- **Formatting without a local Prettier.** A temporary commit on the Task branch changed the `check` script to run `prettier --write` and print the diff on the runner. The final HEAD restores the scripts.
+- **Real browser in Vitest.** `shell.browser.test.tsx` starts the runner image's Chrome and proves no overlap, no horizontal overflow, the fonts, tabular figures and axe (with contrast) at 390×844 and 1440×900 in both languages. It fails in CI when Chrome or the build is missing and skips only outside CI. The page is rendered on the server, so the open drawer and client hydration wait for TASK-007.
+- **Catalog loading.** All namespaces load eagerly from `import.meta.glob`, not per page as LOCALIZATION §2 describes. The catalog is small; this needs revisiting when module Tasks grow it.
+- **Removed from the kit.** Dark mode and the appearance page (DESIGN_SYSTEM §10), the Bunny font CDN, the welcome page, the unused header layout and the kit's external links. `/` now redirects to `/home`, and the route named `dashboard` serves PG-003 at `/home`.

@@ -86,9 +86,13 @@ function Fixture() {
                         ))}
                     </div>
                     <p className="font-mono text-sm text-muted-foreground tabular-nums">
-                        {i18n.t('common:states.request_id', { id: '1234567890' })}
+                        {i18n.t('common:states.request_id', {
+                            id: '1234567890',
+                        })}
                     </p>
-                    <EmptyState description={i18n.t('common:home.description')} />
+                    <EmptyState
+                        description={i18n.t('common:home.description')}
+                    />
                     <ErrorState requestId="req-1" />
                     <ForbiddenState />
                     <NotFoundState />
@@ -188,7 +192,10 @@ describe.skipIf(!available)('the shell in a real browser', () => {
             'utf8',
         );
         const links = cssFiles
-            .map((name) => `<link rel="stylesheet" href="/build/assets/${name}">`)
+            .map(
+                (name) =>
+                    `<link rel="stylesheet" href="/build/assets/${name}">`,
+            )
             .join('');
 
         for (const locale of locales) {
@@ -240,7 +247,9 @@ describe.skipIf(!available)('the shell in a real browser', () => {
 
                 if (url === '/run') {
                     response.setHeader('Content-Type', 'text/html');
-                    response.end(`<!doctype html><title>run</title>${frames.join('')}`);
+                    response.end(
+                        `<!doctype html><title>run</title>${frames.join('')}`,
+                    );
 
                     return;
                 }
@@ -261,12 +270,15 @@ describe.skipIf(!available)('the shell in a real browser', () => {
                     return;
                 }
 
-                const file = normalize(join(buildFolder, url.replace(/^\/build/, '')));
+                const file = normalize(
+                    join(buildFolder, url.replace(/^\/build/, '')),
+                );
 
                 if (file.startsWith(buildFolder) && existsSync(file)) {
                     response.setHeader(
                         'Content-Type',
-                        contentTypes[extname(file)] ?? 'application/octet-stream',
+                        contentTypes[extname(file)] ??
+                            'application/octet-stream',
                     );
                     response.end(readFileSync(file));
 
@@ -304,21 +316,29 @@ describe.skipIf(!available)('the shell in a real browser', () => {
     });
 
     it('measured every viewport in both languages', () => {
-        expect(reports.map((report) => `${report.locale}-${report.width}`).sort()).toEqual(
-            ['en-1440', 'en-390', 'id-1440', 'id-390'],
-        );
+        expect(
+            reports.map((report) => `${report.locale}-${report.width}`).sort(),
+        ).toEqual(['en-1440', 'en-390', 'id-1440', 'id-390']);
     });
 
     it('has no overlap and no horizontal overflow (TAC-02)', () => {
         for (const report of reports) {
-            expect(report.overlaps, `${report.locale}-${report.width}`).toEqual([]);
-            expect(report.horizontalOverflow, `${report.locale}-${report.width}`).toBe(false);
+            expect(report.overlaps, `${report.locale}-${report.width}`).toEqual(
+                [],
+            );
+            expect(
+                report.horizontalOverflow,
+                `${report.locale}-${report.width}`,
+            ).toBe(false);
         }
     });
 
     it('shows the sidebar on the desktop and keeps it as a drawer on the phone', () => {
         for (const report of reports) {
-            expect(report.sidebarVisible, `${report.locale}-${report.width}`).toBe(report.width === 1440);
+            expect(
+                report.sidebarVisible,
+                `${report.locale}-${report.width}`,
+            ).toBe(report.width === 1440);
         }
     });
 
@@ -332,7 +352,10 @@ describe.skipIf(!available)('the shell in a real browser', () => {
 
     it('passes axe, including color contrast', () => {
         for (const report of reports) {
-            expect(report.violations, `${report.locale}-${report.width}`).toEqual([]);
+            expect(
+                report.violations,
+                `${report.locale}-${report.width}`,
+            ).toEqual([]);
         }
     });
 });

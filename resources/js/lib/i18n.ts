@@ -33,7 +33,9 @@ void i18next.use(initReactI18next).init({
     resources,
     // The server renders the language of the session into the root element.
     lng: toLocale(
-        typeof document === 'undefined' ? undefined : document.documentElement.lang,
+        typeof document === 'undefined'
+            ? undefined
+            : document.documentElement.lang,
     ),
     fallbackLng: defaultLocale,
     defaultNS: 'common',
