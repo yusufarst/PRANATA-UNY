@@ -187,7 +187,7 @@ Task baru DONE setelah rekonsiliasi berada di `main`. Total di TASK_PLAN harus c
 
 ### 8.4 Mode bootstrap (sebelum CI ada)
 
-TASK-001–TASK-004 berjalan sebelum `ci.yml` ada, sehingga `ci-gate` tidak dapat dipersyaratkan. Untuk keempatnya: mode SUPERVISED; PR tetap dibuka sebagai catatan; Owner menyaksikan bukti, diff dan metadata commit; merge memakai metode D-08 tanpa `ci-gate`. TASK-001 diverifikasi lokal (PowerShell, tanpa PHP). Sejak TASK-002, bukti uji yang memerlukan PHP, PostgreSQL, Gotenberg atau browser berasal dari workflow bootstrap sementara di runner GitHub-hosted ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)), bukan dari mesin Owner (OD-37). Merge bootstrap mensyaratkan setiap job workflow `bootstrap` pada SHA HEAD PR berakhir `success`, tanpa yang hilang, dilewati atau dibatalkan; Owner memeriksanya, dan skrip merge `-Bootstrap` menegakkannya setelah TASK-002 memperluasnya. Uji yang tidak dijalankan dicatat NOT RUN, tidak pernah lulus. TASK-005 membuat `ci.yml`, sehingga PR-nya sendiri sudah menjalankan `ci-gate`; setelah TASK-005 ter-merge, Owner menerapkan ruleset `main`. Sejak TASK-006 setiap merge mensyaratkan `ci-gate`. Uji E2E browser tersedia sejak TASK-007; Task sebelumnya mencatatnya N/A dengan alasan.
+TASK-001–TASK-004 berjalan sebelum `ci.yml` ada, sehingga `ci-gate` tidak dapat dipersyaratkan. Untuk keempatnya: mode SUPERVISED; PR tetap dibuka sebagai catatan; Owner menyaksikan bukti, diff dan metadata commit; merge memakai metode D-08 tanpa `ci-gate`. TASK-001 diverifikasi lokal (PowerShell, tanpa PHP). Sejak TASK-002, bukti uji yang memerlukan PHP, PostgreSQL, Gotenberg atau browser berasal dari workflow bootstrap sementara di runner GitHub-hosted ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)), bukan dari mesin Owner (OD-37). Merge bootstrap mengikuti prosedur bukti fail-closed [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara): run `bootstrap` terbaru untuk PR dan SHA HEAD saat ini, semua job `success`, serta SHA HEAD, SHA base dan tree uji-merge yang cocok; selain itu ditolak. Owner memeriksanya, dan skrip merge `-Bootstrap` menegakkannya setelah TASK-002 memperluasnya dan membuktikannya (C-16) pada PR uji sekali pakai sebelum merge TASK-002. Uji yang tidak dijalankan dicatat NOT RUN, tidak pernah lulus. TASK-005 membuat `ci.yml`, sehingga PR-nya sendiri sudah menjalankan `ci-gate`; setelah TASK-005 ter-merge, Owner menerapkan ruleset `main`. Sejak TASK-006 setiap merge mensyaratkan `ci-gate`. Uji E2E browser tersedia sejak TASK-007; Task sebelumnya mencatatnya N/A dengan alasan.
 
 ## 9. Runner, watcher, checkpoint dan pemulihan
 
@@ -275,7 +275,7 @@ Eskalasi ke Owner hanya untuk hal yang dicadangkan (U-007 §22): ambiguitas kebi
 
 ## 13. Kemampuan platform yang wajib diverifikasi
 
-Semua berstatus **UNVERIFIED** sampai TASK-001 mencatat VERIFIED, FAILED, NOT AVAILABLE atau SUPERSEDED beserta bukti di laporan kemampuan.
+Semua berstatus **UNVERIFIED** sampai TASK-001 (C-16 pada TASK-002) mencatat VERIFIED, FAILED, NOT AVAILABLE atau SUPERSEDED beserta bukti di laporan kemampuan.
 
 | # | Kemampuan yang diasumsikan | Dipakai untuk | Cara verifikasi (TASK-001) | Jalan cadangan bila gagal |
 |---|---|---|---|---|
@@ -294,8 +294,9 @@ Semua berstatus **UNVERIFIED** sampai TASK-001 mencatat VERIFIED, FAILED, NOT AV
 | C-13 | Worktree Git di Windows untuk Task paralel | Paralelisme | Uji worktree | Tanpa paralelisme |
 | C-14 | Kinerja bind mount Docker Desktop dan batas sumber daya — **SUPERSEDED / NOT APPLICABLE** sejak OD-37 (tanpa Docker lokal); tidak diverifikasi dan tidak dicatat VERIFIED | — | — | Uji berat di runner GitHub-hosted ([TEST_STRATEGY §8](../08-testing/TEST_STRATEGY.md#8-piramida-verifikasi-dan-pemeriksaan-sebelum-pr)) |
 | C-15 | Runner headless Claude Code lokal (bukan runner GitHub Actions self-hosted, yang dilarang OD-37) memakai token GitHub terpisah (variabel lingkungan dan kredensial Git khusus proses runner) tanpa memengaruhi login Owner; token tanpa hak Administration ditolak saat mencoba mengubah ruleset | Pembatasan kewenangan eksekutor (D-27) | Uji pada repositori sekali pakai | Bila tidak dapat dipisahkan: mode otonom memakai login Owner hanya bila Owner menerimanya secara eksplisit |
+| C-16 | Gerbang bukti bootstrap mengaitkan run `pull_request` (commit uji-merge sintetis) dengan PR, SHA HEAD, SHA base dan tree yang tepat ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)) | Merge bootstrap TASK-002–TASK-004 | TASK-002: PR uji sekali pakai dengan run lulus, gagal, dibatalkan/dilewati, basi dan base bergerak | Tidak ada merge bootstrap; laporkan ke Owner |
 
-**Status hasil TASK-001 (2026-11-01, bukti di [EXECUTOR_CAPABILITY_REPORT](evidence/EXECUTOR_CAPABILITY_REPORT.md)):** VERIFIED: C-01, C-02, C-03, C-05, C-09, C-10, C-11, C-13. VERIFIED dengan batas tercatat: C-04, C-06, C-12 (simulasi). NOT AVAILABLE: C-07, C-08, C-15 (menunggu token Owner; prasyarat Owner sebelum mode otonom). SUPERSEDED / NOT APPLICABLE: C-14 (OD-37, PCR-002).
+**Status hasil TASK-001 (2026-11-01, bukti di [EXECUTOR_CAPABILITY_REPORT](evidence/EXECUTOR_CAPABILITY_REPORT.md)):** VERIFIED: C-01, C-02, C-03, C-05, C-09, C-10, C-11, C-13. VERIFIED dengan batas tercatat: C-04, C-06, C-12 (simulasi). NOT AVAILABLE: C-07, C-08, C-15 (menunggu token Owner; prasyarat Owner sebelum mode otonom). SUPERSEDED / NOT APPLICABLE: C-14 (OD-37, PCR-002). UNVERIFIED: C-16 (ditambahkan PCR-002; diverifikasi TASK-002).
 
 Kemampuan yang FAILED atau NOT AVAILABLE memicu jalan cadangannya dan, bila memengaruhi Task lain, TASK PLAN CHANGE. Model ini diperbarui dari hasil uji, bukan dari dugaan.
 

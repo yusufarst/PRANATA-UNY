@@ -72,7 +72,7 @@ Dua workflow: `ci.yml` (PR dan `main`) dan `ci-nightly.yml` (terjadwal). Nama jo
 |---|---|---|---|
 | `changes` | `ci.yml`: setiap PR ke `main` dan push ke `main` | Menentukan kelompok berkas yang berubah (kode aplikasi, E2E, dokumen, workflow) | < 1 menit |
 | `ci-fast` | `ci.yml`, bila kode/konfigurasi/workflow berubah | Pint, Larastan, ESLint, Prettier, tsc, Vitest, Pest (paralel, PostgreSQL service), arch tests, route integrity, pemeriksa kunci terjemahan, `migrate:fresh`, build produksi, `composer audit`, `npm audit`, gitleaks | ≤ 10 menit (cache hangat), ≤ 15 menit run pertama |
-| `ci-e2e` | `ci.yml`, bila `app/`, `resources/`, `routes/`, `database/`, `lang/`, `tests/e2e/`, `config/`, `bootstrap/`, `public/`, `composer.json`/`composer.lock`, `package.json`/`package-lock.json`, `vite.config.*`, `playwright.config.*`, `tsconfig*.json` atau `.github/workflows/` berubah | Build + server uji + Playwright Chromium & WebKit (sharded) + axe | ≤ 20 menit |
+| `ci-e2e` | `ci.yml`, bila `app/`, `resources/`, `routes/`, `database/`, `lang/`, `tests/e2e/`, `config/`, `bootstrap/`, `public/`, `composer.json`/`composer.lock`, `package.json`/`package-lock.json`, `vite.config.*`, `playwright.config.*`, `tsconfig*.json` atau `.github/workflows/` berubah | Build + server uji + asap HTTP + Gotenberg service (smoke dan Pest grup `gotenberg`) + Playwright Chromium & WebKit (sharded) + axe | ≤ 20 menit |
 | `docs-check` | `ci.yml`, bila `docs/` atau berkas Markdown akar berubah | Pemeriksa tautan/anchor/ID dokumen dan konsistensi TASK_PLAN | ≤ 2 menit |
 | `ci-gate` | `ci.yml`, selalu | Agregat: lulus hanya bila setiap job yang diperlukan menurut `changes` lulus | < 1 menit |
 | `ci-nightly` | `ci-nightly.yml`: terjadwal pada `main` + manual | E2E penuh, uji performa ringan PERF-03, uji migrasi penuh, integrasi Gotenberg | Bebas |
@@ -84,7 +84,7 @@ Aturan kecepatan dan keandalan:
 - Filter path di dalam `ci.yml` (job `changes`) agar perubahan dokumentasi tidak menjalankan suite aplikasi.
 - Cache Composer (`composer.lock`), npm (`package-lock.json`), browser Playwright (versi), dan build Vite antarjob dalam satu run (artefak).
 - Pest paralel (`--parallel`) dengan basis data per proses; Playwright sharding 2–4.
-- Service container `postgres` dengan major yang dipatok di TOOLCHAIN (sama dengan target staging/produksi); Gotenberg (image dipatok) hanya di `ci-nightly`, job bootstrap TASK-003 dan Task dokumen. Pengujian ini tidak menetapkan cara deploy produksi ([INFRASTRUCTURE §4](../09-operations/INFRASTRUCTURE.md#4-topologi-staging-dan-produksi)).
+- Service container `postgres` dengan major yang dipatok di TOOLCHAIN (sama dengan target staging/produksi); Gotenberg (image dipatok) berjalan di `ci-e2e` (smoke dan Pest grup `gotenberg`; wajib bila terpicu), di `ci-nightly` (integrasi mendalam; bukan gerbang PR) dan di job bootstrap TASK-003 (bagian 4.1). Pengujian ini tidak menetapkan cara deploy produksi ([INFRASTRUCTURE §4](../09-operations/INFRASTRUCTURE.md#4-topologi-staging-dan-produksi)).
 - Tidak ada rahasia produksi di CI; variabel hanya untuk uji.
 - Keamanan workflow: pemicu `pull_request` (bukan `pull_request_target`); `permissions` minimum (`contents: read` kecuali alasan tercatat); action dipatok SHA commit; image service dipatok; tanpa secret repositori untuk uji; data sintetis saja; workflow tidak commit, push atau membuat rilis (GOV-08). Artefak diunduh eksekutor dan di-commit dengan identitas Owner. Artefak repositori publik dapat diunduh pengguna GitHub lain, jadi tidak memuat rahasia, `APP_KEY` atau data riil.
 - Status check wajib sebelum merge ke `main` adalah satu job agregat **`ci-gate`** yang selalu berjalan pada setiap PR dan lulus hanya bila setiap job yang dipicu filter path (di dalam workflow, bukan filter tingkat workflow) lulus. Dengan begitu PR dokumentasi tidak menunggu check yang tidak dipicu, dan PR kode tidak dapat di-merge bila `ci-fast`/`ci-e2e` yang relevan gagal atau dilewati secara keliru.
@@ -102,11 +102,31 @@ Berlaku untuk TASK-002–TASK-004 sebelum `ci.yml` ada (OD-37, PCR-002). Berkas:
 | `app-boot` | TASK-002 | PostgreSQL service; `composer install`, `npm ci`, `npm run build`; `migrate:fresh` + rollback; server uji; `GET /login` 200 dan registrasi 404; Pest; Pint, ESLint, tsc; screenshot halaman masuk 390×844 dan 1440×900 sebagai artefak |
 | `db-integration` | TASK-003 | Versi major PostgreSQL; ekstensi `pg_trgm`, `ltree`, `btree_gist`; `numeric`/`timestamptz`; Pest `--parallel` pada `pranata_test_<token>`; uji DatabaseGuard; Gotenberg service: health + konversi berkas sintetis |
 | `quality` | TASK-004 | `composer qa`, `npm run qa`, uji negatif arch/rute, `composer audit`, `npm audit`, gitleaks |
+| `bootstrap-gate` | TASK-002 | Selalu berjalan (`if: always()`, `needs` semua job lain); gagal bila ada job yang tidak `success`; mengunggah artefak kecil `bootstrap-evidence` (JSON): nomor PR, `github.event.pull_request.head.sha`, `github.event.pull_request.base.sha`, `github.sha` (commit uji-merge sintetis `refs/pull/<n>/merge`), SHA tree commit yang diuji, ID run dan attempt |
 
 - Pemicu `pull_request` ke `main` saja: run dimulai dari PR draft dan tidak memerlukan workflow di `main` lebih dahulu. `concurrency` per PR dengan `cancel-in-progress`; `timeout-minutes` per job; `runs-on` berlabel runner GitHub-hosted (misalnya `ubuntu-24.04`), tidak pernah `self-hosted`.
 - Aturan keamanan workflow bagian 4 berlaku penuh.
-- Gerbang merge bootstrap: setiap job yang didefinisikan `bootstrap.yml` pada SHA HEAD PR menghasilkan check-run `success` (`gh api repos/<owner>/<repo>/commits/<sha>/check-runs`), tanpa yang hilang, dilewati atau dibatalkan; ditambah review sesuai kelas risiko dan kesaksian Owner (mode SUPERVISED, [EXECUTOR_OPERATING_MODEL §8.4](../11-tasks/EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada)).
+- **Gerbang merge bootstrap (fail-closed).** Run `pull_request` menguji commit uji-merge sintetis (`github.sha`), bukan SHA HEAD PR; karena itu bukti dikaitkan lewat metadata run dan artefak, bukan dugaan. Skrip `merge-verified.ps1 -Bootstrap` (diperluas TASK-002) menolak merge kecuali semua langkah berikut lulus:
+  1. PR terbuka, base `main`, `mergeable` = `MERGEABLE`; SHA yang akan di-fast-forward = `headRefOid` saat ini; `main` remote adalah leluhurnya ([EXECUTOR_OPERATING_MODEL §8.1](../11-tasks/EXECUTOR_OPERATING_MODEL.md#81-pemeriksaan-sebelum-merge)).
+  2. Run dicari lewat API Actions (`gh api repos/<owner>/<repo>/actions/workflows/bootstrap.yml/runs?event=pull_request&head_sha=<HEAD>`); dipakai run terbaru (ID dan `run_attempt` tertinggi) yang `pull_requests`-nya memuat nomor PR ini. Tidak ada run = tolak; PR yang konflik merge tidak menghasilkan run, jadi juga ditolak.
+  3. Run `status = completed` dan `conclusion = success`. Daftar job attempt itu (`…/actions/runs/<id>/attempts/<n>/jobs`) memuat himpunan job wajib minimum yang dipatok di skrip per Task (TASK-002: `app-boot`, `bootstrap-gate`; TASK-003: + `db-integration`; TASK-004: + `quality`), dan setiap job dalam run berkesimpulan `success`. Job yang hilang, `skipped`, `cancelled`, `failure`, `timed_out`, `action_required` atau `neutral` = tolak.
+  4. Artefak `bootstrap-evidence` run itu: nomor PR dan `head.sha` = HEAD saat ini; `base.sha` = `main` remote saat ini; tree yang diuji = `git rev-parse <HEAD>^{tree}`. Karena `main` leluhur HEAD, commit uji-merge dan target fast-forward berpohon sama. Selisih apa pun = tolak. Push baru atau `main` yang bergerak membuat bukti basi dan memerlukan run baru.
+  5. ID run, attempt, SHA uji-merge, SHA HEAD dan SHA base dicatat di COMPLETION EVIDENCE.
+
+  Ditambah review sesuai kelas risiko dan kesaksian Owner (mode SUPERVISED, [EXECUTOR_OPERATING_MODEL §8.4](../11-tasks/EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada)). Mekanisme ini **UNVERIFIED** sampai TASK-002 membuktikannya sebagai C-16 pada PR uji sekali pakai sebelum merge TASK-002: gerbang wajib menolak job gagal, dibatalkan atau dilewati, run yang hilang, bukti basi setelah push baru, base yang bergerak dan tree yang tidak cocok, serta menerima run hijau pada HEAD terbaru. PR uji ditutup tanpa merge. Pemicu `pull_request` dan permission baca-saja tetap; tidak ada izin bypass.
 - Bukti di COMPLETION EVIDENCE: URL dan ID run, SHA HEAD, kesimpulan dan durasi per job, tautan artefak. Run lama tidak berlaku untuk SHA baru. Pemeriksaan yang tidak dijalankan dicatat NOT RUN.
+- **Klasifikasi setelah konsolidasi (TASK-005).** `ci-gate` hanya mencakup job `ci.yml`; tidak ada pemeriksaan wajib yang dipindahkan hanya ke `ci-nightly`.
+
+| Pemeriksaan bootstrap | Tujuan | Kelas gerbang |
+|---|---|---|
+| `app-boot`: `composer install`, `npm ci`, `npm run build`, `migrate:fresh` + rollback, Pest (termasuk rute masuk 200 dan registrasi 404), Pint, ESLint, tsc | `ci-fast` | PR-wajib lewat `ci-gate` bila kode, konfigurasi atau workflow berubah |
+| `app-boot`: boot server uji dan `GET /login` 200 | Asap HTTP di `ci-e2e`; sejak TASK-007 perjalanan Playwright | PR-wajib lewat `ci-gate` bila `ci-e2e` terpicu |
+| `app-boot`: screenshot halaman masuk | Tidak dipindahkan; bukti sekali TASK-002 (diganti E2E responsif TASK-007) | Bukan gerbang |
+| `db-integration`: versi major, ekstensi, `numeric`/`timestamptz`, Pest `--parallel`, DatabaseGuard | `ci-fast` | PR-wajib |
+| `db-integration`: Gotenberg health dan konversi sintetis | `ci-e2e` (smoke dan Pest grup `gotenberg`) | PR-wajib bila `ci-e2e` terpicu: kode aplikasi, konfigurasi, lockfile atau workflow, termasuk setiap perubahan Gotenberg |
+| `quality`: `composer qa`, `npm run qa`, uji negatif arch/rute, `composer audit`, `npm audit`, gitleaks | `ci-fast` | PR-wajib |
+| Integrasi Gotenberg mendalam (semua route, gagal-konversi, merge besar) | `ci-nightly` | Regresi terjadwal pada `main`; **tidak** dicakup `ci-gate`; kegagalan ditangani lebih dahulu menurut [EXECUTOR_OPERATING_MODEL §7](../11-tasks/EXECUTOR_OPERATING_MODEL.md#7-kegagalan-ci) |
+
 - `bootstrap` bukan status check wajib ruleset; ruleset hanya memakai `ci-gate` (TASK-005).
 
 ## 5. Bukti di Task

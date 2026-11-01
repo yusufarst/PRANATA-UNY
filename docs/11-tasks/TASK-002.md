@@ -36,9 +36,10 @@ Semua Task berikutnya membutuhkan fondasi yang sesuai ADR-0001 dan versi yang di
 
 - Verifikasi versi Laravel, PHP, Inertia, React, TypeScript, Tailwind, shadcn/ui yang didukung saat ini dari dokumentasi resmi
 - Pembuatan aplikasi dari starter kit React; penggabungan aman dengan berkas yang ada (AGENTS.md, CLAUDE.md, README, docs/, .gitignore) tanpa kehilangan isi
-- Pembangkitan kerangka tanpa PHP lokal (OD-37): job sementara `scaffold` di `.github/workflows/bootstrap.yml` membuat aplikasi dari starter kit pada runner GitHub-hosted dan mengunggah artefak berisi sumber dan lockfile (tanpa `vendor/`, `node_modules/`, `.env` atau kunci); eksekutor mengunduhnya (`gh run download`), memeriksa dan menggabungkannya, lalu meng-commit dengan identitas Owner. Workflow tidak pernah commit atau push (GOV-08). Job `scaffold` dihapus sebelum HEAD akhir PR. Jalan cadangan hanya bila cara ini tidak dapat dipakai: PHP CLI dan Composer portabel lingkup proyek menurut [TOOLCHAIN](../00-governance/TOOLCHAIN.md#docker-free-development-topology-pcr-002-od-37)
+- Pembangkitan kerangka tanpa PHP lokal (OD-37): job sementara `scaffold` di `.github/workflows/bootstrap.yml` membuat aplikasi dari starter kit pada runner GitHub-hosted dan mengunggah artefak berisi sumber dan lockfile (tanpa `vendor/`, `node_modules/`, `.env` atau kunci); eksekutor mengunduhnya (`gh run download`), memeriksa dan menggabungkannya, lalu meng-commit dengan identitas Owner. Impor memakai `scripts/executor/stage.ps1` (path eksplisit) dan pemeriksaan byte/akhir baris GOV-09 ([GIT_WORKFLOW](../00-governance/GIT_WORKFLOW.md#standing-identity-attribution-and-byte-policy-gov-08--gov-09)); `.gitattributes` bawaan starter kit tidak di-stage atau di-commit, dan bila berkas itu benar-benar diperlukan, eksekutor mengajukan keputusan Owner terpisah dengan diff terbatas dan dampaknya. Workflow tidak pernah commit atau push (GOV-08). Job `scaffold` dihapus sebelum HEAD akhir PR. Jalan cadangan hanya bila cara ini tidak dapat dipakai: PHP CLI dan Composer portabel lingkup proyek menurut [TOOLCHAIN](../00-governance/TOOLCHAIN.md#docker-free-development-topology-pcr-002-od-37)
 - Job `app-boot` di `bootstrap.yml`: PostgreSQL service container, `composer install`, `npm ci`, `npm run build`, `migrate:fresh` + rollback, server uji di runner, pemeriksaan HTTP rute masuk dan registrasi, Pest, Pint, ESLint, tsc, serta screenshot halaman masuk pada dua viewport sebagai artefak run
-- Perluasan gerbang `-Bootstrap` pada `scripts/executor/merge-verified.ps1` dan `scripts/executor/lib/merge-gate.ps1` beserta ujinya: merge bootstrap hanya bila setiap job workflow `bootstrap` pada SHA HEAD PR berakhir `success`, tanpa yang hilang, dilewati atau dibatalkan
+- Job `bootstrap-gate` dengan artefak `bootstrap-evidence`, serta perluasan gerbang `-Bootstrap` pada `scripts/executor/merge-verified.ps1` dan `scripts/executor/lib/merge-gate.ps1` beserta ujinya, menurut prosedur fail-closed [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara): run terbaru untuk PR dan SHA HEAD saat ini, semua job `success`, serta SHA HEAD, SHA base dan tree uji-merge yang cocok
+- Uji kemampuan C-16 pada PR uji sekali pakai sebelum merge TASK-002: gerbang menolak job gagal, dibatalkan atau dilewati, run yang hilang, bukti basi setelah push baru, base yang bergerak dan tree yang tidak cocok, serta menerima run hijau pada HEAD terbaru; PR uji ditutup tanpa merge dan cabangnya tidak dihapus eksekutor
 - Penonaktifan registrasi publik dan fitur yang bertentangan dengan OD-11 (registrasi terbuka, login sosial)
 - Kerangka modul `app/Modules/<Module>` dengan service provider pemuat rute, migrasi dan policy per modul
 - Konfigurasi dasar: zona waktu aplikasi UTC, lokal default `id`, fallback `en`, PostgreSQL sebagai koneksi default
@@ -207,7 +208,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Dokumen tata kelola tidak berubah isinya selain penambahan yang dimaksud (diff ditinjau)
 - TAC-04 Struktur `app/Modules` dengan minimal satu modul contoh terdaftar dan teruji
 - TAC-05 TOOLCHAIN mencatat versi aktual dan sumber verifikasinya
-- TAC-06 `bootstrap.yml` memenuhi aturan [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara), job `scaffold` tidak ada pada HEAD akhir, dan gerbang `-Bootstrap` menolak merge bila job `bootstrap` gagal, hilang, dilewati atau dibatalkan (uji positif dan negatif skrip merge)
+- TAC-06 `bootstrap.yml` memenuhi aturan [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara), job `scaffold` tidak ada pada HEAD akhir, dan C-16 VERIFIED: pada PR uji sekali pakai gerbang `-Bootstrap` menolak run yang gagal, dibatalkan, dilewati, hilang atau basi (HEAD atau base berubah, tree tidak cocok) dan menerima run hijau pada HEAD terbaru; bukti: URL PR uji, ID run, SHA HEAD, SHA base dan SHA uji-merge
 
 ## TEST REQUIREMENTS
 
@@ -223,7 +224,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Accessibility: N/A — axe tersedia sejak TASK-007
 - Production build: npm run build
 - Migration: migrate:fresh + rollback migrasi baru + hak peran DB (PostgreSQL service container, job `app-boot`)
-- Other: Uji skrip merge `-Bootstrap` positif dan negatif (PowerShell lokal, ringan)
+- Other: Uji skrip merge `-Bootstrap` positif dan negatif (PowerShell lokal, ringan) dan uji C-16 pada PR uji sekali pakai
 
 ## TEST CHECKLIST
 
@@ -281,4 +282,5 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 - Jangan mengakses basis data produksi atau proyek lain
 - Jangan memakai Docker lokal (termasuk perintah baca-saja), memasang PHP/Composer/PostgreSQL global, atau mengubah PATH, variabel lingkungan sistem atau layanan (OD-37)
 - Jangan memakai runner GitHub Actions self-hosted; workflow tidak commit, push atau memakai data riil
+- Jangan menambah `.gitattributes` atau menormalkan akhir baris tanpa keputusan Owner terpisah (GOV-09)
 - Jangan menambahkan atribusi AI pada commit/PR

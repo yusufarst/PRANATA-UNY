@@ -38,7 +38,7 @@ Setiap PR Task harus diverifikasi otomatis dan cepat tanpa run ganda atau check 
 
 - `.github/workflows/ci.yml` dengan job `changes`, `ci-fast`, `docs-check`, kerangka `ci-e2e` dan `ci-gate` (selalu berjalan; gagal bila job yang diperlukan gagal/dibatalkan)
 - `.github/workflows/ci-nightly.yml` kerangka
-- Konsolidasi `bootstrap.yml`: setiap pemeriksaan job `app-boot`, `db-integration` dan `quality` dipetakan ke job `ci.yml` (`ci-fast`) atau `ci-nightly.yml` (integrasi Gotenberg) tanpa kehilangan cakupan; `bootstrap.yml` dihapus pada PR yang sama; pemetaan dicatat di COMPLETION EVIDENCE
+- Konsolidasi `bootstrap.yml` menurut tabel klasifikasi [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara): pemeriksaan PR-wajib ke `ci-fast` atau `ci-e2e` (asap HTTP, smoke Gotenberg dan Pest grup `gotenberg`), integrasi Gotenberg mendalam ke `ci-nightly.yml` tanpa diklaim dicakup `ci-gate`; `bootstrap.yml` dihapus pada PR yang sama; pemetaan dicatat di COMPLETION EVIDENCE
 - Aturan keamanan workflow QUALITY_GATES §4 berlaku untuk `ci.yml` dan `ci-nightly.yml`: `pull_request` (bukan `pull_request_target`), permission minimum, action dipatok SHA, tanpa secret repositori untuk uji, runner GitHub-hosted saja (OD-37)
 - Pemicu: PR ke `main` dan push ke `main`; tidak pada setiap push cabang kerja
 - Cache Composer/npm, concurrency per PR dengan cancel-in-progress; run `main` tidak dibatalkan
@@ -169,7 +169,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 PR dengan job wajib yang gagal membuat `ci-gate` gagal (uji negatif)
 - TAC-04 Run kedua lebih cepat karena cache; run usang pada PR dibatalkan
 - TAC-05 Ruleset diterapkan Owner dan push ke `main` atas commit yang belum lulus `ci-gate` ditolak (uji)
-- TAC-06 `bootstrap.yml` tidak ada lagi; setiap pemeriksaan yang dibuktikan TASK-002–TASK-004 berjalan di `ci.yml` atau `ci-nightly.yml` (pemetaan dicatat) dan `ci-gate` gagal bila pemeriksaan wajib di antaranya gagal
+- TAC-06 `bootstrap.yml` tidak ada lagi; setiap pemeriksaan yang dibuktikan TASK-002–TASK-004 berpindah menurut tabel klasifikasi QUALITY_GATES §4.1 (pemetaan dicatat); `ci-gate` gagal bila pemeriksaan PR-wajib di `ci-fast` atau `ci-e2e` yang terpicu gagal (uji negatif); pemeriksaan `ci-nightly` tidak diklaim dicakup `ci-gate`
 
 ## TEST REQUIREMENTS
 

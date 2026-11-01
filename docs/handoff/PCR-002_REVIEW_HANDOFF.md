@@ -4,12 +4,24 @@ Status: PCR-002 — lihat [APPROVAL_RECORDS PCR-002](../00-governance/APPROVAL_R
 
 Review ini **terfokus dan proporsional** (FRZ-001, GOV-11): hanya delta PCR-002 di atas `main` yang sudah terbit. Baseline P0–P11, PCR-001 dan AUTH-013 tidak direview ulang.
 
+## 0. Koreksi atas review `793ad80` (REVISE)
+
+Review terfokus atas `793ad801d724e7a202cf911dba9d385d5df9ef4a` memberi verdict **REVISE** dengan tiga temuan; bagian lain PCR-002 dinilai dapat diterima. Satu commit koreksi di atas `793ad80`; review delta hanya memeriksa ketiga koreksi ini (`git diff 793ad80..<SHA HEAD>`).
+
+| Temuan | Koreksi | Tempat memeriksa |
+|---|---|---|
+| PCR002-SR-P1-01 Bukti merge bootstrap tidak terkait pasti dengan HEAD PR yang diuji | Prosedur fail-closed: run dicari lewat API Actions untuk PR dan SHA HEAD (run dan attempt terbaru); himpunan job wajib per Task; semua job `success`; job `bootstrap-gate` mengunggah `bootstrap-evidence` (nomor PR, SHA HEAD, SHA base, SHA uji-merge sintetis, tree); gerbang mencocokkan HEAD saat ini, `main` saat ini dan tree HEAD. Run hilang, basi, gagal, dibatalkan, dilewati atau konflik ditolak. Kemampuan baru C-16 wajib VERIFIED pada PR uji sekali pakai sebelum merge TASK-002. `pull_request` dan permission baca-saja tetap. | [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara); [EXECUTOR_OPERATING_MODEL §8.4, §13 C-16](../11-tasks/EXECUTOR_OPERATING_MODEL.md#84-mode-bootstrap-sebelum-ci-ada); [TASK-002](../11-tasks/TASK-002.md) IN SCOPE, TAC-06, TEST REQUIREMENTS |
+| PCR002-SR-P2-01 `.gitattributes` starter kit bertentangan dengan GOV-09 | `.gitattributes` bawaan starter kit tidak di-stage atau di-commit; impor memakai `stage.ps1` dan pemeriksaan byte GOV-09; bila diperlukan, keputusan Owner terpisah dengan diff terbatas. Baris risiko diperbaiki. | [TASK-002](../11-tasks/TASK-002.md) IN SCOPE dan DO NOT DO; bagian 5 di bawah |
+| PCR002-SR-P2-02 Pemeriksaan PR-wajib dan nightly tidak dibedakan | Tabel klasifikasi per pemeriksaan bootstrap: tujuan dan kelas gerbang. Semua pemeriksaan kebenaran dan integritas tetap PR-wajib di `ci-fast`/`ci-e2e`; smoke Gotenberg dan Pest grup `gotenberg` di `ci-e2e` (wajib bila terpicu, termasuk setiap perubahan Gotenberg); hanya integrasi Gotenberg mendalam di `ci-nightly`, dinyatakan tidak dicakup `ci-gate`. | [QUALITY_GATES §4 dan §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara); [TASK-005](../11-tasks/TASK-005.md) IN SCOPE, TAC-06; [DOCUMENT_ENGINE](../04-architecture/DOCUMENT_ENGINE.md) |
+
+Tidak berubah: 78 Task, dependensi, keputusan OD-37, izin jalur pengaman, prosedur paritas TASK-071, perlakuan D-19/C-14/C-15 dan semua bagian lain yang sudah diterima.
+
 ## 1. Identitas
 
 | Unsur | Nilai |
 |---|---|
 | Base (`origin/main`, terverifikasi) | `ef21d09074a0e08dd4054dcdabd2f9caf566e721` (TASK-001 DONE) |
-| Head | SHA HEAD cabang `docs/pcr-002-docker-free-development` yang dilaporkan bersama permintaan ini; satu commit di atas base; diff `git diff ef21d09..<SHA HEAD>` |
+| Head | SHA HEAD cabang `docs/pcr-002-docker-free-development` yang dilaporkan bersama permintaan ini: `793ad80` ditambah satu commit koreksi; diff penuh `git diff ef21d09..<SHA HEAD>` |
 | Keputusan Owner | OD-37 dari U-013 (2026-11-01): tanpa Docker/Compose, basis data, layanan atau runner Actions self-hosted untuk PRANATA di PC Owner; runner GitHub-hosted sebagai lingkungan utama uji berat; PostgreSQL dan Gotenberg boleh sebagai service container GitHub-hosted; tanpa perubahan global PHP/Composer/PostgreSQL/PATH/variabel lingkungan/layanan; tanpa layanan berbayar; tanpa data privat di GitHub publik |
 | Masukan utama | Usulan TASK PLAN CHANGE eksekutor di [CURRENT_HANDOFF](CURRENT_HANDOFF.md) (kini ditandai INCORPORATED) |
 | Keadaan | Belum diterima dan belum terbit. TASK-002 dan TASK-003 BLOCKED (gerbang publikasi PCR-002). |
@@ -20,7 +32,7 @@ Review ini **terfokus dan proporsional** (FRZ-001, GOV-11): hanya delta PCR-002 
 2. **TASK-002 tanpa PHP lokal.** Job sementara `scaffold` membuat aplikasi dari starter kit di runner dan mengunggah artefak sumber + lockfile. Eksekutor mengunduh, meninjau dan meng-commit dengan identitas Owner; workflow tidak pernah commit atau push. Job `app-boot` membuktikan boot, `migrate:fresh` + rollback, `GET /login` 200, registrasi 404, Pest, Pint, ESLint, tsc dan screenshot dua viewport. PHP/Composer portabel lingkup proyek hanya jalan cadangan.
 3. **TASK-003 tanpa Compose.** Job `db-integration`: major PostgreSQL yang dipatok, ekstensi `pg_trgm`/`ltree`/`btree_gist`, `numeric`/`timestamptz`, Pest paralel, DatabaseGuard, health dan konversi Gotenberg. Pengaman eksekutor diperketat: klien/URL basis data lokal ditolak.
 4. **TASK-004** membuktikan `composer qa`/`npm run qa` dan uji negatif di job `quality`. **TASK-005** memetakan setiap pemeriksaan bootstrap ke `ci.yml`/`ci-nightly.yml`, menghapus `bootstrap.yml` (TAC-06 baru) dan mempertahankan `ci-gate`, cache dan ruleset.
-5. **Gerbang merge bootstrap**: setiap job `bootstrap` pada SHA HEAD PR `success`, tanpa yang hilang, dilewati atau dibatalkan, ditambah review dan kesaksian Owner. Skrip merge `-Bootstrap` diperluas TASK-002 untuk menegakkannya.
+5. **Gerbang merge bootstrap** fail-closed (QUALITY_GATES §4.1): run terbaru untuk PR dan SHA HEAD saat ini, semua job `success`, SHA HEAD/base/tree uji-merge cocok, ditambah review dan kesaksian Owner. Skrip merge `-Bootstrap` diperluas TASK-002 dan dibuktikan sebagai C-16 pada PR uji sekali pakai.
 6. **Izin jalur pengaman** dipersempit per Task, hanya SUPERVISED (EXECUTOR_OPERATING_MODEL §5): TASK-002 `bootstrap.yml` + gerbang `-Bootstrap` skrip merge dan ujinya; TASK-003 `bootstrap.yml` + aturan basis data lokal di `policy.ps1` dan uji guard (hanya memperketat); TASK-004 `bootstrap.yml`. Larangan mode otonom tidak berubah.
 7. **Paritas BMU TASK-071**: oracle TypeScript murni (Node saja). CI publik membandingkan V1 dengan golden output sintetis. Paritas privat di PC Owner memakai CSV dan ekspor XLSX/teks PDF di `.pranata/private/parity/`. Yang dicatat hanya lulus/gagal, kategori selisih dan profil pola tanpa nilai, dan setiap kategori pola riil wajib punya kasus sintetis.
 8. **C-14 SUPERSEDED / NOT APPLICABLE** (tidak VERIFIED). C-15 tetap prasyarat Owner kemudian; runner headless Claude Code lokal ≠ runner Actions self-hosted.
@@ -69,11 +81,11 @@ Tidak berubah: berkas di `.github/`, `.claude/`, `.githooks/`, `scripts/` (perub
 
 | Risiko | Mitigasi |
 |---|---|
-| Run `pull_request` menguji merge ref, bukan HEAD | Opsi D-08 A mensyaratkan `main` leluhur HEAD (§8.1 no. 4), sehingga pohon merge = pohon HEAD; check-run dibaca pada SHA HEAD |
+| Run `pull_request` menguji commit uji-merge sintetis, bukan HEAD | Prosedur fail-closed QUALITY_GATES §4.1: run dicari lewat API Actions untuk PR dan SHA HEAD; artefak `bootstrap-evidence` mencatat SHA HEAD, SHA base, SHA uji-merge dan tree; tree uji = tree HEAD karena `main` leluhur HEAD; run hilang, basi, gagal, dibatalkan atau dilewati ditolak; dibuktikan sebagai C-16 pada PR uji sebelum merge TASK-002 |
 | Integritas kerangka dari artefak | Dibuat installer resmi di runner pada PR yang sama; diff ditinjau sebelum commit; lockfile; audit dependensi di `quality`; tanpa secret |
 | Artefak repositori publik dapat diunduh | Hanya sumber publik, lockfile dan screenshot sintetis; tanpa `.env`, `APP_KEY` atau data riil |
 | Umpan balik lebih lambat (putaran CI) | PR draft dibuka lebih awal; commit dikumpulkan; `timeout-minutes`; Node lokal untuk pemeriksaan cepat |
-| Akhir baris saat mengekstrak artefak di Windows (`core.autocrlf=true` global) | `stage.ps1` dan `.gitattributes` starter kit; diff ditinjau |
+| Akhir baris saat mengekstrak artefak di Windows (`core.autocrlf=true` global) | `.gitattributes` bawaan starter kit tidak di-stage atau di-commit (GOV-09); impor memakai `stage.ps1` dan pemeriksaan byte GIT_WORKFLOW; bila berkas itu diperlukan, keputusan Owner terpisah dengan diff terbatas; diff ditinjau |
 | Pengetatan guard memblokir perintah sah | Uji guard positif dan negatif di TASK-003 |
 | Paritas tidak langsung (V1 = oracle sintetis, oracle = legacy riil) | Profil pola memaksa kasus sintetis untuk setiap kategori riil; uji ujung-ke-ujung privat opsional di lingkungan Owner |
 | Konflik D-19 staging | Hanya dibatasi; keputusan lokasi staging dicadangkan untuk Owner sebelum TASK-040; M0–M2 tidak terdampak |
