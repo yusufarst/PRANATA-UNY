@@ -4,13 +4,13 @@ Updated: 2026-11-01 (Asia/Jakarta) | Canonical owner of phase progress: this fil
 
 - Approved baseline: **P0–P11 DONE — APPROVED** at `851013ff2dc33bf75a1973089f09e38c7512c058` — APPR-001–APPR-004 (P0–P3), APPR-005 (AUTH-010 remediation), APPR-006 (AUTH-012 compatibility amendment, U-011 procurement amendment, P4–P11, ADR-0001–ADR-0010 ACCEPTED, 78 Tasks). Independent Second Review: READY_FOR_OWNER_APPROVAL (reported by the Owner, U-012).
 - Publication: AUTH-011 **COMPLETED** — Verified on 2026-11-01 with `git ls-remote origin refs/heads/main`: `main` fast-forwarded `0e3f7de` → `167864c` (approved baseline with FRZ-001/AUTH-013; GitHub shows PR #1 merged at 2026-11-01T11:32:25Z with merge commit `851013f`, i.e. no merge commit) → `6b880b4` (PCR-001 as reviewed) → the follow-up state-transition commit ([APPROVAL_RECORDS](00-governance/APPROVAL_RECORDS.md#auth-011-and-pcr-001-publication-record)).
-- Planning Freeze: **REACHED — FRZ-001**, effective on `origin/main`. Task Baseline: **78 Tasks**; TASK-001 DONE; post-freeze change **PCR-001 PUBLISHED** (review `6b880b4` APPROVED WITH CONDITIONS, conditions applied); post-freeze change **PCR-002** (Docker-free development, OD-37) PENDING_SECOND_REVIEW / NOT_PUBLISHED, so TASK-002 and TASK-003 are BLOCKED by its publication gate.
+- Planning Freeze: **REACHED — FRZ-001**, effective on `origin/main`. Task Baseline: **78 Tasks**; TASK-001 DONE; post-freeze change **PCR-001 PUBLISHED** (review `6b880b4` APPROVED WITH CONDITIONS, conditions applied); post-freeze change **PCR-002 PUBLISHED** (Docker-free development, OD-37; delta review `6d7c8c3` APPROVED WITH CONDITIONS, condition carried into TASK-005); TASK-002 READY; no Task blocked.
 - Execution: **AUTHORIZED — AUTH-013**, standing autonomous execution of TASK-001–TASK-078 with maximum safe autonomy (bootstrap TASK-001–TASK-005, then AUTONOMOUS). Production, real institutional transactions, official policy activation with open GAPs, spending and GitHub administration remain Owner-only.
 - Authorizations: AUTH-013 ACTIVE; AUTH-011 completes on verified publication; AUTH-002–AUTH-010 and AUTH-012: HISTORICAL / COMPLETED.
 - Application implementation: NONE yet (TASK-001 delivered the executor guardrails; the application starts with TASK-002).
 - GAP-001–GAP-029: OPEN (resolved NONE); GAP-020 V1 relevance decided by OD-24.
 - Owner decisions D-01–D-29: answered ([OWNER_DECISION_PACKAGE §0](handoff/OWNER_DECISION_PACKAGE.md#0-jawaban-owner-2026-11-01)).
-- Next safe action: focused Second Review of PCR-002 ([PCR-002_REVIEW_HANDOFF](handoff/PCR-002_REVIEW_HANDOFF.md)); after verified publication and the state-transition commit, the open executor session continues with TASK-002 under AUTH-013 ([EXECUTOR_BOOTSTRAP §5.0](11-tasks/EXECUTOR_BOOTSTRAP.md#50-mulai-eksekusi-auth-013) is not resubmitted).
+- Next safe action: the open executor session continues with TASK-002 in SUPERVISED bootstrap mode under AUTH-013 ([EXECUTOR_BOOTSTRAP §5.0](11-tasks/EXECUTOR_BOOTSTRAP.md#50-mulai-eksekusi-auth-013) is not resubmitted).
 
 | Phase | Coverage | Status | Authorization / approval |
 |---|---|---|---|

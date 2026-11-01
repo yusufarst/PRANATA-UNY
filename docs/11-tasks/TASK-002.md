@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: BLOCKED
-EXECUTION STAGE: — (BLOCKED: gerbang publikasi PCR-002 — menunggu penerimaan Second Review, terbit di `origin/main` dan commit transisi status)
+STATUS: READY
+EXECUTION STAGE: READY
 RISK CLASS: HIGH
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: NO
@@ -208,7 +208,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Dokumen tata kelola tidak berubah isinya selain penambahan yang dimaksud (diff ditinjau)
 - TAC-04 Struktur `app/Modules` dengan minimal satu modul contoh terdaftar dan teruji
 - TAC-05 TOOLCHAIN mencatat versi aktual dan sumber verifikasinya
-- TAC-06 `bootstrap.yml` memenuhi aturan [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara), job `scaffold` tidak ada pada HEAD akhir, dan C-16 VERIFIED: pada PR uji sekali pakai gerbang `-Bootstrap` menolak run yang gagal, dibatalkan, dilewati, hilang atau basi (HEAD atau base berubah, tree tidak cocok) dan menerima run hijau pada HEAD terbaru; bukti: URL PR uji, ID run, SHA HEAD, SHA base dan SHA uji-merge
+- TAC-06 `bootstrap.yml` memenuhi aturan [QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara), job `scaffold` tidak ada pada HEAD akhir, dan C-16 VERIFIED: pada PR uji sekali pakai gerbang `-Bootstrap` menolak run yang gagal, dibatalkan, dilewati, hilang atau basi (HEAD atau base berubah, tree tidak cocok) dan menerima run hijau pada HEAD terbaru; perilaku filter `head_sha` API Actions dibuktikan dengan hasil API nyata; C-16 yang gagal menahan merge dan tidak melonggarkan gerbang; bukti: URL PR uji, ID run, SHA HEAD, SHA base dan SHA uji-merge
 
 ## TEST REQUIREMENTS
 

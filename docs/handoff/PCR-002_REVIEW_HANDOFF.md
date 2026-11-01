@@ -2,6 +2,8 @@
 
 Status: PCR-002 — lihat [APPROVAL_RECORDS PCR-002](../00-governance/APPROVAL_RECORDS.md#pcr-002) | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Untuk: Second Review Agent independen (ChatGPT)
 
+> Selesai: review delta atas `6d7c8c3` memberi verdict APPROVED WITH CONDITIONS; PCR-002 terbit di `main` pada 2026-11-01 dan syarat nonblocking PCR002-SR-C1 dimasukkan ke TASK-005 pada commit transisi status. Handoff ini kini historis.
+
 Review ini **terfokus dan proporsional** (FRZ-001, GOV-11): hanya delta PCR-002 di atas `main` yang sudah terbit. Baseline P0–P11, PCR-001 dan AUTH-013 tidak direview ulang.
 
 ## 0. Koreksi atas review `793ad80` (REVISE)

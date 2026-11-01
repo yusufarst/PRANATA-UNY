@@ -45,7 +45,7 @@ Setiap PR Task harus diverifikasi otomatis dan cepat tanpa run ganda atau check 
 - PostgreSQL service versi sama dengan produksi; Pest paralel
 - composer audit, npm audit, gitleaks
 - Pemeriksa dokumen (tautan/anchor/ID dan konsistensi TASK_PLAN) dipindahkan dari skrip perencanaan ke `scripts/docs-check`
-- Filter `ci-e2e` mencakup kode aplikasi, `config/`, `bootstrap/`, lockfile dependensi, `vite.config.*`, `playwright.config.*`, `tsconfig*.json` dan berkas workflow
+- Filter `ci-e2e` mencakup kode aplikasi, `config/`, `bootstrap/`, lockfile dependensi, `vite.config.*`, `playwright.config.*`, `tsconfig*.json` dan berkas workflow, serta setiap jalur implementasi, template, fixture, konfigurasi dan uji yang peka Gotenberg, termasuk uji di luar `tests/e2e/` (misalnya uji grup `gotenberg` di `tests/**`) (PCR002-SR-C1)
 - Instruksi ruleset `main` sesuai keputusan D-08 (opsi A: status check `ci-gate` wajib, riwayat linear, tanpa force push/penghapusan, tanpa aturan PR wajib; opsi B: PR wajib + `ci-gate`) dan perlindungan tag `v*`; Owner menerapkannya setelah `ci-gate` terbukti pada PR uji
 
 ## OUT OF SCOPE
@@ -170,6 +170,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-04 Run kedua lebih cepat karena cache; run usang pada PR dibatalkan
 - TAC-05 Ruleset diterapkan Owner dan push ke `main` atas commit yang belum lulus `ci-gate` ditolak (uji)
 - TAC-06 `bootstrap.yml` tidak ada lagi; setiap pemeriksaan yang dibuktikan TASK-002–TASK-004 berpindah menurut tabel klasifikasi QUALITY_GATES §4.1 (pemetaan dicatat); `ci-gate` gagal bila pemeriksaan PR-wajib di `ci-fast` atau `ci-e2e` yang terpicu gagal (uji negatif); pemeriksaan `ci-nightly` tidak diklaim dicakup `ci-gate`
+- TAC-07 Uji regresi filter (PCR002-SR-C1): PR uji yang hanya mengubah satu uji Gotenberg di luar `tests/e2e/` memicu `ci-e2e` dengan pemeriksaan Gotenberg wajibnya, dan `ci-gate` tidak lulus tanpa pemeriksaan itu berjalan dan lulus; perilaku dicatat di COMPLETION EVIDENCE
 
 ## TEST REQUIREMENTS
 
