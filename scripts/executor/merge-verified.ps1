@@ -1,5 +1,5 @@
 # Guarded verified fast-forward of main to a PR HEAD (D-08 option A; EXECUTOR_OPERATING_MODEL 8.1-8.4).
-# -Bootstrap applies section 8.4: TASK-001 to TASK-004 only, SUPERVISED only, no ci-gate yet.
+# -Bootstrap applies section 8.4 and QUALITY_GATES 4.1: TASK-002 to TASK-004 only, SUPERVISED only, no ci-gate yet.
 # Task and risk class come from the PR branch and the contract on main, never from the caller.
 # Review evidence is read from .pranata/executor/review-<sha>.json, written after the reviews finish.
 param(
@@ -30,7 +30,7 @@ $checkedMain = ((& git -C $Root ls-remote origin refs/heads/main) -split '\s+')[
 
 $prInfo = $null
 for ($attempt = 0; $attempt -lt 4; $attempt++) {
-    $prInfo = (& gh pr view $Pr --json state,baseRefName,headRefName,headRefOid,isDraft,mergeable,title,body) -join "`n" | ConvertFrom-Json
+    $prInfo = (& gh pr view $Pr --repo yusufarst/PRANATA-UNY --json state,baseRefName,headRefName,headRefOid,isDraft,mergeable,title,body) -join "`n" | ConvertFrom-Json
     if ($prInfo.mergeable -ne 'UNKNOWN') { break }
     Start-Sleep -Seconds 5
 }
@@ -112,7 +112,7 @@ if ($after -ne $VerifiedSha) { throw "remote main is $after, expected $VerifiedS
 Write-Output "MERGED: remote main = $after"
 $state = $null
 for ($attempt = 0; $attempt -lt 6; $attempt++) {
-    $state = (& gh pr view $Pr --json state --jq .state)
+    $state = (& gh pr view $Pr --repo yusufarst/PRANATA-UNY --json state --jq .state)
     if ($state -eq 'MERGED') { break }
     Start-Sleep -Seconds 10
 }

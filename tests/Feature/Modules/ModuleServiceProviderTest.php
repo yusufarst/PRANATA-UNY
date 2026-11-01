@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Modules\Platform\Providers\PlatformServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Tests\Fixtures\Modules\Sample\Providers\SampleServiceProvider;
 use Tests\Fixtures\Modules\Sample\SampleRecord;
 
@@ -19,6 +20,11 @@ test('a module provider loads the routes of its module behind their own middlewa
     $this->actingAs(User::factory()->create())
         ->get('/sample-module/ping')
         ->assertNoContent();
+
+    $route = collect(Route::getRoutes()->getRoutes())
+        ->first(fn ($route) => $route->uri() === 'sample-module/ping');
+
+    expect($route->gatherMiddleware())->toContain('web')->toContain('auth');
 });
 
 test('a module provider loads the migrations of its module', function () {

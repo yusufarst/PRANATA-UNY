@@ -136,7 +136,7 @@ function Get-PranataBootstrapRun {
     $dir = Join-Path $WorkDir ("bootstrap-evidence-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
     try {
         $ErrorActionPreference = 'Continue'
-        & gh run download $result.RunId -R $Repo -n bootstrap-evidence -D $dir 2>$null
+        & gh run download $result.RunId -R $Repo -n bootstrap-evidence -D $dir 2>$null | Out-Null
         if ($LASTEXITCODE -ne 0) { throw "gh run download exited $LASTEXITCODE" }
         $result.Evidence = [IO.File]::ReadAllText((Join-Path $dir 'bootstrap-evidence.json')) | ConvertFrom-Json
     } catch {

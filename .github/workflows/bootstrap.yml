@@ -85,11 +85,20 @@ jobs:
       - name: Pint
         run: composer lint:check
 
+      - name: Larastan
+        run: composer types:check
+
       - name: Frontend lint and format
         run: npm run check
 
       - name: TypeScript
         run: npm run types:check
+
+      # QUALITY_GATES 2.1: no unexcepted high or critical finding. A dependency arrives here for the first time.
+      - name: Dependency audits
+        run: |
+          composer audit
+          npm audit --audit-level=high
 
       - name: Start the test server
         run: |
@@ -120,7 +129,8 @@ jobs:
               --window-size="$size" --virtual-time-budget=8000 \
               --screenshot="screenshots/login-${size/,/x}.png" http://127.0.0.1:8000/login
           done
-          ls -l screenshots
+          file screenshots/login-390x844.png | grep -q '390 x 844'
+          file screenshots/login-1440x900.png | grep -q '1440 x 900'
 
       - name: Upload screenshots
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

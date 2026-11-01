@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -28,9 +29,9 @@ test('the login page exists', function () {
 test('no page links to registration', function () {
     expect(resource_path('js/pages/auth/register.tsx'))->not->toBeFile();
 
-    foreach (['auth/login', 'welcome'] as $page) {
-        expect(file_get_contents(resource_path("js/pages/{$page}.tsx")))
-            ->not->toContain('register');
+    foreach (File::allFiles(resource_path('js')) as $file) {
+        expect($file->getContents())
+            ->not->toMatch('~\bregister\(\)|routes/register|["\'`]/register\b~');
     }
 });
 

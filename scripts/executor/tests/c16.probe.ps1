@@ -48,7 +48,7 @@ function Say([string]$Name, [bool]$Ok, [string]$Evidence) {
     [void]$results.Add(@{ name = $Name; ok = $Ok; evidence = $Evidence })
     Write-Output ("{0} {1}: {2}" -f $Name, $status, $Evidence)
 }
-function Set-Workflow([string]$Root, [string]$Content) {
+function Set-Workflow([string]$Root, $Content) {
     $file = Join-Path $Root $workflowPath
     if ($null -eq $Content) { if (Test-Path -LiteralPath $file) { Remove-Item -LiteralPath $file }; return }
     [void](New-Item -ItemType Directory -Path (Split-Path -Parent $file) -Force)

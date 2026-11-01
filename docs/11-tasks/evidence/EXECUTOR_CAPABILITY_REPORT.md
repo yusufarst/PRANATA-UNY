@@ -38,7 +38,7 @@ Diverifikasi TASK-002 pada 2026-11-01 dengan `scripts/executor/tests/c16.probe.p
 | Run dibatalkan | 41327322461 | `0a641ab` | Ditolak: kesimpulan `cancelled` |
 | Job wajib dilewati | [41327463823](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41327463823) | `cde61af` | Ditolak: job `app-boot` `skipped` |
 | Job tambahan dilewati, run `success` | [41327518373](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41327518373) | `8b42d15` | Ditolak: job `extra` `skipped` |
-| Run hilang | Tidak ada | `44056dc` | Ditolak: tidak ada run bootstrap |
+| Run hilang (berkas workflow kosong pada HEAD ini) | Tidak ada | `44056dc` | Ditolak: tidak ada run bootstrap |
 | Run hijau pada HEAD terbaru | [41327683341](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41327683341), attempt 1 | `542e683` | **Diterima**; base `bbf2e59`, uji-merge `4ec7c0e` |
 | Push baru, SHA lama | 41327683341 | `542e683` → `3b227f3` | Ditolak: 8.1.1 |
 | Bukti lama untuk HEAD baru | 41327683341 | `3b227f3` | Ditolak: `head_sha` dan `tree_sha` |
