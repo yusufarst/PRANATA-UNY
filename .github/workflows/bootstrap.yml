@@ -21,6 +21,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
+      - name: Report the PostgreSQL image digest for pinning
+        run: |
+          docker pull --quiet postgres:18
+          docker inspect --format '{{index .RepoDigests 0}}' postgres:18
+          docker run --rm postgres:18 postgres --version
+          google-chrome --version
+
       - name: Set up PHP
         uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:

@@ -56,6 +56,13 @@ if (-not $Bootstrap) {
     $gate = @($checkRuns | Where-Object { $_.name -ceq 'ci-gate' }) | Select-Object -First 1
     if ($gate -and $gate.conclusion) { $ciConclusion = [string]$gate.conclusion }
 }
+$bootstrapFailures = $null
+$bootstrapRun = $null
+if ($Bootstrap -and $script:BootstrapRequiredJobs.ContainsKey([string]$task.TaskId)) {
+    $tree = (& git -C $Root rev-parse "$($prInfo.headRefOid)^{tree}")
+    $bootstrapRun = Get-PranataBootstrapRun -Repo 'yusufarst/PRANATA-UNY' -Pr $Pr -HeadSha $prInfo.headRefOid -WorkDir $paths.Dir
+    $bootstrapFailures = Get-PranataBootstrapFailures -Run $bootstrapRun -TaskId $task.TaskId -Pr $Pr -HeadSha $prInfo.headRefOid -MainSha $checkedMain -Tree $tree
+}
 $review = Read-PranataJson (Join-Path $paths.Dir "review-$VerifiedSha.json")
 $changed = @(& git -C $Root diff --name-only "$checkedMain...$VerifiedSha")
 $touched = @($changed | Where-Object { $_ -match $script:GuardPathRegex })
@@ -66,7 +73,7 @@ $remoteMain = ((& git -C $Root ls-remote origin refs/heads/main) -split '\s+')[0
 
 $facts = @{
     CheckpointTaskId = (Get-PranataCheckpoint $Root).task_id
-    Bootstrap = [bool]$Bootstrap; Mode = $mode; TaskId = $task.TaskId; RiskClass = $riskClass; TaskStatus = $taskStatus
+    Bootstrap = [bool]$Bootstrap; BootstrapFailures = $bootstrapFailures; Mode = $mode; TaskId = $task.TaskId; RiskClass = $riskClass; TaskStatus = $taskStatus
     Authorized = (Test-PranataAuthorizationText $records $task.TaskId); ReconcileScopeOk = $reconcileOk
     PrState = $prInfo.state; PrBase = $prInfo.baseRefName; IsDraft = [bool]$prInfo.isDraft; PrMergeable = $prInfo.mergeable
     PrHeadSha = $prInfo.headRefOid; VerifiedSha = $VerifiedSha
@@ -88,6 +95,10 @@ if ($failures.Count -gt 0) {
     exit 1
 }
 Write-Output "Gate PASS: $($task.TaskId) ($riskClass), main $remoteMain -> $VerifiedSha (PR #$Pr)"
+if ($bootstrapRun) {
+    # QUALITY_GATES 4.1 step 5: these values go into COMPLETION EVIDENCE.
+    Write-Output "Bootstrap evidence: run $($bootstrapRun.RunId) attempt $($bootstrapRun.RunAttempt), merge $($bootstrapRun.Evidence.merge_sha), head $($bootstrapRun.Evidence.head_sha), base $($bootstrapRun.Evidence.base_sha)"
+}
 if ($DryRun) { Write-Output 'DRY RUN: nothing pushed.'; exit 0 }
 
 # Re-read main right before the push to shrink the race window; the push itself is a plain fast-forward.

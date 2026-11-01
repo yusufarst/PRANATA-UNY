@@ -1,10 +1,16 @@
 # Merge gate of EXECUTOR_OPERATING_MODEL section 8.1, as a pure function over collected facts,
 # so every negative path is testable without GitHub and without touching main.
 
+# Minimum job set per Task (QUALITY_GATES 4.1). A Task not listed here cannot use bootstrap evidence.
+$script:BootstrapRequiredJobs = @{
+    'TASK-002' = @('app-boot', 'bootstrap-gate')
+    'TASK-003' = @('app-boot', 'db-integration', 'bootstrap-gate')
+    'TASK-004' = @('app-boot', 'db-integration', 'quality', 'bootstrap-gate')
+}
+
 function Get-PranataMergeFailures {
     param([hashtable]$Facts)
     $failures = New-Object System.Collections.ArrayList
-    $bootstrapTasks = @('TASK-001', 'TASK-002', 'TASK-003', 'TASK-004')
 
     if (-not $Facts.TaskId) { [void]$failures.Add('task: PR branch does not name a Task') }
     if ($Facts.RiskClass -notin @('LOW', 'STANDARD', 'HIGH')) { [void]$failures.Add("task: risk class '$($Facts.RiskClass)' could not be read from the contract on main") }
@@ -14,7 +20,10 @@ function Get-PranataMergeFailures {
     if ($Facts.CheckpointTaskId -and $Facts.CheckpointTaskId -ne $Facts.TaskId) { [void]$failures.Add("task: PR names $($Facts.TaskId), checkpoint names $($Facts.CheckpointTaskId)") }
     if ($Facts.Bootstrap) {
         if ($Facts.Mode -ne 'SUPERVISED') { [void]$failures.Add('bootstrap: only allowed in a SUPERVISED session') }
-        if ($Facts.TaskId -notin $bootstrapTasks) { [void]$failures.Add("bootstrap: not allowed for $($Facts.TaskId) (only TASK-001 to TASK-004)") }
+        if (-not $script:BootstrapRequiredJobs.ContainsKey([string]$Facts.TaskId)) { [void]$failures.Add("bootstrap: not allowed for $($Facts.TaskId) (only TASK-002 to TASK-004)") }
+        # Fail closed: bootstrap mode without collected evidence is never a pass.
+        if ($null -eq $Facts.BootstrapFailures) { [void]$failures.Add('bootstrap 4.1: evidence was not collected') }
+        foreach ($item in @($Facts.BootstrapFailures)) { if ($item) { [void]$failures.Add($item) } }
     }
     if ($Facts.PrState -ne 'OPEN') { [void]$failures.Add("8.1.5 PR state is $($Facts.PrState), expected OPEN") }
     if ($Facts.PrBase -ne 'main') { [void]$failures.Add("8.1.5 PR base is $($Facts.PrBase), expected main") }
@@ -47,6 +56,95 @@ function Get-PranataMergeFailures {
         [void]$failures.Add("GOV-08 commit identity or attribution problem: $($Facts.CommitIdentityProblems -join '; ')")
     }
     return ,$failures
+}
+
+# QUALITY_GATES 4.1 steps 2-4 as a pure function over what GitHub reported. A pull_request run tests the synthetic
+# merge commit, not the PR HEAD, so the link to HEAD, base and tree comes from run metadata and the evidence artifact.
+function Get-PranataBootstrapFailures {
+    param([hashtable]$Run, [string]$TaskId, [int]$Pr, [string]$HeadSha, [string]$MainSha, [string]$Tree)
+    $failures = New-Object System.Collections.ArrayList
+    $required = $script:BootstrapRequiredJobs[$TaskId]
+    if (-not $required) { return ,$failures }
+    if ($Run.LookupError) { [void]$failures.Add("bootstrap 4.1.2 run lookup failed: $($Run.LookupError)"); return ,$failures }
+    if (-not $Run.RunId) { [void]$failures.Add("bootstrap 4.1.2 no bootstrap run for PR $Pr on HEAD $HeadSha"); return ,$failures }
+
+    if ($Run.RunStatus -cne 'completed') { [void]$failures.Add("bootstrap 4.1.3 run $($Run.RunId) status is '$($Run.RunStatus)', expected completed") }
+    if ($Run.RunConclusion -cne 'success') { [void]$failures.Add("bootstrap 4.1.3 run $($Run.RunId) conclusion is '$($Run.RunConclusion)', expected success") }
+    if ($Run.JobError) { [void]$failures.Add("bootstrap 4.1.3 job list failed: $($Run.JobError)") }
+    $jobs = @($Run.Jobs)
+    if ($Run.JobsTotal -ne $jobs.Count) { [void]$failures.Add("bootstrap 4.1.3 job list is incomplete: $($jobs.Count) of $($Run.JobsTotal)") }
+    foreach ($name in $required) {
+        if (@($jobs | Where-Object { $_.name -ceq $name }).Count -eq 0) { [void]$failures.Add("bootstrap 4.1.3 required job '$name' is missing") }
+    }
+    foreach ($job in $jobs) {
+        if ($job.conclusion -cne 'success') { [void]$failures.Add("bootstrap 4.1.3 job '$($job.name)' is '$($job.conclusion)', expected success") }
+    }
+
+    $evidence = $Run.Evidence
+    if (-not $evidence) {
+        [void]$failures.Add("bootstrap 4.1.4 evidence artifact unavailable: $($Run.EvidenceError)")
+        return ,$failures
+    }
+    $checks = @(
+        @('pr', [string]$Pr), @('head_sha', $HeadSha), @('base_sha', $MainSha), @('tree_sha', $Tree),
+        @('run_id', [string]$Run.RunId), @('run_attempt', [string]$Run.RunAttempt)
+    )
+    foreach ($check in $checks) {
+        $actual = [string]$evidence.($check[0])
+        if (-not $check[1] -or $actual -cne $check[1]) { [void]$failures.Add("bootstrap 4.1.4 evidence $($check[0]) is '$actual', expected '$($check[1])'") }
+    }
+    if ([string]$evidence.merge_sha -cnotmatch '^[0-9a-f]{40}$') { [void]$failures.Add("bootstrap 4.1.4 evidence merge_sha is '$($evidence.merge_sha)'") }
+    return ,$failures
+}
+
+# Reads a GitHub API GET as an object; native stderr never decides, the exit code does.
+function Invoke-PranataGhJson([string]$Path) {
+    $ErrorActionPreference = 'Continue'
+    $output = & gh api $Path 2>$null
+    if ($LASTEXITCODE -ne 0) { throw "gh api $Path exited $LASTEXITCODE" }
+    return (($output -join "`n") | ConvertFrom-Json)
+}
+
+# Collects what Get-PranataBootstrapFailures judges. Any error is recorded, so it can only lead to a refusal.
+function Get-PranataBootstrapRun {
+    param([string]$Repo, [int]$Pr, [string]$HeadSha, [string]$WorkDir)
+    $result = @{
+        LookupError = $null; RunId = $null; RunAttempt = $null; RunStatus = $null; RunConclusion = $null
+        Jobs = @(); JobsTotal = -1; JobError = $null; Evidence = $null; EvidenceError = 'not read'
+    }
+    try {
+        $listing = Invoke-PranataGhJson "repos/$Repo/actions/workflows/bootstrap.yml/runs?event=pull_request&head_sha=$HeadSha&per_page=100"
+        # The filter is rechecked here: only a run proven to belong to this PR and HEAD counts.
+        $runs = @($listing.workflow_runs | Where-Object {
+            $_.head_sha -ceq $HeadSha -and $_.event -ceq 'pull_request' -and
+            @($_.pull_requests | Where-Object { $_.number -eq $Pr }).Count -gt 0
+        } | Sort-Object { [long]$_.id }, { [int]$_.run_attempt })
+        if ($runs.Count -eq 0) { return $result }
+        $latest = $runs[-1]
+        $result.RunId = $latest.id; $result.RunAttempt = $latest.run_attempt
+        $result.RunStatus = $latest.status; $result.RunConclusion = $latest.conclusion
+    } catch {
+        $result.LookupError = $_.Exception.Message
+        return $result
+    }
+    try {
+        $jobs = Invoke-PranataGhJson "repos/$Repo/actions/runs/$($result.RunId)/attempts/$($result.RunAttempt)/jobs?per_page=100"
+        $result.JobsTotal = [int]$jobs.total_count
+        $result.Jobs = @($jobs.jobs | ForEach-Object { @{ name = $_.name; conclusion = $_.conclusion } })
+    } catch { $result.JobError = $_.Exception.Message }
+
+    $dir = Join-Path $WorkDir ("bootstrap-evidence-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
+    try {
+        $ErrorActionPreference = 'Continue'
+        & gh run download $result.RunId -R $Repo -n bootstrap-evidence -D $dir 2>$null
+        if ($LASTEXITCODE -ne 0) { throw "gh run download exited $LASTEXITCODE" }
+        $result.Evidence = [IO.File]::ReadAllText((Join-Path $dir 'bootstrap-evidence.json')) | ConvertFrom-Json
+    } catch {
+        $result.EvidenceError = $_.Exception.Message
+    } finally {
+        if (Test-Path -LiteralPath $dir) { Remove-Item -LiteralPath $dir -Recurse -Force }
+    }
+    return $result
 }
 
 # Reads the PR branch name; the Task is never taken from a caller-supplied argument.

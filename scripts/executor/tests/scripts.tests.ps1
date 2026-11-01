@@ -49,12 +49,98 @@ try {
     Assert ((Get-PranataMergeFailures -Facts $sup).Count -eq 0) 'gate: guard paths pass in SUPERVISED'
     $sub = $good.Clone(); $sub.CodexStatus = 'TIMEOUT'; $sub.SubstituteReviewDone = $true
     Assert ((Get-PranataMergeFailures -Facts $sub).Count -eq 0) 'gate: substitute review satisfies Codex timeout'
-    $boot = $good.Clone(); $boot.Bootstrap = $true; $boot.Mode = 'SUPERVISED'; $boot.TaskId = 'TASK-001'; $boot.CiGateConclusion = 'missing'
-    Assert ((Get-PranataMergeFailures -Facts $boot).Count -eq 0) 'gate: bootstrap TASK-001 SUPERVISED without ci-gate passes'
+    $boot = $good.Clone(); $boot.Bootstrap = $true; $boot.BootstrapFailures = @(); $boot.Mode = 'SUPERVISED'; $boot.TaskId = 'TASK-002'; $boot.CiGateConclusion = 'missing'
+    Assert ((Get-PranataMergeFailures -Facts $boot).Count -eq 0) 'gate: bootstrap TASK-002 SUPERVISED without ci-gate passes'
     $bootAuto = $boot.Clone(); $bootAuto.Mode = 'AUTONOMOUS'
     Assert ((Get-PranataMergeFailures -Facts $bootAuto).Count -ge 1) 'gate: bootstrap refused in AUTONOMOUS'
     $bootLate = $boot.Clone(); $bootLate.TaskId = 'TASK-005'
     Assert ((Get-PranataMergeFailures -Facts $bootLate).Count -ge 1) 'gate: bootstrap refused for TASK-005'
+    $bootEarly = $boot.Clone(); $bootEarly.TaskId = 'TASK-001'
+    Assert ((Get-PranataMergeFailures -Facts $bootEarly).Count -ge 1) 'gate: bootstrap refused for TASK-001, which has no bootstrap job set'
+    $bootNoEvidence = $boot.Clone(); $bootNoEvidence.BootstrapFailures = $null
+    Assert (((Get-PranataMergeFailures -Facts $bootNoEvidence) -join ';') -match 'not collected') 'gate: bootstrap without collected evidence refused'
+    $bootBad = $boot.Clone(); $bootBad.BootstrapFailures = @('bootstrap 4.1.3 x')
+    Assert (((Get-PranataMergeFailures -Facts $bootBad) -join ';') -match '4\.1\.3 x') 'gate: bootstrap evidence failure reaches the refusal'
+
+    # --- Bootstrap evidence (QUALITY_GATES 4.1): every step fails on its own.
+    $headS = 'a' * 40; $mainS = 'b' * 40; $treeS = 'c' * 40; $mergeS = 'd' * 40
+    function New-BootRun {
+        return @{
+            LookupError = $null; RunId = 77; RunAttempt = 2; RunStatus = 'completed'; RunConclusion = 'success'
+            Jobs = @(@{ name = 'app-boot'; conclusion = 'success' }, @{ name = 'bootstrap-gate'; conclusion = 'success' })
+            JobsTotal = 2; JobError = $null; EvidenceError = $null
+            Evidence = [pscustomobject]@{ pr = 5; head_sha = $headS; base_sha = $mainS; tree_sha = $treeS; merge_sha = $mergeS; run_id = 77; run_attempt = 2 }
+        }
+    }
+    function Get-BootFailures([hashtable]$Run, [string]$TaskId = 'TASK-002') {
+        return (Get-PranataBootstrapFailures -Run $Run -TaskId $TaskId -Pr 5 -HeadSha $headS -MainSha $mainS -Tree $treeS)
+    }
+    Assert ((Get-BootFailures (New-BootRun)).Count -eq 0) 'bootstrap: green run on the latest HEAD accepted'
+    Assert (((Get-BootFailures (New-BootRun) 'TASK-003') -join ';') -match "'db-integration' is missing") 'bootstrap: TASK-003 requires db-integration'
+    Assert (((Get-BootFailures (New-BootRun) 'TASK-004') -join ';') -match "'quality' is missing") 'bootstrap: TASK-004 requires quality'
+    foreach ($row in @(
+        @('RunId', $null, '4\.1\.2'), @('LookupError', 'boom', '4\.1\.2'), @('RunStatus', 'in_progress', '4\.1\.3'), @('RunConclusion', 'failure', '4\.1\.3'),
+        @('RunConclusion', 'cancelled', '4\.1\.3'), @('RunConclusion', $null, '4\.1\.3'), @('JobError', 'boom', '4\.1\.3'), @('JobsTotal', 3, '4\.1\.3'), @('Evidence', $null, '4\.1\.4')
+    )) {
+        $run = New-BootRun; $run[$row[0]] = $row[1]
+        Assert (((Get-BootFailures $run) -join ';') -match $row[2]) "bootstrap: $($row[0])=$($row[1]) refused"
+    }
+    foreach ($conclusion in @('failure', 'cancelled', 'skipped', 'timed_out', 'action_required', 'neutral', $null)) {
+        $run = New-BootRun; $run.Jobs = @(@{ name = 'app-boot'; conclusion = $conclusion }, @{ name = 'bootstrap-gate'; conclusion = 'success' })
+        Assert (((Get-BootFailures $run) -join ';') -match "job 'app-boot'") "bootstrap: job conclusion '$conclusion' refused"
+    }
+    $run = New-BootRun; $run.Jobs = @(@{ name = 'bootstrap-gate'; conclusion = 'success' }); $run.JobsTotal = 1
+    Assert (((Get-BootFailures $run) -join ';') -match "'app-boot' is missing") 'bootstrap: missing required job refused'
+    $run = New-BootRun; $run.Jobs += @{ name = 'extra'; conclusion = 'skipped' }; $run.JobsTotal = 3
+    Assert (((Get-BootFailures $run) -join ';') -match "job 'extra'") 'bootstrap: a skipped job outside the required set refused'
+    foreach ($field in @('pr', 'head_sha', 'base_sha', 'tree_sha', 'run_id', 'run_attempt', 'merge_sha')) {
+        $run = New-BootRun; $run.Evidence.$field = 'other'
+        Assert (((Get-BootFailures $run) -join ';') -match "4\.1\.4 evidence $field") "bootstrap: evidence $field mismatch refused"
+    }
+    $run = New-BootRun; $run.Evidence = [pscustomobject]@{ pr = 5 }
+    Assert (((Get-BootFailures $run) -join ';') -match 'evidence head_sha') 'bootstrap: incomplete evidence refused'
+    Assert ((Get-BootFailures (New-BootRun) 'TASK-010').Count -eq 0) 'bootstrap: a Task outside the map is refused by the gate, not here'
+
+    # --- Run collection against a stubbed gh: only a run proven to belong to this PR and HEAD counts.
+    $script:ghRuns = '{"workflow_runs":[]}'; $script:ghJobs = '{"total_count":0,"jobs":[]}'; $script:ghEvidence = $null; $script:ghExit = 0
+    function gh {
+        $global:LASTEXITCODE = $script:ghExit
+        if ($script:ghExit -ne 0) { return }
+        if ($args[0] -eq 'api') { if ($args[1] -match '/attempts/') { return $script:ghJobs } else { return $script:ghRuns } }
+        if (-not $script:ghEvidence) { $global:LASTEXITCODE = 1; return }
+        $target = $args[$args.Count - 1]
+        [void](New-Item -ItemType Directory -Path $target -Force)
+        [IO.File]::WriteAllText((Join-Path $target 'bootstrap-evidence.json'), $script:ghEvidence)
+    }
+    function New-RunJson([long]$Id, [int]$Attempt, [string]$Head, [int]$Number, [string]$Event = 'pull_request') {
+        return '{"id":' + $Id + ',"run_attempt":' + $Attempt + ',"status":"completed","conclusion":"success","head_sha":"' + $Head + '","event":"' + $Event + '","pull_requests":[{"number":' + $Number + '}]}'
+    }
+    $bootDir = Join-Path $work 'bootrun'
+    [void](New-Item -ItemType Directory -Path $bootDir)
+    $collect = { Get-PranataBootstrapRun -Repo 'o/r' -Pr 5 -HeadSha $headS -WorkDir $bootDir }
+
+    $collected = & $collect
+    Assert ($null -eq $collected.RunId -and -not $collected.LookupError) 'collect: no run gives no run id'
+    Assert (((Get-PranataBootstrapFailures -Run $collected -TaskId 'TASK-002' -Pr 5 -HeadSha $headS -MainSha $mainS -Tree $treeS) -join ';') -match '4\.1\.2 no bootstrap run') 'collect: a missing run is refused'
+
+    $script:ghRuns = '{"workflow_runs":[' + (New-RunJson 90 1 ('e' * 40) 5) + ',' + (New-RunJson 91 1 $headS 6) + ',' + (New-RunJson 92 1 $headS 5 'push') + ',' + (New-RunJson 70 1 $headS 5) + ',' + (New-RunJson 77 2 $headS 5) + ']}'
+    $script:ghJobs = '{"total_count":2,"jobs":[{"name":"app-boot","conclusion":"success"},{"name":"bootstrap-gate","conclusion":"success"}]}'
+    $script:ghEvidence = '{"pr":5,"head_sha":"' + $headS + '","base_sha":"' + $mainS + '","tree_sha":"' + $treeS + '","merge_sha":"' + $mergeS + '","run_id":77,"run_attempt":2}'
+    $collected = & $collect
+    Assert ($collected.RunId -eq 77 -and $collected.RunAttempt -eq 2) "collect: another HEAD, another PR, another event and older runs are ignored ($($collected.RunId))"
+    Assert ((Get-PranataBootstrapFailures -Run $collected -TaskId 'TASK-002' -Pr 5 -HeadSha $headS -MainSha $mainS -Tree $treeS).Count -eq 0) 'collect: the collected green run passes'
+    Assert (@(Get-ChildItem -LiteralPath $bootDir).Count -eq 0) 'collect: the downloaded evidence is removed'
+
+    $script:ghEvidence = $null
+    $collected = & $collect
+    Assert (((Get-PranataBootstrapFailures -Run $collected -TaskId 'TASK-002' -Pr 5 -HeadSha $headS -MainSha $mainS -Tree $treeS) -join ';') -match '4\.1\.4 evidence artifact unavailable') 'collect: a missing artifact is refused'
+    $script:ghEvidence = 'not json'
+    $collected = & $collect
+    Assert (((Get-PranataBootstrapFailures -Run $collected -TaskId 'TASK-002' -Pr 5 -HeadSha $headS -MainSha $mainS -Tree $treeS) -join ';') -match '4\.1\.4 evidence artifact unavailable') 'collect: an unreadable artifact is refused'
+    $script:ghExit = 1
+    $collected = & $collect
+    Assert (((Get-PranataBootstrapFailures -Run $collected -TaskId 'TASK-002' -Pr 5 -HeadSha $headS -MainSha $mainS -Tree $treeS) -join ';') -match '4\.1\.2 run lookup failed') 'collect: a failing API call is refused'
+    Remove-Item -LiteralPath Function:\gh
 
     $low = $good.Clone(); $low.RiskClass = 'LOW'; $low.CodexStatus = 'NOT_REQUESTED'; $low.IndependentReviewDone = $false
     Assert ((Get-PranataMergeFailures -Facts $low).Count -eq 0) 'gate: reconciliation (LOW) needs no Codex review'
