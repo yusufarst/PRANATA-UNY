@@ -252,6 +252,8 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
     Assert ($openRules.Count -eq 0) "runner: no bare Bash, shell, cd or backslash rule ($($openRules -join ' '))"
     $stepPrompt = Get-Content -LiteralPath (Join-Path $clone '.pranata\stub-prompt.txt') -Raw
     Assert ($stepPrompt -match 'Jangan awali perintah dengan cd' -and $stepPrompt -match 'powershell -NoProfile -File scripts/executor/stage\.ps1 -Paths' -and $stepPrompt -match 'result blocked') 'runner: the step prompt names the cd rule, the one script form and stops on repeated denials'
+    Assert ($stepPrompt -match 'scripts/executor/fetch-source\.ps1 -Package' -and $stepPrompt -notmatch 'dibaca dengan gh api') 'runner: the step prompt sends dependency sources to fetch-source, not to gh api'
+    Assert ($calls -match 'Bash\(powershell -NoProfile -File scripts/executor/fetch-source\.ps1\*\)') 'runner: fetch-source allowed through Bash'
 
     # A failed step reported as subtype=success must stop the loop, not spin on the model.
     Set-Content -LiteralPath (Join-Path $clone '.pranata\stub-auth-error') -Value x -Encoding ASCII
@@ -597,6 +599,15 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
     Remove-Item -LiteralPath (Join-Path $eolRepo 'gone.txt')
     $s = Invoke-Script (Join-Path $scriptsDir 'stage.ps1') @('-Paths', 'gone.txt', '-Root', $eolRepo)
     Assert ($s.Code -eq 0 -and -not ((& git -C $eolRepo diff --cached --name-only) -contains 'gone.txt')) 'stage: a really deleted file is staged as such'
+
+    # fetch-source refuses before any download: only locked registry or commit-pinned dists, never a name it cannot place.
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'package-lock.json'), '{"packages":{"node_modules/evil":{"version":"1.0.0","resolved":"http://example.test/evil-1.0.0.tgz","integrity":"sha512-AA=="},"node_modules/weak":{"version":"1.0.0","resolved":"https://registry.npmjs.org/weak/-/weak-1.0.0.tgz","integrity":"sha1-AA=="}}}')
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'composer.lock'), '{"packages":[{"name":"acme/unpinned","version":"v1.0.0","dist":{"type":"zip","url":"https://example.test/acme.zip","reference":"abc123"}}],"packages-dev":[]}')
+    foreach ($case in @(@('missing', 'not-locked'), @('evil', 'a non-registry URL'), @('weak', 'a tarball without sha512'), @('acme/unpinned', 'a dist without its commit'), @('../x', 'a path'), @('a b', 'a name with a space'))) {
+        $f = Invoke-Script (Join-Path $scriptsDir 'fetch-source.ps1') @('-Package', $case[0], '-Root', $eolRepo)
+        Assert ($f.Code -ne 0 -and -not (Test-Path -LiteralPath (Join-Path $eolRepo '.pranata\tools\src'))) "fetch-source: refuses $($case[1]) before downloading"
+    }
+    Remove-Item -LiteralPath (Join-Path $eolRepo 'package-lock.json'), (Join-Path $eolRepo 'composer.lock')
 
     # WIP commit on a CRLF working copy touches only the real change.
     $state2 = Initialize-PranataStateDirs $eolRepo

@@ -34,7 +34,10 @@ $matrix = @(
     @('18', 'Bash', $runnerRules, 'git status -sb && git log --oneline -1 && git diff --stat', 0),
     @('19', 'Bash', $runnerRules, 'cd "<box>" && git status --short', 1),
     @('20', 'Bash', $runnerRules, 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts/executor/stage.ps1 -Paths seed.txt', 1),
-    @('21', 'Bash', $runnerRules, 'powershell -NoProfile -File scriptsexecutorstage.ps1 -Paths seed.txt', 1)
+    @('21', 'Bash', $runnerRules, 'powershell -NoProfile -File scriptsexecutorstage.ps1 -Paths seed.txt', 1),
+    # Rows 22-23: TASK-009 chained mkdir/tar around npm pack and was refused; fetch-source is the one admitted form.
+    @('22', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts/executor/fetch-source.ps1 -Package not-locked', 0),
+    @('23', 'Bash', $runnerRules, 'mkdir -p .pranata/tools/x && npm --version', 1)
 )
 
 $failed = 0

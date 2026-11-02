@@ -55,8 +55,9 @@ Baca .pranata/executor/context.md, lalu verifikasi keadaan nyata (cabang, HEAD, 
 Task: $($Checkpoint.task_id), tahap: $($Checkpoint.stage). Tindakan berikutnya: $($Checkpoint.next_action).
 Kerjakan sampai tahap berikutnya atau sampai menunggu hasil eksternal; perbarui checkpoint pada setiap transisi; patuhi hold.
 Alat: Bash sudah berjalan di root repo. Jangan awali perintah dengan cd: CLI menolak cd yang digabung dengan git tanpa bertanya.
-Skrip eksekutor hanya dalam bentuk ini, dengan garis miring dan tanpa -ExecutionPolicy: powershell -NoProfile -File scripts/executor/stage.ps1 -Paths <a,b> (juga status.ps1 dan merge-verified.ps1).
-Baca berkas dengan Read/Grep/Glob. WebFetch dan MCP tidak tersedia; sumber resmi versi terpasang dibaca dengan gh api.
+Skrip eksekutor hanya dalam bentuk ini, dengan garis miring dan tanpa -ExecutionPolicy: powershell -NoProfile -File scripts/executor/stage.ps1 -Paths <a,b> (juga status.ps1, fetch-source.ps1 dan merge-verified.ps1).
+Bash hanya menerima git, gh, php artisan, composer, npm, npx dan skrip itu; mkdir, ls, cat, tail, tar, sed dan which ditolak, juga di dalam rangkaian &&. Baca dan ubah berkas dengan Read/Grep/Glob/Edit/Write.
+WebFetch, MCP dan gh ke repositori lain tidak tersedia; vendor/ dan node_modules/ tidak terpasang. Sumber dependensi versi terkunci: powershell -NoProfile -File scripts/executor/fetch-source.ps1 -Package <nama>, lalu baca folder yang dicetaknya.
 Bila alat ditolak dua kali untuk tujuan yang sama, berhenti dengan result blocked dan sebutkan perintahnya, jangan menghabiskan giliran.
 Jangan mengulang perintah yang tidak idempoten tanpa memverifikasi hasil sebelumnya. Keluarkan baris status JSON akhir:
 {"task":"$($Checkpoint.task_id)","stage":"$($Checkpoint.stage)","result":"progressed|waiting|blocked|done","next":"<...>"}

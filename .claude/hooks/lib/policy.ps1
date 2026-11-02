@@ -384,7 +384,7 @@ function Test-PranataGhApi([string[]]$ApiArgs) {
     $path = $endpoint.TrimStart('/')
     if ($path -match '(?i)^repos/([^/]+/[^/?]+)') {
         if ($Matches[1] -notmatch "(?i)^($script:OwnRepo|$script:SandboxRepo)$") {
-            return (Deny 'gh-foreign-repo' "gh api is limited to this repository, not $($Matches[1]).")
+            return (Deny 'gh-foreign-repo' "gh api is limited to this repository, not $($Matches[1]). Locked dependency source: powershell -NoProfile -File scripts/executor/fetch-source.ps1 -Package <name>.")
         }
     }
     if ($method -eq 'GET') { return (New-PranataVerdict 'allow' '' '') }
