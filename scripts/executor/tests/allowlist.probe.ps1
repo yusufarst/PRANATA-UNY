@@ -28,11 +28,13 @@ $matrix = @(
     @('14', 'Bash', $runnerRules, 'npm --version', 0),
     @('15', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts/executor/hold.ps1 -Mode SHUTDOWN_AFTER_CURRENT_TASK -Reason x', 1),
     @('16', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts/executor/runner.ps1 -Start', 1),
-    # Rows 17-20: the forms that blocked TASK-008 and TASK-009 steps; a cd joined with git stays refused, so the prompt forbids it.
-    @('17', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts\executor\stage.ps1 -Paths seed.txt', 0),
+    # Rows 17-21: the forms refused in TASK-008 and TASK-009 steps. They stay refused; the step prompt names the admitted form.
+    # Git Bash drops unquoted backslashes, so no backslash rule exists (it would run a root file the step can write).
+    @('17', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts\executor\stage.ps1 -Paths seed.txt', 1),
     @('18', 'Bash', $runnerRules, 'git status -sb && git log --oneline -1 && git diff --stat', 0),
     @('19', 'Bash', $runnerRules, 'cd "<box>" && git status --short', 1),
-    @('20', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts\executor\hold.ps1 -Mode SHUTDOWN_AFTER_CURRENT_TASK -Reason x', 1)
+    @('20', 'Bash', $runnerRules, 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts/executor/stage.ps1 -Paths seed.txt', 1),
+    @('21', 'Bash', $runnerRules, 'powershell -NoProfile -File scriptsexecutorstage.ps1 -Paths seed.txt', 1)
 )
 
 $failed = 0
@@ -60,6 +62,8 @@ try {
         try { $json = $out | ConvertFrom-Json } catch { }
         $denied = if ($json) { @($json.permission_denials).Count } else { -1 }
         $ok = ($denied -eq $row[4])
+        # An admitted stage call must really be stage.ps1: the seed file ends up in the index.
+        if ($ok -and $row[0] -eq '11') { $ok = (@(& git -C $box diff --cached --name-only) -contains 'seed.txt') }
         if (-not $ok) { $failed++ }
         $text = if ($json) { (([string]$json.result) -replace '\s+', ' ') } else { 'unparsable' }
         Write-Output ("case {0} {1}: {2} denials={3} expected={4} result={5} command={6}" -f $row[0], $row[1], $(if ($ok) { 'PASS' } else { 'FAIL' }), $denied, $row[4], $text.Substring(0, [Math]::Min(20, $text.Length)), $row[3])

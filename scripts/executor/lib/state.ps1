@@ -122,11 +122,8 @@ function Get-PranataRunnerAllowedTools {
         'Bash(git *)', 'Bash(gh *)', 'Bash(php artisan *)', 'Bash(composer *)', 'Bash(npm *)', 'Bash(npx *)',
         'Bash(powershell -NoProfile -File scripts/executor/status.ps1*)',
         'Bash(powershell -NoProfile -File scripts/executor/stage.ps1*)',
-        'Bash(powershell -NoProfile -File scripts/executor/merge-verified.ps1*)',
-        # A step on Windows also writes the documented backslash form; dontAsk refuses it without its own rule.
-        'Bash(powershell -NoProfile -File scripts\executor\status.ps1*)',
-        'Bash(powershell -NoProfile -File scripts\executor\stage.ps1*)',
-        'Bash(powershell -NoProfile -File scripts\executor\merge-verified.ps1*)'
+        # Forward slashes only: Git Bash drops unquoted backslashes, so a backslash rule would run another file.
+        'Bash(powershell -NoProfile -File scripts/executor/merge-verified.ps1*)'
     ) -join ',')
 }
 

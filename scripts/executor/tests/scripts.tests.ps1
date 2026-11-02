@@ -248,9 +248,10 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
     Assert ($calls -match 'Bash\(powershell -NoProfile -File scripts/executor/stage\.ps1\*\)' -and $calls -match 'Bash\(powershell -NoProfile -File scripts/executor/merge-verified\.ps1\*\)') 'runner: stage and merge scripts allowed through Bash'
     Assert ($calls -match '--disallowedTools "?PowerShell,' -and $calls -notmatch 'PowerShell\(') 'runner: the PowerShell tool is off in headless steps'
     Assert ($calls -notmatch 'hold\.ps1|runner\.ps1|watcher\.ps1') 'runner: hold, runner and watcher scripts are not allowed in a step'
-    Assert ($calls -match 'Bash\(powershell -NoProfile -File scripts\\executor\\stage\.ps1\*\)' -and $calls -notmatch 'Bash\(cd |Bash\(\*\)|Bash\(bash|Bash\(sh ') 'runner: backslash script form allowed, no cd or open shell rule'
+    $openRules = @((Get-PranataRunnerAllowedTools) -split ',' | Where-Object { $_ -eq 'Bash' -or $_ -match '\\' -or $_ -match '^Bash\((cd|bash|sh|pwsh|cmd|powershell \*|powershell -NoProfile -File \*|\*)' })
+    Assert ($openRules.Count -eq 0) "runner: no bare Bash, shell, cd or backslash rule ($($openRules -join ' '))"
     $stepPrompt = Get-Content -LiteralPath (Join-Path $clone '.pranata\stub-prompt.txt') -Raw
-    Assert ($stepPrompt -match 'Jangan awali perintah dengan cd' -and $stepPrompt -match 'result blocked') 'runner: the step prompt names the cd rule and stops on repeated denials'
+    Assert ($stepPrompt -match 'Jangan awali perintah dengan cd' -and $stepPrompt -match 'powershell -NoProfile -File scripts/executor/stage\.ps1 -Paths' -and $stepPrompt -match 'result blocked') 'runner: the step prompt names the cd rule, the one script form and stops on repeated denials'
 
     # A failed step reported as subtype=success must stop the loop, not spin on the model.
     Set-Content -LiteralPath (Join-Path $clone '.pranata\stub-auth-error') -Value x -Encoding ASCII

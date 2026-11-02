@@ -193,7 +193,7 @@ function Test-PranataGit {
         }
         'commit' {
             if (($configOverrides -match '(?i)^core\.autocrlf=false') -and ($rest -match '^(-[a-zA-Z]*a[a-zA-Z]*|--all)$')) {
-                return (Deny 'git-unsafe-stage' 'commit -a with core.autocrlf=false rewrites line endings; use scripts\executor\stage.ps1.')
+                return (Deny 'git-unsafe-stage' 'commit -a with core.autocrlf=false rewrites line endings; use powershell -NoProfile -File scripts/executor/stage.ps1 -Paths <a,b>.')
             }
             foreach ($a in $rest) {
                 if ($a -match '^(--no-verify|--amend|--author.*|--reset-author)$' -or $a -match '^-[a-zA-Z]*n[a-zA-Z]*$') {
@@ -203,7 +203,7 @@ function Test-PranataGit {
         }
         'add' {
             if ($configOverrides -match '(?i)^core\.autocrlf=false') {
-                return (Deny 'git-unsafe-stage' 'Staging a CRLF working copy with core.autocrlf=false rewrites line endings; use scripts\executor\stage.ps1.')
+                return (Deny 'git-unsafe-stage' 'Staging a CRLF working copy with core.autocrlf=false rewrites line endings; use powershell -NoProfile -File scripts/executor/stage.ps1 -Paths <a,b>.')
             }
         }
         'reset' { if ($rest -contains '--hard') { return (Deny 'git-destructive' 'git reset --hard is forbidden.') } }
