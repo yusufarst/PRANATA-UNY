@@ -113,6 +113,28 @@ test('a key whose command failed validation may be sent again with corrected inp
     expect($this->runs)->toBe(1);
 });
 
+test('a key whose command failed validation in a named error bag may be sent again', function () {
+    Route::middleware(['web', 'auth', 'idempotent'])->post('/_probe/named-bag', function (Request $request) {
+        $request->validateWithBag('probe', ['title' => ['required', 'string']]);
+        $this->runs++;
+
+        return redirect('/_probe/done/'.$this->runs);
+    });
+    $key = idempotencyKey();
+
+    $this->withHeader(EnsureIdempotentCommand::HEADER, $key)
+        ->post('/_probe/named-bag', ['title' => ''])
+        ->assertSessionHasErrorsIn('probe', 'title');
+
+    expect(DB::table(EnsureIdempotentCommand::TABLE)->sole()->status)->toBe('FAILED');
+
+    $this->withHeader(EnsureIdempotentCommand::HEADER, $key)
+        ->post('/_probe/named-bag', ['title' => 'Satu'])
+        ->assertRedirect('/_probe/done/1');
+
+    expect($this->runs)->toBe(1);
+});
+
 test('a command that committed and then failed is not run again by a resend', function () {
     Route::middleware(['web', 'auth', 'idempotent'])->post('/_probe/after-commit', function () {
         $this->runs++;
