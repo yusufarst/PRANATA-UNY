@@ -132,10 +132,11 @@ test.describe('signed in', () => {
         const name = `Pengguna ${test.info().project.name} ${Date.now()}`;
         const keys: string[] = [];
 
+        // The Wayfinder form spoofs the verb: POST /settings/profile?_method=PATCH.
         page.on('request', (request) => {
             if (
-                request.method() === 'PATCH' &&
-                request.url().endsWith('/settings/profile')
+                request.method() !== 'GET' &&
+                new URL(request.url()).pathname === '/settings/profile'
             ) {
                 keys.push(request.headers()['x-idempotency-key'] ?? '');
             }
