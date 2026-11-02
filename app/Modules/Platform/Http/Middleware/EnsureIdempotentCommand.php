@@ -3,6 +3,7 @@
 namespace App\Modules\Platform\Http\Middleware;
 
 use App\Modules\Platform\Exceptions\CommandBusyException;
+use App\Modules\Platform\Support\Action;
 use App\Modules\Platform\Support\CommandMessage;
 use Closure;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +21,8 @@ use Throwable;
  *
  * The key is bound to the signed-in user. The claim commits before the command runs, so a second request with the same key
  * and the same input waits briefly for the first and then gets its redirect again; the command itself runs once. The same
- * key with different input is refused with 422. A command that failed changed nothing, so its key may be sent again.
+ * key with different input is refused with 422. A command that failed before its Action committed changed nothing, so its key
+ * may be sent again.
  */
 class EnsureIdempotentCommand
 {
@@ -83,7 +85,7 @@ class EnsureIdempotentCommand
         try {
             $response = $next($request);
         } catch (Throwable $exception) {
-            $this->finish($userId, $key, 'FAILED', null);
+            $this->finishFailed($request, $userId, $key, null);
 
             throw $exception;
         }
@@ -94,10 +96,25 @@ class EnsureIdempotentCommand
                 'location' => $response instanceof RedirectResponse ? $response->getTargetUrl() : null,
             ]);
         } else {
-            $this->finish($userId, $key, 'FAILED', null);
+            $this->finishFailed($request, $userId, $key, $response->getStatusCode());
         }
 
         return $response;
+    }
+
+    /**
+     * A failure before any commit left no effect, so the key may be sent again. A failure after a command committed, such as
+     * an after-commit callback that threw, keeps the key completed: a resend goes back instead of running the writes twice.
+     */
+    private function finishFailed(Request $request, mixed $userId, string $key, ?int $status): void
+    {
+        if ($request->attributes->get(Action::COMMITTED) === true) {
+            $this->finish($userId, $key, 'COMPLETED', ['status' => $status, 'location' => null]);
+
+            return;
+        }
+
+        $this->finish($userId, $key, 'FAILED', null);
     }
 
     /**

@@ -2,10 +2,12 @@
 
 use App\Models\User;
 use App\Modules\Platform\Http\Middleware\EnsureIdempotentCommand;
+use App\Modules\Platform\Support\Action;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Sleep;
 use Illuminate\Support\Str;
 
@@ -13,7 +15,27 @@ use Illuminate\Support\Str;
  * X-Idempotency-Key (COMMAND_AND_API_CONTRACTS section 4; TASK-009 TAC-01 and TAC-02), through a probe command that counts
  * how often it runs.
  */
+class IdempotentProbeAction extends Action
+{
+    /**
+     * Write one effect and run $afterCommit once it commits; $fail throws inside the transaction instead, so nothing commits.
+     */
+    public function handle(Closure $afterCommit, bool $fail = false): void
+    {
+        $this->transaction(function () use ($afterCommit, $fail) {
+            DB::table('idempotent_probe_effects')->insert(['id' => DB::table('idempotent_probe_effects')->count() + 1]);
+            $this->afterCommit($afterCommit);
+
+            if ($fail) {
+                throw new RuntimeException('rule broken');
+            }
+        });
+    }
+}
+
 beforeEach(function () {
+    Schema::create('idempotent_probe_effects', fn ($table) => $table->unsignedInteger('id')->primary());
+
     $this->runs = 0;
 
     Route::middleware(['web', 'auth', 'idempotent'])->group(function () {
@@ -89,6 +111,42 @@ test('a key whose command failed validation may be sent again with corrected inp
         ->assertRedirect('/_probe/done/1');
 
     expect($this->runs)->toBe(1);
+});
+
+test('a command that committed and then failed is not run again by a resend', function () {
+    Route::middleware(['web', 'auth', 'idempotent'])->post('/_probe/after-commit', function () {
+        $this->runs++;
+        (new IdempotentProbeAction)->handle(fn () => throw new RuntimeException('mail down'));
+    });
+    $key = idempotencyKey();
+
+    $this->withHeader(EnsureIdempotentCommand::HEADER, $key)->post('/_probe/after-commit')->assertServerError();
+    $this->withHeader(EnsureIdempotentCommand::HEADER, $key)
+        ->post('/_probe/after-commit')
+        ->assertStatus(303)
+        ->assertHeader('X-Idempotent-Replay', 'true');
+
+    expect($this->runs)->toBe(1)
+        ->and(DB::table('idempotent_probe_effects')->count())->toBe(1)
+        ->and(DB::table(EnsureIdempotentCommand::TABLE)->sole()->status)->toBe('COMPLETED');
+});
+
+test('a command that failed inside its transaction may be sent again', function () {
+    $fail = true;
+    Route::middleware(['web', 'auth', 'idempotent'])->post('/_probe/rolled-back', function () use (&$fail) {
+        $this->runs++;
+        (new IdempotentProbeAction)->handle(fn () => null, $fail);
+    });
+    $key = idempotencyKey();
+
+    $this->withHeader(EnsureIdempotentCommand::HEADER, $key)->post('/_probe/rolled-back')->assertServerError();
+    expect(DB::table(EnsureIdempotentCommand::TABLE)->sole()->status)->toBe('FAILED');
+
+    $fail = false;
+    $this->withHeader(EnsureIdempotentCommand::HEADER, $key)->post('/_probe/rolled-back')->assertOk();
+
+    expect($this->runs)->toBe(2)
+        ->and(DB::table('idempotent_probe_effects')->count())->toBe(1);
 });
 
 test('a key is bound to its user', function () {

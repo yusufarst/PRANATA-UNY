@@ -20,6 +20,11 @@ abstract class Action
 {
     public const MAX_RETRIES = 2;
 
+    /**
+     * The request attribute set once a command of the request committed, so a later failure does not make its key reusable.
+     */
+    public const COMMITTED = 'platform.command_committed';
+
     private const RETRYABLE = ['40P01', '40001'];
 
     private const LOCK_NOT_AVAILABLE = '55P03';
@@ -44,6 +49,8 @@ abstract class Action
             $connection->beginTransaction();
 
             try {
+                // Registered first, so it runs on the real commit before any callback of the work can fail, and never on a rollback.
+                $connection->afterCommit(static fn () => self::markCommitted());
                 $result = $work();
                 $connection->commit();
 
@@ -85,6 +92,13 @@ abstract class Action
     protected function connection(): Connection
     {
         return DB::connection();
+    }
+
+    private static function markCommitted(): void
+    {
+        if (app()->bound('request')) {
+            request()->attributes->set(self::COMMITTED, true);
+        }
     }
 
     /**
