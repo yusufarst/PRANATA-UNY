@@ -17,11 +17,11 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Field | Current value |
 |---|---|
 | Current phase | Execution; approved phases 12/12. |
-| Current Task / status | None active. **TASK-007 READY**, not started. |
+| Current Task / status | **TASK-007 IN_PROGRESS** on `feature/task-007-e2e-harness`. Everything outside the guardrail paths is written; browser tests have not run. |
 | Last completed action | 2026-11-02: PR #25 merged by verified fast-forward at `598ec93` after two valid Codex P2 findings were fixed; push run 41381534903 success; TASK-006 reconciled DONE. |
 | Evidence | [TASK-006 COMPLETION EVIDENCE](../11-tasks/TASK-006.md#completion-evidence); [TASK-005](../11-tasks/TASK-005.md#completion-evidence); [TASK-004](../11-tasks/TASK-004.md#completion-evidence); [TASK-003](../11-tasks/TASK-003.md#completion-evidence); [TASK-002](../11-tasks/TASK-002.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
-| Task plan | Baseline 78 · Current 78 · DONE 6 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 71 · SUPERSEDED 0 · 8%. |
-| Open blockers | None. |
+| Task plan | Baseline 78 · Current 78 · DONE 6 · READY 0 · IN_PROGRESS 1 · BLOCKED 0 · VERIFYING 0 · TODO 71 · SUPERSEDED 0 · 8%. |
+| Open blockers | TASK-007 needs the `ci-e2e` job in `.github/workflows/ci.yml`. That is a guardrail path: read-only in AUTONOMOUS mode, and AUTH-013 merges it only in SUPERVISED mode with the Owner present. TASK-008 and everything after it wait on TASK-007; TASK-040 waits on the staging decision. |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
 | Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, and OD-37 (no local Docker; GitHub-hosted testing). |
 | Decisions pending | Ruleset `release-tags` keeps the admin role's `always` bypass ([MAIN_RULESET](../09-operations/MAIN_RULESET.md)); it applies to the runner token too, so the guard is what holds the executor back from tags. For Claude Planning, non-blocking: the current starter kit ships Inertia 3 where the plan names Inertia 2 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#application-versions--task-002-2026-11-01)); ARCHITECTURE §5 rule 3 conflicts with the dependency column of §4 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#quality-tooling--task-004-2026-11-02)). Before TASK-040: where staging runs (D-19 as limited by OD-37). |
@@ -57,7 +57,7 @@ Status: **INCORPORATED into PCR-002** (published; mapping in [PCR-002_REVIEW_HAN
 
 ## Exact next safe action
 
-**Executor:** start TASK-007 from `.pranata/executor/checkpoint.json` under the single runner and watcher. No local Docker, PHP, Composer or PostgreSQL (OD-37).
+**Owner, with the executor in a SUPERVISED session:** apply the `ci-e2e` change written in the TASK-007 draft PR to `.github/workflows/ci.yml` on `feature/task-007-e2e-harness`, read the first browser run, then merge under EXECUTOR_OPERATING_MODEL §8. No local Docker, PHP, Composer or PostgreSQL (OD-37).
 
 ## DO NOT DO
 

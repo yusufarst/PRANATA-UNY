@@ -12,6 +12,7 @@
         "check": "npm run lint && npm run format:check",
         "types:check": "tsc --noEmit",
         "test": "vp test run",
+        "e2e": "playwright test",
         "translations:check": "node scripts/quality/check-translations.mjs",
         "docs:check": "node scripts/docs/check-links.mjs",
         "qa": "npm run check && npm run types:check && npm run test && npm run translations:check && npm run docs:check"
@@ -57,8 +58,10 @@
         "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0"
     },
     "devDependencies": {
+        "@axe-core/playwright": "4.14.0",
         "@eslint/js": "^9.39.5",
         "@laravel/vite-plugin-wayfinder": "^0.1.3",
+        "@playwright/test": "1.64.1",
         "@rolldown/plugin-babel": "^0.2.3",
         "@types/node": "^22.13.5",
         "axe-core": "^4.14.0",

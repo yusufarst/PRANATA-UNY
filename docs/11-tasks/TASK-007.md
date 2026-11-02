@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: IN_PROGRESS
+EXECUTION STAGE: IN_PROGRESS
 RISK CLASS: STANDARD
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: NO
