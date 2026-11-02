@@ -13,9 +13,11 @@ import { dashboard } from '@/routes';
 export default function ErrorPage({
     status,
     returnUrl = null,
+    requestId,
 }: {
     status: ErrorStatus;
     returnUrl?: string | null;
+    requestId?: string;
 }) {
     const { t } = useTranslation();
     const title = t(`common:errors.${status}.title`);
@@ -68,6 +70,7 @@ export default function ErrorPage({
                             title={title}
                             description={description}
                             action={reload}
+                            requestId={requestId}
                         />
                     )}
                 </div>

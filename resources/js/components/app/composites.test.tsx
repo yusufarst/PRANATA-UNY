@@ -173,6 +173,12 @@ describe('error pages (TAC-05)', () => {
         },
     );
 
+    it('shows the request code of a failed request', () => {
+        expect(
+            renderToStaticMarkup(<ErrorPage status={500} requestId="req-9" />),
+        ).toContain('Kode permintaan: req-9');
+    });
+
     it('hides the language switch where a POST cannot succeed', () => {
         const switchLabel = 'aria-label="Pilih bahasa"';
 
