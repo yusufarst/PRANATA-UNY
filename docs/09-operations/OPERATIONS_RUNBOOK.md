@@ -29,7 +29,7 @@ Cek `php artisan queue:monitor` (ambang per antrean), `queue:failed`; ulangi job
 
 ## RB-05 Partisi audit dan pemeliharaan basis data
 
-Scheduler membuat partisi `audit_events` tiga bulan ke depan dan `asset_depreciation_lines` tahun berikut; operator memeriksa laporan job bulanan. Autovacuum dipantau untuk tabel besar; `VACUUM (ANALYZE)` manual hanya pada jendela pemeliharaan.
+Scheduler membuat partisi `audit_events` tiga bulan ke depan dan `asset_depreciation_lines` tahun berikut; operator memeriksa laporan job bulanan. Partisi audit dibuat setiap hari oleh `php artisan audit:partitions` (aman diulang; bulan kalender UTC). Bila command menolak dengan `PN005`, partisi default sudah memuat peristiwa bulan itu: peristiwa audit tidak dipindah atau dihapus, sehingga bulan itu tetap di partisi default dan kejadian ini dicatat sebagai temuan operasi. Autovacuum dipantau untuk tabel besar; `VACUUM (ANALYZE)` manual hanya pada jendela pemeliharaan.
 
 ## RB-06 Verifikasi cadangan harian
 
@@ -75,3 +75,15 @@ Koreksi data bisnis selalu melalui fitur aplikasi (transaksi koreksi/pembalik de
 ## RB-15 Rotasi rahasia
 
 Ganti kredensial DB/SMTP/kunci cadangan secara terjadwal atau saat personel berganti; `APP_KEY` hanya diganti dengan prosedur re-enkripsi rahasia 2FA yang direncanakan (atau reset 2FA semua pengguna setelah pemberitahuan).
+
+## RB-16 Peran basis data di server
+
+Peran mengikuti [DATA_MODEL §2](../04-architecture/DATA_MODEL.md#2-peran-basis-data-dan-hak). Di server, operator membuat peran sekali per server sebelum migrasi pertama, sebagai superuser PostgreSQL, dengan password dari pengelola rahasia (RB-15):
+
+1. `CREATE ROLE pranata_owner NOLOGIN;` — pemilik objek; tidak pernah dipakai untuk login.
+2. `CREATE ROLE pranata_migrator LOGIN PASSWORD '…' IN ROLE pranata_owner;` — login migrasi; hanya dipakai saat deploy (RB-01).
+3. `CREATE ROLE pranata_app LOGIN PASSWORD '…';` — login aplikasi web, worker dan scheduler.
+4. Pada basis data `pranata`: `GRANT USAGE, CREATE ON SCHEMA public TO pranata_owner;` dan `GRANT USAGE ON SCHEMA public TO pranata_app;`.
+5. `.env`: `DB_USERNAME=pranata_app` dan password aplikasi; `DB_MIGRATOR_USERNAME=pranata_migrator` dan password migrasi. `DB_MIGRATOR_ROLE` tetap `pranata_owner`, sehingga sesi migrasi bekerja sebagai pemilik.
+
+Setiap perintah migrasi berjalan melalui koneksi `migrator` dan berhenti bila sesi itu bukan `pranata_owner`; hak `pranata_app` diberikan oleh migrasi, bukan manual. Di server pengembangan atau uji yang login migrasinya superuser, peran dan hak skema dibuat otomatis oleh perintah migrasi; di produksi tidak pernah.

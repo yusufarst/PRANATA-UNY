@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Platform\Support\DatabaseResetGuard;
+use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -89,10 +90,12 @@ test('the reset guard listens for a destructive command in production', function
 });
 
 test('the reset guard lets other commands and allowed databases through', function () {
-    startCommand('migrate:status');
-    startCommand('migrate:fresh');
+    foreach (['migrate:status', 'migrate:fresh'] as $command) {
+        startCommand($command);
+        event(new CommandFinished($command, new ArrayInput([]), new NullOutput, 0));
+    }
 
-    expect(true)->toBeTrue();
+    expect(config('database.default'))->toBe('pgsql');
 });
 
 test('the database name is read after DB_URL is applied', function () {
