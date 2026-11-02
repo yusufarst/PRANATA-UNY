@@ -43,11 +43,14 @@ CAP-01/AC-01 dan ADR-0007.
 - Ganti password wajib dan profil password
 - Halaman PG-001/PG-002 dan menu akun dasar; preferensi bahasa tersimpan
 - Audit peristiwa autentikasi
+- Penghapusan akun mandiri bawaan starter kit dihapus ([OD-38](../00-governance/DECISION_LOG.md#od-38)): rute `profile.destroy`, aksi kontrolernya dan UI hapus akun, tanpa pengganti berupa penghapusan lain; akun hanya berakhir sebagai DEACTIVATED melalui admin (TASK-011)
 
 ## OUT OF SCOPE
 
 - Pembuatan akun oleh admin (TASK-011)
 - TOTP (TASK-012)
+- Penonaktifan akun oleh admin (TASK-011)
+- Penghapusan permanen akun atau data pengguna: tidak tersedia sampai kebijakan retensi dan penghapusan institusi tervalidasi (GAP-023, OD-38)
 
 ## REFERENCES
 
@@ -55,6 +58,8 @@ CAP-01/AC-01 dan ADR-0007.
 - [SECURITY_MODEL §3–4](../05-security/SECURITY_MODEL.md#3-autentikasi)
 - [ADR-0007](../adr/ADR-0007-local-authentication.md)
 - [WF-001](../03-workflows/WORKFLOW_CONTRACTS.md#wf-001)
+- [DATA_MODEL §2](../04-architecture/DATA_MODEL.md#2-peran-basis-data-dan-hak)
+- [OD-38](../00-governance/DECISION_LOG.md#od-38)
 
 ## TRACEABILITY
 
@@ -63,8 +68,8 @@ CAP-01/AC-01 dan ADR-0007.
 - WF/TR: WF-001 (TR-001–TR-003, 3 TR; BLOCKED_BY_GAP: TR-003)
 - RT: RT-001
 - IX: IX-019
-- GAP: GAP-015
-- Keputusan Owner: OD-11, OD-12
+- GAP: GAP-015, GAP-023
+- Keputusan Owner: OD-11, OD-12, OD-38
 
 ## EXPECTED MODULES / FILE AREAS
 
@@ -72,6 +77,8 @@ CAP-01/AC-01 dan ADR-0007.
 - `resources/js/pages/auth`
 - `config/session.php`
 - `config/auth.php`
+- Rute pengaturan starter kit (`routes/settings.php`) dan UI profil di `resources/js/pages/settings`
+- `tests/Feature/RouteIntegrityTest.php`, `tests/Feature/Settings/`
 
 ## BUSINESS RULES
 
@@ -88,6 +95,7 @@ CAP-01/AC-01 dan ADR-0007.
 
 - SEC-01–SEC-06, SEC-20 sebagian
 - Tidak ada registrasi publik
+- `pranata_app` tidak memiliki dan tidak diberi hak DELETE pada `users` ([DATA_MODEL §2](../04-architecture/DATA_MODEL.md#2-peran-basis-data-dan-hak)); tidak ada penghapusan akun dari antarmuka
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
@@ -180,6 +188,7 @@ CAP-01/AC-01 dan ADR-0007.
 ## ROUTE IMPACT
 
 - RT-001
+- `profile.destroy` dihapus (OD-38)
 
 ## INTERACTION CONTRACTS
 
@@ -206,6 +215,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-04 Ganti password wajib memblokir akses lain sampai selesai
 - TAC-05 Keluar mengakhiri sesi; sesi lain dicabut setelah ganti password
 - TAC-06 Halaman masuk lolos axe dan tampil benar dalam dua bahasa dan dua viewport
+- TAC-07 Penghapusan akun mandiri tidak ada (OD-38): uji integritas rute membuktikan `profile.destroy` tidak terdaftar (dikeluarkan dari `OWN_ACCOUNT_ROUTES`), UI hapus akun tidak tampil, dan uji kit yang memanggil rute itu dihapus atau diganti; tidak adanya DELETE `users` untuk `pranata_app` dirujuk dari `DatabaseRolesTest` (TASK-008) tanpa uji baru
 
 ## TEST REQUIREMENTS
 
@@ -213,7 +223,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - Typecheck: Larastan + tsc
 - Feature: Login/throttle/lockout/status/sesi
 - Authorization: Uji izin positif dan negatif untuk setiap aksi baru
-- Route integrity: Rute baru terdaftar di uji integritas rute
+- Route integrity: Rute baru terdaftar di uji integritas rute; `profile.destroy` tidak terdaftar
 - Browser E2E: J-01 sebagian
 - Localization/language switch: Halaman masuk dua bahasa
 - Responsive: 390×844 dan 1440×900
@@ -276,4 +286,5 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 - Jangan menyimpan password sementara dalam bentuk dapat dibaca
 - Jangan memperluas ruang lingkup; perubahan rencana diajukan ke Planning Agent sebagai usulan TASK PLAN CHANGE
 - Jangan mengakses basis data produksi atau proyek lain
+- Jangan memberi `pranata_app` hak DELETE pada `users` atau menambah penghapusan akun/hard delete pengguna (OD-38, GAP-023)
 - Jangan menambahkan atribusi AI pada commit/PR

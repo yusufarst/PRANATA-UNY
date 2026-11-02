@@ -23,6 +23,7 @@ In P0, 45 historical files received bounded content inspection and SRC-033/VIS-0
 | U-011 | Owner procurement field findings and instruction (2026-10-30); provenance in [U-011](#u-011-owner-procurement-field-findings-of-2026-10-30) | OD-35, OD-36; RG-07; targeted P0–P11 procurement amendment | OWNER_APPROVED_DECISION for the explicit direction (multiple winners by award scope, evaluation priority, amendment instruction); the employees' observations are OBSERVED_CURRENT_PROCESS (practice) and the memorandum is a nonbinding reference | Official rules only from validated sources (GAP-003/013/017/026/027/029); candidate approval only by explicit Owner approval |
 | U-012 | Owner consolidated directive (2026-11-01); provenance in [U-012](#u-012-owner-consolidated-directive-of-2026-11-01) | APPR-005, APPR-006, AUTH-011, FRZ-001, AUTH-013; answers D-01–D-29; PCR-001 | OWNER_APPROVED_DECISION for the explicit approvals, authorizations and operational decisions; its statements about institutional rules are Owner input, not resolved GAPs |
 | U-013 | Owner directive on Docker-free development (2026-11-01); provenance in [U-013](#u-013-owner-directive-docker-free-development-of-2026-11-01) | OD-37; PCR-002 | OWNER_APPROVED_DECISION for the development and testing topology; changes no business requirement and resolves no GAP |
+| U-014 | Owner decision on account deactivation (2026-11-02); provenance in [U-014](#u-014-owner-account-deactivation-decision-of-2026-11-02) | OD-38; PCR-003 | OWNER_APPROVED_DECISION for account ending and deletion behaviour; resolves no GAP |
 | FW-001 | Unchanged repository AICWDF v4.3 English source | Master operating framework | AUTHORITATIVE_SOURCE for operating rules through Owner adoption; not UNY accounting/procurement authority | Preserved hash and full section map in FRAMEWORK_ADOPTION |
 | STRUCT-001 | GitHub yusufarst/MULTIPLECORP, pinned main a526daf47444d12b4ae5c51e1ae14c9dfe3f4978 | Entry point, adapter, governance/evidence/phase/context/handoff structures | INFERENCE for reusable structural patterns; never PRANATA domain/security/financial truth | Exact inspected paths and excluded content in FRAMEWORK_ADOPTION |
 
@@ -147,6 +148,11 @@ U-004 provenance — the P3 request, its same-scope continuation and the minor-c
 
 - U-013: the Owner's in-session directive "OWNER DIRECTIVE — TARGETED TASK PLAN CHANGE: DOCKER-FREE LOCAL DEVELOPMENT" (**6,976 bytes / SHA-256 `2eb1f18fe417b666920c025c63653cc2a0de5c9e83e5a5da18a46070f2ccb0e7`**). It approves the no-local-Docker, GitHub-hosted testing direction (OD-37) and requests the targeted change PCR-002, with the executor's TASK PLAN CHANGE proposal in CURRENT_HANDOFF as primary input; operative content is recorded in [DECISION_LOG OD-37](DECISION_LOG.md#od-37) and [APPROVAL_RECORDS PCR-002](APPROVAL_RECORDS.md#pcr-002).
 - Handling: session-delivered and external to the repository; read only; never published.
+
+## U-014 Owner account-deactivation decision of 2026-11-02
+
+- U-014: the Owner's decision of 2026-11-02 on starter-kit account deletion, recorded by the executor in CURRENT_HANDOFF ("TASK PLAN CHANGE proposal — account deletion", published on `main` at `5330ce7`), and the Owner's in-session directive "OWNER DIRECTIVE — ACCOUNT DEACTIVATION PCR" of 2026-11-02 asking Claude Planning to apply it to TASK-010 and TASK-011. Operative content: [DECISION_LOG OD-38](DECISION_LOG.md#od-38) and [APPROVAL_RECORDS PCR-003](APPROVAL_RECORDS.md#pcr-003).
+- Handling: the directive is session-delivered and external to the repository; read only; never published.
 
 ## Starter Kit reference originals (2026-10-30)
 
