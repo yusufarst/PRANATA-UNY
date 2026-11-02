@@ -515,10 +515,19 @@ function Test-PranataCommand {
     return (New-PranataVerdict 'allow' '' '')
 }
 
+# Hold and mode live in the main checkout, so a linked worktree must read them there.
+function Get-PranataStateRoot([string]$ProjectDir) {
+    $gitFile = Join-Path $ProjectDir '.git'
+    if (Test-Path -LiteralPath $gitFile -PathType Leaf) {
+        if ([IO.File]::ReadAllText($gitFile) -match '(?m)^gitdir:\s*(.+?)[\\/]\.git[\\/]worktrees[\\/][^\\/\r\n]+\s*$') { return $Matches[1] }
+    }
+    return $ProjectDir
+}
+
 # During IMMEDIATE_SAFE_SHUTDOWN only the steps needed to reach the safe stop may run.
 function Test-PranataHoldAllowsCommand([string]$Command) {
     foreach ($segment in (Get-PranataSegments $Command)) {
-        if ($segment -notmatch '(?i)^(git(\.exe)?\s+((-c\s+\S+\s+)*)(status|log|rev-parse|diff|show|add|commit|ls-remote|branch\s+--show-current)\b|(\.[\\/])?scripts[\\/]executor[\\/](status|hold)\.ps1\b|powershell(\.exe)?\s.*scripts[\\/]executor[\\/](status|hold)\.ps1\b)') {
+        if ($segment -notmatch '(?i)^(git(\.exe)?\s+((-c\s+\S+\s+)*)(status|log|rev-parse|diff|show|add|commit|ls-remote|branch\s+--show-current)\b|(\.[\\/])?scripts[\\/]executor[\\/](status|hold)\.ps1(\s|$)|powershell(\.exe)?(\s+-(NoProfile|NonInteractive|ExecutionPolicy\s+\S+))*\s+-File\s+(\.[\\/])?scripts[\\/]executor[\\/](status|hold)\.ps1(\s|$))') {
             return $false
         }
     }

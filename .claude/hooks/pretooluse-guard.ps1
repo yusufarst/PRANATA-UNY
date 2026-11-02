@@ -29,16 +29,17 @@ try {
 
     . (Join-Path $PSScriptRoot 'lib\policy.ps1')
 
+    $stateRoot = Get-PranataStateRoot $projectDir
     $mode = 'SUPERVISED'
     if ($env:PRANATA_EXECUTOR_MODE -eq 'AUTONOMOUS') { $mode = 'AUTONOMOUS' }
-    $checkpointPath = Join-Path $projectDir '.pranata\executor\checkpoint.json'
+    $checkpointPath = Join-Path $stateRoot '.pranata\executor\checkpoint.json'
     if ($mode -ne 'AUTONOMOUS' -and (Test-Path -LiteralPath $checkpointPath)) {
         $checkpoint = Get-Content -LiteralPath $checkpointPath -Raw | ConvertFrom-Json
         if ($checkpoint.mode -eq 'AUTONOMOUS') { $mode = 'AUTONOMOUS' }
     }
 
     $holdMode = $null
-    $holdPath = Join-Path $projectDir '.pranata\executor\hold.json'
+    $holdPath = Join-Path $stateRoot '.pranata\executor\hold.json'
     if (Test-Path -LiteralPath $holdPath) { $holdMode = (Get-Content -LiteralPath $holdPath -Raw | ConvertFrom-Json).mode }
 
     $toolInput = $payload.tool_input

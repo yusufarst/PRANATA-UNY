@@ -70,7 +70,9 @@ Terverifikasi pada [PR #2](https://github.com/yusufarst/PRANATA-UNY/pull/2) (202
 
 ## Sisa risiko yang diterima
 
-- Guard berbasis teks tidak dapat melihat isi skrip yang ditulis lalu dijalankan. Lapisan lain: allowlist runner tanpa PowerShell bebas, `disallowedTools` jalur pengaman, gerbang merge, ruleset `main` setelah TASK-005.
+- Guard berbasis teks tidak dapat melihat isi skrip yang ditulis lalu dijalankan. Lapisan lain: allowlist runner tanpa tool PowerShell, `disallowedTools` jalur pengaman, gerbang merge, ruleset `main` setelah TASK-005.
+- Langkah headless memakai Bash untuk semua perintah (`allowlist.probe.ps1`, 2026-11-02). Pada `dontAsk`, tool PowerShell menolak `powershell -File scripts/executor/*.ps1` dan pemanggilan skrip langsung dalam 7 dari 7 bentuk aturan, termasuk `PowerShell(powershell *)`; `PowerShell(npm *)` dan `PowerShell(git *)` juga sempat ditolak sesekali tanpa penyebab terdokumentasi. Bentuk Bash lulus 5 dari 5, dan `hold.ps1` serta `runner.ps1` tetap ditolak.
+- Tugas terjadwal watcher memakai prioritas 4. Dengan prioritas bawaan 7, 2 dari 2 run gagal dengan `0xC000013A`; prioritas 4 lulus 3 dari 3 dalam 11–17 detik. Mekanisme pastinya belum terbukti.
 - Penolakan kata `docker` di dalam teks perintah dapat salah sasaran (misalnya `git commit -m`); pakai `git commit -F`. Ini sengaja: pembungkus seperti `powershell -c` tetap tertangkap.
 - `PSScriptAnalyzer` tidak terpasang dan tidak dipasang (tanpa instalasi global); pengganti: parser AST PowerShell dan pemeriksaan ASCII pada semua skrip.
 

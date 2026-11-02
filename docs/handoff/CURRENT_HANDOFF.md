@@ -17,11 +17,11 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Field | Current value |
 |---|---|
 | Current phase | Execution; approved phases 12/12. |
-| Current Task / status | None active. **TASK-006 READY**, next for the autonomous runner. |
+| Current Task / status | **TASK-006 IMPLEMENTED**, paused under the Owner's hold; work is on PR #23 or its `-r2` replacement. The first autonomous step stopped on the turn limit, and the runner repair (turn limit, Bash allowlist, hold pattern and worktree hold, watcher priority) merged SUPERVISED. |
 | Last completed action | 2026-11-02: rulesets read back; TAC-05 proven when the Owner's push of unproven commit `90fa0b6` to `main` was refused with `GH013` and `main` stayed at `675e909`; TASK-005 reconciled DONE. |
 | Evidence | [TASK-005 COMPLETION EVIDENCE](../11-tasks/TASK-005.md#completion-evidence); [TASK-004](../11-tasks/TASK-004.md#completion-evidence); [TASK-003](../11-tasks/TASK-003.md#completion-evidence); [TASK-002](../11-tasks/TASK-002.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
 | Task plan | Baseline 78 · Current 78 · DONE 5 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 72 · SUPERSEDED 0 · 6%. |
-| Open blockers | None for TASK-006. |
+| Open blockers | Owner: release the hold and authorize resuming AUTONOMOUS mode. Until then the checkpoint stays SUPERVISED and the watcher stays disabled. |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
 | Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, and OD-37 (no local Docker; GitHub-hosted testing). |
 | Decisions pending | Ruleset `release-tags` keeps the admin role's `always` bypass ([MAIN_RULESET](../09-operations/MAIN_RULESET.md)); it applies to the runner token too, so the guard is what holds the executor back from tags. For Claude Planning, non-blocking: the current starter kit ships Inertia 3 where the plan names Inertia 2 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#application-versions--task-002-2026-11-01)); ARCHITECTURE §5 rule 3 conflicts with the dependency column of §4 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#quality-tooling--task-004-2026-11-02)). Before TASK-040: where staging runs (D-19 as limited by OD-37). |
@@ -57,7 +57,7 @@ Status: **INCORPORATED into PCR-002** (published; mapping in [PCR-002_REVIEW_HAN
 
 ## Exact next safe action
 
-**Executor:** continue TASK-006 from `.pranata/executor/checkpoint.json` under the single runner and watcher. **Owner:** none; `scripts/executor/hold.ps1` stops it at any time. No local Docker, PHP, Composer or PostgreSQL (OD-37).
+**Owner:** authorize resuming AUTONOMOUS mode and release the hold. **Executor, after that:** continue TASK-006 from `.pranata/executor/checkpoint.json` under the single runner and watcher. No local Docker, PHP, Composer or PostgreSQL (OD-37).
 
 ## DO NOT DO
 

@@ -209,6 +209,7 @@ $log = Join-Path $PWD '.pranata\stub-calls.log'
 Add-Content -LiteralPath $log -Value (($args -join ' ') + ' MODE=' + $env:PRANATA_EXECUTOR_MODE + ' TOKEN=' + [bool]$env:GH_TOKEN + ' GITCFG=' + $env:GIT_CONFIG_COUNT)
 if (Test-Path (Join-Path $PWD '.pranata\stub-auth-error')) { Write-Output '{"type":"result","subtype":"success","is_error":true,"session_id":"s-auth","result":"Failed to authenticate"}'; exit 1 }
 if (Test-Path (Join-Path $PWD '.pranata\stub-rate-limit')) { Write-Output '{"type":"result","is_error":true,"session_id":"s-limit","result":"usage limit reached"}'; exit 1 }
+if (Test-Path (Join-Path $PWD '.pranata\stub-max-turns')) { Write-Output '{"type":"result","subtype":"error_max_turns","is_error":true,"session_id":"s-turns","num_turns":41,"terminal_reason":"max_turns","permission_denials":[{"tool_input":{"command":"echo usage limit"}}]}'; exit 1 }
 if (Test-Path (Join-Path $PWD '.pranata\stub-critical')) { Start-Process -FilePath 'cmd.exe' -ArgumentList '/c ping -n 14 127.0.0.1 >nul & rem merge-verified' -NoNewWindow; Start-Sleep -Seconds 14 }
 if (Test-Path (Join-Path $PWD '.pranata\stub-sleep')) { Start-Sleep -Seconds 120 }
 if (Test-Path (Join-Path $PWD '.pranata\stub-raise-hold')) { Set-Content -LiteralPath (Join-Path $PWD 'late.txt') -Value x -Encoding ASCII; Set-Content -LiteralPath (Join-Path $PWD '.pranata\executor\hold.json') -Value '{"mode":"IMMEDIATE_SAFE_SHUTDOWN"}' -Encoding ASCII }
@@ -243,6 +244,9 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
     Assert ($calls -notmatch 'fake-test-value') 'runner: token value never appears in arguments'
     Assert (-not (Get-ChildItem -LiteralPath $state.Logs -Recurse -File | Select-String -SimpleMatch 'fake-test-value')) 'runner: token value never reaches a log'
     Assert ($calls -match '--setting-sources project' -and $calls -match '--strict-mcp-config') 'runner: project settings only, no MCP'
+    Assert ($calls -match 'Bash\(powershell -NoProfile -File scripts/executor/stage\.ps1\*\)' -and $calls -match 'Bash\(powershell -NoProfile -File scripts/executor/merge-verified\.ps1\*\)') 'runner: stage and merge scripts allowed through Bash'
+    Assert ($calls -match '--disallowedTools "?PowerShell,' -and $calls -notmatch 'PowerShell\(') 'runner: the PowerShell tool is off in headless steps'
+    Assert ($calls -notmatch 'hold\.ps1|runner\.ps1|watcher\.ps1') 'runner: hold, runner and watcher scripts are not allowed in a step'
 
     # A failed step reported as subtype=success must stop the loop, not spin on the model.
     Set-Content -LiteralPath (Join-Path $clone '.pranata\stub-auth-error') -Value x -Encoding ASCII
@@ -251,6 +255,24 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
     Assert ($r.Out -match 'status=error') 'runner: is_error with subtype=success is an error'
     Assert ((@(Get-Content -LiteralPath (Join-Path $clone '.pranata\stub-calls.log')).Count - $before) -eq 1) 'runner: exactly one call on a failed step, no retry loop'
     Remove-Item -LiteralPath (Join-Path $clone '.pranata\stub-auth-error')
+
+    # The turn budget ending a step continues from the checkpoint, inside the no-progress budget.
+    Set-Content -LiteralPath (Join-Path $clone '.pranata\stub-max-turns') -Value x -Encoding ASCII
+    $before = @(Get-Content -LiteralPath (Join-Path $clone '.pranata\stub-calls.log')).Count
+    $nextBefore = (Get-PranataCheckpoint $clone).next_action
+    $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Root', $clone, '-ClaudeCommand', $stub, '-TokenFile', $tokenFile, '-MaxSteps', '2')
+    Assert ($r.Code -eq 0 -and $r.Out -match 'status=max_turns') 'runner: error_max_turns is reported as max_turns'
+    Assert ($r.Out -match 'rate_limited=False') 'runner: a turn limit is not mistaken for a usage limit'
+    Assert ($r.Out -notmatch 'without a continuable status') 'runner: a turn limit does not stop the loop'
+    Assert ((@(Get-Content -LiteralPath (Join-Path $clone '.pranata\stub-calls.log')).Count - $before) -eq 2) 'runner: the next step starts after a turn limit'
+    $afterTurns = Get-PranataCheckpoint $clone
+    Assert ($afterTurns.stage -eq 'IN_PROGRESS' -and $afterTurns.next_action -eq $nextBefore) 'runner: a turn limit keeps the checkpoint'
+    $before = @(Get-Content -LiteralPath (Join-Path $clone '.pranata\stub-calls.log')).Count
+    $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Root', $clone, '-ClaudeCommand', $stub, '-TokenFile', $tokenFile)
+    Assert ($r.Out -match 'BLOCKED: no progress') 'runner: repeated turn limits without progress end in BLOCKED'
+    Assert ((@(Get-Content -LiteralPath (Join-Path $clone '.pranata\stub-calls.log')).Count - $before) -eq 3) 'runner: the no-progress budget bounds turn-limit steps'
+    Remove-Item -LiteralPath (Join-Path $clone '.pranata\stub-max-turns')
+    $cpT = Get-PranataCheckpoint $clone; $cpT.stage = 'IN_PROGRESS'; $cpT.last_action = $null; Save-PranataCheckpoint $clone $cpT
 
     # IMMEDIATE hold keeps unfinished work as a local WIP commit on the Task branch.
     & git -C $clone switch --quiet -c chore/task-999-x
@@ -339,6 +361,8 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
     $r = Invoke-Script (Join-Path $scriptsDir 'runner.ps1') @('-Start', '-Once', '-Root', $clone, '-ClaudeCommand', $stub, '-TokenFile', $tokenFile)
     Assert ($r.Out -match 'starts no model step') 'runner: SUPERVISED checkpoint starts no model step'
 
+    $watcherText = Get-Content -LiteralPath (Join-Path $scriptsDir 'watcher.ps1') -Raw
+    Assert ($watcherText -match 'New-ScheduledTaskSettingsSet [^\r\n]*-Priority 4') 'watcher: registered at normal priority'
     # Watcher: single instance, evidence based, -NoStart keeps the test from spawning anything.
     $w = Invoke-Script (Join-Path $scriptsDir 'watcher.ps1') @('-Once', '-NoStart', '-Root', $clone)
     Assert ($w.Code -eq 0 -and $w.Out -match 'runner=False') 'watcher: reports evidence'

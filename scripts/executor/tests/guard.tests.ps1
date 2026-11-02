@@ -355,6 +355,13 @@ foreach ($row in $files) {
 foreach ($row in @(
     @($true, 'git status --short'),
     @($true, 'git -c core.autocrlf=false add docs/x.md'),
+    @($true, 'scripts\executor\status.ps1 -Offline'),
+    @($true, 'powershell -NoProfile -File scripts\executor\status.ps1 -Offline'),
+    @($true, 'powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\executor\hold.ps1 -Mode IMMEDIATE_SAFE_SHUTDOWN -Reason x'),
+    @($false, 'powershell -NoProfile -File other.ps1 scripts\executor\status.ps1'),
+    @($false, 'powershell -c Remove-Item x scripts/executor/status.ps1'),
+    @($false, 'powershell -NoProfile -File scripts\executor\status.ps1.evil.ps1'),
+    @($false, 'scripts\executor\status.ps1.evil.ps1'),
     @($false, 'docker compose -p pranata stop'),
     @($false, 'npm run build'),
     @($false, 'git push -u origin chore/x'),
@@ -399,6 +406,24 @@ foreach ($row in @(
     $failedClosed = $result.Out -match 'failed closed'
     $ok = if ($row[0] -eq 'deny-closed') { $isDeny -and $failedClosed -and $result.Code -eq 0 } elseif ($row[0] -eq 'deny') { $isDeny -and (-not $failedClosed) -and $result.Code -eq 0 } else { (-not $result.Out) -and $result.Code -eq 0 }
     if (-not $ok) { $fail++; Write-Output "FAIL [hook-wire] expected $($row[0]), code $($result.Code), out: $($result.Out)" }
+}
+
+# A linked worktree obeys the hold and mode of the main checkout.
+$wtBase = Join-Path $env:TEMP ("pranata-guard-wt-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
+$wtMain = Join-Path $wtBase 'main'
+$wtLinked = Join-Path $wtBase 'linked'
+[void](New-Item -ItemType Directory -Path (Join-Path $wtMain '.pranata\executor') -Force)
+[void](New-Item -ItemType Directory -Path $wtLinked -Force)
+try {
+    [IO.File]::WriteAllText((Join-Path $wtLinked '.git'), "gitdir: $($wtMain.Replace('\', '/'))/.git/worktrees/linked`n")
+    $wtJson = "{`"tool_name`":`"Bash`",`"cwd`":`"$($wtLinked.Replace('\', '\\'))`",`"tool_input`":{`"command`":`"npm run build`"}}"
+    $counts['hook-wire'] = 3 + [int]$counts['hook-wire']
+    if ((Get-PranataStateRoot $wtLinked).Replace('/', '\') -ne $wtMain) { $fail++; Write-Output 'FAIL [hook-wire] worktree state root' }
+    if ((Invoke-Hook $wtJson $wtLinked).Out) { $fail++; Write-Output 'FAIL [hook-wire] worktree without a hold must stay silent' }
+    [IO.File]::WriteAllText((Join-Path $wtMain '.pranata\executor\hold.json'), '{"mode":"IMMEDIATE_SAFE_SHUTDOWN"}')
+    if ((Invoke-Hook $wtJson $wtLinked).Out -notmatch 'IMMEDIATE_SAFE_SHUTDOWN') { $fail++; Write-Output 'FAIL [hook-wire] worktree must obey the hold of the main checkout' }
+} finally {
+    if ($wtBase -match 'pranata-guard-wt-[0-9a-f]{8}$') { Remove-Item -LiteralPath $wtBase -Recurse -Force -ErrorAction SilentlyContinue }
 }
 
 $summary = ($counts.GetEnumerator() | Sort-Object Name | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join ' '

@@ -115,6 +115,17 @@ function Exit-PranataLock([string]$LockPath) {
     }
 }
 
+# Shared with allowlist.probe.ps1, which proves these rules against the real CLI.
+function Get-PranataRunnerAllowedTools {
+    return (@(
+        'Read', 'Edit', 'Write', 'Glob', 'Grep', 'Agent',
+        'Bash(git *)', 'Bash(gh *)', 'Bash(php artisan *)', 'Bash(composer *)', 'Bash(npm *)', 'Bash(npx *)',
+        'Bash(powershell -NoProfile -File scripts/executor/status.ps1*)',
+        'Bash(powershell -NoProfile -File scripts/executor/stage.ps1*)',
+        'Bash(powershell -NoProfile -File scripts/executor/merge-verified.ps1*)'
+    ) -join ',')
+}
+
 # Restricted runner token (D-27): DPAPI-encrypted for this Windows user, outside the repository.
 function Get-PranataTokenPath { return (Join-Path $env:LOCALAPPDATA 'PRANATA-UNY\runner-token.dpapi') }
 

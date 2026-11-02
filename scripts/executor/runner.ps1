@@ -21,18 +21,11 @@ $ErrorActionPreference = 'Stop'
 if (-not $Root) { $Root = Get-PranataRepoRoot }
 $paths = Initialize-PranataStateDirs $Root
 
-$allowedTools = @(
-    'Read', 'Edit', 'Write', 'Glob', 'Grep', 'Agent',
-    'PowerShell(git *)', 'PowerShell(gh *)',
-    'PowerShell(php artisan *)', 'PowerShell(composer *)', 'PowerShell(npm *)', 'PowerShell(npx *)',
-    'PowerShell(powershell -NoProfile -File scripts\executor\status.ps1*)',
-    'PowerShell(powershell -NoProfile -File scripts\executor\stage.ps1*)',
-    'PowerShell(powershell -NoProfile -File scripts\executor\merge-verified.ps1*)',
-    'Bash(git *)', 'Bash(gh *)', 'Bash(php artisan *)', 'Bash(composer *)', 'Bash(npm *)', 'Bash(npx *)'
-) -join ','
+$allowedTools = Get-PranataRunnerAllowedTools
 
 $guardGlobs = @('.github/workflows/**', '.claude/**', '.githooks/**', 'scripts/executor/**', '.pranata/executor/hold.json')
-$disallowedTools = (@($guardGlobs | ForEach-Object { "Edit($_)"; "Write($_)" })) -join ','
+# Headless steps run shell work through Bash only: allowlist.probe.ps1 shows no PowerShell rule admits these scripts.
+$disallowedTools = (@('PowerShell') + @($guardGlobs | ForEach-Object { "Edit($_)"; "Write($_)" })) -join ','
 
 function Write-RunnerLog([string]$Message) {
     $line = "{0} {1}" -f (Get-Date).ToUniversalTime().ToString('o'), $Message
@@ -180,6 +173,11 @@ function Get-StepOutcome($Step) {
         if ($json.PSObject.Properties['session_id']) { $outcome.SessionId = $json.session_id }
         if ($json.PSObject.Properties['is_error']) { $outcome.IsError = [bool]$json.is_error }
     }
+    # The turn budget ending a step is not a failure: the next step resumes from the checkpoint and the real state.
+    if ($json -and $json.PSObject.Properties['subtype'] -and [string]$json.subtype -eq 'error_max_turns') {
+        $outcome.Status = 'max_turns'
+        return $outcome
+    }
     # Only a failed step can be a usage limit: a healthy step may simply mention the words.
     if ($outcome.IsError) {
         $text = "$($Step.Raw)`n$($Step.Err)"
@@ -274,6 +272,7 @@ try {
         if ($MaxSteps -gt 0 -and $steps -ge $MaxSteps) { Write-RunnerLog "max steps $MaxSteps reached"; break }
 
         $headBefore = (& git -C $Root rev-parse HEAD)
+        $treeBefore = (& git -C $Root status --porcelain) -join "`n"
         $stageBefore = $checkpoint.stage
         $nextBefore = $checkpoint.next_action
         Write-ContextPack $checkpoint
@@ -297,11 +296,13 @@ try {
         } elseif ($outcome.Status -eq 'blocked') {
             $checkpoint.stage = 'BLOCKED'
             if ($outcome.Next) { $checkpoint.next_action = $outcome.Next }
-        } elseif ($outcome.Status -in @('progressed', 'done')) {
+        } elseif ($outcome.Status -in @('progressed', 'done', 'max_turns')) {
             $checkpoint.wait_until = $null
             if ($outcome.Next) { $checkpoint.next_action = $outcome.Next }
             $headAfter = (& git -C $Root rev-parse HEAD)
-            $moved = ($headAfter -ne $headBefore) -or ($checkpoint.stage -ne $stageBefore)
+            $treeAfter = (& git -C $Root status --porcelain) -join "`n"
+            # Names only, so rewriting the same files is not movement; uncommitted new work is.
+            $moved = ($headAfter -ne $headBefore) -or ($treeAfter -ne $treeBefore) -or ($checkpoint.stage -ne $stageBefore)
             if ($moved -or $checkpoint.next_action -ne $nextBefore) { $noProgress = 0 } else { $noProgress++ }
             if ($moved) { $notMoved = 0 } else { $notMoved++ }
             # A step that only rewrites next_action is talking, not working; it gets a wider but finite budget.
