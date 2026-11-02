@@ -61,6 +61,43 @@ for (const language of LANGUAGES) {
     });
 }
 
+test('the drawer opens on a phone and has no axe violation', async ({
+    page,
+}) => {
+    test.skip(
+        (page.viewportSize()?.width ?? 0) >= 640,
+        'The drawer exists only on a phone.',
+    );
+
+    await signIn(page);
+    await page.getByRole('button', { name: 'Buka atau tutup menu' }).click();
+
+    await expect(
+        page
+            .getByRole('dialog', { name: 'Menu' })
+            .getByRole('link', { name: 'Beranda' }),
+    ).toBeVisible();
+    expect(await axeViolations(page)).toEqual([]);
+});
+
+test('an expired page leads back to where it came from', async ({
+    page,
+    criticalErrors,
+}) => {
+    await page.goto('/login');
+    await page.context().clearCookies();
+    await page.getByLabel('Alamat email').fill(emailOf('internal'));
+    await page.locator('#password').fill(PASSWORD);
+    await page.getByRole('button', { name: 'Masuk' }).click();
+    await page.getByRole('button', { name: 'Muat ulang halaman' }).click();
+
+    await expect(page).toHaveURL(/\/login$/);
+    await expect(page.getByRole('button', { name: 'Masuk' })).toBeVisible();
+
+    // The refused request is the point of this test, and the browser logs it as a console error.
+    criticalErrors.length = 0;
+});
+
 test('axe reports a violation that is really there', async ({ page }) => {
     await page.goto('/login');
     await page.evaluate(() => {
