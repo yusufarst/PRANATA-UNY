@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Sleep;
 use Illuminate\Support\ViewErrorBag;
 use Illuminate\Validation\ValidationException;
+use stdClass;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -120,7 +121,7 @@ class EnsureIdempotentCommand
     /**
      * Claim the key for this request, or give the row of the request that holds it.
      */
-    private function claim(mixed $userId, string $key, string $route, string $hash): ?object
+    private function claim(mixed $userId, string $key, string $route, string $hash): ?stdClass
     {
         $now = now();
         $claim = [
