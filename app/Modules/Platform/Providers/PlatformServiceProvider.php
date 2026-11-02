@@ -81,6 +81,14 @@ class PlatformServiceProvider extends ModuleServiceProvider
                 return;
             }
 
+            // The reset guard checked the connection the command names; with DB_MIGRATOR_URL the migrator reaches another database.
+            if (in_array($event->command, DatabaseResetGuard::COMMANDS, true)) {
+                DatabaseResetGuard::assertAllowed(
+                    $this->app->environment(),
+                    DatabaseResetGuard::databaseName(config('database.connections.'.self::MIGRATOR)),
+                );
+            }
+
             if ($requested === null) {
                 config(['database.default' => self::MIGRATOR]);
                 $this->replacedDefault = $application;

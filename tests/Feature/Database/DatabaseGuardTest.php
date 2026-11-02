@@ -82,6 +82,19 @@ test('the reset guard listens for a destructive command through another connecti
         ->toThrow(RuntimeException::class, 'forbidden on database []');
 });
 
+test('the reset guard checks the database the migrator really reaches', function () {
+    config(['database.connections.migrator.url' => 'postgresql://pranata@127.0.0.1:5432/other_app']);
+
+    try {
+        expect(fn () => startCommand('db:wipe'))
+            ->toThrow(RuntimeException::class, 'forbidden on database [other_app]')
+            ->and(config('database.default'))->toBe('pgsql');
+    } finally {
+        config(['database.connections.migrator.url' => null]);
+        DB::purge('migrator');
+    }
+});
+
 test('the reset guard listens for a destructive command in production', function () {
     app()->detectEnvironment(fn () => 'production');
 
@@ -146,6 +159,7 @@ test('artisan migrate:fresh stops on a foreign database', function (string $envi
     'foreign name, testing' => ['testing', ['DB_DATABASE' => 'other_app'], [], 'forbidden on database [other_app]'],
     'foreign URL, local' => ['local', ['DB_DATABASE' => 'pranata_test', 'DB_URL' => 'postgresql://pranata@127.0.0.1:5432/other_app'], [], 'forbidden on database [other_app]'],
     'foreign URL, testing' => ['testing', ['DB_DATABASE' => 'pranata_test', 'DB_URL' => 'postgresql://pranata@127.0.0.1:5432/other_app'], [], 'forbidden on database [other_app]'],
+    'foreign migrator URL, testing' => ['testing', ['DB_DATABASE' => 'pranata_test', 'DB_MIGRATOR_URL' => 'postgresql://pranata@127.0.0.1:5432/other_app'], [], 'forbidden on database [other_app]'],
     'other driver, local' => ['local', [], ['--database=sqlite'], 'forbidden on database'],
     'other driver, testing' => ['testing', [], ['--database=sqlite'], 'forbidden on database'],
     'unknown connection, testing' => ['testing', [], ['--database=missing_connection'], 'forbidden on database'],

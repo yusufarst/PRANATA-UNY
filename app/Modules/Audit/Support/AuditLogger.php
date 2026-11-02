@@ -62,6 +62,9 @@ final class AuditLogger
             throw new InvalidArgumentException("[{$module}] is not a module code.");
         }
 
+        // Checked as stored: json_encode() also writes the public properties and jsonSerialize() of an object.
+        $changes = self::plain($changes);
+        $metadata = self::plain($metadata);
         $secrets = [...self::secretKeys($changes), ...self::secretKeys($metadata)];
 
         if ($secrets !== []) {
@@ -168,7 +171,20 @@ final class AuditLogger
     }
 
     /**
-     * @param  array<string, mixed>  $values
+     * The payload as json_encode() stores it, with every object turned into an array.
+     *
+     * @param  array<array-key, mixed>  $values
+     * @return array<array-key, mixed>
+     */
+    private static function plain(array $values): array
+    {
+        $plain = json_decode(json_encode($values, JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
+
+        return is_array($plain) ? $plain : [];
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $values
      */
     private static function json(array $values): ?string
     {

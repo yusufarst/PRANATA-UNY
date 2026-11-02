@@ -85,6 +85,8 @@ test('an event never carries a secret, at any depth', function (array $changes, 
     'two-factor secret' => [['two_factor_secret' => ['after' => 'x']], [], 'two_factor_secret'],
     'recovery codes' => [['two_factor_recovery_codes' => ['after' => 'x']], [], 'two_factor_recovery_codes'],
     'nested camel case' => [[], ['context' => ['apiKey' => 'x']], 'context.apiKey'],
+    'object' => [[], ['context' => (object) ['password' => 'x']], 'context.password'],
+    'object in a change' => [['profile' => ['after' => (object) ['access_token' => 'x']]], [], 'profile.after.access_token'],
 ]);
 
 test('an invalid action or module code is refused', function (string $action, string $module) {
