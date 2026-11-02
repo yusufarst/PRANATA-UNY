@@ -6,7 +6,6 @@ use App\Modules\Platform\Exceptions\CommandBusyException;
 use App\Modules\Platform\Support\Action;
 use App\Modules\Platform\Support\CommandMessage;
 use Closure;
-use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -195,7 +194,7 @@ class EnsureIdempotentCommand
 
         // any() reads only the default bag, and validateWithBag() flashes into a named one.
         foreach ($errors->getBags() as $bag) {
-            if ($bag instanceof MessageBag && $bag->any()) {
+            if ($bag->isNotEmpty()) {
                 return false;
             }
         }
