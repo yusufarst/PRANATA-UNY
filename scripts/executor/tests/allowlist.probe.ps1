@@ -27,7 +27,12 @@ $matrix = @(
     @('13', 'Bash', $runnerRules, 'git diff --cached --stat', 0),
     @('14', 'Bash', $runnerRules, 'npm --version', 0),
     @('15', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts/executor/hold.ps1 -Mode SHUTDOWN_AFTER_CURRENT_TASK -Reason x', 1),
-    @('16', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts/executor/runner.ps1 -Start', 1)
+    @('16', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts/executor/runner.ps1 -Start', 1),
+    # Rows 17-20: the forms that blocked TASK-008 and TASK-009 steps; a cd joined with git stays refused, so the prompt forbids it.
+    @('17', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts\executor\stage.ps1 -Paths seed.txt', 0),
+    @('18', 'Bash', $runnerRules, 'git status -sb && git log --oneline -1 && git diff --stat', 0),
+    @('19', 'Bash', $runnerRules, 'cd "<box>" && git status --short', 1),
+    @('20', 'Bash', $runnerRules, 'powershell -NoProfile -File scripts\executor\hold.ps1 -Mode SHUTDOWN_AFTER_CURRENT_TASK -Reason x', 1)
 )
 
 $failed = 0
@@ -48,7 +53,8 @@ try {
     $env:PRANATA_EXECUTOR_MODE = 'AUTONOMOUS'
     foreach ($row in $matrix) {
         if ($Cases.Count -gt 0 -and $Cases -notcontains $row[0]) { continue }
-        $prompt = "Use the $($row[1]) tool to run exactly this one command, once, with nothing added: $($row[3]) . The command may fail; that does not matter. Then reply with the single word DONE if it ran, or DENIED if it was refused. Do not try alternatives."
+        $command = $row[3].Replace('<box>', ('/' + $box.Substring(0, 1).ToLower() + ($box.Substring(2) -replace '\\', '/')))
+        $prompt = "Use the $($row[1]) tool to run exactly this one command, once, with nothing added: $command . The command may fail; that does not matter. Then reply with the single word DONE if it ran, or DENIED if it was refused. Do not try alternatives."
         $out = $prompt | & claude -p --model $Model --output-format json --setting-sources project --strict-mcp-config --permission-mode dontAsk --max-turns 3 --allowedTools $row[2] 2>$null | Out-String
         $json = $null
         try { $json = $out | ConvertFrom-Json } catch { }

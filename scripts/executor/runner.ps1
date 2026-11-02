@@ -54,6 +54,9 @@ Peran: EXECUTION AGENT - AUTONOMOUS. Otorisasi: $($Checkpoint.authorization_id).
 Baca .pranata/executor/context.md, lalu verifikasi keadaan nyata (cabang, HEAD, PR, CI, status merge) sebelum bertindak.
 Task: $($Checkpoint.task_id), tahap: $($Checkpoint.stage). Tindakan berikutnya: $($Checkpoint.next_action).
 Kerjakan sampai tahap berikutnya atau sampai menunggu hasil eksternal; perbarui checkpoint pada setiap transisi; patuhi hold.
+Alat: Bash sudah berjalan di root repo. Jangan awali perintah dengan cd: CLI menolak cd yang digabung dengan git tanpa bertanya.
+Baca berkas dengan Read/Grep/Glob. WebFetch dan MCP tidak tersedia; sumber resmi versi terpasang dibaca dengan gh api.
+Bila alat ditolak dua kali untuk tujuan yang sama, berhenti dengan result blocked dan sebutkan perintahnya, jangan menghabiskan giliran.
 Jangan mengulang perintah yang tidak idempoten tanpa memverifikasi hasil sebelumnya. Keluarkan baris status JSON akhir:
 {"task":"$($Checkpoint.task_id)","stage":"$($Checkpoint.stage)","result":"progressed|waiting|blocked|done","next":"<...>"}
 "@

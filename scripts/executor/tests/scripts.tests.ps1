@@ -205,6 +205,7 @@ try {
     $stub = Join-Path $work 'claude-stub.ps1'
     @'
 $prompt = [Console]::In.ReadToEnd()
+Set-Content -LiteralPath (Join-Path $PWD '.pranata\stub-prompt.txt') -Value $prompt -Encoding UTF8
 $log = Join-Path $PWD '.pranata\stub-calls.log'
 Add-Content -LiteralPath $log -Value (($args -join ' ') + ' MODE=' + $env:PRANATA_EXECUTOR_MODE + ' TOKEN=' + [bool]$env:GH_TOKEN + ' GITCFG=' + $env:GIT_CONFIG_COUNT)
 if (Test-Path (Join-Path $PWD '.pranata\stub-auth-error')) { Write-Output '{"type":"result","subtype":"success","is_error":true,"session_id":"s-auth","result":"Failed to authenticate"}'; exit 1 }
@@ -247,6 +248,9 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-1","num_turns":
     Assert ($calls -match 'Bash\(powershell -NoProfile -File scripts/executor/stage\.ps1\*\)' -and $calls -match 'Bash\(powershell -NoProfile -File scripts/executor/merge-verified\.ps1\*\)') 'runner: stage and merge scripts allowed through Bash'
     Assert ($calls -match '--disallowedTools "?PowerShell,' -and $calls -notmatch 'PowerShell\(') 'runner: the PowerShell tool is off in headless steps'
     Assert ($calls -notmatch 'hold\.ps1|runner\.ps1|watcher\.ps1') 'runner: hold, runner and watcher scripts are not allowed in a step'
+    Assert ($calls -match 'Bash\(powershell -NoProfile -File scripts\\executor\\stage\.ps1\*\)' -and $calls -notmatch 'Bash\(cd |Bash\(\*\)|Bash\(bash|Bash\(sh ') 'runner: backslash script form allowed, no cd or open shell rule'
+    $stepPrompt = Get-Content -LiteralPath (Join-Path $clone '.pranata\stub-prompt.txt') -Raw
+    Assert ($stepPrompt -match 'Jangan awali perintah dengan cd' -and $stepPrompt -match 'result blocked') 'runner: the step prompt names the cd rule and stops on repeated denials'
 
     # A failed step reported as subtype=success must stop the loop, not spin on the model.
     Set-Content -LiteralPath (Join-Path $clone '.pranata\stub-auth-error') -Value x -Encoding ASCII
