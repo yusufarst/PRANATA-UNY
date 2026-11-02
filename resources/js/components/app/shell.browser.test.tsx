@@ -311,7 +311,13 @@ describe.skipIf(!available)('the shell in a real browser', () => {
         server?.close();
 
         if (profile) {
-            rmSync(profile, { recursive: true, force: true });
+            // Chrome may still be writing its profile for a moment after the kill.
+            rmSync(profile, {
+                recursive: true,
+                force: true,
+                maxRetries: 10,
+                retryDelay: 200,
+            });
         }
     });
 
