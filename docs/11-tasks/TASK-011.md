@@ -44,7 +44,7 @@ Pemulihan akun harus selalu tersedia tanpa ketergantungan email institusi (FUT-0
 - Maker-checker reset akun SUPER_ADMIN/istimewa melalui penentu "akun istimewa" yang dapat diperluas (TASK-015 menambah pemegang penugasan keputusan)
 - Aktivasi akun baru dengan kode sekali pakai
 - Halaman sesi aktif pengguna + cabut sesi oleh admin
-- Penonaktifan akun ([OD-38](../00-governance/DECISION_LOG.md#od-38)): status DEACTIVATED dan `deactivated_at` diisi, semua sesi pengguna dicabut, peristiwa tercatat di `audit_events`; tidak ada baris `users` yang dihapus dan riwayat tetap ([OPERATIONS_RUNBOOK RB-13](../09-operations/OPERATIONS_RUNBOOK.md#rb-13-offboarding-pengguna))
+- Penonaktifan akun ([OD-38](../00-governance/DECISION_LOG.md#od-38)): status DEACTIVATED dan `deactivated_at` diisi, semua sesi pengguna dicabut, `remember_token` diganti sehingga cookie remember-me lama tidak berlaku, peristiwa tercatat di `audit_events`; tidak ada baris `users` yang dihapus dan riwayat tetap ([OPERATIONS_RUNBOOK RB-13](../09-operations/OPERATIONS_RUNBOOK.md#rb-13-offboarding-pengguna))
 - Reset via email bila mail dikonfigurasi (dinonaktifkan otomatis bila tidak)
 - Notifikasi in-app ke pengguna setelah reset
 - Audit semua aksi
@@ -217,7 +217,7 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Reset akun istimewa membutuhkan admin kedua
 - TAC-04 Pengguna melihat dan mencabut sesi aktifnya; admin dapat mencabut sesi pengguna
 - TAC-05 Tanpa SMTP, tautan reset email tidak ditampilkan
-- TAC-06 Admin menonaktifkan akun: status DEACTIVATED dan `deactivated_at` terisi, setiap sesi aktif pengguna dicabut saat itu (permintaan berikutnya dengan sesi lama ditolak), peristiwa tercatat di `audit_events`, baris `users` dan riwayat auditnya tetap ada, dan akun tidak dapat masuk (TASK-010 TAC-02)
+- TAC-06 Admin menonaktifkan akun: status DEACTIVATED dan `deactivated_at` terisi, setiap sesi aktif pengguna dicabut saat itu (permintaan berikutnya dengan sesi lama ditolak), cookie remember-me yang diterbitkan sebelum penonaktifan tidak memulihkan akses terautentikasi (selaras dengan TASK-010 TAC-02; PCR003-SR-C1), peristiwa tercatat di `audit_events`, baris `users` dan riwayat auditnya tetap ada, dan akun tidak dapat masuk (TASK-010 TAC-02)
 
 ## TEST REQUIREMENTS
 
