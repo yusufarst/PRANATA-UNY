@@ -3,13 +3,14 @@
 namespace App\Modules\Platform\Support;
 
 use App\Modules\Platform\Exceptions\StaleVersionException;
+use Illuminate\Database\Eloquent\Model;
 use LogicException;
 
 /**
  * Optimistic concurrency of an aggregate that users edit at the same time (COMMAND_AND_API_CONTRACTS section 5). The table
  * holds lock_version integer NOT NULL DEFAULT 0 (DATA_MODEL section 1).
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 trait HasLockVersion
 {
