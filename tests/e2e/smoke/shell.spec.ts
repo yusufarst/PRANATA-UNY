@@ -72,7 +72,11 @@ test.describe('signed in', () => {
     });
 
     test.beforeAll(async ({ browser, baseURL }, testInfo) => {
-        const context = await browser.newContext({ baseURL });
+        // The runner applies the storageState of this group to every new context, and its file does not exist yet.
+        const context = await browser.newContext({
+            baseURL,
+            storageState: { cookies: [], origins: [] },
+        });
 
         try {
             await signIn(await context.newPage(), 'internal');
@@ -122,20 +126,30 @@ test.describe('signed in', () => {
     }
 });
 
-// Another profile than the signed-in tests, so this attempt never shares their login limit.
-test('an expired page leads back to where it came from', async ({
+// A same-origin browser request passes the forgery check without a token, so a 419 cannot be provoked here.
+// The login limit gives a real failed mutation instead, on an address no profile uses.
+test('a refused sign-in leads back to where it came from', async ({
     page,
     criticalErrors,
 }) => {
+    const address = `limit.${test.info().project.name}@e2e.pranata.test`;
+    const submit = page.getByRole('button', { name: 'Masuk' });
+    const refused = page.getByRole('heading', {
+        name: 'Terlalu banyak permintaan',
+    });
+
     await page.goto('/login');
-    await page.context().clearCookies();
-    await page.getByLabel('Alamat email').fill(emailOf('vendor'));
-    await page.locator('#password').fill(PASSWORD);
-    await page.getByRole('button', { name: 'Masuk' }).click();
-    await page.getByRole('button', { name: 'Muat ulang halaman' }).click();
+    await expect(async () => {
+        await page.getByLabel('Alamat email').fill(address);
+        await page.locator('#password').fill('not-the-password');
+        await submit.click();
+        await expect(refused).toBeVisible({ timeout: 2_000 });
+    }).toPass({ timeout: 20_000 });
+
+    await page.getByRole('button', { name: 'Coba lagi' }).click();
 
     await expect(page).toHaveURL(/\/login$/);
-    await expect(page.getByRole('button', { name: 'Masuk' })).toBeVisible();
+    await expect(submit).toBeVisible();
 
     // The refused request is the point of this test, and the browser logs it as a console error.
     criticalErrors.length = 0;
