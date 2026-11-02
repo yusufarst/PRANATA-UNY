@@ -129,6 +129,25 @@ test('saving at the seen version raises it by one', function () {
         ->and(CommandProbeRecord::find($record->id)->only('title', 'lock_version'))->toBe(['title' => 'Baru', 'lock_version' => 1]);
 });
 
+test('a deadlock after saving at the seen version still writes the change on the retry', function () {
+    Sleep::fake();
+
+    $record = CommandProbeRecord::create(['title' => 'Lama']);
+    $record->title = 'Baru';
+
+    (new CommandProbeAction)->handle(function (int $attempt) use ($record) {
+        $record->saveAtVersion(0);
+
+        if ($attempt === 0) {
+            throw sqlFailure('40P01');
+        }
+    });
+
+    expect($record->lock_version)->toBe(1)
+        ->and($record->isDirty())->toBeFalse()
+        ->and(CommandProbeRecord::find($record->id)->only('title', 'lock_version'))->toBe(['title' => 'Baru', 'lock_version' => 1]);
+});
+
 test('saving at a stale version writes nothing', function () {
     $record = CommandProbeRecord::create(['title' => 'Lama']);
     DB::table('command_probe_records')->where('id', $record->id)->update(['lock_version' => 1]);

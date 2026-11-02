@@ -43,7 +43,11 @@ trait HasLockVersion
             throw StaleVersionException::of($this);
         }
 
-        $this->setAttribute('lock_version', $next);
-        $this->syncOriginal();
+        // The model in memory takes the write only on the commit: a deadlock later in the transaction rolls the row back, and the
+        // retry must still see these attributes as changed or it would write nothing but the version.
+        $this->getConnection()->afterCommit(function () use ($next) {
+            $this->setAttribute('lock_version', $next);
+            $this->syncOriginal();
+        });
     }
 }
