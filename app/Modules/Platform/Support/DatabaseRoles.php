@@ -3,6 +3,7 @@
 namespace App\Modules\Platform\Support;
 
 use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 /**
@@ -35,6 +36,12 @@ final class DatabaseRoles
         if ($connection->scalar('select current_user') !== $role) {
             $connection->statement('set role '.self::identifier($role));
         }
+
+        // db:wipe, which migrate:fresh calls once the migrations table exists, disconnects; the new session has to take the role again.
+        $connection->setReconnector(static function (Connection $lost) use ($role): void {
+            $lost->setPdo(DB::reconnect($lost->getNameWithReadWriteType())->getRawPdo());
+            $lost->statement('set role '.self::identifier($role));
+        });
     }
 
     /**

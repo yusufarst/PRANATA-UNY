@@ -23,9 +23,9 @@ test('migrations create every table and trigger function as pranata_owner', func
     ))->pluck('owner', 'proname');
 
     expect($owners)->toHaveCount(5)
-        ->and($owners->unique()->all())->toBe([DatabaseRoles::OWNER])
+        ->and($owners->unique()->values()->all())->toBe([DatabaseRoles::OWNER])
         ->and($functionOwners)->toHaveCount(5)
-        ->and($functionOwners->unique()->all())->toBe([DatabaseRoles::OWNER]);
+        ->and($functionOwners->unique()->values()->all())->toBe([DatabaseRoles::OWNER]);
 });
 
 test('pranata_app reads, adds and changes rows but deletes only from framework tables', function () {
@@ -79,6 +79,11 @@ test('the migrator connection works as the configured owner role', function () {
 
     $migrator = DB::connection('migrator');
     DatabaseRoles::prepareMigrator($migrator, DatabaseRoles::OWNER, true);
+
+    expect($migrator->scalar('select current_user'))->toBe(DatabaseRoles::OWNER);
+
+    // db:wipe disconnects before migrate:fresh migrates; the session after it must still work as the owner.
+    $migrator->disconnect();
 
     expect($migrator->scalar('select current_user'))->toBe(DatabaseRoles::OWNER);
 

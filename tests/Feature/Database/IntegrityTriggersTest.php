@@ -68,11 +68,13 @@ test('forbid_scope_change() refuses a change of a scope column, also as pranata_
 
 test('forbid_change_when_parent_final() refuses changing, deleting and adding child rows of a final parent', function () {
     createGuardedProbeTables(DB::connection(), 'final_probe');
-    DB::table('final_probe_parents')->insert([['id' => 1, 'status' => 'DRAFT'], ['id' => 2, 'status' => 'FINAL']]);
+    DB::table('final_probe_parents')->insert([['id' => 1, 'status' => 'DRAFT'], ['id' => 2, 'status' => 'DRAFT']]);
     DB::table('final_probe_lines')->insert([
         ['parent_id' => 1, 'workspace' => 'unit_a', 'amount' => 1],
         ['parent_id' => 2, 'workspace' => 'unit_a', 'amount' => 1],
     ]);
+    // The lines exist before their parent becomes final, as they do in the application.
+    DB::table('final_probe_parents')->where('id', 2)->update(['status' => 'FINAL']);
     // Only to show that the trigger, not the missing privilege, refuses the delete of pranata_app.
     DB::statement('grant delete on final_probe_lines to '.DatabaseRoles::APP);
 
