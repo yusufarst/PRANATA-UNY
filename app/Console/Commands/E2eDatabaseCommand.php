@@ -12,9 +12,9 @@ use RuntimeException;
  */
 class E2eDatabaseCommand extends Command
 {
-    protected $signature = 'e2e:database {action : create or drop} {name : pranata_e2e_<run>}';
+    protected $signature = 'e2e:database {action : create, drop or verify} {name : pranata_e2e_<run>}';
 
-    protected $description = 'Create or drop the database of one E2E run';
+    protected $description = 'Create, drop or verify the database of one E2E run';
 
     public function handle(): int
     {
@@ -31,11 +31,27 @@ class E2eDatabaseCommand extends Command
         match ($action) {
             'create' => Schema::createDatabase($name),
             'drop' => Schema::dropDatabaseIfExists($name),
+            'verify' => $this->verify($name),
             default => throw new RuntimeException("Unknown action [{$action}]."),
         };
 
         $this->info("{$action}: {$name}");
 
         return self::SUCCESS;
+    }
+
+    /**
+     * The run resets its database, so the connection Laravel really uses must be that database, after DB_URL and any cached configuration.
+     */
+    private function verify(string $name): bool
+    {
+        $connection = config('database.default');
+        $actual = DatabaseResetGuard::databaseName(config("database.connections.{$connection}"));
+
+        if ($actual !== $name) {
+            throw new RuntimeException("The current connection uses [{$actual}], not [{$name}].");
+        }
+
+        return true;
     }
 }

@@ -36,6 +36,9 @@ export default async function globalSetup(config: FullConfig): Promise<void> {
         if (!E2E_DATABASE.test(database)) {
             throw new Error(`[${database}] is not an E2E database`);
         }
+
+        // DB_URL or a cached configuration could still lead Laravel elsewhere, and the next step resets the database.
+        artisan('e2e:database', 'verify', database);
     });
 
     await step('migrations', () => artisan('migrate:fresh', '--force'));

@@ -35,6 +35,24 @@ test('the command refuses any other database', function (string $name) {
         ->toThrow(RuntimeException::class, 'is not an E2E database');
 })->with(['pranata_test', 'other_app', 'pranata_e2e_', 'pranata_e2e_x"; drop database pranata_test; --', 'PRANATA_E2E_X']);
 
+test('verify accepts the database the connection really uses', function () {
+    $connection = config('database.default');
+    config(["database.connections.{$connection}.url" => null, "database.connections.{$connection}.database" => 'pranata_e2e_x']);
+
+    $this->artisan('e2e:database', ['action' => 'verify', 'name' => 'pranata_e2e_x'])->assertSuccessful();
+});
+
+test('verify refuses a connection that DB_URL leads to another database', function () {
+    $connection = config('database.default');
+    config([
+        "database.connections.{$connection}.database" => 'pranata_e2e_x',
+        "database.connections.{$connection}.url" => 'pgsql://pranata@127.0.0.1:5432/pranata_test',
+    ]);
+
+    expect(fn () => $this->artisan('e2e:database', ['action' => 'verify', 'name' => 'pranata_e2e_x'])->run())
+        ->toThrow(RuntimeException::class, 'uses [pranata_test], not [pranata_e2e_x]');
+});
+
 test('the command refuses an unknown action', function () {
     expect(fn () => $this->artisan('e2e:database', ['action' => 'wipe', 'name' => 'pranata_e2e_x'])->run())
         ->toThrow(RuntimeException::class, 'Unknown action');
