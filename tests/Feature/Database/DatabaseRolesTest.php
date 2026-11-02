@@ -59,6 +59,32 @@ test('the application works with the privileges of pranata_app', function () {
         ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::table('users')->delete()))->toBe('42501');
 });
 
+test('the application session check accepts pranata_app alone', function () {
+    $refused = [];
+
+    foreach ([null, DatabaseRoles::OWNER, DatabaseRoles::APP] as $role) {
+        DatabaseSession::sqlStateAs($role, function () use ($role, &$refused) {
+            try {
+                DatabaseRoles::assertApplicationSession(DB::connection());
+            } catch (RuntimeException $exception) {
+                $refused[] = [$role, $exception->getMessage()];
+            }
+        });
+    }
+
+    // The test suite signs in as a superuser.
+    expect(array_column($refused, 0))->toBe([null, DatabaseRoles::OWNER])
+        ->and($refused[1][1])->toBe('The application must work as a member of pranata_app only, not as [pranata_owner].');
+});
+
+test('the health check fails while the application works with more than pranata_app', function () {
+    config(['database.application_role_required' => false]);
+    $this->get('/up')->assertOk();
+
+    config(['database.application_role_required' => true]);
+    $this->get('/up')->assertStatus(500);
+});
+
 test('a migration refuses a session that does not work as pranata_owner', function () {
     expect(fn () => DatabaseRoles::assertOwnerSession(DB::connection()))
         ->toThrow(RuntimeException::class, 'Migrations must run as pranata_owner');

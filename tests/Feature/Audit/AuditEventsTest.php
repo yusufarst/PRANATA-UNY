@@ -63,6 +63,7 @@ test('pranata_app may read and add audit events and nothing else', function () {
     $delete = fn () => DB::table('audit_events')->where('action', 'audit.probe_old')->delete();
 
     expect(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => insertAuditProbe('audit.probe_app')))->toBeNull()
+        ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => insertAuditProbe('audit.probe_dated', '2001-01-15 00:00:00+00')))->toBe('42501')
         ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::table('audit_events')->count()))->toBeNull()
         ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, $update))->toBe('42501')
         ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, $delete))->toBe('42501')
@@ -92,6 +93,8 @@ test('pranata_app creates the partitions ahead, and repeating it changes nothing
     $state = DatabaseSession::sqlStateAs(DatabaseRoles::APP, function () use (&$created, &$repeated) {
         $created = AuditPartitions::ensure(DB::connection(), CarbonImmutable::parse('2030-12-10 03:00:00', 'UTC'), 2);
         $repeated = AuditPartitions::ensure(DB::connection(), CarbonImmutable::parse('2030-12-31 23:00:00', 'UTC'), 2);
+        // Only a role above pranata_app may choose occurred_at.
+        DB::statement('reset role');
         insertAuditProbe('audit.probe_future', '2031-02-28 23:59:59+00');
 
         expect(auditPartitionOf('audit.probe_future'))->toBe('audit_events_2031_02');
@@ -113,14 +116,26 @@ test('a month is a UTC calendar month', function () {
         ->and(auditPartitionOf('audit.probe_utc'))->toBe('audit_events_default');
 });
 
-test('a month the default partition already holds is not created and its events stay', function () {
-    insertAuditProbe('audit.probe_caught', '2033-05-20 00:00:00+00');
+test('a month the default partition already holds is not created, its events stay, and the months after it are', function () {
+    insertAuditProbe('audit.probe_caught', '2033-06-20 00:00:00+00');
+    $refusal = null;
+    $partitions = [];
 
-    $state = DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => AuditPartitions::ensure(DB::connection(), CarbonImmutable::parse('2033-05-01', 'UTC'), 0));
+    $state = DatabaseSession::sqlStateAs(DatabaseRoles::APP, function () use (&$refusal, &$partitions) {
+        try {
+            AuditPartitions::ensure(DB::connection(), CarbonImmutable::parse('2033-05-01', 'UTC'), 2);
+        } catch (RuntimeException $exception) {
+            $refusal = $exception->getMessage();
+        }
 
-    expect($state)->toBe('PN005')
-        ->and(auditPartitionOf('audit.probe_caught'))->toBe('audit_events_default')
-        ->and(auditPartitionNames())->not->toContain('audit_events_2033_05');
+        $partitions = auditPartitionNames();
+    });
+
+    expect($state)->toBeNull()
+        ->and($refusal)->toStartWith('audit_events_default holds events of 2033-06, so')
+        ->and($partitions)->toContain('audit_events_2033_05', 'audit_events_2033_07')
+        ->and($partitions)->not->toContain('audit_events_2033_06')
+        ->and(auditPartitionOf('audit.probe_caught'))->toBe('audit_events_default');
 });
 
 test('the months ahead stay within bounds', function () {

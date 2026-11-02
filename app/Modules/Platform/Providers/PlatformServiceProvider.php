@@ -8,6 +8,7 @@ use App\Modules\Platform\Support\DatabaseRoles;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Events\DiagnosingHealth;
 use Illuminate\Support\ConfigurationUrlParser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -36,6 +37,19 @@ class PlatformServiceProvider extends ModuleServiceProvider
 
         $this->guardDestructiveCommands();
         $this->runMigrationsAsOwner();
+        $this->checkApplicationRole();
+    }
+
+    /**
+     * Fail the health check while the application connection holds more than the privileges of pranata_app (RB-16).
+     */
+    private function checkApplicationRole(): void
+    {
+        Event::listen(DiagnosingHealth::class, function (): void {
+            if ((bool) config('database.application_role_required')) {
+                DatabaseRoles::assertApplicationSession(DB::connection());
+            }
+        });
     }
 
     /**

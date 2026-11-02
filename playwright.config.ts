@@ -26,7 +26,16 @@ export default defineConfig({
         command: 'php artisan serve --host=127.0.0.1 --port=8010 --no-reload',
         url: `${baseURL}/up`,
         reuseExistingServer: false,
-        env: { PHP_CLI_SERVER_WORKERS: '4' },
+        // With E2E_APP_DB_USERNAME the server signs in as that member of pranata_app, and /up fails on any wider role.
+        env: {
+            PHP_CLI_SERVER_WORKERS: '4',
+            ...(process.env.E2E_APP_DB_USERNAME
+                ? {
+                      DB_USERNAME: process.env.E2E_APP_DB_USERNAME,
+                      DB_REQUIRE_APP_ROLE: 'true',
+                  }
+                : {}),
+        },
     },
     projects: [
         {

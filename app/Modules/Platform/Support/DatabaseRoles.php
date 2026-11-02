@@ -57,6 +57,23 @@ final class DatabaseRoles
     }
 
     /**
+     * Refuse to go on unless this session works with the privileges of pranata_app alone: no superuser, no owner.
+     */
+    public static function assertApplicationSession(Connection $connection): void
+    {
+        $allowed = (bool) $connection->scalar(
+            "select not rolsuper and pg_has_role(rolname, ?, 'member') and not pg_has_role(rolname, ?, 'member') from pg_roles where rolname = current_user",
+            [self::APP, self::OWNER],
+        );
+
+        if (! $allowed) {
+            $current = $connection->scalar('select current_user');
+
+            throw new RuntimeException('The application must work as a member of '.self::APP." only, not as [{$current}].");
+        }
+    }
+
+    /**
      * Create the missing roles and let them use the public schema of this database.
      */
     private static function provision(Connection $connection): void

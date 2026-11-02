@@ -422,6 +422,22 @@ jobs:
       - name: Create the database of this run
         run: php artisan e2e:database create "pranata_e2e_${{ github.run_id }}_${{ matrix.shard }}"
 
+      # The E2E server signs in as a login that is only a member of pranata_app, as on a server, and /up refuses anything more.
+      - name: Create the login of the application role
+        run: |
+          psql -h 127.0.0.1 -U pranata -d pranata_test -v ON_ERROR_STOP=1 <<'SQL'
+          do $$
+          begin
+              if not exists (select from pg_roles where rolname = 'pranata_app') then
+                  create role pranata_app nologin;
+              end if;
+              if not exists (select from pg_roles where rolname = 'pranata_e2e_app') then
+                  create role pranata_e2e_app login in role pranata_app;
+              end if;
+          end
+          $$;
+          SQL
+
       - name: Install the browsers
         run: npx playwright install --with-deps chromium webkit
 
@@ -429,6 +445,7 @@ jobs:
         env:
           DB_DATABASE: pranata_e2e_${{ github.run_id }}_${{ matrix.shard }}
           E2E_RUN_ID: ${{ github.run_id }}${{ matrix.shard }}
+          E2E_APP_DB_USERNAME: pranata_e2e_app
         run: |
           cp database/seeders/ScenarioSeeder.php seeder.orig
           sed -i "s/\$run = getenv/throw new RuntimeException('probe'); \$run = getenv/" database/seeders/ScenarioSeeder.php
@@ -450,6 +467,7 @@ jobs:
           DB_DATABASE: pranata_e2e_${{ github.run_id }}_${{ matrix.shard }}
           E2E_RUN_ID: ${{ github.run_id }}${{ matrix.shard }}
           E2E_NEGATIVE: '1'
+          E2E_APP_DB_USERNAME: pranata_e2e_app
         run: |
           if npx playwright test negative --project=chromium-desktop --no-deps > negative.log 2>&1; then
             cat negative.log
@@ -463,6 +481,7 @@ jobs:
         env:
           DB_DATABASE: pranata_e2e_${{ github.run_id }}_${{ matrix.shard }}
           E2E_RUN_ID: ${{ github.run_id }}${{ matrix.shard }}
+          E2E_APP_DB_USERNAME: pranata_e2e_app
         run: npx playwright test --shard=${{ matrix.shard }}/2
 
       # The output folder starts with a dot, and upload-artifact skips hidden paths unless told otherwise.

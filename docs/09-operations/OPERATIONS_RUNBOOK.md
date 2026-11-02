@@ -29,7 +29,7 @@ Cek `php artisan queue:monitor` (ambang per antrean), `queue:failed`; ulangi job
 
 ## RB-05 Partisi audit dan pemeliharaan basis data
 
-Scheduler membuat partisi `audit_events` tiga bulan ke depan dan `asset_depreciation_lines` tahun berikut; operator memeriksa laporan job bulanan. Partisi audit dibuat setiap hari oleh `php artisan audit:partitions` (aman diulang; bulan kalender UTC). Bila command menolak dengan `PN005`, partisi default sudah memuat peristiwa bulan itu: peristiwa audit tidak dipindah atau dihapus, sehingga bulan itu tetap di partisi default dan kejadian ini dicatat sebagai temuan operasi. Autovacuum dipantau untuk tabel besar; `VACUUM (ANALYZE)` manual hanya pada jendela pemeliharaan.
+Scheduler membuat partisi `audit_events` tiga bulan ke depan dan `asset_depreciation_lines` tahun berikut; operator memeriksa laporan job bulanan. Partisi audit dibuat setiap hari oleh `php artisan audit:partitions` (aman diulang; bulan kalender UTC). Bila partisi default sudah memuat peristiwa suatu bulan (`PN005`), command tetap membuat bulan-bulan lain lalu keluar gagal dengan nama bulan itu. Peristiwa audit tidak dipindah atau dihapus, sehingga bulan itu tetap di partisi default dan kejadian ini dicatat sebagai temuan operasi. `occurred_at` selalu diisi jam basis data, karena `pranata_app` tidak boleh mengisinya. Autovacuum dipantau untuk tabel besar; `VACUUM (ANALYZE)` manual hanya pada jendela pemeliharaan.
 
 ## RB-06 Verifikasi cadangan harian
 
@@ -87,3 +87,5 @@ Peran mengikuti [DATA_MODEL §2](../04-architecture/DATA_MODEL.md#2-peran-basis-
 5. `.env`: `DB_USERNAME=pranata_app` dan password aplikasi; `DB_MIGRATOR_USERNAME=pranata_migrator` dan password migrasi. `DB_MIGRATOR_ROLE` tetap `pranata_owner`, sehingga sesi migrasi bekerja sebagai pemilik.
 
 Setiap perintah migrasi berjalan melalui koneksi `migrator` dan berhenti bila sesi itu bukan `pranata_owner`; hak `pranata_app` diberikan oleh migrasi, bukan manual. Di server pengembangan atau uji yang login migrasinya superuser, peran dan hak skema dibuat otomatis oleh perintah migrasi; di produksi tidak pernah.
+
+Pemeriksaan kesehatan `/up` gagal (HTTP 500) selama koneksi aplikasi bekerja sebagai superuser, sebagai anggota `pranata_owner`, atau bukan sebagai anggota `pranata_app`. Pemeriksaan ini aktif di produksi, dan di luar produksi bila `DB_REQUIRE_APP_ROLE=true`. Server E2E di CI login sebagai `pranata_e2e_app`, yang hanya anggota `pranata_app`.

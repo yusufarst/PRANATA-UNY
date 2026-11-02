@@ -159,6 +159,7 @@ test('artisan migrate:fresh stops on a foreign database', function (string $envi
     'foreign name, testing' => ['testing', ['DB_DATABASE' => 'other_app'], [], 'forbidden on database [other_app]'],
     'foreign URL, local' => ['local', ['DB_DATABASE' => 'pranata_test', 'DB_URL' => 'postgresql://pranata@127.0.0.1:5432/other_app'], [], 'forbidden on database [other_app]'],
     'foreign URL, testing' => ['testing', ['DB_DATABASE' => 'pranata_test', 'DB_URL' => 'postgresql://pranata@127.0.0.1:5432/other_app'], [], 'forbidden on database [other_app]'],
+    'foreign URL through the migrator, testing' => ['testing', ['DB_DATABASE' => 'pranata_test', 'DB_URL' => 'postgresql://pranata@127.0.0.1:5432/other_app'], ['--database=migrator'], 'forbidden on database [other_app]'],
     'foreign migrator URL, testing' => ['testing', ['DB_DATABASE' => 'pranata_test', 'DB_MIGRATOR_URL' => 'postgresql://pranata@127.0.0.1:5432/other_app'], [], 'forbidden on database [other_app]'],
     'other driver, local' => ['local', [], ['--database=sqlite'], 'forbidden on database'],
     'other driver, testing' => ['testing', [], ['--database=sqlite'], 'forbidden on database'],

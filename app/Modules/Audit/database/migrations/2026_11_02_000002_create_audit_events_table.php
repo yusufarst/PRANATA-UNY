@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\DB;
  */
 return new class extends Migration
 {
+    /**
+     * The columns pranata_app may fill; id and occurred_at come from the database.
+     */
+    private const APPLICATION_COLUMNS = [
+        'actor_user_id', 'actor_role_group', 'action', 'module', 'subject_type', 'subject_id', 'subject_public_id',
+        'workspace', 'reason', 'changes', 'metadata', 'request_id', 'ip', 'user_agent',
+    ];
+
     public function up(): void
     {
         $app = DatabaseRoles::APP;
@@ -78,11 +86,20 @@ return new class extends Migration
         // Partitions are read and written through audit_events only; the parent keeps SELECT and INSERT for the application.
         IntegrityTriggers::appendOnly('audit_events');
 
+        // The database clock sets occurred_at, so the application can neither date an event back nor fill a month ahead.
+        DB::statement("revoke insert on audit_events from {$app}");
+        DB::statement('grant insert ('.implode(', ', self::APPLICATION_COLUMNS).") on audit_events to {$app}");
+
         AuditPartitions::ensure(DB::connection());
     }
 
     public function down(): void
     {
+        // Audit history is never deleted (ADR-0010); a rollback is only for a database that holds none.
+        if (DB::table('audit_events')->exists()) {
+            throw new RuntimeException('audit_events holds events, so this migration is not rolled back.');
+        }
+
         DB::unprepared(<<<'SQL'
             drop function if exists audit_ensure_partition(date);
             drop table if exists audit_events;

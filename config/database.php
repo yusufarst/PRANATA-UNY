@@ -19,6 +19,9 @@ return [
 
     'default' => env('DB_CONNECTION', 'pgsql'),
 
+    // The health check /up fails while the default connection holds more than pranata_app (DATA_MODEL section 2, RB-16).
+    'application_role_required' => (bool) env('DB_REQUIRE_APP_ROLE', env('APP_ENV') === 'production'),
+
     /*
     |--------------------------------------------------------------------------
     | Database Connections
