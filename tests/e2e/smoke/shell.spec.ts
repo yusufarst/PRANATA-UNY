@@ -1,15 +1,27 @@
+import { resolve } from 'node:path';
 import type { Page } from '@playwright/test';
 import { axeViolations, expect, test } from '../support/fixtures';
 import { emailOf, PASSWORD } from '../support/profiles';
+import type { Profile } from '../support/profiles';
 
-// The language lives in the session, so parallel tests sharing a saved login would switch it under each other.
-async function signIn(page: Page): Promise<void> {
+const MENU_TOGGLE = 'Buka atau tutup menu';
+
+async function signIn(page: Page, profile: Profile): Promise<void> {
     await page.goto('/login');
-    await page.getByLabel('Alamat email').fill(emailOf('internal'));
+    await page.getByLabel('Alamat email').fill(emailOf(profile));
     await page.locator('#password').fill(PASSWORD);
     await page.getByRole('button', { name: 'Masuk' }).click();
 
     await expect(page).toHaveURL(/\/home$/);
+}
+
+function sessionOf(project: string): string {
+    return resolve(
+        import.meta.dirname,
+        '..',
+        '.auth',
+        `session-${project}.json`,
+    );
 }
 
 const LANGUAGES = [
@@ -45,48 +57,79 @@ for (const language of LANGUAGES) {
             ).toBeVisible();
             expect(await axeViolations(page)).toEqual([]);
         });
-
-        test('the empty shell is usable and has no axe violation', async ({
-            page,
-        }) => {
-            await signIn(page);
-            await page.getByLabel(language.option).first().click();
-
-            await expect(
-                page.getByRole('heading', { name: language.home }),
-            ).toBeVisible();
-            await expect(page.getByText(language.empty)).toBeVisible();
-            expect(await axeViolations(page)).toEqual([]);
-        });
     });
 }
 
-test('the drawer opens on a phone and has no axe violation', async ({
-    page,
-}) => {
-    test.skip(
-        (page.viewportSize()?.width ?? 0) >= 640,
-        'The drawer exists only on a phone.',
-    );
+// The language lives in the session, and the login limit allows five attempts a minute per address.
+// So each browser project signs in once and runs these tests in order on its own session.
+test.describe('signed in', () => {
+    test.describe.configure({ mode: 'serial' });
+    test.use({
+        // eslint-disable-next-line no-empty-pattern
+        storageState: async ({}, use, testInfo) => {
+            await use(sessionOf(testInfo.project.name));
+        },
+    });
 
-    await signIn(page);
-    await page.getByRole('button', { name: 'Buka atau tutup menu' }).click();
+    test.beforeAll(async ({ browser, baseURL }, testInfo) => {
+        const context = await browser.newContext({ baseURL });
 
-    await expect(
-        page
-            .getByRole('dialog', { name: 'Menu' })
-            .getByRole('link', { name: 'Beranda' }),
-    ).toBeVisible();
-    expect(await axeViolations(page)).toEqual([]);
+        try {
+            await signIn(await context.newPage(), 'internal');
+            await context.storageState({
+                path: sessionOf(testInfo.project.name),
+            });
+        } finally {
+            await context.close();
+        }
+    });
+
+    // First: its labels are Indonesian, and the tests below switch the language of this session.
+    test('the drawer opens on a phone and has no axe violation', async ({
+        page,
+    }) => {
+        test.skip(
+            (page.viewportSize()?.width ?? 0) >= 640,
+            'The drawer exists only on a phone.',
+        );
+
+        await page.goto('/home');
+        await page.getByRole('button', { name: MENU_TOGGLE }).click();
+
+        await expect(
+            page
+                .getByRole('dialog', { name: 'Menu' })
+                .getByRole('link', { name: 'Beranda' }),
+        ).toBeVisible();
+        expect(await axeViolations(page)).toEqual([]);
+    });
+
+    for (const language of LANGUAGES) {
+        test.describe(`language ${language.code}`, () => {
+            test('the empty shell is usable and has no axe violation', async ({
+                page,
+            }) => {
+                await page.goto('/home');
+                await page.getByLabel(language.option).first().click();
+
+                await expect(
+                    page.getByRole('heading', { name: language.home }),
+                ).toBeVisible();
+                await expect(page.getByText(language.empty)).toBeVisible();
+                expect(await axeViolations(page)).toEqual([]);
+            });
+        });
+    }
 });
 
+// Another profile than the signed-in tests, so this attempt never shares their login limit.
 test('an expired page leads back to where it came from', async ({
     page,
     criticalErrors,
 }) => {
     await page.goto('/login');
     await page.context().clearCookies();
-    await page.getByLabel('Alamat email').fill(emailOf('internal'));
+    await page.getByLabel('Alamat email').fill(emailOf('vendor'));
     await page.locator('#password').fill(PASSWORD);
     await page.getByRole('button', { name: 'Masuk' }).click();
     await page.getByRole('button', { name: 'Muat ulang halaman' }).click();

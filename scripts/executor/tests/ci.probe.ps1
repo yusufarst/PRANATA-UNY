@@ -50,7 +50,14 @@ function Wait-Run([string]$Sha, [int]$Seconds = 900) {
 function Get-Jobs([long]$RunId) {
     $listing = (& gh api "repos/$repo/actions/runs/$RunId/jobs?per_page=50" 2>$null) -join "`n" | ConvertFrom-Json
     $map = @{}
-    foreach ($job in $listing.jobs) { $map[$job.name] = [string]$job.conclusion }
+    # A matrix job reports one check per entry, such as "ci-e2e (1)"; the job keeps its worst conclusion.
+    $rank = @{ 'success' = 0; 'skipped' = 1; 'cancelled' = 2; 'failure' = 3 }
+    $weight = { param($c) if ($rank.ContainsKey($c)) { $rank[$c] } else { 3 } }
+    foreach ($job in $listing.jobs) {
+        $name = $job.name -replace ' \([^)]*\)$', ''
+        $conclusion = [string]$job.conclusion
+        if (-not $map.ContainsKey($name) -or (& $weight $conclusion) -gt (& $weight $map[$name])) { $map[$name] = $conclusion }
+    }
     return $map
 }
 
