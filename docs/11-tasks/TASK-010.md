@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: BLOCKED
-EXECUTION STAGE: — (BLOCKED: menunggu publikasi TASK PLAN CHANGE penghapusan akun di CURRENT_HANDOFF)
+STATUS: TODO
+EXECUTION STAGE: —
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: NO
