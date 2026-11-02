@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: NO
@@ -194,19 +194,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- [x] Authorization
+- [x] Route integrity
+- N/A Interaction behavior: tanpa antarmuka atau interaksi baru
+- [x] Browser E2E if required
+- N/A Responsive/adaptive if required: tanpa UI
+- N/A Visual breathing room/density if UI: tanpa UI
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -221,18 +221,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41445730309](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41445730309) pada HEAD `fa2dbcd`: `changes`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)`, `docs-check` dan `ci-gate` sukses. Pest 218 lulus dan 2 dilewati; Playwright 16 lulus dan 1 dilewati per shard; grup gotenberg 2/2; migrasi `fresh` lalu `rollback` lulus. TAC-01: `DatabaseRolesTest` (tabel dan fungsi trigger milik `pranata_owner`, migrasi menolak sesi bukan pemilik, koneksi migrator tetap sebagai pemilik setelah terputus), dan server E2E login sebagai `pranata_e2e_app` yang hanya anggota `pranata_app` sementara `/up` menolak peran yang lebih luas. TAC-02: `AuditEventsTest` (42501 untuk UPDATE, DELETE, TRUNCATE dan baca partisi langsung oleh `pranata_app`; PN001 juga untuk superuser dan pemilik). TAC-03: partisi bulan berjalan + 3 bulan, partisi default, bulan UTC, dan bulan yang sudah tertangkap partisi default tidak menghentikan bulan berikutnya. TAC-04: `AuditLoggerTest` (field wajib; kunci rahasia ditolak di kedalaman mana pun, termasuk di dalam objek). TAC-05 dan TAC-06: `IntegrityTriggersTest` (perubahan lingkup, ubah/hapus/sisip anak induk final, sisipan yang berbalapan dengan finalisasi, `verify_capture_manifest()` saat commit).
+- Build result: `npm run build` lulus di `ci-fast`; Pint, Larastan, ESLint, Prettier dan TypeScript lulus.
+- Route evidence: tanpa rute baru; `RouteIntegrityTest` lulus di `ci-fast`.
+- Interaction evidence: N/A, tanpa UI.
+- Browser evidence: alur E2E yang ada (login, shell, bahasa, halaman galat 429) lulus di Chromium dan WebKit dengan server yang bekerja dengan hak `pranata_app`.
+- Localization evidence: N/A, tanpa teks UI baru; `translations:check` lulus.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Codex `COMPLETED_WITH_FINDINGS` pada `35694f4`: P1 (guard reset tidak memeriksa basis data migrator di bawah `DB_MIGRATOR_URL`) dan P2 (objek bersarang lolos pemeriksaan kunci rahasia), keduanya valid dan diperbaiki di `1279d7e`. Review independen pada `35694f4`: FAIL dengan P1 yang sama, P2-1 (satu bulan PN005 menghentikan semua partisi berikutnya) dan P2-2 (sisi aplikasi TAC-01 belum terbukti), diperbaiki di `fa2dbcd`; verifikasi delta independen `35694f4..fa2dbcd`: PASS tanpa P0/P1/P2 baru. P3 yang ditunda: penegakan sesi pemilik hanya sekali; celah daftar kunci rahasia; permintaan palsu konsol di baris audit; `audit_ensure_partition` tanpa batas bulan; DELETE `password_reset_tokens` belum ada di DATA_MODEL §2; ekstensi, `statement_timeout` dan EXECUTE fungsi di RB-16; uji perintah bersarang; cek peran aplikasi belum memeriksa kepemilikan basis data dan atribut peran; `/up` belum diperiksa RB-01/RB-02; uji HTTP Pest masih sebagai superuser sehingga `profile.destroy` (DELETE `users`, perilaku kit yang belum disetujui) belum terlihat.
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 23 berkas di [PR #29](https://github.com/yusufarst/PRANATA-UNY/pull/29), terutama `app/Modules/Platform/Support/DatabaseRoles.php`, `IntegrityTriggers.php`, `app/Modules/Platform/Providers/PlatformServiceProvider.php`, `app/Modules/Audit/`, `config/database.php`, migrasi peran, trigger dan `audit_events`, `.github/workflows/ci.yml`, `playwright.config.ts`, RB-05 dan RB-16, serta uji di `tests/Feature/Audit`, `tests/Feature/Database` dan `tests/Unit`.
+- PR / CI run: [PR #29](https://github.com/yusufarst/PRANATA-UNY/pull/29) MERGED; run di atas. Run gagal sebelumnya: 41428085471 dan 41429696751 (`db:wipe` di dalam `migrate:fresh` memutus koneksi migrator dan sesi baru kehilangan `SET ROLE`; uji membandingkan koleksi berkunci; uji menyisipkan anak di bawah induk yang sudah FINAL). Run hijau antara: 41440709762 (`35694f4`), 41442223910 (`1279d7e`).
+- Commit SHA: `fa2dbcd10e7ecd6c266d141615739627b03dc322`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode SUPERVISED.
+- Notes: TAC-01–TAC-06 terbukti di CI. Perubahan `ci.yml` (login `pranata_e2e_app` untuk server E2E) diotorisasi Owner 2026-11-02 dalam directive TASK-008 CI FAILURE RECOVERY. `pranata_app` kini hanya boleh mengisi kolom yang ditulis `AuditLogger`; `id` dan `occurred_at` diisi basis data. Rollback migrasi `audit_events` ditolak selama tabel berisi peristiwa.
 
 ## SAFE NEXT TASK
 

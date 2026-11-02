@@ -1,13 +1,13 @@
 # Current handoff
 
-Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · PCR-002 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-007 DONE, TASK-008 READY | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
+Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · PCR-002 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-008 DONE, TASK-009 READY | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
 
 ## Current state
 
 Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRANATA-UNY`, specifically published `main`, is the durable shared Source of Truth; confirm it with `git ls-remote origin refs/heads/main` before acting.
 
 - P0–P11 **DONE — APPROVED** (APPR-005, APPR-006); Planning Freeze **FRZ-001** effective; PCR-001 published; execution authorized by **AUTH-013**.
-- **TASK-001 DONE**: executor guardrails, runner, watcher and capability report. **TASK-002 DONE**: Laravel 13 React skeleton, `app/Modules`, `bootstrap.yml` and the `-Bootstrap` evidence gate. **TASK-003 DONE**: database reset guards, PostgreSQL and Gotenberg checks on GitHub-hosted runners, tightened executor guard. **TASK-004 DONE** (4/78): ESLint, Prettier, Vitest, architecture and route integrity tests, translation and link checkers, the negative checks and gitleaks. **TASK-005 DONE** (5/78): `ci.yml`, `ci-gate` and `ci-nightly.yml` on `main`; the `main` ruleset refuses a commit without a `ci-gate` result. **TASK-006 DONE** (6/78): design tokens, AppShell, composites, self-hosted fonts, id/en localization and localized error pages. **TASK-007 DONE** (7/78): Playwright on Chromium and WebKit, axe, per-run E2E databases, SETUP FAILURE and the sharded `ci-e2e` job; `main` at `c75cfda`. No business feature yet.
+- **TASK-001 DONE**: executor guardrails, runner, watcher and capability report. **TASK-002 DONE**: Laravel 13 React skeleton, `app/Modules`, `bootstrap.yml` and the `-Bootstrap` evidence gate. **TASK-003 DONE**: database reset guards, PostgreSQL and Gotenberg checks on GitHub-hosted runners, tightened executor guard. **TASK-004 DONE** (4/78): ESLint, Prettier, Vitest, architecture and route integrity tests, translation and link checkers, the negative checks and gitleaks. **TASK-005 DONE** (5/78): `ci.yml`, `ci-gate` and `ci-nightly.yml` on `main`; the `main` ruleset refuses a commit without a `ci-gate` result. **TASK-006 DONE** (6/78): design tokens, AppShell, composites, self-hosted fonts, id/en localization and localized error pages. **TASK-007 DONE** (7/78): Playwright on Chromium and WebKit, axe, per-run E2E databases, SETUP FAILURE and the sharded `ci-e2e` job. **TASK-008 DONE** (8/78): PostgreSQL roles `pranata_owner`/`pranata_app` with the `migrator` connection, generic integrity triggers, partitioned append-only `audit_events`, `AuditLogger` and `audit:partitions`; the E2E server signs in as a member of `pranata_app` only; `main` at `fa2dbcd`. No business feature yet.
 - Executor mode: **AUTONOMOUS** under AUTH-013, through the runner. C-15 is VERIFIED and AUTH-013 needs no further scope authorization, so no prerequisite of EXECUTOR_OPERATING_MODEL §1 is left for the Owner. The guard now refuses tag pushes and tag writes; that Owner-approved guardrail change (2026-11-02) merged on a `fix/task-006-*` branch because the merge gate refuses a Task already DONE. It is not part of the TASK-006 contract.
 - **PCR-002 published** (2026-11-01): Owner decision OD-37 forbids local Docker; heavy checks run on GitHub-hosted runners, first through the temporary bootstrap workflow ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)). C-16 (bootstrap evidence gate) is VERIFIED ([EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md#c-16)).
 - GAP-001–GAP-029: OPEN (resolved NONE).
@@ -17,10 +17,10 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Field | Current value |
 |---|---|
 | Current phase | Execution; approved phases 12/12. |
-| Current Task / status | None active. **TASK-008 READY**, not started (HIGH: independent review required). |
-| Last completed action | 2026-11-02: PR #27 merged by verified fast-forward at `c75cfda` in a SUPERVISED session the Owner authorized, after one valid Codex P1 finding was fixed; TASK-007 reconciled DONE. |
-| Evidence | [TASK-007 COMPLETION EVIDENCE](../11-tasks/TASK-007.md#completion-evidence); [TASK-006](../11-tasks/TASK-006.md#completion-evidence); [TASK-005](../11-tasks/TASK-005.md#completion-evidence); [TASK-004](../11-tasks/TASK-004.md#completion-evidence); [TASK-003](../11-tasks/TASK-003.md#completion-evidence); [TASK-002](../11-tasks/TASK-002.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
-| Task plan | Baseline 78 · Current 78 · DONE 7 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 70 · SUPERSEDED 0 · 9%. |
+| Current Task / status | None active. **TASK-009 READY**, not started (HIGH: independent review required). |
+| Last completed action | 2026-11-02: PR #29 merged by verified fast-forward at `fa2dbcd` in a SUPERVISED session under the Owner directive TASK-008 CI FAILURE RECOVERY, after the CI failures of run 41429696751, two valid Codex findings (P1, P2) and two valid independent-review P2 findings were fixed; TASK-008 reconciled DONE. |
+| Evidence | [TASK-008 COMPLETION EVIDENCE](../11-tasks/TASK-008.md#completion-evidence); [TASK-007](../11-tasks/TASK-007.md#completion-evidence); [TASK-006](../11-tasks/TASK-006.md#completion-evidence); [TASK-005](../11-tasks/TASK-005.md#completion-evidence); [TASK-004](../11-tasks/TASK-004.md#completion-evidence); [TASK-003](../11-tasks/TASK-003.md#completion-evidence); [TASK-002](../11-tasks/TASK-002.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
+| Task plan | Baseline 78 · Current 78 · DONE 8 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 69 · SUPERSEDED 0 · 10%. |
 | Open blockers | TASK-040 waits on the staging decision. |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
 | Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, and OD-37 (no local Docker; GitHub-hosted testing). |
@@ -28,9 +28,9 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Toolchain | See [TOOLCHAIN — Executor machine facts](../00-governance/TOOLCHAIN.md). Stage with `scripts/executor/stage.ps1`; a bulk add under `core.autocrlf=false` rewrites line endings on this machine. |
 | Machine | RAM 7.2 GB, 0.1–1.1 GB free during TASK-001 and about 50–70 MB free during TASK-004 without any PRANATA container, so `npm` work runs on GitHub-hosted runners; PHP, Composer and psql not installed. Other projects were not touched. Editing a file that holds carriage returns (`docs/00-governance/TOOLCHAIN.md`, `.gitignore`) must keep them (GOV-09); check before staging. |
 | Cost | New recurring cost: NONE. Paid exception: NONE. |
-| Database | Direct production DB touched: NO. Schema: Laravel skeleton tables only, tested on a runner service container. |
+| Database | Direct production DB touched: NO. Schema: Laravel skeleton tables, database roles, integrity trigger functions and `audit_events`, tested on a runner service container. |
 | Cleanup for the Owner | Public synthetic sandbox `yusufarst/pranata-uny-sandbox-c10` (used for C-10 and C-16) may be deleted by the Owner; the executor token cannot delete repositories. Disposable branches stay as they are. |
-| Next READY Task | TASK-008. Browser tests sign in once per project (login limit 5 a minute per address); a 419 cannot be provoked from a same-origin browser. SSR is off (`config/inertia.php`); turning it on first needs a per-request translation instance. |
+| Next READY Task | TASK-009. Deferred P3 findings of TASK-008 are listed in its COMPLETION EVIDENCE; `profile.destroy` (starter-kit account deletion) fails under `pranata_app`, which holds no DELETE on `users`. Browser tests sign in once per project (login limit 5 a minute per address); a 419 cannot be provoked from a same-origin browser. SSR is off (`config/inertia.php`); turning it on first needs a per-request translation instance. |
 
 ## TASK PLAN CHANGE proposal — Docker-free local development (for Claude Planning)
 
@@ -57,7 +57,7 @@ Status: **INCORPORATED into PCR-002** (published; mapping in [PCR-002_REVIEW_HAN
 
 ## Exact next safe action
 
-**Executor:** start TASK-008 from `.pranata/executor/checkpoint.json` under the single runner and watcher. No local Docker, PHP, Composer or PostgreSQL (OD-37).
+**Executor:** start TASK-009 from `.pranata/executor/checkpoint.json` under the single runner and watcher. No local Docker, PHP, Composer or PostgreSQL (OD-37).
 
 ## DO NOT DO
 
