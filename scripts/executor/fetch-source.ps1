@@ -10,10 +10,8 @@ $ErrorActionPreference = 'Stop'
 $repoRoot = Get-PranataRepoRoot
 if (-not $Root) { $Root = $repoRoot }
 $Root = [IO.Path]::GetFullPath($Root).TrimEnd('\')
-# A folder inside the repository other than its root (say .claude) would put the output in a guardrail path.
-if ($Root -ne $repoRoot -and ($Root + '\').StartsWith($repoRoot + '\', [StringComparison]::OrdinalIgnoreCase)) {
-    throw "Root must be the repository root: $Root"
-}
+# Any other root (say .claude) would put the output in a guardrail path; only the offline tests use another one.
+if ($Root -ne $repoRoot -and $env:PRANATA_FETCH_SOURCE_TEST -ne '1') { throw "Root must be the repository root: $Root" }
 if ($Package -notmatch '^(@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*$' -and $Package -notmatch '^[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._-]*$') {
     throw "Not a package name: $Package"
 }
@@ -43,7 +41,8 @@ if (-not $url -and (Test-Path -LiteralPath $composerLock)) {
     if ($entry) {
         $dist = $entry['dist']; $url = $dist['url']; $version = $entry['version']
         # GitHub dists carry no shasum; the locked commit in the URL pins the content instead.
-        if ([string]$dist['reference'] -notmatch '^[0-9a-f]{40}$' -or $url -cne "https://api.github.com/repos/$Package/zipball/$($dist['reference'])") {
+        # The GitHub slug often differs from the package name (Bacon/BaconQrCode), so only the commit is compared.
+        if ([string]$dist['reference'] -notmatch '^[0-9a-f]{40}$' -or $url -notmatch '^https://api\.github\.com/repos/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+/zipball/([0-9a-f]{40})$' -or $Matches[1] -ne $dist['reference']) {
             throw "Locked dist is not a GitHub zipball pinned to its commit: $Package"
         }
         if ($dist['shasum']) { $integrity = 'sha1-' + $dist['shasum'] }

@@ -468,7 +468,7 @@ function Test-PranataCommand {
             }
         }
         # fetch-source.ps1 writes only under .pranata/tools/src; a package named del or touch is not a write verb.
-        $flat = $flat -replace '(?i)^\s*powershell(\.exe)?\s+-NoProfile\s+-File\s+scripts/executor/fetch-source\.ps1\s+-Package\s+[@a-z0-9._/-]+\s*$', ''
+        if ($Command -match '(?i)^\s*powershell(\.exe)?\s+-NoProfile\s+-File\s+scripts/executor/fetch-source\.ps1\s+-Package\s+[@a-z0-9._/-]+\s*$') { $flat = '' }
         if (($flat -match $script:GuardPaths -or $flat -match $script:RuntimeDir) -and ($flat -match $script:WriteVerbs)) {
             return (Deny 'guard-path-autonomous' 'Guardrail paths are read-only in AUTONOMOUS mode.')
         }

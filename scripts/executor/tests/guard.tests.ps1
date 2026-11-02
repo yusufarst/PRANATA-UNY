@@ -235,6 +235,7 @@ $commands = @(
     @('review', 'allow', 'powershell -NoProfile -File scripts\executor\stage.ps1 -Paths docs/x.md', 'AUTONOMOUS'),
     @('guard-paths', 'allow', 'powershell -NoProfile -File scripts/executor/fetch-source.ps1 -Package del', 'AUTONOMOUS'),
     @('guard-paths', 'deny', 'powershell -NoProfile -File scripts/executor/fetch-source.ps1 -Package del && rm scripts/executor/runner.ps1', 'AUTONOMOUS'),
+    @('guard-paths', 'deny', 'powershell -NoProfile -File scripts/executor/fetch-source.ps1 -Package `rm scripts/executor/runner.ps1`', 'AUTONOMOUS'),
     # Forms found by the PR review
     @('review', 'deny', 'git -c core.autocrlf=false checkout abc123 -- .claude/settings.json', 'AUTONOMOUS'),
     @('review', 'deny', 'git -C ../pranata-uny-worktrees/task-011 push origin HEAD'),
