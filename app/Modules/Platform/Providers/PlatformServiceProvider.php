@@ -3,10 +3,12 @@
 namespace App\Modules\Platform\Providers;
 
 use App\Modules\ModuleServiceProvider;
+use App\Modules\Platform\Console\PruneIdempotencyKeys;
 use App\Modules\Platform\Support\DatabaseResetGuard;
 use App\Modules\Platform\Support\DatabaseRoles;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Events\DiagnosingHealth;
 use Illuminate\Support\ConfigurationUrlParser;
@@ -38,6 +40,23 @@ class PlatformServiceProvider extends ModuleServiceProvider
         $this->guardDestructiveCommands();
         $this->runMigrationsAsOwner();
         $this->checkApplicationRole();
+        $this->pruneIdempotencyKeys();
+    }
+
+    /**
+     * Delete the expired idempotency keys every hour.
+     */
+    private function pruneIdempotencyKeys(): void
+    {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
+        $this->commands([PruneIdempotencyKeys::class]);
+
+        $this->callAfterResolving(Schedule::class, function (Schedule $schedule): void {
+            $schedule->command(PruneIdempotencyKeys::class)->hourly()->withoutOverlapping();
+        });
     }
 
     /**

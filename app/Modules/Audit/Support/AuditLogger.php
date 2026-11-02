@@ -2,6 +2,7 @@
 
 namespace App\Modules\Audit\Support;
 
+use App\Modules\Platform\Support\RequestId;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\Container\Container;
@@ -23,7 +24,7 @@ final class AuditLogger
     /**
      * The request attribute that carries the correlation id of the current request.
      */
-    public const REQUEST_ID = 'request_id';
+    public const REQUEST_ID = RequestId::ATTRIBUTE;
 
     /**
      * A key part that marks a secret, matched on the snake_case key split at underscores.
@@ -137,14 +138,7 @@ final class AuditLogger
      */
     public static function requestId(Request $request): string
     {
-        $id = $request->attributes->get(self::REQUEST_ID);
-
-        if (! is_string($id) || ! Str::isUuid($id)) {
-            $id = (string) Str::uuid();
-            $request->attributes->set(self::REQUEST_ID, $id);
-        }
-
-        return $id;
+        return RequestId::of($request);
     }
 
     private function request(): ?Request

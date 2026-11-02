@@ -2,6 +2,9 @@
 
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetLocale;
+use App\Modules\Platform\Http\Middleware\AssignRequestId;
+use App\Modules\Platform\Http\Middleware\EnsureIdempotentCommand;
+use App\Modules\Platform\Support\RequestId;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['sidebar_state']);
+
+        // First, so a request refused by any later middleware still answers with its id.
+        $middleware->prepend(AssignRequestId::class);
+
+        $middleware->alias(['idempotent' => EnsureIdempotentCommand::class]);
 
         $middleware->web(append: [
             SetLocale::class,
@@ -47,7 +55,12 @@ return Application::configure(basePath: dirname(__DIR__))
             $sameOrigin = str_starts_with($referer.'/', $request->getSchemeAndHttpHost().'/');
             $returnUrl = $request->isMethod('GET') ? null : ($sameOrigin ? $referer : route('home'));
 
-            return Inertia::render('errors/show', ['status' => $status, 'locale' => App::getLocale(), 'returnUrl' => $returnUrl])
+            return Inertia::render('errors/show', [
+                'status' => $status,
+                'locale' => App::getLocale(),
+                'returnUrl' => $returnUrl,
+                'requestId' => RequestId::of($request),
+            ])
                 ->toResponse($request)
                 ->setStatusCode($status);
         });

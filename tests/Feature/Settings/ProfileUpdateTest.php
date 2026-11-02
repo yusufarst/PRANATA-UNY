@@ -1,6 +1,13 @@
 <?php
 
 use App\Models\User;
+use App\Modules\Platform\Http\Middleware\EnsureIdempotentCommand;
+use Illuminate\Support\Str;
+
+// profile.update is a material command, so every request carries its own idempotency key.
+beforeEach(function () {
+    $this->withHeader(EnsureIdempotentCommand::HEADER, (string) Str::uuid());
+});
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
