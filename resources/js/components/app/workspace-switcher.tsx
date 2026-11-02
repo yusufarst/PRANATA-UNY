@@ -40,7 +40,8 @@ export function WorkspaceSwitcher() {
                 <Button
                     variant="ghost"
                     className="h-11 min-w-0 gap-2 px-2 sm:h-9"
-                    aria-label={t('common:workspace.label')}
+                    // The name must hold the visible workspace too, or speech control cannot reach the button.
+                    aria-label={`${t('common:workspace.label')} ${currentLabel}`}
                 >
                     <span className="truncate">{currentLabel}</span>
                     <ChevronsUpDown className="size-4" aria-hidden="true" />

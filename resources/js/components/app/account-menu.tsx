@@ -25,7 +25,8 @@ export function AccountMenu() {
                 <Button
                     variant="ghost"
                     className="size-11 rounded-full p-1 sm:size-10"
-                    aria-label={t('common:account.menu')}
+                    // The name must hold the visible initials too, or speech control cannot reach the button.
+                    aria-label={`${getInitials(auth.user.name)} ${t('common:account.menu')}`}
                 >
                     <Avatar className="size-8 overflow-hidden rounded-full">
                         <AvatarImage

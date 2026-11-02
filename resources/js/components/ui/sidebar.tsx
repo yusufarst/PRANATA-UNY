@@ -180,10 +180,6 @@ function Sidebar({
   if (isMobile) {
     return (
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
-        <SheetHeader className="sr-only">
-          <SheetTitle><TranslatedText textKey="common:nav.drawer_title" /></SheetTitle>
-          <SheetDescription><TranslatedText textKey="common:nav.drawer_description" /></SheetDescription>
-        </SheetHeader>
         <SheetContent
           data-sidebar="sidebar"
           data-slot="sidebar"
@@ -196,6 +192,10 @@ function Sidebar({
           }
           side={side}
         >
+          <SheetHeader className="sr-only">
+            <SheetTitle><TranslatedText textKey="common:nav.drawer_title" /></SheetTitle>
+            <SheetDescription><TranslatedText textKey="common:nav.drawer_description" /></SheetDescription>
+          </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>
       </Sheet>
@@ -203,7 +203,7 @@ function Sidebar({
   }
 
   return (
-    <div
+    <aside
       className="group peer text-sidebar-foreground hidden sm:block"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
@@ -243,7 +243,7 @@ function Sidebar({
           {children}
         </div>
       </div>
-    </div>
+    </aside>
   )
 }
 
