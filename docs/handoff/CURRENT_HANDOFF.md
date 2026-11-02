@@ -1,14 +1,14 @@
 # Current handoff
 
-Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · PCR-002 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-005 DONE, TASK-006 READY | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
+Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · PCR-002 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-006 DONE, TASK-007 READY | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
 
 ## Current state
 
 Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRANATA-UNY`, specifically published `main`, is the durable shared Source of Truth; confirm it with `git ls-remote origin refs/heads/main` before acting.
 
 - P0–P11 **DONE — APPROVED** (APPR-005, APPR-006); Planning Freeze **FRZ-001** effective; PCR-001 published; execution authorized by **AUTH-013**.
-- **TASK-001 DONE**: executor guardrails, runner, watcher and capability report. **TASK-002 DONE**: Laravel 13 React skeleton, `app/Modules`, `bootstrap.yml` and the `-Bootstrap` evidence gate. **TASK-003 DONE**: database reset guards, PostgreSQL and Gotenberg checks on GitHub-hosted runners, tightened executor guard. **TASK-004 DONE** (4/78): ESLint, Prettier, Vitest, architecture and route integrity tests, translation and link checkers, the negative checks and gitleaks. **TASK-005 DONE** (5/78): `ci.yml`, `ci-gate` and `ci-nightly.yml` on `main`; the `main` ruleset refuses a commit without a `ci-gate` result. No business feature yet.
-- Executor mode: **SUPERVISED** until the runner starts. C-15 is VERIFIED and AUTH-013 needs no further scope authorization, so no prerequisite of EXECUTOR_OPERATING_MODEL §1 is left for the Owner. The guard now refuses tag pushes and tag writes; that Owner-approved guardrail change (2026-11-02) merged on a `fix/task-006-*` branch because the merge gate refuses a Task already DONE. It is not part of the TASK-006 contract.
+- **TASK-001 DONE**: executor guardrails, runner, watcher and capability report. **TASK-002 DONE**: Laravel 13 React skeleton, `app/Modules`, `bootstrap.yml` and the `-Bootstrap` evidence gate. **TASK-003 DONE**: database reset guards, PostgreSQL and Gotenberg checks on GitHub-hosted runners, tightened executor guard. **TASK-004 DONE** (4/78): ESLint, Prettier, Vitest, architecture and route integrity tests, translation and link checkers, the negative checks and gitleaks. **TASK-005 DONE** (5/78): `ci.yml`, `ci-gate` and `ci-nightly.yml` on `main`; the `main` ruleset refuses a commit without a `ci-gate` result. **TASK-006 DONE** (6/78): design tokens, AppShell, composites, self-hosted fonts, id/en localization and localized error pages; `main` at `598ec93`. No business feature yet.
+- Executor mode: **AUTONOMOUS** under AUTH-013, through the runner. C-15 is VERIFIED and AUTH-013 needs no further scope authorization, so no prerequisite of EXECUTOR_OPERATING_MODEL §1 is left for the Owner. The guard now refuses tag pushes and tag writes; that Owner-approved guardrail change (2026-11-02) merged on a `fix/task-006-*` branch because the merge gate refuses a Task already DONE. It is not part of the TASK-006 contract.
 - **PCR-002 published** (2026-11-01): Owner decision OD-37 forbids local Docker; heavy checks run on GitHub-hosted runners, first through the temporary bootstrap workflow ([QUALITY_GATES §4.1](../08-testing/QUALITY_GATES.md#41-workflow-bootstrap-sementara)). C-16 (bootstrap evidence gate) is VERIFIED ([EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md#c-16)).
 - GAP-001–GAP-029: OPEN (resolved NONE).
 
@@ -17,11 +17,11 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Field | Current value |
 |---|---|
 | Current phase | Execution; approved phases 12/12. |
-| Current Task / status | **TASK-006 IMPLEMENTED**, paused under the Owner's hold; work is on PR #23 or its `-r2` replacement. The first autonomous step stopped on the turn limit, and the runner repair (turn limit, Bash allowlist, hold pattern and worktree hold, watcher priority) merged SUPERVISED. |
-| Last completed action | 2026-11-02: rulesets read back; TAC-05 proven when the Owner's push of unproven commit `90fa0b6` to `main` was refused with `GH013` and `main` stayed at `675e909`; TASK-005 reconciled DONE. |
-| Evidence | [TASK-005 COMPLETION EVIDENCE](../11-tasks/TASK-005.md#completion-evidence); [TASK-004](../11-tasks/TASK-004.md#completion-evidence); [TASK-003](../11-tasks/TASK-003.md#completion-evidence); [TASK-002](../11-tasks/TASK-002.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
-| Task plan | Baseline 78 · Current 78 · DONE 5 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 72 · SUPERSEDED 0 · 6%. |
-| Open blockers | Owner: release the hold and authorize resuming AUTONOMOUS mode. Until then the checkpoint stays SUPERVISED and the watcher stays disabled. |
+| Current Task / status | None active. **TASK-007 READY**, not started. |
+| Last completed action | 2026-11-02: PR #25 merged by verified fast-forward at `598ec93` after two valid Codex P2 findings were fixed; push run 41381534903 success; TASK-006 reconciled DONE. |
+| Evidence | [TASK-006 COMPLETION EVIDENCE](../11-tasks/TASK-006.md#completion-evidence); [TASK-005](../11-tasks/TASK-005.md#completion-evidence); [TASK-004](../11-tasks/TASK-004.md#completion-evidence); [TASK-003](../11-tasks/TASK-003.md#completion-evidence); [TASK-002](../11-tasks/TASK-002.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
+| Task plan | Baseline 78 · Current 78 · DONE 6 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 71 · SUPERSEDED 0 · 8%. |
+| Open blockers | None. |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
 | Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, and OD-37 (no local Docker; GitHub-hosted testing). |
 | Decisions pending | Ruleset `release-tags` keeps the admin role's `always` bypass ([MAIN_RULESET](../09-operations/MAIN_RULESET.md)); it applies to the runner token too, so the guard is what holds the executor back from tags. For Claude Planning, non-blocking: the current starter kit ships Inertia 3 where the plan names Inertia 2 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#application-versions--task-002-2026-11-01)); ARCHITECTURE §5 rule 3 conflicts with the dependency column of §4 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#quality-tooling--task-004-2026-11-02)). Before TASK-040: where staging runs (D-19 as limited by OD-37). |
@@ -30,7 +30,7 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Cost | New recurring cost: NONE. Paid exception: NONE. |
 | Database | Direct production DB touched: NO. Schema: Laravel skeleton tables only, tested on a runner service container. |
 | Cleanup for the Owner | Public synthetic sandbox `yusufarst/pranata-uny-sandbox-c10` (used for C-10 and C-16) may be deleted by the Owner; the executor token cannot delete repositories. Disposable branches stay as they are. |
-| Next READY Task | TASK-006, under the prerequisites of EXECUTOR_OPERATING_MODEL §1. |
+| Next READY Task | TASK-007. It inherits from TASK-006: browser tests for the open drawer, client hydration and the error-page recovery click. SSR is off (`config/inertia.php`); turning it on first needs a per-request translation instance. |
 
 ## TASK PLAN CHANGE proposal — Docker-free local development (for Claude Planning)
 
@@ -57,7 +57,7 @@ Status: **INCORPORATED into PCR-002** (published; mapping in [PCR-002_REVIEW_HAN
 
 ## Exact next safe action
 
-**Owner:** authorize resuming AUTONOMOUS mode and release the hold. **Executor, after that:** continue TASK-006 from `.pranata/executor/checkpoint.json` under the single runner and watcher. No local Docker, PHP, Composer or PostgreSQL (OD-37).
+**Executor:** start TASK-007 from `.pranata/executor/checkpoint.json` under the single runner and watcher. No local Docker, PHP, Composer or PostgreSQL (OD-37).
 
 ## DO NOT DO
 

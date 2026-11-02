@@ -12,21 +12,21 @@ PROJECT TASK STATUS
 Baseline Total Tasks: 78 (FRZ-001)
 Current Total Tasks: 78
 
-DONE: 5
+DONE: 6
 READY: 1
 IN_PROGRESS: 0
 BLOCKED: 0
 VERIFYING: 0
-TODO: 72
+TODO: 71
 SUPERSEDED: 0
 
-Progress: 5 / 78
-Percentage: 6%
+Progress: 6 / 78
+Percentage: 8%
 ```
 
 ```text
 CURRENT TASK: —
-NEXT READY TASK: TASK-006 (AUTH-013; mode AUTONOMOUS menunggu prasyarat EXECUTOR_OPERATING_MODEL §1 yang tersisa: token runner C-15 dan otorisasi mode otonom)
+NEXT READY TASK: TASK-007 (AUTH-013)
 LAST TASK PLAN CHANGE: PCR-002 — PUBLISHED 2026-11-01 (review delta `6d7c8c3` APPROVED WITH CONDITIONS; syarat PCR002-SR-C1 masuk TASK-005; terverifikasi di `origin/main`): topologi pengembangan tanpa Docker lokal (OD-37); kontrak TASK-002, TASK-003, TASK-004, TASK-005, TASK-071; jumlah Task tetap 78 dan dependensi tidak berubah. Sebelumnya: PCR-001 — PUBLISHED 2026-11-01 (kontrak TASK-025, TASK-066, TASK-069, TASK-071)
 ADDITIONAL RECURRING PRODUCTION COST: 0 di luar infrastruktur yang dibiayai klien
 PAID SERVICE EXCEPTIONS: NONE
@@ -55,7 +55,7 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 - [x] [TASK-003](TASK-003.md) — Lingkungan pengembangan terisolasi `pranata` dan pengaman basis data uji
 - [x] [TASK-004](TASK-004.md) — Perkakas kualitas dan uji arsitektur
 - [x] [TASK-005](TASK-005.md) — Pipeline CI dan pemeriksa dokumentasi
-- [ ] [TASK-006](TASK-006.md) — Token desain, AppShell dan lokalisasi id/en
+- [x] [TASK-006](TASK-006.md) — Token desain, AppShell dan lokalisasi id/en
 - [ ] [TASK-007](TASK-007.md) — Harness E2E Playwright, axe dan seeder skenario
 - [ ] [TASK-008](TASK-008.md) — Peran basis data, tabel append-only dan jejak audit
 - [ ] [TASK-009](TASK-009.md) — Kontrak perintah: idempotensi, versi optimistis, model galat dan request id
@@ -138,8 +138,8 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-003](TASK-003.md) | Lingkungan pengembangan terisolasi `pranata` dan pengaman basis data uji | DONE | STANDARD | M0 | TASK-002 | NO | NONE | NO |
 | [TASK-004](TASK-004.md) | Perkakas kualitas dan uji arsitektur | DONE | STANDARD | M0 | TASK-003 | NO | NONE | NO |
 | [TASK-005](TASK-005.md) | Pipeline CI dan pemeriksa dokumentasi | DONE | STANDARD | M0 | TASK-004 | YES | NONE | NO |
-| [TASK-006](TASK-006.md) | Token desain, AppShell dan lokalisasi id/en | READY | STANDARD | M0 | TASK-004 | YES | NONE | YES |
-| [TASK-007](TASK-007.md) | Harness E2E Playwright, axe dan seeder skenario | TODO | STANDARD | M0 | TASK-005, TASK-006 | NO | NONE | YES |
+| [TASK-006](TASK-006.md) | Token desain, AppShell dan lokalisasi id/en | DONE | STANDARD | M0 | TASK-004 | YES | NONE | YES |
+| [TASK-007](TASK-007.md) | Harness E2E Playwright, axe dan seeder skenario | READY | STANDARD | M0 | TASK-005, TASK-006 | NO | NONE | YES |
 | [TASK-008](TASK-008.md) | Peran basis data, tabel append-only dan jejak audit | TODO | HIGH | M1 | TASK-004, TASK-007 | NO | PROPOSED | NO |
 | [TASK-009](TASK-009.md) | Kontrak perintah: idempotensi, versi optimistis, model galat dan request id | TODO | HIGH | M1 | TASK-008 | NO | PROPOSED | YES |
 | [TASK-010](TASK-010.md) | Autentikasi lokal dan sesi | TODO | HIGH | M1 | TASK-006, TASK-008 | NO | PROPOSED | YES |

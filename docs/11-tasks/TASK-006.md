@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: STANDARD
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: YES
@@ -238,18 +238,18 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41381237779](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41381237779) pada HEAD `598ec93`: `changes`, `ci-fast`, `ci-e2e`, `docs-check` dan `ci-gate` sukses. Run push `main` [41381534903](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41381534903) sukses. TAC-01: `resources/js/lib/design-tokens.test.ts`. TAC-03: `tests/Feature/LocalizationTest.php`, `resources/js/components/app/composites.test.tsx`. TAC-05: `LocalizationTest`, setiap status galat dalam `id` dan `en`. Tidak ada uji berat yang dijalankan lokal (OD-37).
+- Build result: `npm run build` lulus di `ci-fast`.
+- Route evidence: `RouteIntegrityTest` di `ci-fast`; rute fallback menjawab semua metode.
+- Interaction evidence: `composites.test.tsx` untuk pemilih bahasa dan halaman galat; pemulihan setelah mutasi gagal menuju halaman asal se-origin (`LocalizationTest`). Klik tombol pemulihan tidak diuji di browser.
+- Browser evidence: TAC-02 lewat `shell.browser.test.tsx`: tanpa tumpang tindih atau luapan pada 390×844 dan 1440×900 di kedua bahasa, axe termasuk kontras warna, dengan Chrome di runner. Pengganti tangkapan layar manual kontrak. Drawer terbuka dan hidrasi klien belum diuji di browser; menunggu harness TASK-007.
+- Localization evidence: TAC-04 lewat `npm run translations:check` di `ci-fast`.
+- Review status (Codex / independen, temuan P0–P3): swa-review tanpa P0/P1. Independen: tidak wajib (STANDARD). Codex `COMPLETED_WITH_FINDINGS` pada `2df5fb9`, dua P2 valid dan diperbaiki di `d6ac221`: [pemulihan galat](https://github.com/yusufarst/PRANATA-UNY/pull/25#discussion_r4438563478) dan [locale SSR](https://github.com/yusufarst/PRANATA-UNY/pull/25#discussion_r4438563692). Tidak ada review Codex penuh atas `d6ac221` dan `598ec93` (perbaikan kecil, EXECUTOR_OPERATING_MODEL §6.3). P3 ditunda: halaman 503 pada `artisan down` diperkirakan memakai bahasa bawaan (hasil pembacaan kode); `input-error.tsx` dan beberapa komponen kit masih memakai utilitas warna bawaan Tailwind (bukan hex); katalog dimuat seluruhnya, tidak per halaman.
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 95 berkas di [PR #25](https://github.com/yusufarst/PRANATA-UNY/pull/25), terutama `resources/css/app.css`, `resources/js/components/app`, `resources/js/lib/i18n.ts`, `resources/js/locales`, `resources/js/pages/errors/show.tsx`, `lang/`, `bootstrap/app.php`, `config/inertia.php`, `routes/`, `docs/00-governance/TOOLCHAIN.md`.
+- PR / CI run: [PR #25](https://github.com/yusufarst/PRANATA-UNY/pull/25) MERGED, menggantikan #23 (EXECUTOR_OPERATING_MODEL §8.2); run di atas. Run 41381007507 pada `d6ac221` gagal karena balapan pembersihan profil Chrome di teardown uji (66 uji lulus), diperbaiki di `598ec93` tanpa mengubah asersi.
+- Commit SHA: `598ec93b93f0d28536b2dce358cb63caa0c7f277`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`.
+- Notes: TAC-01–TAC-05 terbukti di CI. SSR dimatikan (`inertia.ssr.enabled=false`) karena produksi tidak menjalankan proses Node dan `i18n.ts` mengambil bahasa dari dokumen; bila SSR kelak diaktifkan, instance terjemahan harus dibuat per permintaan dari `page.props.locale`. Efek konfigurasi itu tidak dibaca dari sumber `inertia-laravel` atau dokumentasi resmi karena keduanya tidak terjangkau pada sesi ini, dan `build:ssr` masih ada di `package.json`.
 
 ## SAFE NEXT TASK
 
