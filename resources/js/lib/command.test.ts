@@ -30,10 +30,11 @@ describe('newIdempotencyKey', () => {
     });
 
     it('still makes a UUID v4 outside a secure context', () => {
-        vi.stubGlobal('crypto', {
-            getRandomValues: (bytes: Uint8Array) =>
-                globalThis.crypto.getRandomValues(bytes),
-        });
+        // Taken before the stub, as the stub replaces globalThis.crypto and would call itself.
+        const getRandomValues = globalThis.crypto.getRandomValues.bind(
+            globalThis.crypto,
+        );
+        vi.stubGlobal('crypto', { getRandomValues });
 
         expect(newIdempotencyKey()).toMatch(uuidV4);
     });
