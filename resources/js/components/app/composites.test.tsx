@@ -133,7 +133,7 @@ describe('language switch (TAC-03)', () => {
         const html = renderToStaticMarkup(<LanguageSwitcher />);
 
         expect(html).toContain('aria-pressed="true"');
-        expect(html).toContain('aria-label="Bahasa Indonesia"');
+        expect(html).toContain('aria-label="ID Bahasa Indonesia"');
     });
 
     it('asks the server to change language and keeps the page state', () => {

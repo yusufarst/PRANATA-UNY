@@ -5,7 +5,11 @@ import type { Page } from '@playwright/test';
 // A navigation cancels its pending requests; the browsers word that differently and it is no defect.
 const CANCELLED = /ERR_ABORTED|NS_BINDING_ABORTED|cancelled|Load request cancelled/i;
 
-export type AxeViolation = { id: string; impact?: string | null };
+export type AxeViolation = {
+    id: string;
+    impact?: string | null;
+    targets: string[];
+};
 
 export function collectCriticalErrors(page: Page): string[] {
     const errors: string[] = [];
@@ -35,7 +39,11 @@ export function collectCriticalErrors(page: Page): string[] {
 export async function axeViolations(page: Page): Promise<AxeViolation[]> {
     const { violations } = await new AxeBuilder({ page }).analyze();
 
-    return violations.map(({ id, impact }) => ({ id, impact }));
+    return violations.map(({ id, impact, nodes }) => ({
+        id,
+        impact,
+        targets: nodes.map(({ target }) => target.join(' ')),
+    }));
 }
 
 export const test = base.extend<{ criticalErrors: string[] }>({

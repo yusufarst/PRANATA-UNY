@@ -36,7 +36,8 @@ export function LanguageSwitcher() {
                     variant={locale === current ? 'secondary' : 'ghost'}
                     className="h-11 min-w-11 px-2 sm:h-8 sm:min-w-8"
                     aria-pressed={locale === current}
-                    aria-label={t(`common:language.${locale}_name`)}
+                    // The name must hold the visible code too, or speech control cannot reach the button.
+                    aria-label={`${t(`common:language.${locale}`)} ${t(`common:language.${locale}_name`)}`}
                     onClick={() => chooseLocale(locale, current)}
                 >
                     {t(`common:language.${locale}`)}

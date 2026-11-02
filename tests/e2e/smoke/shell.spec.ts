@@ -1,5 +1,16 @@
+import type { Page } from '@playwright/test';
 import { axeViolations, expect, test } from '../support/fixtures';
-import { emailOf, PASSWORD, storageStateOf } from '../support/profiles';
+import { emailOf, PASSWORD } from '../support/profiles';
+
+// The language lives in the session, so parallel tests sharing a saved login would switch it under each other.
+async function signIn(page: Page): Promise<void> {
+    await page.goto('/login');
+    await page.getByLabel('Alamat email').fill(emailOf('internal'));
+    await page.locator('#password').fill(PASSWORD);
+    await page.getByRole('button', { name: 'Masuk' }).click();
+
+    await expect(page).toHaveURL(/\/home$/);
+}
 
 const LANGUAGES = [
     {
@@ -35,33 +46,20 @@ for (const language of LANGUAGES) {
             expect(await axeViolations(page)).toEqual([]);
         });
 
-        test.describe('signed in', () => {
-            test.use({ storageState: storageStateOf('internal') });
+        test('the empty shell is usable and has no axe violation', async ({
+            page,
+        }) => {
+            await signIn(page);
+            await page.getByLabel(language.option).first().click();
 
-            test('the empty shell is usable and has no axe violation', async ({
-                page,
-            }) => {
-                await page.goto('/home');
-                await page.getByLabel(language.option).first().click();
-
-                await expect(
-                    page.getByRole('heading', { name: language.home }),
-                ).toBeVisible();
-                await expect(page.getByText(language.empty)).toBeVisible();
-                expect(await axeViolations(page)).toEqual([]);
-            });
+            await expect(
+                page.getByRole('heading', { name: language.home }),
+            ).toBeVisible();
+            await expect(page.getByText(language.empty)).toBeVisible();
+            expect(await axeViolations(page)).toEqual([]);
         });
     });
 }
-
-test('a full sign-in reaches the shell', async ({ page }) => {
-    await page.goto('/login');
-    await page.getByLabel('Alamat email').fill(emailOf('internal'));
-    await page.locator('#password').fill(PASSWORD);
-    await page.getByRole('button', { name: 'Masuk' }).click();
-
-    await expect(page).toHaveURL(/\/home$/);
-});
 
 test('axe reports a violation that is really there', async ({ page }) => {
     await page.goto('/login');
