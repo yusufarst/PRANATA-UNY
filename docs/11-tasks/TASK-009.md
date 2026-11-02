@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: NO
@@ -210,19 +210,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- N/A Authorization: tanpa aksi bisnis atau kapabilitas baru; kunci idempotensi terikat pengguna diuji di `IdempotentCommandTest`
+- [x] Route integrity
+- [x] Interaction behavior
+- [x] Browser E2E if required
+- [x] Responsive/adaptive if required
+- [x] Visual breathing room/density if UI
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -237,18 +237,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41494819346](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41494819346) pada HEAD `def83d2`: `changes`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)` dan `ci-gate` sukses; `docs-check` dilewati (tanpa perubahan dokumen). Di `ci-fast`: Pest paralel dengan uji arsitektur dan rute, Vitest, migrasi `fresh` lalu `rollback`, dan pemeriksaan negatif lulus. TAC-01: `IdempotentCommandTest` (kirim ganda dengan kunci sama menjalankan perintah sekali dan redirect ke tempat yang sama; kunci terikat pengguna; duplikat yang masih berjalan mendapat 409 setelah menunggu; kunci yang gagal validasi, juga di error bag bernama, boleh dikirim ulang) dan E2E klik ganda pada simpan profil. TAC-02: kunci sama dengan isi berbeda ditolak 422 tanpa efek. TAC-03: `CommandContractTest` (simpan pada versi basi tidak menulis apa pun; 409 dengan data terbaru dan pesan konflik) dan Vitest `useCommand` (409 membuka ConflictDialog dan input tetap). TAC-04: 40P01/40001 diulang lalu sukses sekali; deadlock yang melampaui batas ulang menjawab 503 tanpa sisa; galat lain tidak diulang; deadlock setelah simpan berversi tetap menulis perubahan pada ulangan. TAC-05: setiap respons membawa request id yang sama dengan konteks log dan `audit_events`; halaman galat menampilkan request id-nya.
+- Build result: `npm run build` lulus di `ci-fast` dan kedua shard E2E; Pint, Larastan, ESLint, Prettier dan TypeScript lulus.
+- Route evidence: tanpa rute baru; `routes/settings.php` memberi `profile.update` middleware idempotensi; `RouteIntegrityTest` lulus di `ci-fast`.
+- Interaction evidence: IX-002 — klik ganda menghasilkan satu simpan di bawah satu kunci, kirim ulang dengan kunci sama mendapat jawaban yang pertama, 409 membuka ConflictDialog, halaman galat menampilkan request id.
+- Browser evidence: `tests/e2e/smoke/shell.spec.ts` lulus di Chromium dan WebKit (dua shard), termasuk klik ganda, kirim ulang, laci di ponsel dan shell kosong pada viewport proyek dengan axe tanpa pelanggaran.
+- Localization evidence: kunci baru di `lang/{id,en}/command.php` dan `resources/js/locales/{id,en}/common.json`; `translations:check` lulus (kunci hilang 0).
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Codex dengan temuan: P1 dan P2 valid, diperbaiki di `a1ac7a2` dan `ea4f693` (thread dibiarkan terbuka untuk Owner). Codex ulang pada `5c7861c`: tanpa temuan utama; tidak diminta ulang untuk `6a7a638`, `036549e`, `def83d2`. Review independen HIGH: P2-1 (model di memori disinkronkan sebelum commit, sehingga ulangan deadlock hanya menulis versi) diperbaiki di `6a7a638`; P2-2 (galat validasi di error bag bernama dihitung sukses) diperbaiki di `036549e`, dengan perbaikan tipe Larastan di `def83d2`. Review delta eksekutor `5c7861c..def83d2`: kedua P2 tertutup, tanpa P0/P1/P2 baru. P3 yang ditunda: ulangan di dalam savepoint bersarang; halaman 503 karena ulangan habis menampilkan teks pemeliharaan; kunci yang macet di IN_PROGRESS; konteks `DomainRuleViolation` tidak ditampilkan; `syncOriginal` saat commit juga menandai atribut lain yang belum disimpan sebagai bersih; belum ada uji hak peran DB untuk tabel baru, balapan dua koneksi, render ConflictDialog dan respons HTTP 503.
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 31 berkas pada delta `b739bf0..def83d2` di [PR #34](https://github.com/yusufarst/PRANATA-UNY/pull/34), terutama `app/Modules/Platform/` (`Support/Action.php`, `Support/HasLockVersion.php`, `Support/RequestId.php`, `Http/Middleware/EnsureIdempotentCommand.php`, `Http/Middleware/AssignRequestId.php`, `Exceptions/`, `Console/PruneIdempotencyKeys.php`), migrasi `platform_settings` dan `platform_idempotency_keys`, `bootstrap/app.php`, `AuditLogger`, `resources/js/lib/command.ts`, `resources/js/components/app/ConflictDialog.tsx`, halaman profil dan galat, terjemahan, serta uji di `tests/Feature/Platform`, `resources/js/lib/command.test.ts` dan `tests/e2e/smoke/shell.spec.ts`.
+- PR / CI run: [PR #34](https://github.com/yusufarst/PRANATA-UNY/pull/34) MERGED; run di atas. Run sebelumnya: 41487589092, 41488773800, 41489919224, 41491092514, 41493612941 (yang terakhir gagal hanya di Larastan, diperbaiki di `def83d2`).
+- Commit SHA: `def83d27afd31879936acfb8f84fa12a77e76b8f`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode AUTONOMOUS.
+- Notes: TAC-01–TAC-05 terbukti di CI. Hak peran DB untuk tabel baru tidak diuji tersendiri (P3 di atas); server E2E berjalan sebagai anggota `pranata_app` dan lulus. Pembersihan kunci kedaluwarsa dijadwalkan tiap jam. Uji izin positif/negatif N/A karena tidak ada aksi bisnis atau kapabilitas baru.
 
 ## SAFE NEXT TASK
 

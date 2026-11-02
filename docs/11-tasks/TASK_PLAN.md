@@ -12,21 +12,21 @@ PROJECT TASK STATUS
 Baseline Total Tasks: 78 (FRZ-001)
 Current Total Tasks: 78
 
-DONE: 8
-READY: 1
+DONE: 9
+READY: 0
 IN_PROGRESS: 0
-BLOCKED: 0
+BLOCKED: 1
 VERIFYING: 0
-TODO: 69
+TODO: 68
 SUPERSEDED: 0
 
-Progress: 8 / 78
-Percentage: 10%
+Progress: 9 / 78
+Percentage: 12%
 ```
 
 ```text
 CURRENT TASK: —
-NEXT READY TASK: TASK-009 (AUTH-013)
+NEXT READY TASK: — (TASK-010 BLOCKED: menunggu publikasi TASK PLAN CHANGE penghapusan akun, CURRENT_HANDOFF)
 LAST TASK PLAN CHANGE: PCR-002 — PUBLISHED 2026-11-01 (review delta `6d7c8c3` APPROVED WITH CONDITIONS; syarat PCR002-SR-C1 masuk TASK-005; terverifikasi di `origin/main`): topologi pengembangan tanpa Docker lokal (OD-37); kontrak TASK-002, TASK-003, TASK-004, TASK-005, TASK-071; jumlah Task tetap 78 dan dependensi tidak berubah. Sebelumnya: PCR-001 — PUBLISHED 2026-11-01 (kontrak TASK-025, TASK-066, TASK-069, TASK-071)
 ADDITIONAL RECURRING PRODUCTION COST: 0 di luar infrastruktur yang dibiayai klien
 PAID SERVICE EXCEPTIONS: NONE
@@ -58,7 +58,7 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 - [x] [TASK-006](TASK-006.md) — Token desain, AppShell dan lokalisasi id/en
 - [x] [TASK-007](TASK-007.md) — Harness E2E Playwright, axe dan seeder skenario
 - [x] [TASK-008](TASK-008.md) — Peran basis data, tabel append-only dan jejak audit
-- [ ] [TASK-009](TASK-009.md) — Kontrak perintah: idempotensi, versi optimistis, model galat dan request id
+- [x] [TASK-009](TASK-009.md) — Kontrak perintah: idempotensi, versi optimistis, model galat dan request id
 - [ ] [TASK-010](TASK-010.md) — Autentikasi lokal dan sesi
 - [ ] [TASK-011](TASK-011.md) — Administrasi pengguna, aktivasi dan pemulihan dibantu admin
 - [ ] [TASK-012](TASK-012.md) — TOTP 2FA untuk akun istimewa
@@ -141,8 +141,8 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-006](TASK-006.md) | Token desain, AppShell dan lokalisasi id/en | DONE | STANDARD | M0 | TASK-004 | YES | NONE | YES |
 | [TASK-007](TASK-007.md) | Harness E2E Playwright, axe dan seeder skenario | DONE | STANDARD | M0 | TASK-005, TASK-006 | NO | NONE | YES |
 | [TASK-008](TASK-008.md) | Peran basis data, tabel append-only dan jejak audit | DONE | HIGH | M1 | TASK-004, TASK-007 | NO | PROPOSED | NO |
-| [TASK-009](TASK-009.md) | Kontrak perintah: idempotensi, versi optimistis, model galat dan request id | READY | HIGH | M1 | TASK-008 | NO | PROPOSED | YES |
-| [TASK-010](TASK-010.md) | Autentikasi lokal dan sesi | TODO | HIGH | M1 | TASK-006, TASK-008 | NO | PROPOSED | YES |
+| [TASK-009](TASK-009.md) | Kontrak perintah: idempotensi, versi optimistis, model galat dan request id | DONE | HIGH | M1 | TASK-008 | NO | PROPOSED | YES |
+| [TASK-010](TASK-010.md) | Autentikasi lokal dan sesi | BLOCKED | HIGH | M1 | TASK-006, TASK-008 | NO | PROPOSED | YES |
 | [TASK-011](TASK-011.md) | Administrasi pengguna, aktivasi dan pemulihan dibantu admin | TODO | HIGH | M1 | TASK-010, TASK-009 | NO | PROPOSED | YES |
 | [TASK-012](TASK-012.md) | TOTP 2FA untuk akun istimewa | TODO | HIGH | M1 | TASK-011 | YES | PROPOSED | YES |
 | [TASK-013](TASK-013.md) | Organisasi berversi, jabatan dan penunjukan | TODO | HIGH | M1 | TASK-009, TASK-011 | NO | PROPOSED | YES |
