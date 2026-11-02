@@ -48,6 +48,13 @@
         "error_description": "Data that was already saved is safe. Please try again.",
         "request_id": "Request code: {{id}}"
     },
+    "conflict": {
+        "title": "Someone else changed this data",
+        "description": "Someone else changed this data after you opened it. Check the latest data, then make your change again.",
+        "unsaved": "Your change is not saved. Loading the latest data clears your input on screen.",
+        "keep": "Stay with my input",
+        "reload": "Load the latest data"
+    },
     "errors": {
         "home": "Back to Home",
         "retry": "Try again",

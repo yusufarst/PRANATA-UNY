@@ -48,6 +48,13 @@
         "error_description": "Data yang sudah tersimpan tetap aman. Silakan coba lagi.",
         "request_id": "Kode permintaan: {{id}}"
     },
+    "conflict": {
+        "title": "Data sudah diubah orang lain",
+        "description": "Data ini sudah diubah orang lain sejak Anda membukanya. Periksa data terbaru, lalu ulangi perubahan Anda.",
+        "unsaved": "Perubahan Anda belum tersimpan. Memuat data terbaru akan menghapus isian Anda di layar.",
+        "keep": "Tetap di isian saya",
+        "reload": "Muat data terbaru"
+    },
     "errors": {
         "home": "Kembali ke Beranda",
         "retry": "Coba lagi",
