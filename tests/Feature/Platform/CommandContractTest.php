@@ -99,11 +99,14 @@ test('a deadlock that outlasts the retries answers 503 and leaves nothing behind
 test('other failures are not retried', function () {
     $runs = 0;
 
-    expect(fn () => (new CommandProbeAction)->handle(function () use (&$runs) {
+    // Built outside the arrow function, which would capture $runs by value.
+    $work = function () use (&$runs) {
         $runs++;
 
         throw new RuntimeException('probe');
-    }))->toThrow(RuntimeException::class, 'probe');
+    };
+
+    expect(fn () => (new CommandProbeAction)->handle($work))->toThrow(RuntimeException::class, 'probe');
 
     expect($runs)->toBe(1)
         ->and(DB::table('command_probe_records')->count())->toBe(0);
