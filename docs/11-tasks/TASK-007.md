@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: IN_PROGRESS
-EXECUTION STAGE: IN_PROGRESS
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: STANDARD
 MILESTONE: M0 — Fondasi rekayasa
 PARALLEL SAFE: NO
@@ -207,19 +207,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- N/A Authorization: tidak ada aturan otorisasi baru
+- [x] Route integrity
+- [x] Interaction behavior
+- [x] Browser E2E if required
+- [x] Responsive/adaptive if required
+- N/A Visual breathing room/density if UI: tata letak tidak berubah; hanya markup aksesibilitas
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -234,18 +234,18 @@ STANDARD — swa-review terstruktur + review PR otomatis (Codex); lulus bila tid
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41418983904](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41418983904) pada HEAD `c75cfda`: `changes`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)`, `docs-check` dan `ci-gate` sukses. Playwright 16 lulus dan 1 dilewati per shard (drawer hanya di ponsel); Pest 169 lulus. TAC-02: spec `negative` gagal dengan `injected console error` dan langkahnya menolak bila lulus. TAC-03: tepat satu `SETUP FAILURE [ScenarioSeeder]`, tanpa uji UI yang berjalan. TAC-04: `E2eDatabaseTest` (seeder diulang tanpa tabrakan, run kedua beridentitas sendiri). TAC-05: `pranata_e2e_<run>_<shard>` dibuat, lalu dihapus dan `pg_database` = 0. TAC-06: pelanggaran `image-alt` yang disuntikkan terlapor; run 41400797668 menemukan pelanggaran nyata yang lalu diperbaiki.
+- Build result: `npm run build` lulus di `ci-fast` dan `ci-e2e`.
+- Route evidence: `RouteIntegrityTest` di `ci-fast`; RT-001 dan RT-002 dibuka di browser.
+- Interaction evidence: pemilih bahasa di halaman masuk dan shell, drawer ponsel, dan tombol pemulihan halaman galat setelah login ditolak 429 kembali ke `/login`.
+- Browser evidence: TAC-01 di Chromium (shard 1) dan WebKit (shard 2) pada 390×844 dan 1440×900, kedua bahasa, axe tanpa pelanggaran. Artefak trace terbukti terunggah pada run gagal 41400797668, tanpa `.env` atau `.auth`. Hidrasi SSR tidak relevan karena SSR mati; render klien dibuktikan oleh klik yang mengganti bahasa.
+- Localization evidence: uji shell dan halaman masuk dalam id dan en; `translations:check` di `ci-fast`.
+- Review status (Codex / independen, temuan P0–P3): swa-review tanpa P0/P1. Independen: tidak wajib (STANDARD). Codex `COMPLETED_WITH_FINDINGS` pada `b50c894`: satu P1 valid ([validasi basis data](https://github.com/yusufarst/PRANATA-UNY/pull/27#discussion_r4440425042)), diperbaiki di `c75cfda` dengan `e2e:database verify` dan dua uji Pest.
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 26 berkas di [PR #27](https://github.com/yusufarst/PRANATA-UNY/pull/27), terutama `playwright.config.ts`, `tests/e2e/`, `database/seeders/ScenarioSeeder.php`, `app/Console/Commands/E2eDatabaseCommand.php`, `.github/workflows/ci.yml`, `scripts/executor/tests/ci.probe.ps1` dan perbaikan aksesibilitas di `resources/js`.
+- PR / CI run: [PR #27](https://github.com/yusufarst/PRANATA-UNY/pull/27) MERGED; run di atas. Run gagal sebelumnya: 41400797668 (pelanggaran axe nyata dan balapan bahasa sesi), 41401706315 (axe di shell), 41403574488 dan 41414566193 (batas login 429, state konteks, uji 419 yang mustahil).
+- Commit SHA: `c75cfda561543ac8a7db0fca7fdefcef107066f9`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode SUPERVISED.
+- Notes: TAC-01–TAC-06 terbukti di CI. Perubahan `ci.yml` dan `ci.probe.ps1` (check matrix dibaca sebagai satu job dengan hasil terburuk) diotorisasi Owner 2026-11-02. Pin `upload-artifact` v7.0.2 `cf430e0` diverifikasi dengan `git ls-remote`. Urutan Tab halaman masuk kini mengikuti DOM. Organisasi sintetis dan peran profil di `ScenarioSeeder` menunggu tabelnya di Task berikutnya. Uji yang login berjalan berurutan per project karena bahasa tersimpan di sesi dan batas login 5 per menit per alamat; 419 tidak dapat dipicu dari browser karena cek same-origin Laravel meloloskan permintaan tanpa token.
 
 ## SAFE NEXT TASK
 
