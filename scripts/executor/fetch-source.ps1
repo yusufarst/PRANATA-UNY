@@ -7,7 +7,13 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib\state.ps1')
-if (-not $Root) { $Root = Get-PranataRepoRoot }
+$repoRoot = Get-PranataRepoRoot
+if (-not $Root) { $Root = $repoRoot }
+$Root = [IO.Path]::GetFullPath($Root).TrimEnd('\')
+# A folder inside the repository other than its root (say .claude) would put the output in a guardrail path.
+if ($Root -ne $repoRoot -and ($Root + '\').StartsWith($repoRoot + '\', [StringComparison]::OrdinalIgnoreCase)) {
+    throw "Root must be the repository root: $Root"
+}
 if ($Package -notmatch '^(@[a-z0-9][a-z0-9._-]*/)?[a-z0-9][a-z0-9._-]*$' -and $Package -notmatch '^[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._-]*$') {
     throw "Not a package name: $Package"
 }
@@ -37,23 +43,57 @@ if (-not $url -and (Test-Path -LiteralPath $composerLock)) {
     if ($entry) {
         $dist = $entry['dist']; $url = $dist['url']; $version = $entry['version']
         # GitHub dists carry no shasum; the locked commit in the URL pins the content instead.
-        if ($url -notlike 'https://*' -or -not $dist['reference'] -or $url -notlike "*$($dist['reference'])*") { throw "Locked dist does not pin its commit: $Package" }
+        if ([string]$dist['reference'] -notmatch '^[0-9a-f]{40}$' -or $url -cne "https://api.github.com/repos/$Package/zipball/$($dist['reference'])") {
+            throw "Locked dist is not a GitHub zipball pinned to its commit: $Package"
+        }
         if ($dist['shasum']) { $integrity = 'sha1-' + $dist['shasum'] }
     }
 }
 if (-not $url) { throw "Not a locked dependency of this repository: $Package" }
+if ($version -notmatch '^v?[0-9][A-Za-z0-9.+-]*$') { throw "Not a release version: $Package $version" }
 
-$dest = Join-Path $Root (".pranata\tools\src\" + ($Package -replace '/', '__') + "@$version")
-if (Test-Path -LiteralPath $dest) { Write-Output $dest; exit 0 }
+$base = [IO.Path]::GetFullPath((Join-Path $Root '.pranata\tools\src'))
+$dest = [IO.Path]::GetFullPath((Join-Path $base (($Package -replace '/', '__') + "@$version")))
+if (-not $dest.StartsWith($base + '\', [StringComparison]::OrdinalIgnoreCase)) { throw "Destination escapes .pranata/tools/src: $dest" }
+$marker = Join-Path $dest 'FETCHED'
+# Only a folder this script finished counts; anything else at that path is fetched again.
+if ((Test-Path -LiteralPath $marker) -and (Get-Content -LiteralPath $marker -Raw).Trim() -eq "$url $integrity".Trim()) { Write-Output $dest; exit 0 }
+if (Test-Path -LiteralPath $dest) { Remove-Item -LiteralPath $dest -Recurse -Force }
 $part = "$dest.part"
 if (Test-Path -LiteralPath $part) { Remove-Item -LiteralPath $part -Recurse -Force }
 [void](New-Item -ItemType Directory -Path $part -Force)
 $archive = Join-Path $part 'archive'
 try {
+    # Redirects are followed by hand: https only, and only to the registry or GitHub's archive hosts.
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest -Uri $url -OutFile $archive -UseBasicParsing -MaximumRedirection 5
-    if ((Get-Item -LiteralPath $archive).Length -gt 50MB) { throw "Archive over 50 MB: $Package" }
+    $next = [Uri]$url
+    for ($hop = 0; ; $hop++) {
+        if ($hop -gt 5 -or $next.Scheme -ne 'https' -or $next.Host -notin @('registry.npmjs.org', 'api.github.com', 'codeload.github.com')) {
+            throw "Refused download location: $next"
+        }
+        $request = [Net.HttpWebRequest]::Create($next)
+        $request.AllowAutoRedirect = $false
+        $request.UserAgent = 'pranata-fetch-source'
+        $response = $request.GetResponse()
+        $status = [int]$response.StatusCode
+        if ($status -ge 300 -and $status -lt 400) {
+            $next = New-Object Uri($next, $response.Headers['Location'])
+            $response.Close()
+            continue
+        }
+        break
+    }
+    $in = $response.GetResponseStream()
+    $out = [IO.File]::Create($archive)
+    try {
+        $buffer = New-Object byte[] 65536
+        $total = 0
+        while (($read = $in.Read($buffer, 0, $buffer.Length)) -gt 0) {
+            $total += $read
+            if ($total -gt 50MB) { throw "Archive over 50 MB: $Package" }
+            $out.Write($buffer, 0, $read)
+        }
+    } finally { $out.Dispose(); $response.Close() }
     if ($integrity) {
         $algorithm, $expected = $integrity -split '-', 2
         $hasher = [Security.Cryptography.HashAlgorithm]::Create($algorithm.ToUpper())
@@ -68,6 +108,7 @@ try {
     & "$env:SystemRoot\System32\tar.exe" -xf $archive -C $src
     if ($LASTEXITCODE -ne 0) { throw "Extraction failed: $Package" }
     Remove-Item -LiteralPath $archive
+    Set-Content -LiteralPath (Join-Path $part 'FETCHED') -Value "$url $integrity".Trim() -Encoding ASCII
     Rename-Item -LiteralPath $part -NewName (Split-Path $dest -Leaf)
 } finally {
     # A failed fetch leaves nothing a later step could mistake for the source.

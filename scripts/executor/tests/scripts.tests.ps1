@@ -601,13 +601,16 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
     Assert ($s.Code -eq 0 -and -not ((& git -C $eolRepo diff --cached --name-only) -contains 'gone.txt')) 'stage: a really deleted file is staged as such'
 
     # fetch-source refuses before any download: only locked registry or commit-pinned dists, never a name it cannot place.
-    [IO.File]::WriteAllText((Join-Path $eolRepo 'package-lock.json'), '{"packages":{"node_modules/evil":{"version":"1.0.0","resolved":"http://example.test/evil-1.0.0.tgz","integrity":"sha512-AA=="},"node_modules/weak":{"version":"1.0.0","resolved":"https://registry.npmjs.org/weak/-/weak-1.0.0.tgz","integrity":"sha1-AA=="}}}')
-    [IO.File]::WriteAllText((Join-Path $eolRepo 'composer.lock'), '{"packages":[{"name":"acme/unpinned","version":"v1.0.0","dist":{"type":"zip","url":"https://example.test/acme.zip","reference":"abc123"}}],"packages-dev":[]}')
-    foreach ($case in @(@('missing', 'not-locked'), @('evil', 'a non-registry URL'), @('weak', 'a tarball without sha512'), @('acme/unpinned', 'a dist without its commit'), @('../x', 'a path'), @('a b', 'a name with a space'))) {
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'package-lock.json'), '{"packages":{"":{},"node_modules/evil":{"version":"1.0.0","resolved":"http://example.test/evil-1.0.0.tgz","integrity":"sha512-AA=="},"node_modules/weak":{"version":"1.0.0","resolved":"https://registry.npmjs.org/weak/-/weak-1.0.0.tgz","integrity":"sha1-AA=="},"node_modules/climb":{"version":"1.0.0/../../../../.claude","resolved":"https://registry.npmjs.org/climb/-/climb-1.0.0.tgz","integrity":"sha512-AA=="}}}')
+    $sha = 'd52c3b3129e4c8e213c97cdc68f94b0b7d27f181'
+    [IO.File]::WriteAllText((Join-Path $eolRepo 'composer.lock'), ('{"packages":[{"name":"acme/unpinned","version":"v1.0.0","dist":{"type":"zip","url":"https://example.test/acme.zip","reference":"abc123"}},{"name":"acme/star","version":"v1.0.0","dist":{"type":"zip","url":"https://example.test/any","reference":"*"}},{"name":"acme/host","version":"v1.0.0","dist":{"type":"zip","url":"https://example.test/repos/acme/host/zipball/' + $sha + '","reference":"' + $sha + '"}}],"packages-dev":[]}'))
+    foreach ($case in @(@('missing', 'not-locked'), @('evil', 'a non-registry URL'), @('weak', 'a tarball without sha512'), @('climb', 'a version that climbs out of .pranata/tools/src'), @('acme/unpinned', 'a dist without its commit'), @('acme/star', 'a wildcard reference'), @('acme/host', 'a pinned dist on another host'), @('../x', 'a path'), @('a b', 'a name with a space'))) {
         $f = Invoke-Script (Join-Path $scriptsDir 'fetch-source.ps1') @('-Package', $case[0], '-Root', $eolRepo)
         Assert ($f.Code -ne 0 -and -not (Test-Path -LiteralPath (Join-Path $eolRepo '.pranata\tools\src'))) "fetch-source: refuses $($case[1]) before downloading"
     }
     Remove-Item -LiteralPath (Join-Path $eolRepo 'package-lock.json'), (Join-Path $eolRepo 'composer.lock')
+    $f = Invoke-Script (Join-Path $repo 'scripts\executor\fetch-source.ps1') @('-Package', 'clsx', '-Root', (Join-Path $repo '.claude'))
+    Assert ($f.Code -ne 0 -and $f.Out -match 'repository root') 'fetch-source: a root inside the repository other than its root is refused'
 
     # WIP commit on a CRLF working copy touches only the real change.
     $state2 = Initialize-PranataStateDirs $eolRepo
