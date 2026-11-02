@@ -12,7 +12,7 @@ PARALLEL SAFE: NO
 
 ## OBJECTIVE
 
-Menyediakan pengelolaan pengguna oleh admin (buat, ubah, suspend, nonaktifkan), aktivasi akun dengan kode sekali pakai, reset password dibantu admin dengan pemeriksaan identitas dan maker-checker untuk akun istimewa, daftar sesi aktif, serta reset email opsional bila SMTP ada.
+Menyediakan pengelolaan pengguna oleh admin (buat, ubah, suspend, nonaktifkan), aktivasi akun dengan kode sekali pakai, reset password dibantu admin dengan pemeriksaan identitas dan maker-checker untuk akun istimewa, daftar sesi aktif, serta reset email opsional bila SMTP ada. "Nonaktifkan" berarti status DEACTIVATED dengan pencabutan semua sesi; baris pengguna dan riwayat auditnya tetap (OD-38).
 
 ## WHY THIS EXISTS
 
@@ -44,6 +44,7 @@ Pemulihan akun harus selalu tersedia tanpa ketergantungan email institusi (FUT-0
 - Maker-checker reset akun SUPER_ADMIN/istimewa melalui penentu "akun istimewa" yang dapat diperluas (TASK-015 menambah pemegang penugasan keputusan)
 - Aktivasi akun baru dengan kode sekali pakai
 - Halaman sesi aktif pengguna + cabut sesi oleh admin
+- Penonaktifan akun ([OD-38](../00-governance/DECISION_LOG.md#od-38)): status DEACTIVATED dan `deactivated_at` diisi, semua sesi pengguna dicabut, peristiwa tercatat di `audit_events`; tidak ada baris `users` yang dihapus dan riwayat tetap ([OPERATIONS_RUNBOOK RB-13](../09-operations/OPERATIONS_RUNBOOK.md#rb-13-offboarding-pengguna))
 - Reset via email bila mail dikonfigurasi (dinonaktifkan otomatis bila tidak)
 - Notifikasi in-app ke pengguna setelah reset
 - Audit semua aksi
@@ -52,6 +53,7 @@ Pemulihan akun harus selalu tersedia tanpa ketergantungan email institusi (FUT-0
 
 - Grant akses (TASK-014)
 - Akun penyedia via portal (TASK-043 memakai mekanisme ini)
+- Penghapusan permanen akun atau data pengguna: tidak tersedia sampai kebijakan retensi dan penghapusan institusi tervalidasi (GAP-023, OD-38)
 
 ## REFERENCES
 
@@ -59,6 +61,9 @@ Pemulihan akun harus selalu tersedia tanpa ketergantungan email institusi (FUT-0
 - [SECURITY_MODEL §3.1](../05-security/SECURITY_MODEL.md#31-pemulihan-akun)
 - [OPERATIONS_RUNBOOK RB-08](../09-operations/OPERATIONS_RUNBOOK.md#rb-08-reset-password-dibantu-admin)
 - [INFORMATION_ARCHITECTURE §3.6](../07-ux-design/INFORMATION_ARCHITECTURE.md#36-administrasi)
+- [OPERATIONS_RUNBOOK RB-13](../09-operations/OPERATIONS_RUNBOOK.md#rb-13-offboarding-pengguna)
+- [DATA_MODEL §5](../04-architecture/DATA_MODEL.md#5-identity)
+- [OD-38](../00-governance/DECISION_LOG.md#od-38)
 
 ## TRACEABILITY
 
@@ -67,8 +72,8 @@ Pemulihan akun harus selalu tersedia tanpa ketergantungan email institusi (FUT-0
 - WF/TR: WF-001 (TR-001–TR-003, 3 TR; BLOCKED_BY_GAP: TR-003)
 - RT: RT-001, RT-002
 - IX: IX-001, IX-002, IX-007
-- GAP: GAP-015
-- Keputusan Owner: OD-10, OD-11
+- GAP: GAP-015, GAP-023
+- Keputusan Owner: OD-10, OD-11, OD-38
 
 ## EXPECTED MODULES / FILE AREAS
 
@@ -91,13 +96,14 @@ Pemulihan akun harus selalu tersedia tanpa ketergantungan email institusi (FUT-0
 - SEC-20
 - Admin tidak dapat mereset dirinya sendiri lewat alur dibantu
 - Password sementara tidak masuk log/audit
+- Penonaktifan tanpa hak DELETE pada `users` ([DATA_MODEL §2](../04-architecture/DATA_MODEL.md#2-peran-basis-data-dan-hak))
 - Penegakan di server/kueri/unduhan; frontend hanya mencerminkan izin ([ACCESS_CONTROL §8](../05-security/ACCESS_CONTROL.md#8-kesesuaian-frontendbackend))
 
 ## DATABASE IMPACT ASSESSMENT
 
 - Schema change: PROPOSED
 - Migration required: YES
-- Tables: `identity_password_resets`
+- Tables: `identity_password_resets`; `users` (status, `deactivated_at`) dan `sessions` (pencabutan) tanpa penghapusan baris `users`
 - Existing data transformation: NONE
 - Direct production DB access: FORBIDDEN
 - Data-loss risk: NONE KNOWN
@@ -211,12 +217,13 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 - TAC-03 Reset akun istimewa membutuhkan admin kedua
 - TAC-04 Pengguna melihat dan mencabut sesi aktifnya; admin dapat mencabut sesi pengguna
 - TAC-05 Tanpa SMTP, tautan reset email tidak ditampilkan
+- TAC-06 Admin menonaktifkan akun: status DEACTIVATED dan `deactivated_at` terisi, setiap sesi aktif pengguna dicabut saat itu (permintaan berikutnya dengan sesi lama ditolak), peristiwa tercatat di `audit_events`, baris `users` dan riwayat auditnya tetap ada, dan akun tidak dapat masuk (TASK-010 TAC-02)
 
 ## TEST REQUIREMENTS
 
 - Lint: Pint + ESLint pada berkas yang diubah
 - Typecheck: Larastan + tsc
-- Feature: Alur reset/aktivasi/maker-checker/sesi
+- Feature: Alur reset/aktivasi/maker-checker/sesi dan penonaktifan (status, pencabutan sesi, audit, baris tetap)
 - Authorization: Hanya admin.users.manage
 - Route integrity: Rute baru terdaftar di uji integritas rute
 - Browser E2E: J-18
