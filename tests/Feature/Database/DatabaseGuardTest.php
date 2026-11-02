@@ -60,9 +60,11 @@ test('the reset guard covers every command that drops or empties tables', functi
  *
  * @param  array<string, string>  $parameters
  */
-function startCommand(string $command, array $parameters = []): void
+function startCommand(string $command, array $parameters = []): ArrayInput
 {
-    event(new CommandStarting($command, new ArrayInput($parameters), new NullOutput));
+    event(new CommandStarting($command, $input = new ArrayInput($parameters), new NullOutput));
+
+    return $input;
 }
 
 test('the reset guard listens for a destructive command on a foreign database', function () {
@@ -91,9 +93,22 @@ test('the reset guard listens for a destructive command in production', function
 
 test('the reset guard lets other commands and allowed databases through', function () {
     foreach (['migrate:status', 'migrate:fresh'] as $command) {
-        startCommand($command);
-        event(new CommandFinished($command, new ArrayInput([]), new NullOutput, 0));
+        $input = startCommand($command);
+        event(new CommandFinished($command, $input, new NullOutput, 0));
     }
+
+    expect(config('database.default'))->toBe('pgsql');
+});
+
+test('a command called by a migration command keeps the migrator until the caller finishes', function () {
+    $input = startCommand('migrate:fresh');
+
+    // migrate:fresh calls db:wipe and then migrate; the end of db:wipe must not hand migrate back to pgsql.
+    event(new CommandFinished('db:wipe', new ArrayInput([]), new NullOutput, 0));
+
+    expect(config('database.default'))->toBe('migrator');
+
+    event(new CommandFinished('migrate:fresh', $input, new NullOutput, 0));
 
     expect(config('database.default'))->toBe('pgsql');
 });

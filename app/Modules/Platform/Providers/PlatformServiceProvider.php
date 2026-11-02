@@ -11,6 +11,7 @@ use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\ConfigurationUrlParser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Symfony\Component\Console\Input\InputInterface;
 
 class PlatformServiceProvider extends ModuleServiceProvider
 {
@@ -20,6 +21,11 @@ class PlatformServiceProvider extends ModuleServiceProvider
      * The application connection a running migration command replaced as the default, if any.
      */
     private ?string $replacedDefault = null;
+
+    /**
+     * The input of the command that replaced the default; a command it calls, such as db:wipe, must not restore it.
+     */
+    private ?InputInterface $replacingInput = null;
 
     /**
      * Bootstrap the module.
@@ -78,6 +84,7 @@ class PlatformServiceProvider extends ModuleServiceProvider
             if ($requested === null) {
                 config(['database.default' => self::MIGRATOR]);
                 $this->replacedDefault = $application;
+                $this->replacingInput = $event->input;
             }
 
             $role = config('database.connections.'.self::MIGRATOR.'.role');
@@ -90,12 +97,13 @@ class PlatformServiceProvider extends ModuleServiceProvider
         });
 
         Event::listen(CommandFinished::class, function (CommandFinished $event): void {
-            if ($this->replacedDefault === null || ! self::isMigrationCommand((string) $event->command)) {
+            if ($this->replacedDefault === null || $event->input !== $this->replacingInput) {
                 return;
             }
 
             config(['database.default' => $this->replacedDefault]);
             $this->replacedDefault = null;
+            $this->replacingInput = null;
         });
     }
 

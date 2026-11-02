@@ -150,9 +150,7 @@ final class AuditLogger
             return null;
         }
 
-        $request = $this->container->make('request');
-
-        return $request instanceof Request ? $request : null;
+        return $this->container->make('request');
     }
 
     /**
