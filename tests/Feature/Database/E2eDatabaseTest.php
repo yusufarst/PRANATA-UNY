@@ -74,6 +74,7 @@ test('a second run on the same database gets its own identities', function () {
 test('the seeder refuses production', function () {
     app()->detectEnvironment(fn () => 'production');
 
-    expect(fn () => $this->seed(ScenarioSeeder::class))
+    // Without --force, db:seed stops at its production prompt and the seeder never starts.
+    expect(fn () => $this->artisan('db:seed', ['--class' => ScenarioSeeder::class, '--force' => true])->run())
         ->toThrow(RuntimeException::class, 'forbidden in production');
 });
