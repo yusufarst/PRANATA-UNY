@@ -124,6 +124,73 @@ test.describe('signed in', () => {
             });
         });
     }
+
+    // TASK-009 TAC-01 on the sample command. The labels depend on the language left by the tests above, so ids select.
+    test('a double click saves the profile once under one idempotency key', async ({
+        page,
+    }) => {
+        const name = `Pengguna ${test.info().project.name} ${Date.now()}`;
+        const keys: string[] = [];
+
+        page.on('request', (request) => {
+            if (
+                request.method() === 'PATCH' &&
+                request.url().endsWith('/settings/profile')
+            ) {
+                keys.push(request.headers()['x-idempotency-key'] ?? '');
+            }
+        });
+
+        await page.goto('/settings/profile');
+        await page.locator('#name').fill(name);
+        await page.locator('[data-test="update-profile-button"]').dblclick();
+
+        await expect.poll(() => keys.length).toBeGreaterThan(0);
+        await expect(
+            page.locator('[data-test="update-profile-button"]'),
+        ).toBeEnabled();
+        expect(new Set(keys).size).toBe(1);
+        expect(keys[0]).toMatch(
+            /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+        );
+
+        await page.reload();
+        await expect(page.locator('#name')).toHaveValue(name);
+    });
+
+    test('a resend with the same key gets the answer of the first', async ({
+        page,
+    }) => {
+        await page.goto('/settings/profile');
+
+        // Two requests at once, as from a double click the browser does not stop; the second waits for the first.
+        const answers = await page.evaluate(async () => {
+            const email = (
+                document.querySelector('#email') as HTMLInputElement
+            ).value;
+            const key = crypto.randomUUID();
+            const send = () =>
+                fetch('/settings/profile', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'text/html',
+                        'X-Idempotency-Key': key,
+                    },
+                    body: JSON.stringify({ name: 'Pengguna Ulang', email }),
+                }).then((response) => ({
+                    status: response.status,
+                    url: new URL(response.url).pathname,
+                }));
+
+            return Promise.all([send(), send()]);
+        });
+
+        expect(answers).toEqual([
+            { status: 200, url: '/settings/profile' },
+            { status: 200, url: '/settings/profile' },
+        ]);
+    });
 });
 
 // A same-origin browser request passes the forgery check without a token, so a 419 cannot be provoked here.

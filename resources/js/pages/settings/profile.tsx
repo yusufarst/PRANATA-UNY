@@ -2,12 +2,14 @@ import { Form, Head, usePage } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import { ConflictDialog } from '@/components/app/ConflictDialog';
 import DeleteUser from '@/components/delete-user';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useCommand } from '@/lib/command';
 import { edit } from '@/routes/profile';
 import type { Auth } from '@/types';
 import { send } from '@/routes/verification';
@@ -25,6 +27,7 @@ export default function Profile({
 }) {
     const { t } = useTranslation();
     const { auth } = usePage<PageProps>().props;
+    const command = useCommand();
 
     return (
         <>
@@ -41,6 +44,7 @@ export default function Profile({
 
                 <Form
                     {...ProfileController.update.form()}
+                    {...command.visit}
                     options={{
                         preserveScroll: true,
                     }}
@@ -48,6 +52,10 @@ export default function Profile({
                 >
                     {({ processing, errors }) => (
                         <>
+                            <InputError
+                                message={errors._idempotency ?? errors._domain}
+                            />
+
                             <div className="grid gap-2">
                                 <Label htmlFor="name">
                                     {t('account:profile.name')}
@@ -127,6 +135,7 @@ export default function Profile({
                         </>
                     )}
                 </Form>
+                <ConflictDialog command={command} />
             </div>
 
             <DeleteUser />
