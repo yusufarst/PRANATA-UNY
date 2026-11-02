@@ -21,9 +21,9 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Last completed action | 2026-11-02: PR #29 merged by verified fast-forward at `fa2dbcd` in a SUPERVISED session under the Owner directive TASK-008 CI FAILURE RECOVERY, after the CI failures of run 41429696751, two valid Codex findings (P1, P2) and two valid independent-review P2 findings were fixed; TASK-008 reconciled DONE. |
 | Evidence | [TASK-008 COMPLETION EVIDENCE](../11-tasks/TASK-008.md#completion-evidence); [TASK-007](../11-tasks/TASK-007.md#completion-evidence); [TASK-006](../11-tasks/TASK-006.md#completion-evidence); [TASK-005](../11-tasks/TASK-005.md#completion-evidence); [TASK-004](../11-tasks/TASK-004.md#completion-evidence); [TASK-003](../11-tasks/TASK-003.md#completion-evidence); [TASK-002](../11-tasks/TASK-002.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
 | Task plan | Baseline 78 · Current 78 · DONE 8 · READY 1 · IN_PROGRESS 0 · BLOCKED 0 · VERIFYING 0 · TODO 69 · SUPERSEDED 0 · 10%. |
-| Open blockers | TASK-040 waits on the staging decision. |
+| Open blockers | TASK-010 waits on the publication of the account-deletion TASK PLAN CHANGE below; the Owner's hold `SHUTDOWN_AFTER_CURRENT_TASK` stops the runner after TASK-009. TASK-040 waits on the staging decision. |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
-| Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, and OD-37 (no local Docker; GitHub-hosted testing). |
+| Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, and OD-37 (no local Docker; GitHub-hosted testing). Owner decision 2026-11-02 on account deletion, recorded below for Claude Planning to register. |
 | Decisions pending | Ruleset `release-tags` keeps the admin role's `always` bypass ([MAIN_RULESET](../09-operations/MAIN_RULESET.md)); it applies to the runner token too, so the guard is what holds the executor back from tags. For Claude Planning, non-blocking: the current starter kit ships Inertia 3 where the plan names Inertia 2 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#application-versions--task-002-2026-11-01)); ARCHITECTURE §5 rule 3 conflicts with the dependency column of §4 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#quality-tooling--task-004-2026-11-02)). Before TASK-040: where staging runs (D-19 as limited by OD-37). |
 | Toolchain | See [TOOLCHAIN — Executor machine facts](../00-governance/TOOLCHAIN.md). Stage with `scripts/executor/stage.ps1`; a bulk add under `core.autocrlf=false` rewrites line endings on this machine. |
 | Machine | RAM 7.2 GB, 0.1–1.1 GB free during TASK-001 and about 50–70 MB free during TASK-004 without any PRANATA container, so `npm` work runs on GitHub-hosted runners; PHP, Composer and psql not installed. Other projects were not touched. Editing a file that holds carriage returns (`docs/00-governance/TOOLCHAIN.md`, `.gitignore`) must keep them (GOV-09); check before staging. |
@@ -31,6 +31,28 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Database | Direct production DB touched: NO. Schema: Laravel skeleton tables, database roles, integrity trigger functions and `audit_events`, tested on a runner service container. |
 | Cleanup for the Owner | Public synthetic sandbox `yusufarst/pranata-uny-sandbox-c10` (used for C-10 and C-16) may be deleted by the Owner; the executor token cannot delete repositories. Disposable branches stay as they are. |
 | Next READY Task | TASK-009. Deferred P3 findings of TASK-008 are listed in its COMPLETION EVIDENCE; `profile.destroy` (starter-kit account deletion) fails under `pranata_app`, which holds no DELETE on `users`. Browser tests sign in once per project (login limit 5 a minute per address); a 419 cannot be provoked from a same-origin browser. SSR is off (`config/inertia.php`); turning it on first needs a per-request translation instance. |
+
+## TASK PLAN CHANGE proposal — account deletion (for Claude Planning)
+
+Status: **PROPOSED**; Owner decision 2026-11-02, to be published by Claude Planning before TASK-010 starts. No contract was changed by the executor.
+
+Owner decision, binding for TASK-010 and every later Identity Task:
+
+1. `pranata_app` gets no DELETE on `users` to support Laravel's default `profile.destroy`.
+2. An account ends as DEACTIVATED: its active sessions are revoked and its audit history stays.
+3. The kit's account-deletion UI and route are disabled or replaced where needed.
+4. Permanent deletion of data needs a separately validated institutional retention and deletion policy (GAP-023).
+5. The database security controls of TASK-008 stay as they are.
+6. A change to an approved Task contract goes through this change control.
+7. No redundant reviews or unnecessary tests; mandatory security and integrity checks stay.
+
+Already consistent with the baseline: DATA_MODEL §2 (no DELETE on `users`) and §5 (`status` DEACTIVATED, `deactivated_at`), SECURITY_MODEL (DEACTIVATED cannot sign in; history stays), the offboarding runbook (deactivate, revoke sessions, history stays), TOOLCHAIN (`profile.destroy` is unapproved kit behaviour).
+
+| Document | Proposed change |
+|---|---|
+| TASK-010 | IN SCOPE: remove the kit's `profile.destroy` route, its controller action and the delete-account UI. TAC: the route integrity test proves the route is gone, and `pranata_app` still holds no DELETE on `users`. |
+| TASK-011 | "nonaktifkan" means status DEACTIVATED plus revoking every session of the user, recorded in `audit_events`; no row of `users` is deleted. |
+| GAP-023 | Permanent deletion stays out of V1 until the institutional retention and deletion policy is validated. |
 
 ## TASK PLAN CHANGE proposal — Docker-free local development (for Claude Planning)
 
