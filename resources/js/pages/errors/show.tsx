@@ -10,12 +10,20 @@ import { Button } from '@/components/ui/button';
 import type { ErrorStatus } from '@/lib/i18n';
 import { dashboard } from '@/routes';
 
-export default function ErrorPage({ status }: { status: ErrorStatus }) {
+export default function ErrorPage({
+    status,
+    returnUrl = null,
+}: {
+    status: ErrorStatus;
+    returnUrl?: string | null;
+}) {
     const { t } = useTranslation();
     const title = t(`common:errors.${status}.title`);
     const description = t(`common:errors.${status}.description`);
     // A POST fails during maintenance and with an expired page token, so the switch would be a dead control there.
-    const canSwitchLanguage = status !== 419 && status !== 503;
+    // After a failed mutation it would also redirect back to an address that may answer no GET.
+    const canSwitchLanguage =
+        status !== 419 && status !== 503 && returnUrl === null;
 
     const goHome = (
         <Button asChild>
@@ -23,7 +31,14 @@ export default function ErrorPage({ status }: { status: ErrorStatus }) {
         </Button>
     );
     const reload = (
-        <Button type="button" onClick={() => window.location.reload()}>
+        <Button
+            type="button"
+            onClick={() =>
+                returnUrl === null
+                    ? window.location.reload()
+                    : window.location.assign(returnUrl)
+            }
+        >
             {t(status === 419 ? 'common:errors.reload' : 'common:errors.retry')}
         </Button>
     );

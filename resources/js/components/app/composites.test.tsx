@@ -185,5 +185,10 @@ describe('error pages (TAC-05)', () => {
         expect(renderToStaticMarkup(<ErrorPage status={503} />)).not.toContain(
             switchLabel,
         );
+        expect(
+            renderToStaticMarkup(
+                <ErrorPage status={429} returnUrl="/settings/security" />,
+            ),
+        ).not.toContain(switchLabel);
     });
 });

@@ -82,6 +82,32 @@ describe('error pages', function () {
                 ->where('locale', $locale));
     })->with(['id', 'en']);
 
+    test('recovery from a failed GET stays on the same address', function () {
+        $this->get('/test-error/429')
+            ->assertInertia(fn (Assert $page) => $page->where('returnUrl', null));
+    });
+
+    test('recovery from a failed mutation leads back to the page it came from', function () {
+        Route::middleware('web')->put('/test-error/mutation', fn () => abort(429));
+
+        $this->from(route('login'))
+            ->put('/test-error/mutation')
+            ->assertStatus(429)
+            ->assertInertia(fn (Assert $page) => $page->where('returnUrl', route('login')));
+    });
+
+    test('recovery from a failed mutation never leaves the application', function (?string $referer) {
+        Route::middleware('web')->put('/test-error/mutation', fn () => abort(429));
+
+        $this->withHeaders(array_filter(['referer' => $referer]))
+            ->put('/test-error/mutation')
+            ->assertInertia(fn (Assert $page) => $page->where('returnUrl', route('home')));
+    })->with([
+        'another site' => 'https://example.org/page',
+        'a look-alike host' => fn () => rtrim(config('app.url'), '/').'.example.org/page',
+        'no referer' => null,
+    ]);
+
     test('a JSON client keeps a JSON error', function () {
         $this->getJson('/test-error/403')
             ->assertForbidden()

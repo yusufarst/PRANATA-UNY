@@ -42,7 +42,12 @@ return Application::configure(basePath: dirname(__DIR__))
 
             App::setLocale(SetLocale::resolve($request));
 
-            return Inertia::render('errors/show', ['status' => $status, 'locale' => App::getLocale()])
+            // A failed mutation stays on its own address, which may answer no GET, so recovery leads back to the page it came from.
+            $referer = (string) $request->headers->get('referer');
+            $sameOrigin = str_starts_with($referer.'/', $request->getSchemeAndHttpHost().'/');
+            $returnUrl = $request->isMethod('GET') ? null : ($sameOrigin ? $referer : route('home'));
+
+            return Inertia::render('errors/show', ['status' => $status, 'locale' => App::getLocale(), 'returnUrl' => $returnUrl])
                 ->toResponse($request)
                 ->setStatusCode($status);
         });
