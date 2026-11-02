@@ -34,7 +34,7 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 
 ## TASK PLAN CHANGE proposal — account deletion (for Claude Planning)
 
-Status: **PROPOSED**; Owner decision 2026-11-02, to be published by Claude Planning before TASK-010 starts. No contract was changed by the executor.
+Status: **PROPOSED**; Owner decision 2026-11-02, to be published by Claude Planning before TASK-010 starts. No contract was changed by the executor. This record is not part of the TASK-009 contract; it merged on a `fix/task-009-*` branch only because the merge gate takes the active Task.
 
 Owner decision, binding for TASK-010 and every later Identity Task:
 
@@ -43,15 +43,15 @@ Owner decision, binding for TASK-010 and every later Identity Task:
 3. The kit's account-deletion UI and route are disabled or replaced where needed.
 4. Permanent deletion of data needs a separately validated institutional retention and deletion policy (GAP-023).
 5. The database security controls of TASK-008 stay as they are.
-6. A change to an approved Task contract goes through this change control.
+6. A change to an approved Task contract goes through Planning change control.
 7. No redundant reviews or unnecessary tests; mandatory security and integrity checks stay.
 
 Already consistent with the baseline: DATA_MODEL §2 (no DELETE on `users`) and §5 (`status` DEACTIVATED, `deactivated_at`), SECURITY_MODEL (DEACTIVATED cannot sign in; history stays), the offboarding runbook (deactivate, revoke sessions, history stays), TOOLCHAIN (`profile.destroy` is unapproved kit behaviour).
 
 | Document | Proposed change |
 |---|---|
-| TASK-010 | IN SCOPE: remove the kit's `profile.destroy` route, its controller action and the delete-account UI. TAC: the route integrity test proves the route is gone, and `pranata_app` still holds no DELETE on `users`. |
-| TASK-011 | "nonaktifkan" means status DEACTIVATED plus revoking every session of the user, recorded in `audit_events`; no row of `users` is deleted. |
+| TASK-010 | IN SCOPE: remove the kit's `profile.destroy` route, its controller action and the delete-account UI. TAC: the route integrity test proves the route is gone (today `profile.destroy` is in `OWN_ACCOUNT_ROUTES` of `tests/Feature/RouteIntegrityTest.php`, and `tests/Feature/Settings/ProfileUpdateTest.php` calls it). The missing DELETE on `users` is already proven by `DatabaseRolesTest` (TASK-008); cite it, add no new test. |
+| TASK-011 | "nonaktifkan" means status DEACTIVATED with `deactivated_at` set, plus revoking every session of the user, recorded in `audit_events`; no row of `users` is deleted. |
 | GAP-023 | Permanent deletion stays out of V1 until the institutional retention and deletion policy is validated. |
 
 ## TASK PLAN CHANGE proposal — Docker-free local development (for Claude Planning)
@@ -79,7 +79,7 @@ Status: **INCORPORATED into PCR-002** (published; mapping in [PCR-002_REVIEW_HAN
 
 ## Exact next safe action
 
-**Executor:** start TASK-009 from `.pranata/executor/checkpoint.json` under the single runner and watcher. No local Docker, PHP, Composer or PostgreSQL (OD-37).
+**Executor:** continue TASK-009 from `.pranata/executor/checkpoint.json` under the single runner and watcher. Its §8.3 reconciliation marks TASK-010 **BLOCKED**, not READY (GOV-10): it waits on the publication of the account-deletion TASK PLAN CHANGE, and the Owner's hold stops the runner after TASK-009. No local Docker, PHP, Composer or PostgreSQL (OD-37).
 
 ## DO NOT DO
 
