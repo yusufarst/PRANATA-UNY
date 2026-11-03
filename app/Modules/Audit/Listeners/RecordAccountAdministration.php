@@ -9,7 +9,6 @@ use App\Modules\Identity\Events\AccountUpdated;
 use App\Modules\Identity\Events\PasswordResetIssued;
 use App\Modules\Identity\Events\PasswordResetRequested;
 use App\Modules\Identity\Events\PasswordResetRevoked;
-use App\Modules\Identity\Models\PasswordReset;
 use Illuminate\Events\Dispatcher;
 
 /**
@@ -62,7 +61,7 @@ final class RecordAccountAdministration
     public function passwordResetRequested(PasswordResetRequested $event): void
     {
         $this->audit->record('identity.reset_requested', self::MODULE, $event->reset->user, metadata: [
-            ...self::reset($event->reset),
+            ...self::reset($event),
             'awaits_second_admin' => true,
         ]);
     }
@@ -73,7 +72,7 @@ final class RecordAccountAdministration
     public function passwordResetIssued(PasswordResetIssued $event): void
     {
         $this->audit->record('identity.reset_issued', self::MODULE, $event->reset->user, metadata: [
-            ...self::reset($event->reset),
+            ...self::reset($event),
             'approved_by' => $event->reset->approved_by,
             'ended_sessions' => $event->endedSessions,
         ]);
@@ -81,14 +80,18 @@ final class RecordAccountAdministration
 
     public function passwordResetRevoked(PasswordResetRevoked $event): void
     {
-        $this->audit->record('identity.reset_revoked', self::MODULE, $event->reset->user, metadata: self::reset($event->reset));
+        $this->audit->record('identity.reset_revoked', self::MODULE, $event->reset->user, metadata: self::reset($event));
     }
 
     /**
+     * Takes the event rather than the reset, so Audit reaches Identity through its events only (ARCHITECTURE section 5).
+     *
      * @return array<string, mixed>
      */
-    private static function reset(PasswordReset $reset): array
+    private static function reset(PasswordResetRequested|PasswordResetIssued|PasswordResetRevoked $event): array
     {
+        $reset = $event->reset;
+
         return [
             'reset_id' => $reset->id,
             'requested_by' => $reset->requested_by,
