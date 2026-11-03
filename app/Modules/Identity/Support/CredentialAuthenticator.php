@@ -79,8 +79,7 @@ class CredentialAuthenticator
             return $this->refuse($user, SignInFailed::SECRET_EXPIRED);
         }
 
-        $this->lockout->clear($user);
-
+        // The failures are forgotten at the Login event, once a TOTP challenge too has passed (TASK-012).
         $provider = Auth::guard()->getProvider();
 
         // A one-time secret keeps its hash until the forced change: its record is found by that hash.

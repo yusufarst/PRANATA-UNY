@@ -8,11 +8,14 @@ use App\Modules\Identity\Http\Middleware\EnsureSessionIsCurrent;
 use App\Modules\Identity\Support\CredentialAuthenticator;
 use App\Modules\Identity\Support\LoginLockout;
 use App\Modules\Identity\Support\PrivilegedAccounts;
+use App\Modules\Identity\Support\TwoFactorChallengeGuard;
 use App\Modules\ModuleServiceProvider;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Fortify\Events\TwoFactorAuthenticationFailed;
+use Laravel\Fortify\Events\ValidTwoFactorAuthenticationCodeProvided;
 use Laravel\Fortify\Fortify;
 
 class IdentityServiceProvider extends ModuleServiceProvider
@@ -47,11 +50,19 @@ class IdentityServiceProvider extends ModuleServiceProvider
         // Fortify would otherwise look the account up by its username field, "login", which is no column.
         Fortify::confirmPasswordsUsing(fn (User $user, ?string $password): bool => Hash::check((string) $password, $user->password));
 
+        // The TOTP challenge counts toward the account lock and keeps the status gate (TASK-012).
+        Event::listen(TwoFactorAuthenticationFailed::class, [TwoFactorChallengeGuard::class, 'failed']);
+        Event::listen(ValidTwoFactorAuthenticationCodeProvided::class, [TwoFactorChallengeGuard::class, 'passed']);
+
         // A sign-in, also through the remember cookie, starts the session clock in the saved language and is noted on
-        // the account.
+        // the account. Only a finished sign-in forgets the failures, so the right password does not reset a TOTP guess.
         Event::listen(Login::class, function (Login $event): void {
             $request = $this->app->make('request');
             $user = $event->user instanceof User ? $event->user : null;
+
+            if ($user !== null) {
+                $this->app->make(LoginLockout::class)->clear($user);
+            }
 
             if ($request->hasSession()) {
                 EnsureSessionIsCurrent::start($request);

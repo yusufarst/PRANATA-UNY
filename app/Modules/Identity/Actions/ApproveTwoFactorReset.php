@@ -37,6 +37,11 @@ final class ApproveTwoFactorReset extends Action
                 throw DomainRuleViolation::because('identity.account_deactivated');
             }
 
+            // The account turned its TOTP off while the request waited: nothing is left to remove.
+            if ($user->two_factor_secret === null) {
+                throw DomainRuleViolation::because('identity.two_factor_not_set_up');
+            }
+
             $user->forceFill([
                 'two_factor_secret' => null,
                 'two_factor_recovery_codes' => null,

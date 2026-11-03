@@ -146,6 +146,73 @@ test('a recovery code signs in once and is then used up', function () {
     $this->assertGuest();
 });
 
+test('a TOTP code that signed in once is refused the second time', function () {
+    $secret = totpSecret();
+    $user = totpAccount(User::INTERNAL, $secret);
+    $code = totpCode($secret);
+
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password']);
+    $this->post(route('two-factor.login.store'), ['code' => $code])->assertSessionHasNoErrors();
+    $this->assertAuthenticatedAs($user);
+
+    $this->post(route('logout'));
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password']);
+    $this->post(route('two-factor.login.store'), ['code' => $code])->assertSessionHasErrors('code');
+    $this->assertGuest();
+});
+
+// SEC-02: wrong codes at the challenge count toward the lock, and the right password in between does not forget them.
+test('ten wrong TOTP codes lock the account and end the challenge', function () {
+    $secret = totpSecret();
+    $user = totpAccount(User::INTERNAL, $secret);
+    $wrong = str_pad((string) (((int) totpCode($secret) + 500000) % 1000000), 6, '0', STR_PAD_LEFT);
+
+    foreach (range(1, 10) as $attempt) {
+        // A new challenge every five codes, past the five-a-minute limit of the challenge.
+        if ($attempt % 5 === 1) {
+            $this->travel(61)->seconds();
+            $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password'])
+                ->assertRedirect(route('two-factor.login'));
+        }
+
+        $this->post(route('two-factor.login.store'), ['code' => $wrong]);
+    }
+
+    expect(auditCount('identity.account_locked'))->toBe(1);
+
+    // The challenge is over, and the password is refused while the lock lasts.
+    $this->post(route('two-factor.login.store'), ['code' => totpCode($secret)]);
+    $this->assertGuest();
+
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password'])
+        ->assertSessionHasErrors(['login' => __('auth.failed')]);
+    $this->assertGuest();
+});
+
+test('a right TOTP code is refused for an account locked or no longer active since its password', function (string $case) {
+    $secret = totpSecret();
+    $user = totpAccount(User::INTERNAL, $secret);
+
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password'])
+        ->assertRedirect(route('two-factor.login'));
+
+    if ($case === 'locked') {
+        foreach (range(1, 10) as $attempt) {
+            $this->withServerVariables(['REMOTE_ADDR' => "10.0.9.{$attempt}"])
+                ->post(route('login.store'), ['login' => $user->username, 'password' => 'wrong-password']);
+        }
+    } else {
+        $user->forceFill(['status' => User::SUSPENDED])->save();
+    }
+
+    $this->post(route('two-factor.login.store'), ['code' => totpCode($secret)])
+        ->assertRedirect(route('login'))
+        ->assertSessionHasErrors(['login' => __('auth.failed')]);
+    $this->assertGuest();
+
+    expect(DB::table('audit_events')->where('action', 'identity.login_succeeded')->exists())->toBeFalse();
+})->with(['locked', 'suspended']);
+
 // TAC-02, SEC-03: the server holds a privileged account without confirmed TOTP back from Administration.
 test('a privileged account without confirmed TOTP is sent to set it up before Administration', function (bool $started) {
     $admin = User::factory()->inRoleGroup(User::SUPER_ADMIN)->create($started ? ['two_factor_secret' => encrypt(totpSecret())] : []);
@@ -311,6 +378,26 @@ test('a TOTP reset request can be cancelled, which keeps the TOTP and ends the r
     expect($reset->refresh()->status)->toBe(TwoFactorReset::REVOKED)
         ->and($target->refresh()->hasEnabledTwoFactorAuthentication())->toBeTrue()
         ->and(auditCount('identity.two_factor_reset_revoked'))->toBe(1);
+});
+
+test('a TOTP reset is not approved once the account turned its TOTP off itself', function () {
+    $target = totpAccount(User::INTERNAL, totpSecret());
+
+    $this->actingAs(totpAdministrator())
+        ->withHeaders(totpCommandKey())
+        ->post(route('identity.admin.users.two-factor-resets.store', $target->public_id), totpIdentityCheck())
+        ->assertSessionHasNoErrors();
+    $reset = TwoFactorReset::query()->where('user_id', $target->id)->sole();
+
+    $target->forceFill(['two_factor_secret' => null, 'two_factor_recovery_codes' => null, 'two_factor_confirmed_at' => null])->save();
+
+    $this->actingAs(totpAdministrator())
+        ->withHeaders(totpCommandKey())
+        ->post(route('identity.admin.users.two-factor-resets.approve', [$target->public_id, $reset->id]))
+        ->assertSessionHasErrors('_domain');
+
+    expect($reset->refresh()->status)->toBe(TwoFactorReset::PENDING_APPROVAL)
+        ->and(auditCount('identity.two_factor_reset_approved'))->toBe(0);
 });
 
 test('the account a TOTP reset is meant for can neither approve nor cancel it', function () {
