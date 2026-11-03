@@ -157,5 +157,235 @@
             "approve": "Approve and remove 2FA",
             "revoke": "Cancel request"
         }
+    },
+    "organization": {
+        "title": "Organization",
+        "intro": "Units, positions and appointments. Every change is requested, checked and decided before it takes effect.",
+        "request_change": "Request a change",
+        "empty_title": "No organization units yet",
+        "empty_description": "Start by requesting the top unit, such as the university. Other units can be added below it.",
+        "first_unit": "Request the first unit",
+        "choose_unit": "Choose a unit in the tree to see its details, history and appointments.",
+        "none": "—",
+        "simulation": "Simulation",
+        "failed": "This step cannot be done",
+        "back_to_tree": "Unit list",
+        "back_to_unit": "Back to the unit",
+        "ancestors": "Units above it",
+        "new_sub_unit": "Add a sub-unit",
+        "request_details": "Request contents",
+        "not_yet_effective": "The decision is recorded. The change can be put into effect from {{date}}.",
+        "tree": {
+            "label": "Unit tree",
+            "search": "Search units",
+            "search_placeholder": "Name, code or unit type",
+            "no_match": "No unit matches. Change the search words."
+        },
+        "fields": {
+            "unit": "Unit",
+            "kind": "Type of change",
+            "code": "Code",
+            "code_hint": "Capital letters, digits, dots, underscores or hyphens. It cannot change once the unit is in effect.",
+            "position_code_hint": "Capital letters, digits or underscores, starting with a letter. For example HEAD_CS.",
+            "name": "Name",
+            "short_name": "Short name",
+            "unit_type": "Unit type",
+            "unit_type_hint": "Any type code, such as FACULTY, INSTITUTE, BUREAU or PROGRAM. Capital letters, digits or underscores.",
+            "parent_public_id": "Parent unit",
+            "parent_hint": "Leave empty when this unit is at the top.",
+            "no_parent": "No parent (top unit)",
+            "status": "Status",
+            "effective_from": "In effect from",
+            "effective_to": "Ends on",
+            "effective_to_hint": "Optional. Leave empty when the term is not set yet.",
+            "proposed_effective_from": "Proposed effective date",
+            "proposed_effective_from_hint": "The official effective date is set in the decision.",
+            "reason": "Reason",
+            "reason_placeholder": "For example: units rearranged under the new statute",
+            "source_ref": "Source reference",
+            "source_ref_hint": "Optional, such as a letter or memo number.",
+            "description": "Description",
+            "user": "Staff member",
+            "position": "Position",
+            "appointment": "Appointment",
+            "decree_ref": "Decree number",
+            "decree_ref_hint": "The number of the appointment decree.",
+            "decision_ref": "Decision number",
+            "closed_reason": "Reason for closing",
+            "created_by": "Requested by",
+            "choose": "Choose one"
+        },
+        "unit_status": {
+            "ACTIVE": "Active",
+            "INACTIVE": "Inactive"
+        },
+        "appointment_status": {
+            "ACTIVE": "Active",
+            "ENDED": "Ended"
+        },
+        "change_type": {
+            "CREATE": "Unit formed",
+            "RENAME": "Renamed",
+            "MOVE": "Moved",
+            "ACTIVATE": "Reactivated",
+            "DEACTIVATE": "Deactivated",
+            "CORRECT": "Data corrected"
+        },
+        "history": {
+            "section": "History",
+            "intro": "Every change is recorded as a new version; an earlier version is never overwritten.",
+            "empty": "No history yet.",
+            "meta": "In effect {{date}} · decision {{decision}} · recorded by {{name}}, {{time}}"
+        },
+        "positions": {
+            "section": "Positions",
+            "empty": "No positions in this unit yet."
+        },
+        "appointments": {
+            "section": "Appointments",
+            "no_permission": "An appointment records who holds a position. It grants no permission in PRANATA.",
+            "empty": "No appointments in this unit yet.",
+            "none_active": "This unit has no active appointment that can be ended.",
+            "term": "{{from}} to {{to}}",
+            "open_end": "not set",
+            "decree": "Decree {{ref}}"
+        },
+        "requests": {
+            "unit_section": "Change requests for this unit",
+            "unit_empty": "No change requests for this unit yet.",
+            "open_section": "Open requests",
+            "open_empty": "No change request is in progress.",
+            "effective": "In effect {{date}}"
+        },
+        "kinds": {
+            "CREATE_UNIT": "Form a new unit",
+            "UPDATE_UNIT": "Change unit data",
+            "MOVE_UNIT": "Move the unit",
+            "DEACTIVATE_UNIT": "Deactivate the unit",
+            "ACTIVATE_UNIT": "Reactivate the unit",
+            "CREATE_POSITION": "Add a position",
+            "APPOINT": "Appoint an official",
+            "END_APPOINTMENT": "End an appointment"
+        },
+        "kind_hints": {
+            "CREATE_UNIT": "A new unit with its code, name, type and parent.",
+            "UPDATE_UNIT": "Name, short name or unit type. The earlier version stays in the history.",
+            "MOVE_UNIT": "The unit and every unit below it move to a new parent.",
+            "DEACTIVATE_UNIT": "The unit is no longer used. Units below it and its active appointments must be settled first.",
+            "ACTIVATE_UNIT": "An inactive unit is used again.",
+            "CREATE_POSITION": "An official position or function in this unit.",
+            "APPOINT": "A staff member holds a position for a term, with a decree reference.",
+            "END_APPOINTMENT": "The appointment ends on the effective date of the decision."
+        },
+        "request_status": {
+            "DRAFT": "Draft",
+            "VALIDATED": "Checked",
+            "AWAITING_DECISION": "Awaiting decision",
+            "APPROVED": "Approved",
+            "EFFECTIVE": "In effect",
+            "SUPERSEDED": "Superseded",
+            "WITHDRAWN": "Withdrawn",
+            "REJECTED": "Rejected"
+        },
+        "status_hints": {
+            "DRAFT": "Complete it, then send it to be checked.",
+            "VALIDATED": "Review the check results, then send it for a decision or return it to draft.",
+            "AWAITING_DECISION": "Waiting for the decision of the authorized official.",
+            "APPROVED": "Decided. The change takes effect once it is put into effect on its date.",
+            "EFFECTIVE": "The change is in effect and recorded in the unit history.",
+            "SUPERSEDED": "Replaced by a newer change. Its history is kept.",
+            "WITHDRAWN": "The request was withdrawn. The organization did not change.",
+            "REJECTED": "The request was rejected. The organization did not change."
+        },
+        "form": {
+            "create_title": "Request an organization change",
+            "edit_title": "Correct the request",
+            "intro": "The request is saved as a draft. The organization changes only after it is decided and put into effect.",
+            "for_unit": "For the unit {{name}}. The organization changes only after it is decided and put into effect.",
+            "kind_fixed": "Type of change: {{kind}}",
+            "error_summary": "Please check the following",
+            "save": "Save draft"
+        },
+        "actions": {
+            "submit": "Send to be checked",
+            "escalate": "Send for a decision",
+            "decide": "Record the decision",
+            "apply": "Put the change into effect",
+            "edit": "Correct",
+            "return": "Return to draft",
+            "withdraw": "Withdraw the request"
+        },
+        "policy": {
+            "blocked_title": "Waiting for policy approval",
+            "blocked_description": "An official decision cannot be recorded yet because the organization maintenance policy is not officially in force (GAP-021). The request is kept and can be withdrawn.",
+            "simulation_title": "Simulation mode",
+            "simulation_description": "The organization maintenance policy is not officially in force. In this environment the decision is recorded as a simulation and marked in the history."
+        },
+        "validation": {
+            "section": "Check results",
+            "checked_at": "Checked {{time}}",
+            "clear": "No problems found.",
+            "blocking": "Blocking",
+            "notice": "Worth noting"
+        },
+        "issues": {
+            "unknown_kind": "Unknown type of change.",
+            "other_open_request": "Another request for this unit is in progress. Make sure the two do not conflict.",
+            "code_taken": "This code is already used.",
+            "parent_missing": "The parent unit was not found.",
+            "parent_inactive": "The parent unit is inactive.",
+            "name_duplicate": "A unit with the same name already exists under this parent.",
+            "unit_missing": "The unit was not found.",
+            "nothing_changes": "The entries match the data in force; nothing changes.",
+            "move_into_own_subtree": "A unit cannot move below itself or below one of its own units.",
+            "unit_not_active": "The unit is inactive.",
+            "has_active_children": "There are still active units below this unit.",
+            "has_active_appointments": "There are still active appointments in this unit.",
+            "unit_already_active": "The unit is already active.",
+            "person_missing": "The staff member was not found.",
+            "person_not_eligible": "This account cannot hold a position: only active internal accounts can.",
+            "position_missing": "The position was not found.",
+            "position_inactive": "The position is inactive.",
+            "decree_missing": "The decree number is required.",
+            "already_appointed": "This staff member already holds that position.",
+            "appointment_missing": "The appointment was not found in this unit.",
+            "appointment_not_active": "The appointment has already ended."
+        },
+        "transitions": {
+            "section": "Steps taken",
+            "meta": "Became {{to}} · {{name}}, {{time}}",
+            "codes": {
+                "TR-281": "Draft made or corrected",
+                "TR-282": "Sent and checked",
+                "TR-283": "Returned to draft",
+                "TR-284": "Sent for a decision",
+                "TR-285": "Decision recorded",
+                "TR-286": "Put into effect",
+                "TR-287": "Superseded by a newer change",
+                "TR-288": "Withdrawn"
+            }
+        },
+        "return": {
+            "title": "Return to draft?",
+            "description": "The request can be corrected and sent again. Write what needs correcting.",
+            "confirm": "Yes, return it"
+        },
+        "withdraw": {
+            "title": "Withdraw this request?",
+            "description": "The request is closed and the organization does not change. Its history is kept.",
+            "confirm": "Yes, withdraw"
+        },
+        "decision": {
+            "title": "Record the decision",
+            "description": "Record the decision of the authorized official with its number.",
+            "simulation_description": "The policy is not officially in force yet, so this decision is recorded as a simulation.",
+            "choice": "Decision",
+            "APPROVE": "Approve",
+            "REJECT": "Reject",
+            "effective_hint": "For an approval. Not before today.",
+            "ref_placeholder": "For example: Rector Decree 123/UN34/2026",
+            "reason": "Reason (required for a rejection)",
+            "confirm": "Save the decision"
+        }
     }
 }

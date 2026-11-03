@@ -43,12 +43,14 @@ class ChangeRequestController
         $kind = $request->string('kind')->value();
         $kinds = [...ChangeRequest::KINDS[ChangeRequest::F1], ...ChangeRequest::KINDS[ChangeRequest::F2]];
         $unit = OrgUnit::query()->with('parent')->where('public_id', $request->query('unit'))->first();
+        $kind = in_array($kind, $kinds, true) ? $kind : ($unit === null ? ChangeRequest::CREATE_UNIT : ChangeRequest::UPDATE_UNIT);
 
+        // A new unit opened from a unit goes below it: that unit is the suggested parent, not the subject.
         return Inertia::render('admin/organization/request-form', [
             'changeRequest' => null,
-            'kind' => in_array($kind, $kinds, true) ? $kind : ($unit === null ? ChangeRequest::CREATE_UNIT : ChangeRequest::UPDATE_UNIT),
+            'kind' => $kind,
             'unit' => $unit === null ? null : self::unitSummary($unit),
-            ...$this->options($unit),
+            ...$this->options($unit, $kind),
         ]);
     }
 
@@ -326,23 +328,25 @@ class ChangeRequestController
             ],
             'kind' => $changeRequest->kind,
             'unit' => $changeRequest->unit === null ? null : self::unitSummary($changeRequest->unit),
-            ...$this->options($changeRequest->unit),
+            ...$this->options($changeRequest->unit, $changeRequest->kind),
         ];
     }
 
     /**
      * The choices of the form: units for a parent, unit types already in use, staff for an appointment, the positions and
-     * active appointments of the unit.
+     * active appointments of the unit. A move never offers the unit itself or a unit below it as the new parent.
      *
      * @return array<string, mixed>
      */
-    private function options(?OrgUnit $unit): array
+    private function options(?OrgUnit $unit, string $kind): array
     {
+        $moving = $kind === ChangeRequest::MOVE_UNIT ? $unit : null;
+
         return [
             'options' => [
                 'units' => OrgUnit::query()
                     ->where('status', OrgUnit::ACTIVE)
-                    ->when($unit !== null, fn ($query) => $query->whereRaw('not (path <@ ?::ltree)', [$unit?->path]))
+                    ->when($moving !== null, fn ($query) => $query->whereRaw('not (path <@ ?::ltree)', [$moving?->path]))
                     ->orderBy('path')
                     ->get(['public_id', 'name', 'code', 'depth'])
                     ->map(fn (OrgUnit $option): array => [

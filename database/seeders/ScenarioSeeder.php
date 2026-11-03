@@ -10,8 +10,8 @@ use Laravel\Fortify\RecoveryCode;
 use RuntimeException;
 
 /**
- * Synthetic data for the browser tests. Later Tasks extend it: the organization and the role of a profile
- * have no tables yet, so a profile is only a user for now.
+ * Synthetic data for the browser tests: the profiles and the synthetic organization (TASK-013). Later Tasks extend it;
+ * the role of a profile has no table yet, so a profile is only a user for now.
  */
 class ScenarioSeeder extends Seeder
 {
@@ -49,6 +49,8 @@ class ScenarioSeeder extends Seeder
                 ],
             );
         }
+
+        $this->call(OrganizationSeeder::class);
     }
 
     /**

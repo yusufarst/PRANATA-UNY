@@ -157,5 +157,235 @@
             "approve": "Setujui dan hapus 2FA",
             "revoke": "Batalkan permintaan"
         }
+    },
+    "organization": {
+        "title": "Organisasi",
+        "intro": "Unit, jabatan dan penunjukan. Setiap perubahan diajukan, diperiksa dan diputuskan sebelum berlaku.",
+        "request_change": "Ajukan perubahan",
+        "empty_title": "Belum ada unit organisasi",
+        "empty_description": "Mulai dengan mengajukan unit puncak, misalnya universitas. Unit lain dapat ditambahkan di bawahnya.",
+        "first_unit": "Ajukan unit pertama",
+        "choose_unit": "Pilih unit di pohon untuk melihat detail, riwayat dan penunjukannya.",
+        "none": "—",
+        "simulation": "Simulasi",
+        "failed": "Langkah ini tidak dapat dilakukan",
+        "back_to_tree": "Daftar unit",
+        "back_to_unit": "Kembali ke unit",
+        "ancestors": "Unit di atasnya",
+        "new_sub_unit": "Tambah sub-unit",
+        "request_details": "Isi permintaan",
+        "not_yet_effective": "Keputusan sudah ada. Perubahan dapat diberlakukan mulai {{date}}.",
+        "tree": {
+            "label": "Pohon unit",
+            "search": "Cari unit",
+            "search_placeholder": "Nama, kode atau jenis unit",
+            "no_match": "Tidak ada unit yang cocok. Ubah kata pencarian."
+        },
+        "fields": {
+            "unit": "Unit",
+            "kind": "Jenis perubahan",
+            "code": "Kode",
+            "code_hint": "Huruf besar, angka, titik, garis bawah atau tanda hubung. Tidak dapat diubah setelah unit berlaku.",
+            "position_code_hint": "Huruf besar, angka atau garis bawah, diawali huruf. Misalnya KAPRODI_TI.",
+            "name": "Nama",
+            "short_name": "Nama singkat",
+            "unit_type": "Jenis unit",
+            "unit_type_hint": "Kode jenis bebas, misalnya FAKULTAS, LEMBAGA, BIRO atau PRODI. Huruf besar, angka atau garis bawah.",
+            "parent_public_id": "Unit induk",
+            "parent_hint": "Kosongkan bila unit ini berada di puncak.",
+            "no_parent": "Tanpa induk (unit puncak)",
+            "status": "Status",
+            "effective_from": "Berlaku mulai",
+            "effective_to": "Berakhir pada",
+            "effective_to_hint": "Opsional. Kosongkan bila masa jabatan belum ditentukan.",
+            "proposed_effective_from": "Usulan tanggal berlaku",
+            "proposed_effective_from_hint": "Tanggal berlaku resmi ditetapkan dalam keputusan.",
+            "reason": "Alasan",
+            "reason_placeholder": "Misalnya: penataan unit sesuai statuta baru",
+            "source_ref": "Rujukan dasar",
+            "source_ref_hint": "Opsional, misalnya nomor surat atau nota dinas.",
+            "description": "Uraian",
+            "user": "Pegawai",
+            "position": "Jabatan",
+            "appointment": "Penunjukan",
+            "decree_ref": "Nomor SK",
+            "decree_ref_hint": "Nomor surat keputusan penunjukan.",
+            "decision_ref": "Nomor keputusan",
+            "closed_reason": "Alasan penutupan",
+            "created_by": "Diajukan oleh",
+            "choose": "Pilih salah satu"
+        },
+        "unit_status": {
+            "ACTIVE": "Aktif",
+            "INACTIVE": "Nonaktif"
+        },
+        "appointment_status": {
+            "ACTIVE": "Aktif",
+            "ENDED": "Berakhir"
+        },
+        "change_type": {
+            "CREATE": "Unit dibentuk",
+            "RENAME": "Nama diubah",
+            "MOVE": "Dipindahkan",
+            "ACTIVATE": "Diaktifkan kembali",
+            "DEACTIVATE": "Dinonaktifkan",
+            "CORRECT": "Data dikoreksi"
+        },
+        "history": {
+            "section": "Riwayat",
+            "intro": "Setiap perubahan tercatat sebagai versi baru; versi lama tidak pernah ditimpa.",
+            "empty": "Belum ada riwayat.",
+            "meta": "Berlaku {{date}} · keputusan {{decision}} · dicatat oleh {{name}}, {{time}}"
+        },
+        "positions": {
+            "section": "Jabatan",
+            "empty": "Belum ada jabatan di unit ini."
+        },
+        "appointments": {
+            "section": "Penunjukan",
+            "no_permission": "Penunjukan mencatat siapa memegang jabatan. Penunjukan tidak memberi izin apa pun di PRANATA.",
+            "empty": "Belum ada penunjukan di unit ini.",
+            "none_active": "Tidak ada penunjukan aktif di unit ini yang dapat diakhiri.",
+            "term": "{{from}} sampai {{to}}",
+            "open_end": "belum ditentukan",
+            "decree": "SK {{ref}}"
+        },
+        "requests": {
+            "unit_section": "Permintaan perubahan unit ini",
+            "unit_empty": "Belum ada permintaan perubahan untuk unit ini.",
+            "open_section": "Permintaan terbuka",
+            "open_empty": "Tidak ada permintaan perubahan yang sedang berjalan.",
+            "effective": "Berlaku {{date}}"
+        },
+        "kinds": {
+            "CREATE_UNIT": "Bentuk unit baru",
+            "UPDATE_UNIT": "Ubah data unit",
+            "MOVE_UNIT": "Pindahkan unit",
+            "DEACTIVATE_UNIT": "Nonaktifkan unit",
+            "ACTIVATE_UNIT": "Aktifkan kembali unit",
+            "CREATE_POSITION": "Tambah jabatan",
+            "APPOINT": "Tunjuk pejabat",
+            "END_APPOINTMENT": "Akhiri penunjukan"
+        },
+        "kind_hints": {
+            "CREATE_UNIT": "Unit baru dengan kode, nama, jenis dan induknya.",
+            "UPDATE_UNIT": "Nama, nama singkat atau jenis unit. Versi lama tetap tersimpan di riwayat.",
+            "MOVE_UNIT": "Unit beserta seluruh unit di bawahnya pindah ke induk baru.",
+            "DEACTIVATE_UNIT": "Unit tidak dipakai lagi. Unit di bawahnya dan penunjukan aktifnya harus diselesaikan dulu.",
+            "ACTIVATE_UNIT": "Unit nonaktif dipakai kembali.",
+            "CREATE_POSITION": "Jabatan atau fungsi resmi di unit ini.",
+            "APPOINT": "Pegawai memegang jabatan untuk masa tertentu, dengan rujukan SK.",
+            "END_APPOINTMENT": "Penunjukan berakhir pada tanggal berlaku keputusan."
+        },
+        "request_status": {
+            "DRAFT": "Draf",
+            "VALIDATED": "Sudah diperiksa",
+            "AWAITING_DECISION": "Menunggu keputusan",
+            "APPROVED": "Disetujui",
+            "EFFECTIVE": "Berlaku",
+            "SUPERSEDED": "Digantikan",
+            "WITHDRAWN": "Ditarik",
+            "REJECTED": "Ditolak"
+        },
+        "status_hints": {
+            "DRAFT": "Lengkapi isinya, lalu kirim untuk diperiksa.",
+            "VALIDATED": "Lihat hasil pemeriksaan, lalu teruskan untuk keputusan atau kembalikan ke draf.",
+            "AWAITING_DECISION": "Menunggu keputusan pejabat berwenang.",
+            "APPROVED": "Sudah diputuskan. Perubahan berlaku setelah diberlakukan pada tanggalnya.",
+            "EFFECTIVE": "Perubahan sudah berlaku dan tercatat di riwayat unit.",
+            "SUPERSEDED": "Sudah digantikan oleh perubahan yang lebih baru. Riwayatnya tetap tersimpan.",
+            "WITHDRAWN": "Permintaan ditarik. Organisasi tidak berubah.",
+            "REJECTED": "Permintaan ditolak. Organisasi tidak berubah."
+        },
+        "form": {
+            "create_title": "Ajukan perubahan organisasi",
+            "edit_title": "Perbaiki permintaan",
+            "intro": "Permintaan disimpan sebagai draf. Organisasi baru berubah setelah diputuskan dan diberlakukan.",
+            "for_unit": "Untuk unit {{name}}. Organisasi baru berubah setelah diputuskan dan diberlakukan.",
+            "kind_fixed": "Jenis perubahan: {{kind}}",
+            "error_summary": "Periksa kembali isian berikut",
+            "save": "Simpan draf"
+        },
+        "actions": {
+            "submit": "Kirim untuk diperiksa",
+            "escalate": "Teruskan untuk keputusan",
+            "decide": "Catat keputusan",
+            "apply": "Berlakukan perubahan",
+            "edit": "Perbaiki",
+            "return": "Kembalikan ke draf",
+            "withdraw": "Tarik permintaan"
+        },
+        "policy": {
+            "blocked_title": "Menunggu pengesahan kebijakan",
+            "blocked_description": "Keputusan resmi belum dapat dicatat karena kebijakan pemeliharaan organisasi belum berlaku resmi (GAP-021). Permintaan tetap tersimpan dan dapat ditarik.",
+            "simulation_title": "Mode simulasi",
+            "simulation_description": "Kebijakan pemeliharaan organisasi belum berlaku resmi. Di lingkungan ini keputusan dicatat sebagai simulasi dan ditandai di riwayat."
+        },
+        "validation": {
+            "section": "Hasil pemeriksaan",
+            "checked_at": "Diperiksa {{time}}",
+            "clear": "Tidak ada masalah ditemukan.",
+            "blocking": "Menghalangi",
+            "notice": "Perlu diperhatikan"
+        },
+        "issues": {
+            "unknown_kind": "Jenis perubahan tidak dikenal.",
+            "other_open_request": "Ada permintaan lain yang sedang berjalan untuk unit ini. Pastikan keduanya tidak bertentangan.",
+            "code_taken": "Kode ini sudah dipakai.",
+            "parent_missing": "Unit induk tidak ditemukan.",
+            "parent_inactive": "Unit induk tidak aktif.",
+            "name_duplicate": "Sudah ada unit dengan nama yang sama di bawah induk ini.",
+            "unit_missing": "Unit tidak ditemukan.",
+            "nothing_changes": "Isian sama dengan data yang berlaku; tidak ada yang berubah.",
+            "move_into_own_subtree": "Unit tidak dapat dipindahkan ke bawah dirinya sendiri atau ke unit di bawahnya.",
+            "unit_not_active": "Unit tidak aktif.",
+            "has_active_children": "Masih ada unit aktif di bawah unit ini.",
+            "has_active_appointments": "Masih ada penunjukan aktif di unit ini.",
+            "unit_already_active": "Unit sudah aktif.",
+            "person_missing": "Pegawai tidak ditemukan.",
+            "person_not_eligible": "Akun ini tidak dapat memegang jabatan: hanya akun internal yang aktif.",
+            "position_missing": "Jabatan tidak ditemukan.",
+            "position_inactive": "Jabatan tidak aktif.",
+            "decree_missing": "Nomor SK wajib diisi.",
+            "already_appointed": "Pegawai ini sudah memegang jabatan tersebut.",
+            "appointment_missing": "Penunjukan tidak ditemukan di unit ini.",
+            "appointment_not_active": "Penunjukan sudah berakhir."
+        },
+        "transitions": {
+            "section": "Jejak langkah",
+            "meta": "Menjadi {{to}} · {{name}}, {{time}}",
+            "codes": {
+                "TR-281": "Draf dibuat atau diperbaiki",
+                "TR-282": "Dikirim dan diperiksa",
+                "TR-283": "Dikembalikan ke draf",
+                "TR-284": "Diteruskan untuk keputusan",
+                "TR-285": "Keputusan dicatat",
+                "TR-286": "Diberlakukan",
+                "TR-287": "Digantikan perubahan baru",
+                "TR-288": "Ditarik"
+            }
+        },
+        "return": {
+            "title": "Kembalikan ke draf?",
+            "description": "Permintaan dapat diperbaiki lalu dikirim lagi. Tuliskan apa yang perlu diperbaiki.",
+            "confirm": "Ya, kembalikan"
+        },
+        "withdraw": {
+            "title": "Tarik permintaan ini?",
+            "description": "Permintaan ditutup dan organisasi tidak berubah. Riwayat permintaan tetap tersimpan.",
+            "confirm": "Ya, tarik"
+        },
+        "decision": {
+            "title": "Catat keputusan",
+            "description": "Catat keputusan pejabat berwenang beserta nomornya.",
+            "simulation_description": "Kebijakan belum berlaku resmi, jadi keputusan ini dicatat sebagai simulasi.",
+            "choice": "Keputusan",
+            "APPROVE": "Setujui",
+            "REJECT": "Tolak",
+            "effective_hint": "Untuk persetujuan. Tidak boleh sebelum hari ini.",
+            "ref_placeholder": "Misalnya: SK Rektor 123/UN34/2026",
+            "reason": "Alasan (wajib bila ditolak)",
+            "confirm": "Simpan keputusan"
+        }
     }
 }
