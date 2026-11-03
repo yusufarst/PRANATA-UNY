@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: YES
@@ -208,19 +208,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- [x] Authorization
+- [x] Route integrity
+- [x] Interaction behavior
+- [x] Browser E2E if required
+- [x] Responsive/adaptive if required
+- [x] Visual breathing room/density if UI
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -235,18 +235,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41640350425](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41640350425) pada HEAD `140277f`: `changes`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)` dan `ci-gate` sukses; `docs-check` dilewati (tanpa perubahan dokumen); log Pest per uji tidak dibaca, keberhasilan job adalah buktinya. TAC-01: `tests/Feature/Identity/TwoFactorTest.php` (pendaftaran dengan QR dan kunci manual, konfirmasi kode, tantangan saat masuk, kode pemulihan sekali pakai, kode TOTP tidak dapat dipakai ulang; rahasia dan kode pemulihan terenkripsi APP_KEY, SEC-03). TAC-02: `config('auth.two_factor_required')` (bawaan aktif, SEC-D1 menurut D-12) dan middleware `two-factor` pada rute Administrasi mengarahkan akun istimewa tanpa TOTP terkonfirmasi ke halaman Keamanan; akun itu tidak dapat menonaktifkan TOTP atau memaksa rahasia baru menimpa yang terkonfirmasi. TAC-03: `identity_two_factor_resets` dengan Action minta, setujui dan cabut; penyetuju adalah admin kedua yang bukan peminta dan bukan target (Action dan CHECK basis data); persetujuan menghapus TOTP, mengakhiri sesi akun dan memberi tahu pengguna; ditolak bila TOTP sudah tidak ada; uji izin negatif. Kode TOTP atau pemulihan yang salah dihitung ke penguncian masuk; tantangan ditolak untuk akun terkunci, SUSPENDED atau DEACTIVATED (`TwoFactorChallengeGuard`). Migrasi `identity_two_factor_resets` lulus `migrate:fresh` dan rollback di `ci-fast`.
+- Build result: `npm run build` lulus di `ci-fast`; Pint, Larastan, ESLint, Prettier, TypeScript, `translations:check` dan pemindaian rahasia lulus.
+- Route evidence: `RouteIntegrityTest` lulus dengan rute reset 2FA PG-502 di bawah `auth` + `can:MANAGE_USERS` + `two-factor`; tantangan dan pengaturan TOTP lewat rute Fortify.
+- Interaction evidence: PG-007 Keamanan dengan satu aksi utama Aktifkan 2FA, modal pendaftaran yang ramah layar sempit (QR, kunci manual berlabel, input kode berlabel), daftar kode pemulihan dan pembuatan ulang di balik konfirmasi password; PG-502 detail akun dengan minta, setujui dan cabut reset 2FA.
+- Browser evidence: `tests/e2e/journeys/two-factor.spec.ts` (pendaftaran dari kunci manual, konfirmasi, masuk dengan kode baru dan sekali dengan kode pemulihan yang lalu habis, axe) lulus di semua proyek browser, desktop dan mobile, pada kedua shard. Penegakan (TAC-02) dan reset dua admin (TAC-03) dibuktikan uji fitur.
+- Localization evidence: teks baru di `lang/{id,en}/identity.php` dan `resources/js/locales/{id,en}/{account,admin}.json`; `translations:check` lulus.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Review independen HIGH pada `38e02fb...9608a39`: P2 kode TOTP salah tidak pernah mengunci akun (password benar mengosongkan penghitung gagal); P3 tantangan tidak memeriksa ulang status atau kunci akun; P3 persetujuan tidak memeriksa ulang bahwa TOTP masih ada; P3 `force` Fortify dapat menukar rahasia terkonfirmasi akun yang wajib TOTP; P3 uji pemakaian ulang kode TOTP belum ada; semuanya diperbaiki di `ff72c92` dan `7099fb3` dengan uji, `140277f` membuang `instanceof` yang selalu benar (Larastan). Codex review pada `140277f` (issuecomment-6604608224): tanpa temuan, 0 komentar inline. P3 yang ditunda: status EXPIRED reset 2FA tidak ditulis (permintaan kedaluwarsa tidak dapat disetujui maupun ditampilkan); setujui reset 2FA dan buat ulang kode pemulihan tanpa dialog konfirmasi (sama dengan pola persetujuan TASK-011; buat ulang di balik konfirmasi password); uji cabang 403 JSON; dugaan masalah axe pada daftar kode pemulihan tidak dapat direproduksi.
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 43 berkas di [PR #42](https://github.com/yusufarst/PRANATA-UNY/pull/42), terutama `app/Modules/Identity/` (Action reset 2FA, event, model `TwoFactorReset`, middleware `EnsureTwoFactorIsEnabled`, `TwoFactorPolicy`, `TwoFactorChallengeGuard`, notifikasi, migrasi `identity_two_factor_resets`, rute), `app/Actions/Fortify/`, `app/Providers/FortifyServiceProvider.php`, listener `app/Modules/Audit/Listeners/`, `config/auth.php`, `bootstrap/app.php`, `resources/js/pages/`, `resources/js/components/`, `resources/js/locales/`, `lang/{id,en}/identity.php`, serta uji di `tests/Feature/Identity` dan `tests/e2e`. Tanpa perubahan `.github/workflows` atau `.gitleaks.toml`.
+- PR / CI run: [PR #42](https://github.com/yusufarst/PRANATA-UNY/pull/42) MERGED; run di atas. Run gagal yang tercatat: 41632512864 pada `d11ab1f` (label input dan pemeriksaan selalu-benar, diperbaiki di `0b81f78`), 41633488042 pada `0b81f78` dan 41635473560 pada `9b84a74` (axe dan stabilitas E2E, diperbaiki di `9b84a74` dan `9608a39`), 41639525738 pada `7099fb3` (`ci-fast`: Larastan `instanceof` selalu benar, diperbaiki di `140277f`); 41639351284 pada `ff72c92` dibatalkan karena digantikan. Run hijau antara: 41637236240 (`9608a39`).
+- Commit SHA: `140277f823d3a2f87f8f691941f1c1cf30a78069`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode AUTONOMOUS (opsi A).
+- Notes: TAC-01–TAC-03 terbukti di CI. SEC-D1 diterapkan menurut D-12 (TOTP wajib bagi akun istimewa, dapat dikonfigurasi). Tanpa SMS/email sebagai faktor kedua. TOTP memakai Fortify dari starter kit; tanpa kolom `users` baru karena kolom 2FA Fortify sudah ada.
 
 ## SAFE NEXT TASK
 
