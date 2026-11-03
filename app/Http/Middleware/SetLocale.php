@@ -25,20 +25,21 @@ class SetLocale
     }
 
     /**
-     * A signed-in user's saved language (users.locale) wins; a guest's choice lives in the session.
+     * The session's choice wins; sign-in copies the saved language (users.locale) into it, so a choice made in one
+     * session does not switch another that is open. A signed-in user without a choice in the session gets the saved one.
      *
      * Only a user the guard has already resolved counts, so an error page never queries a database that may be down.
      */
     public static function resolve(Request $request): string
     {
-        $user = Auth::hasUser() ? Auth::user() : null;
-
-        if ($user instanceof User && in_array($user->locale, self::SUPPORTED, true)) {
-            return $user->locale;
-        }
-
         $locale = $request->hasSession() ? $request->session()->get('locale') : null;
 
-        return is_string($locale) && in_array($locale, self::SUPPORTED, true) ? $locale : App::getLocale();
+        if (is_string($locale) && in_array($locale, self::SUPPORTED, true)) {
+            return $locale;
+        }
+
+        $user = Auth::hasUser() ? Auth::user() : null;
+
+        return $user instanceof User && in_array($user->locale, self::SUPPORTED, true) ? $user->locale : App::getLocale();
     }
 }

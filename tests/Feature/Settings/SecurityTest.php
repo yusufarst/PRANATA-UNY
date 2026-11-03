@@ -82,7 +82,7 @@ test('password can be updated', function () {
 
 // SECURITY_MODEL section 3: the password profile holds everywhere, and a password may not repeat the identity.
 test('a new password must meet the password profile', function (string $password) {
-    $user = User::factory()->create(['username' => 'Budi.Santoso-1']);
+    $user = User::factory()->create();
 
     $this->actingAs($user)
         ->from(route('security.edit'))
@@ -97,7 +97,7 @@ test('a new password must meet the password profile', function (string $password
 })->with(['short' => 'Ab-1', 'no symbol' => 'SandiBaru2026', 'no capital' => 'sandi-baru-2026', 'no number' => 'Sandi-Baru-Kuat']);
 
 test('the username or email, in any case, is refused as a password', function (string $password) {
-    $user = User::factory()->create(['username' => 'Budi.Santoso-1', 'email' => 'Budi.S-1@example.com']);
+    $user = User::factory()->create(['username' => 'Budi.Santoso1', 'email' => 'Budi.S-1@example.com']);
 
     $this->actingAs($user)
         ->put(route('user-password.update'), [
@@ -106,7 +106,7 @@ test('the username or email, in any case, is refused as a password', function (s
             'password_confirmation' => $password,
         ])
         ->assertSessionHasErrors(['password' => __('auth.password_is_identity')]);
-})->with(['Budi.Santoso-1', 'bUDI.sANTOSO-1', 'budi.s-1@EXAMPLE.com']);
+})->with(['Budi.Santoso1', 'bUDI.sANTOSO1', 'budi.s-1@EXAMPLE.com']);
 
 // TASK-010 TAC-05: a password change ends the account's other sessions and keeps the one that made it.
 test('changing the password ends the other sessions of the account', function () {

@@ -23,6 +23,15 @@ export default function Login({ status, canResetPassword }: Props) {
         <>
             <Head title={t('auth:login.title')} />
 
+            {status && (
+                <div
+                    role="status"
+                    className="text-center text-sm font-medium text-success"
+                >
+                    {status}
+                </div>
+            )}
+
             <Form
                 {...store.form()}
                 resetOnSuccess={['password']}
@@ -90,12 +99,6 @@ export default function Login({ status, canResetPassword }: Props) {
                     </div>
                 )}
             </Form>
-
-            {status && (
-                <div className="mb-4 text-center text-sm font-medium text-success">
-                    {status}
-                </div>
-            )}
         </>
     );
 }

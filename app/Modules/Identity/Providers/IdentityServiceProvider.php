@@ -2,6 +2,7 @@
 
 namespace App\Modules\Identity\Providers;
 
+use App\Http\Middleware\SetLocale;
 use App\Models\User;
 use App\Modules\Identity\Http\Middleware\EnsureSessionIsCurrent;
 use App\Modules\Identity\Support\CredentialAuthenticator;
@@ -31,17 +32,21 @@ class IdentityServiceProvider extends ModuleServiceProvider
         // Sign-in by username or email (field "login") with the status gate and the account lock.
         Fortify::authenticateUsing(fn ($request) => $this->app->make(CredentialAuthenticator::class)($request));
 
-        // A sign-in, also through the remember cookie, starts the session clock and is noted on the account.
+        // A sign-in, also through the remember cookie, starts the session clock in the saved language and is noted on
+        // the account.
         Event::listen(Login::class, function (Login $event): void {
             $request = $this->app->make('request');
+            $user = $event->user instanceof User ? $event->user : null;
 
             if ($request->hasSession()) {
                 EnsureSessionIsCurrent::start($request);
+
+                if ($user !== null && in_array($user->locale, SetLocale::SUPPORTED, true)) {
+                    $request->session()->put('locale', $user->locale);
+                }
             }
 
-            if ($event->user instanceof User) {
-                $event->user->forceFill(['last_login_at' => now()])->saveQuietly();
-            }
+            $user?->forceFill(['last_login_at' => now()])->saveQuietly();
         });
     }
 }

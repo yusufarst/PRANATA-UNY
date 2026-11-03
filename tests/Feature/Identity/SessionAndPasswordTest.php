@@ -177,8 +177,21 @@ test('a signed-in user keeps the chosen language for the next sign-in', function
 
     expect($user->refresh()->locale)->toBe('en');
 
+    $this->post(route('logout'));
     $this->flushSession();
-    $this->actingAs($user->refresh())
-        ->get(route('dashboard'))
-        ->assertInertia(fn (Assert $page) => $page->where('locale', 'en'));
+
+    // The guest's session is Indonesian; signing in brings the saved language back.
+    $this->post(route('locale.update'), ['locale' => 'id']);
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password']);
+
+    $this->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page->where('locale', 'en'));
+});
+
+test('a language chosen in another session does not switch an open one', function () {
+    $user = User::factory()->create(['locale' => 'id']);
+
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password']);
+    $user->forceFill(['locale' => 'en'])->save();
+
+    $this->get(route('dashboard'))->assertInertia(fn (Assert $page) => $page->where('locale', 'id'));
 });

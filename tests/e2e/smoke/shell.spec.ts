@@ -16,6 +16,16 @@ async function signIn(page: Page, profile: Profile): Promise<void> {
     await expect(page).toHaveURL(/\/home$/);
 }
 
+// By the visible code, which both languages share; the button reports the choice once the page has it.
+async function chooseLanguage(page: Page, code: 'id' | 'en'): Promise<void> {
+    const option = page
+        .getByRole('button', { name: new RegExp(`^${code.toUpperCase()} `) })
+        .first();
+
+    await option.click();
+    await expect(option).toHaveAttribute('aria-pressed', 'true');
+}
+
 function sessionOf(project: string): string {
     return resolve(
         import.meta.dirname,
@@ -61,8 +71,9 @@ for (const language of LANGUAGES) {
     });
 }
 
-// The language lives in the session, and the login limit allows five attempts a minute per address.
-// So each browser project signs in once and runs these tests in order on its own session.
+// The login limit allows five attempts a minute per address, so each browser project signs in once and runs these
+// tests in order on its own session. The account keeps the last language chosen by any project, and sign-in brings it
+// back, so the session starts by choosing Indonesian; a choice in one open session does not switch another.
 test.describe('signed in', () => {
     test.describe.configure({ mode: 'serial' });
     test.use({
@@ -80,7 +91,10 @@ test.describe('signed in', () => {
         });
 
         try {
-            await signIn(await context.newPage(), 'internal');
+            const page = await context.newPage();
+
+            await signIn(page, 'internal');
+            await chooseLanguage(page, 'id');
             await context.storageState({
                 path: sessionOf(testInfo.project.name),
             });
@@ -115,7 +129,7 @@ test.describe('signed in', () => {
                 page,
             }) => {
                 await page.goto('/home');
-                await page.getByLabel(language.option).first().click();
+                await chooseLanguage(page, language.code);
 
                 await expect(
                     page.getByRole('heading', { name: language.home }),
