@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
-import { House, Users } from 'lucide-react';
+import { House, Network, Users } from 'lucide-react';
 import UserAdministrationController from '@/actions/App/Modules/Identity/Http/Controllers/UserAdministrationController';
+import OrganizationController from '@/actions/App/Modules/Organization/Http/Controllers/OrganizationController';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import {
@@ -30,6 +31,15 @@ export function AppSidebar() {
                       title: 'common:nav.users',
                       href: UserAdministrationController.index(),
                       icon: Users,
+                  },
+              ]
+            : []),
+        ...(auth.can.manageOrganization
+            ? [
+                  {
+                      title: 'common:nav.organization',
+                      href: OrganizationController.index(),
+                      icon: Network,
                   },
               ]
             : []),

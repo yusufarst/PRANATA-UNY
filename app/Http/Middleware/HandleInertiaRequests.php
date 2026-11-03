@@ -44,6 +44,7 @@ class HandleInertiaRequests extends Middleware
                 // The menu mirrors the capabilities only; every route checks them again (ACCESS_CONTROL section 8).
                 'can' => [
                     'manageUsers' => $request->user()?->can('admin.users.manage') ?? false,
+                    'manageOrganization' => $request->user()?->can('admin.org.manage') ?? false,
                 ],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',

@@ -3,6 +3,7 @@
         "main": "Main menu",
         "home": "Home",
         "users": "Users",
+        "organization": "Organization",
         "breadcrumb": "Page location",
         "toggle": "Open or close the menu",
         "drawer_title": "Menu",

@@ -15,6 +15,7 @@ export type Auth = {
     /** What the menu may offer; the server checks every route again. */
     can: {
         manageUsers: boolean;
+        manageOrganization: boolean;
     };
 };
 

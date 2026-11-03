@@ -20,6 +20,11 @@ final class DatabaseRoles
     public const APP = 'pranata_app';
 
     /**
+     * The extensions of DATA_MODEL section 1.
+     */
+    public const EXTENSIONS = ['pg_trgm', 'ltree', 'btree_gist'];
+
+    /**
      * Make a migrator session ready: provide the roles where allowed, then work as the configured owner role.
      */
     public static function prepareMigrator(Connection $connection, ?string $role, bool $provision): void
@@ -99,6 +104,20 @@ final class DatabaseRoles
 
         if (! (bool) $connection->scalar("select has_schema_privilege('".self::APP."', 'public', 'usage')")) {
             $connection->statement('grant usage on schema public to '.self::APP);
+        }
+
+        // DATA_MODEL section 1. Extensions belong to the database, so the superuser creates them here, as the operator does on a server.
+        // Parallel test processes may create the same extension at once, like the roles above.
+        foreach (self::EXTENSIONS as $extension) {
+            $connection->statement(sprintf(<<<'SQL'
+                do $$
+                begin
+                    create extension if not exists %1$s;
+                exception when duplicate_object or unique_violation then
+                    null;
+                end
+                $$
+                SQL, $extension));
         }
     }
 
