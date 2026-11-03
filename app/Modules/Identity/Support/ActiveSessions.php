@@ -24,18 +24,19 @@ final class ActiveSessions
      */
     public static function of(User $user, ?string $currentId = null): array
     {
-        return self::query(DB::connection(), $user)
+        $sessions = self::query(DB::connection(), $user)
             ->orderByDesc('last_activity')
             ->get(['id', 'ip_address', 'user_agent', 'last_activity'])
             ->map(fn (stdClass $session): array => [
                 'key' => self::key((string) $session->id),
-                'ip_address' => $session->ip_address,
+                'ip_address' => is_string($session->ip_address) ? $session->ip_address : null,
                 'user_agent' => $session->user_agent === null ? null : mb_substr($session->user_agent, 0, 255),
                 'last_active_at' => CarbonImmutable::createFromTimestamp((int) $session->last_activity)->toIso8601String(),
                 'current' => $currentId !== null && hash_equals((string) $session->id, $currentId),
             ])
-            ->values()
             ->all();
+
+        return array_values($sessions);
     }
 
     /**
