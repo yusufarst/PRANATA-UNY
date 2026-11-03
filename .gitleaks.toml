@@ -4,3 +4,9 @@ useDefault = true
 [[allowlists]]
 description = "AICWDF-COMPAT-8 is the name of the approved password profile in the planning documents, not a credential"
 regexes = ['''^AICWDF-COMPAT-8$''']
+
+[[allowlists]]
+description = "Synthetic new password of the TASK-010 feature tests, only under tests/; already in history at aa460ec"
+condition = "AND"
+regexes = ['''^Sandi-Baru-2026$''']
+paths = ['''^tests/''']
