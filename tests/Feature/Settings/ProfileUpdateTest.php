@@ -103,12 +103,13 @@ test('email verification status is unchanged when the email address is unchanged
 });
 
 // OD-38: an account ends only as DEACTIVATED, by an administrator; RouteIntegrityTest proves profile.destroy is gone.
+// The any-method fallback in routes/web.php answers the removed DELETE with 404, not 405.
 test('a user cannot delete the own account', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
         ->delete('/settings/profile', ['password' => 'password'])
-        ->assertMethodNotAllowed();
+        ->assertNotFound();
 
     expect($user->fresh())->not->toBeNull();
     $this->assertAuthenticatedAs($user);
