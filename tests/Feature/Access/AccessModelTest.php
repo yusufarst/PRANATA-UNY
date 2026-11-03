@@ -210,6 +210,14 @@ describe('the evaluator', function () {
             ->and($evaluator->allows($user, 'admin.policy.activate', AccessSubject::forPolicyFamily('procurement.authority')))->toBeFalse();
     });
 
+    test('a policy family key may be a single word as POLICY_REGISTRY names reconciliation, numbering and retention', function () {
+        $user = User::factory()->create();
+        $grant = accessGrant(accessGranter(), $user, null, 'admin.policy.author', ScopeType::PolicyFamily, null, 'reconciliation');
+        app(ApproveGrant::class)->handle(accessGranter(), $grant, $grant->lock_version);
+
+        expect(app(AccessEvaluator::class)->allows($user, 'admin.policy.author', AccessSubject::forPolicyFamily('reconciliation')))->toBeTrue();
+    });
+
     test('a Super Admin holds the global administration but no business capability, even with a grant row (INV-021)', function () {
         $superAdmin = accessGranter();
         $evaluator = app(AccessEvaluator::class);
@@ -356,7 +364,7 @@ describe('granting', function () {
         $granter = accessGranter();
         $deactivated = User::factory()->create();
         $waiting = accessGrant($granter, $deactivated, 'ACCESS_ADMIN', null, ScopeType::Global);
-        $deactivated->forceFill(['status' => User::DEACTIVATED])->save();
+        $deactivated->forceFill(['status' => User::DEACTIVATED, 'deactivated_at' => now()])->save();
 
         expect(accessDomainReason(fn () => app(ApproveGrant::class)->handle(accessGranter(), $waiting, $waiting->lock_version)))
             ->toBe('access.account_deactivated')

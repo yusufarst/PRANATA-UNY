@@ -402,6 +402,10 @@ describe('the list', function () {
 
         $this->get(route('access.admin.grants.index', ['status' => 'BOGUS', 'q' => '%']))
             ->assertInertia(fn (Assert $page) => $page->has('grants.data', 0)->where('filters.status', ''));
+
+        $this->get(route('access.admin.grants.index', ['q' => ['BUDI']]))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->where('filters.q', ''));
     });
 
     test('a grant past its end shows Kedaluwarsa, under the expired filter, without Cabut', function () {

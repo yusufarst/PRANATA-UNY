@@ -39,8 +39,9 @@ class GrantController
     {
         Gate::authorize(AccessServiceProvider::ADMINISTER_ACCESS);
 
+        $q = $request->query('q');
         $filters = [
-            'q' => trim($request->string('q')->value()),
+            'q' => is_string($q) ? trim($q) : '',
             'status' => in_array($request->query('status'), self::STATUSES, true) ? $request->query('status') : '',
         ];
         $today = BusinessDate::today()->toDateString();

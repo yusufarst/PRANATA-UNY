@@ -24,7 +24,7 @@ use InvalidArgumentException;
  */
 final class GrantAccess extends Action
 {
-    public const POLICY_FAMILY_PATTERN = '/^[a-z][a-z_]*(\.[a-z][a-z_]*)+\z/';
+    public const POLICY_FAMILY_PATTERN = '/^[a-z][a-z_]*(\.[a-z][a-z_]*)*\z/';
 
     public function handle(
         User $actor,
