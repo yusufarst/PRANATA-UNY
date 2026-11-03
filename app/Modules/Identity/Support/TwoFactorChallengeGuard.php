@@ -25,10 +25,6 @@ final class TwoFactorChallengeGuard
     {
         $user = $event->user;
 
-        if (! $user instanceof User) {
-            return;
-        }
-
         $this->lockout->recordFailure($user);
 
         if ($this->lockout->isLocked($user)) {
@@ -42,10 +38,6 @@ final class TwoFactorChallengeGuard
     public function passed(ValidTwoFactorAuthenticationCodeProvided $event): void
     {
         $user = $event->user;
-
-        if (! $user instanceof User) {
-            return;
-        }
 
         $reason = match (true) {
             $this->lockout->isLocked($user) => SignInFailed::ACCOUNT_LOCKED,
