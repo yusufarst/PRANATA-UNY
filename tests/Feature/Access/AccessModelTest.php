@@ -115,14 +115,15 @@ describe('the capability catalog', function () {
             ->and(CapabilityCatalog::exists('procurement.unknown'))->toBeFalse();
     });
 
-    test('the initial profiles of section 9 list only grantable capabilities, and only the admin profile is privileged', function () {
+    // Section 9: a profile with an admin.* capability or a GLOBAL decision (vendor.dpt.decide) is privileged.
+    test('the initial profiles of section 9 list only grantable capabilities, and only the admin and DPT profiles are privileged', function () {
         $profiles = AccessProfile::query()->orderBy('code')->get();
 
         expect($profiles->pluck('code')->all())->toEqualCanonicalizing(array_keys(AccessProfileSeeder::PROFILES));
 
         foreach ($profiles as $profile) {
             expect($profile->capabilities())->toEqualCanonicalizing(AccessProfileSeeder::PROFILES[$profile->code][2])
-                ->and($profile->is_privileged)->toBe($profile->code === 'ACCESS_ADMIN');
+                ->and($profile->is_privileged)->toBe(in_array($profile->code, ['ACCESS_ADMIN', 'DPT_VERIFIER'], true));
 
             foreach ($profile->capabilities() as $capability) {
                 expect(CapabilityCatalog::isGrantable($capability))->toBeTrue();
