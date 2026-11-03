@@ -50,7 +50,7 @@ class ScenarioSeeder extends Seeder
             );
         }
 
-        $this->call(OrganizationSeeder::class);
+        $this->call([OrganizationSeeder::class, AccessProfileSeeder::class]);
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Access\Providers\AccessServiceProvider;
 use App\Modules\Audit\Providers\AuditServiceProvider;
 use App\Modules\Identity\Providers\IdentityServiceProvider;
 use App\Modules\Organization\Providers\OrganizationServiceProvider;
@@ -14,4 +15,5 @@ return [
     AuditServiceProvider::class,
     IdentityServiceProvider::class,
     OrganizationServiceProvider::class,
+    AccessServiceProvider::class,
 ];

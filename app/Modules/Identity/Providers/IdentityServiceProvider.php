@@ -12,7 +12,6 @@ use App\Modules\Identity\Support\TwoFactorChallengeGuard;
 use App\Modules\ModuleServiceProvider;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Events\TwoFactorAuthenticationFailed;
 use Laravel\Fortify\Events\ValidTwoFactorAuthenticationCodeProvided;
@@ -21,7 +20,8 @@ use Laravel\Fortify\Fortify;
 class IdentityServiceProvider extends ModuleServiceProvider
 {
     /**
-     * The capability to create, change and deactivate accounts and to reset them with an administrator's help.
+     * The capability to create, change and deactivate accounts and to reset them with an administrator's help. The Access module
+     * decides it, like every capability of its catalog (ACCESS_CONTROL section 4.1).
      */
     public const MANAGE_USERS = 'admin.users.manage';
 
@@ -40,9 +40,6 @@ class IdentityServiceProvider extends ModuleServiceProvider
     public function boot(): void
     {
         parent::boot();
-
-        // ACCESS_CONTROL section 4.1. Until the scoped grants of TASK-014 exist, only an active SUPER_ADMIN holds it (OD-10).
-        Gate::define(self::MANAGE_USERS, fn (User $user): bool => $user->mayHoldSession() && $user->role_group === User::SUPER_ADMIN);
 
         // Sign-in by username or email (field "login") with the status gate and the account lock.
         Fortify::authenticateUsing(fn ($request) => $this->app->make(CredentialAuthenticator::class)($request));
