@@ -346,8 +346,9 @@
             "person_not_eligible": "This account cannot hold a position: only active internal accounts can.",
             "position_missing": "The position was not found.",
             "position_inactive": "The position is inactive.",
+            "position_other_unit": "The position belongs to another unit.",
             "decree_missing": "The decree number is required.",
-            "already_appointed": "This staff member already holds that position.",
+            "already_appointed": "This staff member already holds that position for an overlapping term.",
             "appointment_missing": "The appointment was not found in this unit.",
             "appointment_not_active": "The appointment has already ended."
         },

@@ -547,6 +547,58 @@ test('an appointment needs a decree, an eligible staff account and a position no
     expect($again->refresh()->validation['issues'])->toContain(['code' => 'already_appointed', 'blocking' => true]);
 });
 
+test('a position owned by one unit cannot be held in another, nor offered there', function () {
+    $this->seed(OrganizationSeeder::class);
+    $buk = seededUnit('BUK');
+    $person = User::factory()->create();
+    $this->actingAs(organizationAdmin());
+
+    $request = draftOrganizationChange($this, ChangeRequest::APPOINT, $buk, [
+        'user' => $person->public_id,
+        'position' => 'KAPRODI_TI',
+        'decree_ref' => 'SK/REK/2026/049',
+    ]);
+    organizationStep($this, $request, 'submit');
+
+    expect($request->refresh()->validation['issues'])->toContain(['code' => 'position_other_unit', 'blocking' => true]);
+
+    $this->get(route('organization.admin.requests.create', ['kind' => ChangeRequest::APPOINT, 'unit' => $buk->public_id]))
+        ->assertInertia(fn (Assert $page) => $page->where(
+            'options.positions',
+            fn ($positions) => collect($positions)->pluck('value')->doesntContain('KAPRODI_TI'),
+        ));
+});
+
+test('a term that has run out neither blocks a new appointment nor keeps the unit from closing', function () {
+    $this->seed(OrganizationSeeder::class);
+    $ti = seededUnit('FT.TI');
+    $person = User::factory()->create();
+    $this->actingAs(organizationAdmin());
+
+    applyOrganizationChange($this, ChangeRequest::APPOINT, $ti, [
+        'user' => $person->public_id,
+        'position' => 'KAPRODI_TI',
+        'decree_ref' => 'SK/REK/2026/051',
+    ]);
+    OrgAppointment::query()->sole()->forceFill([
+        'effective_from' => CarbonImmutable::parse(businessToday())->subYears(4),
+        'effective_to' => CarbonImmutable::parse(businessToday())->subDay(),
+    ])->save();
+
+    $again = draftOrganizationChange($this, ChangeRequest::APPOINT, $ti, [
+        'user' => $person->public_id,
+        'position' => 'KAPRODI_TI',
+        'decree_ref' => 'SK/REK/2026/052',
+    ]);
+    organizationStep($this, $again, 'submit');
+
+    $close = draftOrganizationChange($this, ChangeRequest::DEACTIVATE_UNIT, $ti, []);
+    organizationStep($this, $close, 'submit');
+
+    expect(collect($again->refresh()->validation['issues'])->pluck('code'))->not->toContain('already_appointed')
+        ->and(collect($close->refresh()->validation['issues'])->pluck('code'))->not->toContain('has_active_appointments');
+});
+
 test('ending an appointment that starts today is refused, so its term never ends before it starts', function () {
     $this->seed(OrganizationSeeder::class);
     $ti = seededUnit('FT.TI');

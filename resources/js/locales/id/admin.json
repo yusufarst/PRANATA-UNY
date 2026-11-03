@@ -346,8 +346,9 @@
             "person_not_eligible": "Akun ini tidak dapat memegang jabatan: hanya akun internal yang aktif.",
             "position_missing": "Jabatan tidak ditemukan.",
             "position_inactive": "Jabatan tidak aktif.",
+            "position_other_unit": "Jabatan ini milik unit lain.",
             "decree_missing": "Nomor SK wajib diisi.",
-            "already_appointed": "Pegawai ini sudah memegang jabatan tersebut.",
+            "already_appointed": "Pegawai ini sudah memegang jabatan tersebut pada masa yang beririsan.",
             "appointment_missing": "Penunjukan tidak ditemukan di unit ini.",
             "appointment_not_active": "Penunjukan sudah berakhir."
         },

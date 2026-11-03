@@ -363,8 +363,10 @@ class ChangeRequestController
                     ->get(['public_id', 'name', 'username'])
                     ->map(fn (User $user): array => ['value' => $user->public_id, 'label' => "{$user->name} ({$user->username})"])
                     ->all(),
+                // Positions without a unit, plus those owned by the subject unit.
                 'positions' => OrgPosition::query()
                     ->where('status', OrgPosition::ACTIVE)
+                    ->where(fn ($query) => $query->whereNull('org_unit_id')->when($unit !== null, fn ($query) => $query->orWhere('org_unit_id', $unit?->id)))
                     ->orderBy('name')
                     ->get(['code', 'name'])
                     ->map(fn (OrgPosition $position): array => ['value' => $position->code, 'label' => "{$position->name} ({$position->code})"])

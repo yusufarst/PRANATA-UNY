@@ -23,15 +23,17 @@ final class ChangeValidator
     {
         $payload = $request->payload;
         $unit = $request->org_unit_id === null ? null : OrgUnit::query()->find($request->org_unit_id);
+        // The date the change takes effect: the decided one once known, the proposed one before.
+        $start = ($request->effective_from ?? $request->proposed_effective_from)->toDateString();
 
         $issues = match ($request->kind) {
             ChangeRequest::CREATE_UNIT => $this->createUnit($payload),
             ChangeRequest::UPDATE_UNIT => $this->updateUnit($unit, $payload),
             ChangeRequest::MOVE_UNIT => $this->moveUnit($unit, $payload),
-            ChangeRequest::DEACTIVATE_UNIT => $this->deactivateUnit($unit),
+            ChangeRequest::DEACTIVATE_UNIT => $this->deactivateUnit($unit, $start),
             ChangeRequest::ACTIVATE_UNIT => $this->activateUnit($unit),
             ChangeRequest::CREATE_POSITION => $this->createPosition($unit, $payload),
-            ChangeRequest::APPOINT => $this->appoint($unit, $payload),
+            ChangeRequest::APPOINT => $this->appoint($unit, $payload, $start),
             ChangeRequest::END_APPOINTMENT => $this->endAppointment($unit, $payload),
             default => [self::blocking('unknown_kind')],
         };
@@ -128,7 +130,7 @@ final class ChangeValidator
     /**
      * @return list<array{code: string, blocking: bool}>
      */
-    private function deactivateUnit(?OrgUnit $unit): array
+    private function deactivateUnit(?OrgUnit $unit, string $start): array
     {
         if ($unit === null) {
             return [self::blocking('unit_missing')];
@@ -144,7 +146,14 @@ final class ChangeValidator
             $issues[] = self::blocking('has_active_children');
         }
 
-        if (OrgAppointment::query()->where('org_unit_id', $unit->id)->where('status', OrgAppointment::ACTIVE)->exists()) {
+        // A term that has already run out by the deactivation date no longer holds the unit open.
+        $held = OrgAppointment::query()
+            ->where('org_unit_id', $unit->id)
+            ->where('status', OrgAppointment::ACTIVE)
+            ->where(fn ($query) => $query->whereNull('effective_to')->orWhere('effective_to', '>', $start))
+            ->exists();
+
+        if ($held) {
             $issues[] = self::blocking('has_active_appointments');
         }
 
@@ -196,7 +205,7 @@ final class ChangeValidator
      * @param  array<string, mixed>  $payload
      * @return list<array{code: string, blocking: bool}>
      */
-    private function appoint(?OrgUnit $unit, array $payload): array
+    private function appoint(?OrgUnit $unit, array $payload, string $start): array
     {
         $issues = [];
 
@@ -221,6 +230,9 @@ final class ChangeValidator
             $issues[] = self::blocking('position_missing');
         } elseif ($position->status !== OrgPosition::ACTIVE) {
             $issues[] = self::blocking('position_inactive');
+        } elseif ($unit !== null && $position->org_unit_id !== null && $position->org_unit_id !== $unit->id) {
+            // A position owned by a unit is held in that unit only; a position without a unit may be held anywhere.
+            $issues[] = self::blocking('position_other_unit');
         }
 
         if (blank($payload['decree_ref'] ?? null)) {
@@ -228,10 +240,15 @@ final class ChangeValidator
         }
 
         if ($user !== null && $position !== null) {
+            $end = $payload['effective_to'] ?? null;
+
+            // Only a term overlapping the requested one conflicts; one that has run out does not.
             $held = OrgAppointment::query()
                 ->where('user_id', $user->id)
                 ->where('position_id', $position->id)
                 ->where('status', OrgAppointment::ACTIVE)
+                ->where(fn ($query) => $query->whereNull('effective_to')->orWhere('effective_to', '>', $start))
+                ->when(is_string($end), fn ($query) => $query->where('effective_from', '<', $end))
                 ->exists();
 
             if ($held) {
