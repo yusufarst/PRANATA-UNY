@@ -2,6 +2,8 @@
 
 namespace App\Modules\Access\Support;
 
+use InvalidArgumentException;
+
 /**
  * The scope of a grant (ACCESS_CONTROL section 4): G, U, S, W, K and P in the catalog.
  */
@@ -23,6 +25,7 @@ enum ScopeType: string
             'W' => self::Warehouse,
             'K' => self::Workspace,
             'P' => self::PolicyFamily,
+            default => throw new InvalidArgumentException("Unknown scope letter {$letter}."),
         };
     }
 

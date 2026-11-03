@@ -35,13 +35,12 @@ class AccessProfile extends Model
      */
     public function capabilities(): array
     {
-        return DB::table('access_profile_capabilities')
+        return array_values(DB::table('access_profile_capabilities')
             ->where('profile_id', $this->id)
             ->orderBy('capability')
             ->pluck('capability')
             ->map(fn (mixed $capability): string => (string) $capability)
-            ->values()
-            ->all();
+            ->all());
     }
 
     protected function casts(): array
