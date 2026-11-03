@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
  * lists some of them, and a grant gives one profile or one capability to one user within one scope.
  *
  * A privileged grant (requires_approval) is ACTIVE only with an approver who is not its granter (SOD-05, TAC-06): both rules are
- * constraints here as well as checks in the Actions. A scope names a unit or a warehouse by scope_id and a policy family by
+ * constraints here as well as checks in the Actions, and so is AUTHZ-20: nobody grants to or approves for themselves. A scope names a unit or a warehouse by scope_id and a policy family by
  * scope_key; GLOBAL and WORKSPACE name neither.
  */
 return new class extends Migration
@@ -66,6 +66,8 @@ return new class extends Migration
                 lock_version integer not null default 0,
                 constraint access_grants_target_chk check (num_nonnulls(profile_id, capability) = 1),
                 constraint access_grants_approver_chk check (approved_by is null or approved_by <> granted_by),
+                constraint access_grants_not_self_chk check (user_id <> granted_by),
+                constraint access_grants_not_self_approved_chk check (approved_by is null or approved_by <> user_id),
                 constraint access_grants_approval_chk check (status <> 'ACTIVE' or not requires_approval or approved_by is not null),
                 constraint access_grants_scope_key_chk check ((scope_type = 'POLICY_FAMILY') = (scope_key is not null)),
                 constraint access_grants_scope_id_chk check (

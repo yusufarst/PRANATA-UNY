@@ -308,8 +308,11 @@ describe('granting', function () {
     test('a grant refuses a scope the catalog does not allow, an unknown scope target and a deactivated account', function () {
         $admin = accessGranter();
         $user = User::factory()->create();
+        DB::table('org_units')->where('id', accessUnit('LPPM'))->update(['status' => 'INACTIVE']);
 
-        expect(accessDomainReason(fn () => accessGrant($admin, $user, null, 'asset.view', ScopeType::OrgUnit, accessUnit('FT'))))
+        expect(accessDomainReason(fn () => accessGrant($admin, $user, null, 'asset.view', ScopeType::OrgUnitSubtree, accessUnit('LPPM'))))
+            ->toBe('access.scope_unknown')
+            ->and(accessDomainReason(fn () => accessGrant($admin, $user, null, 'asset.view', ScopeType::OrgUnit, accessUnit('FT'))))
             ->toBe('access.scope_not_allowed')
             ->and(accessDomainReason(fn () => accessGrant($admin, $user, null, 'asset.view', ScopeType::OrgUnitSubtree, 999_999)))
             ->toBe('access.scope_unknown')
@@ -343,7 +346,67 @@ describe('granting', function () {
             ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('access_grants')->insert([...$row, 'approved_by' => $granter->id])))->toBe('23514')
             ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('access_grants')->insert([...$row, 'approved_by' => accessGranter()->id])))->toBeNull()
             ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('access_grants')->insert([...$row, 'profile_id' => accessProfile('ACCESS_ADMIN')->id, 'approved_by' => accessGranter()->id])))->toBe('23514')
-            ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('access_grants')->insert([...$row, 'scope_type' => 'POLICY_FAMILY', 'approved_by' => accessGranter()->id])))->toBe('23514');
+            ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('access_grants')->insert([...$row, 'scope_type' => 'POLICY_FAMILY', 'approved_by' => accessGranter()->id])))->toBe('23514')
+            // AUTHZ-20 in the database as well: nobody grants to or approves for themselves.
+            ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('access_grants')->insert([...$row, 'user_id' => $granter->id, 'approved_by' => accessGranter()->id])))->toBe('23514')
+            ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('access_grants')->insert([...$row, 'approved_by' => $user->id])))->toBe('23514');
+    });
+
+    test('an approval refuses a grant past its end or whose receiver was deactivated meanwhile', function () {
+        $granter = accessGranter();
+        $deactivated = User::factory()->create();
+        $waiting = accessGrant($granter, $deactivated, 'ACCESS_ADMIN', null, ScopeType::Global);
+        $deactivated->forceFill(['status' => User::DEACTIVATED])->save();
+
+        expect(accessDomainReason(fn () => app(ApproveGrant::class)->handle(accessGranter(), $waiting, $waiting->lock_version)))
+            ->toBe('access.account_deactivated')
+            ->and($waiting->refresh()->status)->toBe(AccessGrant::PENDING_APPROVAL);
+
+        $grant = accessGrant($granter, User::factory()->create(), 'ACCESS_ADMIN', null, ScopeType::Global, effectiveTo: BusinessDate::today()->addDay());
+
+        $this->travel(1)->days();
+
+        expect(accessDomainReason(fn () => app(ApproveGrant::class)->handle(accessGranter(), $grant, $grant->lock_version)))
+            ->toBe('access.grant_lapsed')
+            ->and($grant->refresh()->status)->toBe(AccessGrant::PENDING_APPROVAL);
+    });
+});
+
+describe('the audit trail', function () {
+    test('giving, approving and revoking a grant are audited with their actor and reason (SECURITY_MODEL section 9)', function () {
+        $granter = accessGranter();
+        $approver = accessGranter();
+        $user = User::factory()->create();
+
+        $this->actingAs($granter);
+        $grant = accessGrant($granter, $user, 'ACCESS_ADMIN', null, ScopeType::Global);
+        $this->actingAs($approver);
+        app(ApproveGrant::class)->handle($approver, $grant, $grant->lock_version);
+        $grant->refresh();
+        $this->actingAs($granter);
+        app(RevokeGrant::class)->handle($granter, $grant, 'Pindah tugas', $grant->lock_version);
+
+        $events = DB::table('audit_events')
+            ->where('subject_public_id', $grant->public_id)
+            ->orderBy('id')
+            ->get(['action', 'module', 'subject_type', 'actor_user_id', 'reason', 'metadata']);
+
+        expect($events->pluck('action')->all())->toBe(['access.grant_given', 'access.grant_approved', 'access.grant_revoked'])
+            ->and($events->pluck('module')->unique()->all())->toBe(['access'])
+            ->and($events->pluck('subject_type')->unique()->all())->toBe(['access_grants'])
+            ->and($events->pluck('actor_user_id')->map(fn (mixed $id): int => (int) $id)->all())->toBe([$granter->id, $approver->id, $granter->id])
+            ->and($events->pluck('reason')->all())->toBe(['Penugasan staf sesuai surat tugas', null, 'Pindah tugas'])
+            ->and($events[0]->metadata)->toContain('"status": "PENDING_APPROVAL"')
+            ->and($events[1]->metadata)->toContain('"approved_by": '.$approver->id)
+            ->and($events[2]->metadata)->toContain('"status": "REVOKED"');
+    });
+
+    test('a refused grant change writes no audit record', function () {
+        $admin = accessGranter();
+
+        accessDomainReason(fn () => accessGrant($admin, $admin, null, 'admin.audit.read', ScopeType::Global));
+
+        expect(DB::table('audit_events')->where('module', 'access')->exists())->toBeFalse();
     });
 });
 
@@ -373,6 +436,26 @@ describe('revoking and expiry', function () {
 
         $this->travel(1)->days();
         expect($user->can('asset.view'))->toBeFalse();
+    });
+
+    test('a grant past its end shows EXPIRED, is filtered as such and can no longer be revoked', function () {
+        $admin = accessGranter();
+        $lapsing = accessGrant($admin, User::factory()->create(), null, 'asset.view', ScopeType::Global, effectiveTo: BusinessDate::today()->addDay());
+        $open = accessGrant($admin, User::factory()->create(), null, 'asset.view', ScopeType::Global);
+        $today = BusinessDate::today()->toDateString();
+
+        expect($lapsing->statusOn($today))->toBe(AccessGrant::ACTIVE)
+            ->and(AccessGrant::query()->withStatusOn(AccessGrant::ACTIVE, $today)->pluck('id')->all())->toEqualCanonicalizing([$lapsing->id, $open->id]);
+
+        $this->travel(1)->days();
+        $today = BusinessDate::today()->toDateString();
+
+        expect($lapsing->refresh()->statusOn($today))->toBe(AccessGrant::EXPIRED)
+            ->and($open->refresh()->statusOn($today))->toBe(AccessGrant::ACTIVE)
+            ->and(AccessGrant::query()->withStatusOn(AccessGrant::EXPIRED, $today)->pluck('id')->all())->toBe([$lapsing->id])
+            ->and(AccessGrant::query()->withStatusOn(AccessGrant::ACTIVE, $today)->pluck('id')->all())->toBe([$open->id])
+            ->and(accessDomainReason(fn () => app(RevokeGrant::class)->handle($admin, $lapsing, 'Sudah berakhir', $lapsing->lock_version)))
+            ->toBe('access.grant_not_revocable');
     });
 
     test('an inactive profile gives nothing', function () {
@@ -423,6 +506,67 @@ describe('visibleTo', function () {
             ->and(visibleProbeIds($globalUser, 'asset.view'))->toBe([1, 2, 3, 4])
             ->and(visibleProbeIds($globalUser, 'procurement.package.view'))->toBe([])
             ->and(visibleProbeIds(User::factory()->create(), 'asset.view'))->toBe([]);
+    });
+
+    test('a search narrows the visible rows and never widens them past the scope (TAC-02)', function () {
+        $user = User::factory()->create();
+        $admin = accessGranter();
+        accessGrant($admin, $user, null, 'asset.view', ScopeType::OrgUnitSubtree, accessUnit('FT'));
+        accessGrant($admin, $user, null, 'asset.view', ScopeType::OrgUnitSubtree, accessUnit('BUK.PBJ'));
+
+        // The scopes form one OR group, so a search condition next to it still applies to every scope.
+        $found = VisibleTo::apply(DB::table('access_probe')->where('id', '>', 1), $user, 'asset.view', ['unit' => 'unit_id'])
+            ->orderBy('id')
+            ->pluck('id')
+            ->map(fn (mixed $id): int => (int) $id)
+            ->all();
+
+        expect($found)->toBe([2, 4]);
+    });
+
+    // The Warehouse scope cannot be given through GrantAccess until the Inventory module names its warehouses, so the row is
+    // planted directly to prove the evaluator and visibleTo on it (TAC-02).
+    test('a warehouse grant covers its own warehouse only', function () {
+        $user = User::factory()->create();
+        DB::table('access_grants')->insert([
+            'public_id' => strtolower((string) Str::ulid()),
+            'user_id' => $user->id,
+            'capability' => 'inventory.view',
+            'scope_type' => 'WAREHOUSE',
+            'scope_id' => 1,
+            'requires_approval' => false,
+            'effective_from' => BusinessDate::today()->toDateString(),
+            'reason' => 'Gudang uji sebelum modul Inventory',
+            'granted_by' => accessGranter()->id,
+            'status' => 'ACTIVE',
+        ]);
+        DB::table('access_probe')->insert([
+            ['id' => 5, 'unit_id' => accessUnit('FT'), 'warehouse_id' => 1, 'policy_family' => null],
+            ['id' => 6, 'unit_id' => accessUnit('FT'), 'warehouse_id' => 2, 'policy_family' => null],
+        ]);
+        $evaluator = app(AccessEvaluator::class);
+
+        expect($evaluator->allows($user, 'inventory.view', AccessSubject::forWarehouse(1)))->toBeTrue()
+            ->and($evaluator->allows($user, 'inventory.view', AccessSubject::forWarehouse(2)))->toBeFalse()
+            ->and($evaluator->allows($user, 'inventory.view', AccessSubject::forUnit(accessUnit('FT'))))->toBeFalse()
+            ->and(visibleProbeIds($user, 'inventory.view'))->toBe([5]);
+    });
+
+    test('a policy family grant sees the rows of its own family only', function () {
+        $user = User::factory()->create();
+        $grant = accessGrant(accessGranter(), $user, null, 'admin.policy.activate', ScopeType::PolicyFamily, null, 'asset.depreciation');
+        app(ApproveGrant::class)->handle(accessGranter(), $grant, $grant->lock_version);
+        DB::table('access_probe')->insert([
+            ['id' => 7, 'unit_id' => null, 'warehouse_id' => null, 'policy_family' => 'asset.depreciation'],
+            ['id' => 8, 'unit_id' => null, 'warehouse_id' => null, 'policy_family' => 'procurement.authority'],
+        ]);
+
+        $found = VisibleTo::apply(DB::table('access_probe'), $user, 'admin.policy.activate', ['policy_family' => 'policy_family'])
+            ->pluck('id')
+            ->map(fn (mixed $id): int => (int) $id)
+            ->all();
+
+        expect($found)->toBe([7]);
     });
 
     test('a scope without its column shows nothing (fail closed)', function () {

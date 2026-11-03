@@ -3,7 +3,9 @@
 namespace App\Modules\Access\Actions;
 
 use App\Models\User;
+use App\Modules\Access\Events\GrantRevoked;
 use App\Modules\Access\Models\AccessGrant;
+use App\Modules\Organization\Support\BusinessDate;
 use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use App\Modules\Platform\Exceptions\StaleVersionException;
 use App\Modules\Platform\Support\Action;
@@ -22,7 +24,8 @@ final class RevokeGrant extends Action
         $this->transaction(function () use ($actor, $grant, $reason, $seenVersion): void {
             $grant->refresh();
 
-            if (! in_array($grant->status, [AccessGrant::PENDING_APPROVAL, AccessGrant::ACTIVE], true)) {
+            // A grant whose end has come is already EXPIRED; it stays so rather than turning REVOKED.
+            if (! in_array($grant->statusOn(BusinessDate::today()->toDateString()), [AccessGrant::PENDING_APPROVAL, AccessGrant::ACTIVE], true)) {
                 throw DomainRuleViolation::because('access.grant_not_revocable');
             }
 
@@ -32,6 +35,9 @@ final class RevokeGrant extends Action
                 'revoked_at' => now(),
                 'revoke_reason' => $reason,
             ])->saveAtVersion($seenVersion);
+
+            // Inside the transaction, so the revocation and its audit record commit or roll back together (fail closed).
+            GrantRevoked::dispatch($grant);
         });
     }
 }

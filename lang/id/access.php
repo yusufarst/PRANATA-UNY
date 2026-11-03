@@ -10,6 +10,7 @@ return [
     'effective_to_before_start' => 'Tanggal akhir berlaku harus sesudah tanggal mulainya.',
     'profile_inactive' => 'Profil akses ini sudah tidak aktif. Pilih profil lain.',
     'grant_not_pending' => 'Akses ini tidak lagi menunggu persetujuan. Muat ulang halaman untuk melihat keadaan terbaru.',
+    'grant_lapsed' => 'Masa berlaku akses ini sudah berakhir, jadi tidak dapat disetujui lagi. Beri akses baru bila masih diperlukan.',
     'cannot_approve_own_grant' => 'Akses yang Anda berikan sendiri harus disetujui oleh admin lain.',
     'grant_not_revocable' => 'Akses ini sudah dicabut atau kedaluwarsa.',
     'user_unknown' => 'Pengguna dengan nama pengguna ini tidak ditemukan.',

@@ -5,6 +5,7 @@ namespace App\Modules\Access\Models;
 use App\Models\User;
 use App\Modules\Access\Support\ScopeType;
 use App\Modules\Platform\Support\HasLockVersion;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -66,6 +67,45 @@ class AccessGrant extends Model
     public function uniqueIds(): array
     {
         return ['public_id'];
+    }
+
+    /**
+     * The status as of a day: a pending or active grant whose end has come is EXPIRED, as the evaluator already treats it.
+     */
+    public function statusOn(string $day): string
+    {
+        if (in_array($this->status, [self::PENDING_APPROVAL, self::ACTIVE], true)
+            && $this->effective_to !== null
+            && $this->effective_to->toDateString() <= $day) {
+            return self::EXPIRED;
+        }
+
+        return $this->status;
+    }
+
+    /**
+     * The grants whose status as of a day is the given one ({@see statusOn()}).
+     *
+     * @param  Builder<AccessGrant>  $query
+     * @return Builder<AccessGrant>
+     */
+    public function scopeWithStatusOn(Builder $query, string $status, string $day): Builder
+    {
+        if ($status === self::EXPIRED) {
+            return $query->where(fn ($query) => $query
+                ->where('status', self::EXPIRED)
+                ->orWhere(fn ($query) => $query
+                    ->whereIn('status', [self::PENDING_APPROVAL, self::ACTIVE])
+                    ->where('effective_to', '<=', $day)));
+        }
+
+        $query->where('status', $status);
+
+        if (in_array($status, [self::PENDING_APPROVAL, self::ACTIVE], true)) {
+            $query->where(fn ($query) => $query->whereNull('effective_to')->orWhere('effective_to', '>', $day));
+        }
+
+        return $query;
     }
 
     /**

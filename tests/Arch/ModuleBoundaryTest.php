@@ -12,7 +12,8 @@ const MODULE_DEPENDENCIES = [
     'Access' => ['Identity', 'Organization', 'Policy'],
     'Reference' => ['Organization'],
     'Work' => ['Access'],
-    'Audit' => ['Identity'],
+    // Audit listens to the events of Access (grant changes); section 5.3 places Audit after Access.
+    'Audit' => ['Identity', 'Access'],
     'Workflow' => ['Access', 'Audit'],
     'Numbering' => ['Policy'],
     'Files' => ['Access'],

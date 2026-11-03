@@ -3,6 +3,7 @@
 namespace App\Modules\Access\Actions;
 
 use App\Models\User;
+use App\Modules\Access\Events\GrantGiven;
 use App\Modules\Access\Models\AccessGrant;
 use App\Modules\Access\Models\AccessProfile;
 use App\Modules\Access\Support\CapabilityCatalog;
@@ -76,7 +77,7 @@ final class GrantAccess extends Action
             $privileged = ($profile !== null && $profile->is_privileged)
                 || array_filter($given, fn (string $each): bool => CapabilityCatalog::isPrivileged($each, $scope)) !== [];
 
-            return AccessGrant::query()->create([
+            $grant = AccessGrant::query()->create([
                 'user_id' => $user->id,
                 'profile_id' => $profile?->id,
                 'capability' => $capability,
@@ -90,6 +91,11 @@ final class GrantAccess extends Action
                 'granted_by' => $actor->id,
                 'status' => $privileged ? AccessGrant::PENDING_APPROVAL : AccessGrant::ACTIVE,
             ]);
+
+            // Inside the transaction, so the grant and its audit record commit or roll back together (fail closed).
+            GrantGiven::dispatch($grant);
+
+            return $grant;
         });
     }
 
@@ -109,7 +115,7 @@ final class GrantAccess extends Action
     {
         $known = match ($scope) {
             ScopeType::Global, ScopeType::Workspace => true,
-            ScopeType::OrgUnit, ScopeType::OrgUnitSubtree => $scopeId !== null && UnitScope::exists($scopeId),
+            ScopeType::OrgUnit, ScopeType::OrgUnitSubtree => $scopeId !== null && UnitScope::isActive($scopeId),
             // The warehouses arrive with the Inventory module, which then names them here; until then none can be checked.
             ScopeType::Warehouse => false,
             ScopeType::PolicyFamily => $scopeKey !== null && preg_match(self::POLICY_FAMILY_PATTERN, $scopeKey) === 1,

@@ -1,5 +1,5 @@
-import { Form, Head, Link } from '@inertiajs/react';
-import { ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Form, Head, Link, usePage } from '@inertiajs/react';
+import { ArrowLeft, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import GrantController from '@/actions/App/Modules/Access/Http/Controllers/GrantController';
@@ -50,7 +50,12 @@ export default function GrantShow({
     const { t } = useTranslation();
     const dateTime = useDateTime();
     const command = useCommand();
+    // A refused approval answers with the reason under _domain, also when the grant changed meanwhile and the button is gone.
+    const { errors } = usePage().props;
     const [revoking, setRevoking] = useState(false);
+    const failure = revoking
+        ? undefined
+        : (errors._domain ?? errors._idempotency);
     const none = t('admin:access.fields.none');
     const target = scopeTarget(grant);
 
@@ -173,6 +178,14 @@ export default function GrantShow({
                         )
                     }
                 />
+
+                {failure && (
+                    <Alert className="border-danger" data-test="grant-error">
+                        <ShieldAlert aria-hidden="true" />
+                        <AlertTitle>{t('admin:access.failed')}</AlertTitle>
+                        <AlertDescription>{failure}</AlertDescription>
+                    </Alert>
+                )}
 
                 {grant.status === 'PENDING_APPROVAL' && (
                     <Alert data-test="pending-grant">

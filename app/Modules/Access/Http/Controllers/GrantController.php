@@ -43,6 +43,7 @@ class GrantController
             'q' => trim($request->string('q')->value()),
             'status' => in_array($request->query('status'), self::STATUSES, true) ? $request->query('status') : '',
         ];
+        $today = BusinessDate::today()->toDateString();
 
         $grants = AccessGrant::query()
             ->with(['user:id,public_id,username,name', 'profile:id,code,name'])
@@ -53,7 +54,7 @@ class GrantController
                     ->whereRaw('lower(username) like ?', [$term])
                     ->orWhereRaw('lower(name) like ?', [$term])));
             })
-            ->when($filters['status'] !== '', fn ($query) => $query->where('status', $filters['status']))
+            ->when($filters['status'] !== '', fn ($query) => $query->withStatusOn($filters['status'], $today))
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->paginate(20)
@@ -64,7 +65,7 @@ class GrantController
         return Inertia::render('admin/access/index', [
             'grants' => $grants->through(fn (AccessGrant $grant): array => self::summary($grant, $units)),
             'filters' => $filters,
-            'pendingCount' => AccessGrant::query()->where('status', AccessGrant::PENDING_APPROVAL)->count(),
+            'pendingCount' => AccessGrant::query()->withStatusOn(AccessGrant::PENDING_APPROVAL, $today)->count(),
             'can' => ['grant' => $request->user()?->can('admin.access.grant') ?? false],
         ]);
     }
@@ -73,7 +74,10 @@ class GrantController
     {
         Gate::authorize('admin.access.grant');
 
-        $user = User::query()->where('public_id', $request->query('user'))->first(['id', 'public_id', 'username', 'name']);
+        $publicId = $request->query('user');
+        $user = is_string($publicId)
+            ? User::query()->where('public_id', $publicId)->first(['id', 'public_id', 'username', 'name'])
+            : null;
 
         return Inertia::render('admin/access/form', [
             // Opened from the detail of a user, the form names that user and its cancel leads back there.
@@ -187,7 +191,8 @@ class GrantController
             'scope_id' => $grant->scope_type === ScopeType::Warehouse ? $grant->scope_id : null,
             'scope_key' => $grant->scope_key,
             'requires_approval' => $grant->requires_approval,
-            'status' => $grant->status,
+            // A grant past its end shows EXPIRED, as the evaluator already treats it.
+            'status' => $grant->statusOn(BusinessDate::today()->toDateString()),
             'effective_from' => $grant->effective_from->toDateString(),
             'effective_to' => $grant->effective_to?->toDateString(),
             'created_at' => $grant->created_at?->toIso8601String(),
@@ -205,6 +210,7 @@ class GrantController
             ->whereIn('id', array_filter([$grant->granted_by, $grant->approved_by, $grant->revoked_by]))
             ->pluck('name', 'id');
         $own = $actor !== null && $grant->user_id === $actor->id;
+        $status = $grant->statusOn(BusinessDate::today()->toDateString());
 
         return [
             'grant' => [
@@ -222,14 +228,14 @@ class GrantController
             'canOpenUser' => $actor?->can('admin.users.manage') ?? false,
             // SOD-05, TAC-03: the second person is neither the granter nor the receiver; the server checks this again.
             'can' => [
-                'approve' => $grant->status === AccessGrant::PENDING_APPROVAL
+                'approve' => $status === AccessGrant::PENDING_APPROVAL
                     && ($actor?->can('admin.access.approve') ?? false)
                     && $grant->granted_by !== $actor->id
                     && ! $own,
-                'revoke' => in_array($grant->status, [AccessGrant::PENDING_APPROVAL, AccessGrant::ACTIVE], true)
+                'revoke' => in_array($status, [AccessGrant::PENDING_APPROVAL, AccessGrant::ACTIVE], true)
                     && ($actor?->can('admin.access.grant') ?? false),
             ],
-            'approvalBlocked' => $grant->status === AccessGrant::PENDING_APPROVAL && ($grant->granted_by === $actor?->id || $own),
+            'approvalBlocked' => $status === AccessGrant::PENDING_APPROVAL && ($grant->granted_by === $actor?->id || $own),
         ];
     }
 

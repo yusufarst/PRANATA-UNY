@@ -401,6 +401,7 @@
         "pending_notice": "Access waiting for approval: {{count}}.",
         "pending_show": "Show the waiting ones",
         "pending_title": "Waiting for approval",
+        "failed": "This step cannot be done",
         "pending_description": "This privileged access does not apply yet. Check it, then approve it when it is right.",
         "pending_other": "Another administrator must approve this access, not the one who gave or receives it.",
         "empty_title": "No access given yet",

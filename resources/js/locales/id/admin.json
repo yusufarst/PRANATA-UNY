@@ -401,6 +401,7 @@
         "pending_notice": "Akses yang menunggu persetujuan: {{count}}.",
         "pending_show": "Lihat yang menunggu",
         "pending_title": "Menunggu persetujuan",
+        "failed": "Langkah ini tidak dapat dilakukan",
         "pending_description": "Akses istimewa ini belum berlaku. Periksa isinya, lalu setujui bila sudah tepat.",
         "pending_other": "Akses ini harus disetujui admin lain, bukan pemberi atau penerimanya.",
         "empty_title": "Belum ada akses yang diberikan",

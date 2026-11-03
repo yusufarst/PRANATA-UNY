@@ -10,6 +10,7 @@ return [
     'effective_to_before_start' => 'The end date must be after the start date.',
     'profile_inactive' => 'This access profile is no longer active. Choose another profile.',
     'grant_not_pending' => 'This access no longer waits for approval. Reload the page to see the latest state.',
+    'grant_lapsed' => 'This access has passed its end date, so it can no longer be approved. Give new access if it is still needed.',
     'cannot_approve_own_grant' => 'Access that you gave must be approved by another administrator.',
     'grant_not_revocable' => 'This access is already revoked or expired.',
     'user_unknown' => 'No user has this username.',

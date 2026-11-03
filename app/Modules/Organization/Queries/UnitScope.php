@@ -7,14 +7,17 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * The public reads of the unit tree for the access scopes of other modules (ARCHITECTURE section 5 rule 2): whether a unit
- * exists, whether it lies in the subtree of another, and a query condition for "in the subtree of one of these units". The
+ * is active, whether it lies in the subtree of another, and a query condition for "in the subtree of one of these units". The
  * subtree is the ltree path, GiST-indexed (DATA_MODEL section 6).
  */
 final class UnitScope
 {
-    public static function exists(int $unitId): bool
+    /**
+     * Whether the unit exists and is active, so a new scope never names a closed unit.
+     */
+    public static function isActive(int $unitId): bool
     {
-        return DB::table('org_units')->where('id', $unitId)->exists();
+        return DB::table('org_units')->where('id', $unitId)->where('status', 'ACTIVE')->exists();
     }
 
     public static function idOf(string $publicId): ?int

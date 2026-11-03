@@ -253,6 +253,7 @@ describe('granting through PG-503', function () {
         $admin = grantAdmin();
         $user = User::factory()->create();
         $gone = User::factory()->withStatus(User::DEACTIVATED)->create();
+        $vendor = User::factory()->inRoleGroup(User::VENDOR)->create();
 
         $this->actingAs($admin);
         $this->get(route('identity.admin.users.show', $user->public_id))
@@ -261,6 +262,13 @@ describe('granting through PG-503', function () {
             ->assertInertia(fn (Assert $page) => $page->where('can.grantAccess', false));
         $this->get(route('identity.admin.users.show', $gone->public_id))
             ->assertInertia(fn (Assert $page) => $page->where('can.grantAccess', false));
+        // A vendor account holds no capability of the catalog, so the form would only refuse it.
+        $this->get(route('identity.admin.users.show', $vendor->public_id))
+            ->assertInertia(fn (Assert $page) => $page->where('can.grantAccess', false));
+        // A malformed user parameter opens the form for no one rather than failing.
+        $this->get(route('access.admin.grants.create', ['user' => ['x']]))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->where('user', null));
 
         $this->actingAs(delegatedAdmin('admin.users.manage'))
             ->get(route('identity.admin.users.show', $user->public_id))
@@ -394,6 +402,32 @@ describe('the list', function () {
 
         $this->get(route('access.admin.grants.index', ['status' => 'BOGUS', 'q' => '%']))
             ->assertInertia(fn (Assert $page) => $page->has('grants.data', 0)->where('filters.status', ''));
+    });
+
+    test('a grant past its end shows Kedaluwarsa, under the expired filter, without Cabut', function () {
+        $grant = app(GrantAccess::class)->handle(
+            grantAdmin(),
+            User::factory()->create(),
+            null,
+            'asset.view',
+            ScopeType::Global,
+            null,
+            null,
+            BusinessDate::today(),
+            BusinessDate::today()->addDay(),
+            'Penugasan staf sesuai surat tugas',
+        );
+
+        // The session starts after the day has passed, so the idle limit does not end it.
+        $this->travel(1)->days();
+        $this->actingAs(grantAdmin());
+
+        $this->get(route('access.admin.grants.index', ['status' => AccessGrant::EXPIRED]))
+            ->assertInertia(fn (Assert $page) => $page->has('grants.data', 1)->where('grants.data.0.status', AccessGrant::EXPIRED));
+        $this->get(route('access.admin.grants.index', ['status' => AccessGrant::ACTIVE]))
+            ->assertInertia(fn (Assert $page) => $page->has('grants.data', 0));
+        $this->get(route('access.admin.grants.show', $grant->public_id))
+            ->assertInertia(fn (Assert $page) => $page->where('grant.status', AccessGrant::EXPIRED)->where('can.revoke', false));
     });
 });
 
