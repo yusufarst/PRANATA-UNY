@@ -183,6 +183,10 @@ jobs:
       - name: A forbidden module import must fail the architecture test
         run: |
           # Pest ignores a dependency on a class that does not exist, so the probe needs a real one.
+          # The probe must never overwrite or delete real module code.
+          for probe in app/Modules/Identity/Models/Account.php app/Modules/Platform/Actions/ForbiddenProbe.php; do
+            if [ -e "$probe" ]; then echo "probe file already exists: $probe"; exit 1; fi
+          done
           mkdir -p app/Modules/Platform/Actions app/Modules/Identity/Models
           cat > app/Modules/Identity/Models/Account.php <<'PHP'
           <?php
@@ -210,7 +214,9 @@ jobs:
           fi
           grep -E 'FAILED|Tests:' arch.log
           grep -q 'Platform uses no' arch.log
-          rm -r app/Modules/Platform/Actions app/Modules/Identity
+          rm app/Modules/Platform/Actions/ForbiddenProbe.php app/Modules/Identity/Models/Account.php
+          rmdir --ignore-fail-on-non-empty app/Modules/Platform/Actions app/Modules/Identity/Models
+          if [ -n "$(git status --porcelain -- app)" ]; then git status --porcelain -- app; echo 'the probe left app/ changed'; exit 1; fi
 
       - name: A route without sign-in or authorization must fail the route test
         run: |
