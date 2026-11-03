@@ -20,7 +20,7 @@ const usedKeys = [
         sourceFiles('resources/js').flatMap((path) =>
             [
                 ...readFileSync(path, 'utf8').matchAll(
-                    /['"`]((?:common|states|auth|account):[\w.]+)['"`]/g,
+                    /['"`]((?:common|states|auth|account|admin):[\w.]+)['"`]/g,
                 ),
             ].map((match) => match[1]),
         ),

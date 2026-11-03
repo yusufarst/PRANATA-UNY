@@ -41,6 +41,10 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
+                // The menu mirrors the capabilities only; every route checks them again (ACCESS_CONTROL section 8).
+                'can' => [
+                    'manageUsers' => $request->user()?->can('admin.users.manage') ?? false,
+                ],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'locale' => App::getLocale(),

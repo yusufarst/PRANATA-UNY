@@ -20,6 +20,8 @@ final class SignInFailed
 
     public const NOT_ACTIVE = 'not_active';
 
+    public const SECRET_EXPIRED = 'secret_expired';
+
     /**
      * @param  User|null  $user  the account the identity names, null when it names none
      */

@@ -4,6 +4,7 @@ namespace App\Modules\Identity\Support;
 
 use App\Models\User;
 use App\Modules\Identity\Events\SignInFailed;
+use App\Modules\Identity\Models\PasswordReset;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,15 +74,46 @@ class CredentialAuthenticator
             return $this->refuse($user, SignInFailed::NOT_ACTIVE);
         }
 
+        if ($this->usesExpiredSecret($user)) {
+            return $this->refuse($user, SignInFailed::SECRET_EXPIRED);
+        }
+
         $this->lockout->clear($user);
 
         $provider = Auth::guard()->getProvider();
 
-        if ($provider instanceof EloquentUserProvider && config('hashing.rehash_on_login', true)) {
+        // A one-time secret keeps its hash until the forced change: its record is found by that hash.
+        if ($provider instanceof EloquentUserProvider && ! $user->must_change_password && config('hashing.rehash_on_login', true)) {
             $provider->rehashPasswordIfRequired($user, ['password' => $password]);
         }
 
         return $user;
+    }
+
+    /**
+     * Whether the password is a one-time secret from an administrator that is past its life (SECURITY_MODEL section 3.1).
+     * Such a secret is the password only until the forced change, and its record holds the same hash.
+     */
+    private function usesExpiredSecret(User $user): bool
+    {
+        if (! $user->must_change_password) {
+            return false;
+        }
+
+        $secret = PasswordReset::query()
+            ->where('user_id', $user->getKey())
+            ->where('status', PasswordReset::ISSUED)
+            ->where('temp_secret_hash', $user->password)
+            ->latest('id')
+            ->first();
+
+        if ($secret === null || $secret->expires_at->isFuture()) {
+            return false;
+        }
+
+        $secret->forceFill(['status' => PasswordReset::EXPIRED])->save();
+
+        return true;
     }
 
     /**

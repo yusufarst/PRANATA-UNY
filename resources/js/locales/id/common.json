@@ -2,6 +2,7 @@
     "nav": {
         "main": "Menu utama",
         "home": "Beranda",
+        "users": "Pengguna",
         "breadcrumb": "Lokasi halaman",
         "toggle": "Buka atau tutup menu",
         "drawer_title": "Menu",

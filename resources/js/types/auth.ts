@@ -12,6 +12,10 @@ export type User = {
 
 export type Auth = {
     user: User;
+    /** What the menu may offer; the server checks every route again. */
+    can: {
+        manageUsers: boolean;
+    };
 };
 
 export type TwoFactorSetupData = {

@@ -65,6 +65,9 @@ return [
 
     'password_min_length' => (int) env('AUTH_PASSWORD_MIN_LENGTH', 8),
 
+    // How long an activation code or a temporary password from an administrator stays usable (SECURITY_MODEL section 3.1).
+    'one_time_secret_hours' => (int) env('AUTH_ONE_TIME_SECRET_HOURS', 24),
+
     /*
     |--------------------------------------------------------------------------
     | User Providers

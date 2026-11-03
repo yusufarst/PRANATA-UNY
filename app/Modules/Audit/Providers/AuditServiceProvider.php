@@ -3,6 +3,7 @@
 namespace App\Modules\Audit\Providers;
 
 use App\Modules\Audit\Console\EnsureAuditPartitionsCommand;
+use App\Modules\Audit\Listeners\RecordAccountAdministration;
 use App\Modules\Audit\Listeners\RecordAuthenticationEvents;
 use App\Modules\Audit\Support\AuditLogger;
 use App\Modules\ModuleServiceProvider;
@@ -27,6 +28,7 @@ class AuditServiceProvider extends ModuleServiceProvider
         parent::boot();
 
         Event::subscribe(RecordAuthenticationEvents::class);
+        Event::subscribe(RecordAccountAdministration::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([EnsureAuditPartitionsCommand::class]);

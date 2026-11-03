@@ -1,0 +1,94 @@
+{
+    "users": {
+        "title": "Pengguna",
+        "intro": "Kelola akun yang dapat masuk ke PRANATA.",
+        "create": "Buat pengguna",
+        "edit": "Ubah data",
+        "deactivate": "Nonaktifkan",
+        "back_to_list": "Daftar pengguna",
+        "back_to_detail": "Kembali ke detail",
+        "filters": {
+            "label": "Saring pengguna",
+            "search": "Cari",
+            "search_placeholder": "Nama, username atau email",
+            "status": "Status",
+            "role_group": "Kelompok peran",
+            "all": "Semua",
+            "apply": "Terapkan",
+            "reset": "Hapus saringan"
+        },
+        "empty_title": "Belum ada pengguna",
+        "empty_description": "Buat akun pertama, lalu serahkan kode aktivasinya secara langsung.",
+        "empty_filtered_title": "Tidak ada pengguna yang cocok",
+        "empty_filtered_description": "Ubah atau hapus saringan untuk melihat pengguna lain.",
+        "pagination": {
+            "label": "Halaman daftar",
+            "previous": "Sebelumnya",
+            "next": "Berikutnya",
+            "summary": "Halaman {{current}} dari {{last}} · {{total}} pengguna"
+        },
+        "fields": {
+            "name": "Nama",
+            "username": "Username",
+            "email": "Email",
+            "email_hint": "Opsional. Akun tetap dapat dipakai tanpa email.",
+            "staff_identifier": "Nomor pegawai atau identitas",
+            "staff_identifier_hint": "Opsional, misalnya NIP atau nomor identitas penyedia.",
+            "role_group": "Kelompok peran",
+            "role_group_hint": "Hanya dapat dipilih saat akun dibuat.",
+            "status": "Status",
+            "locale": "Bahasa",
+            "last_login_at": "Terakhir masuk",
+            "created_at": "Dibuat",
+            "deactivated_at": "Dinonaktifkan",
+            "must_change_password": "Wajib ganti password",
+            "never": "Belum pernah",
+            "yes": "Ya",
+            "no": "Tidak",
+            "none": "—"
+        },
+        "role_group": {
+            "SUPER_ADMIN": "Super admin",
+            "INTERNAL": "Internal",
+            "VENDOR": "Penyedia"
+        },
+        "status": {
+            "ACTIVE": "Aktif",
+            "SUSPENDED": "Ditangguhkan",
+            "LOCKED": "Terkunci",
+            "DEACTIVATED": "Nonaktif"
+        },
+        "locale": {
+            "id": "Bahasa Indonesia",
+            "en": "Bahasa Inggris"
+        },
+        "form": {
+            "create_title": "Buat pengguna",
+            "create_intro": "Akun baru mendapat kode aktivasi sekali pakai. Anda tidak mengetahui password pengguna.",
+            "edit_title": "Ubah data pengguna",
+            "edit_intro": "Perubahan tercatat di jejak audit.",
+            "submit_create": "Buat pengguna",
+            "submit_edit": "Simpan perubahan"
+        },
+        "detail": {
+            "title": "Detail pengguna",
+            "section": "Data akun",
+            "deactivated_note": "Akun ini sudah dinonaktifkan. Datanya dan riwayat auditnya tetap disimpan."
+        },
+        "secret": {
+            "activation_title": "Kode aktivasi",
+            "activation_intro": "Serahkan kode ini secara langsung kepada pengguna. Kode hanya tampil sekali dan tidak dapat dilihat lagi.",
+            "use_note": "Pengguna masuk dengan username dan kode ini, lalu wajib membuat password baru.",
+            "expires": "Berlaku sampai {{time}}",
+            "copy": "Salin kode",
+            "copied": "Kode tersalin"
+        },
+        "deactivation": {
+            "title": "Nonaktifkan akun ini?",
+            "description": "Akun tidak dapat masuk lagi dan semua sesinya langsung berakhir. Data dan riwayat auditnya tetap disimpan. Tindakan ini tidak dapat dibatalkan dari layar ini.",
+            "reason": "Alasan",
+            "reason_placeholder": "Misalnya: pegawai pindah tugas sejak 1 November",
+            "confirm": "Ya, nonaktifkan"
+        }
+    }
+}

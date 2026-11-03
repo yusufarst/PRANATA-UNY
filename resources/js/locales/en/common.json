@@ -2,6 +2,7 @@
     "nav": {
         "main": "Main menu",
         "home": "Home",
+        "users": "Users",
         "breadcrumb": "Page location",
         "toggle": "Open or close the menu",
         "drawer_title": "Menu",

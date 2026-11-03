@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Modules\Platform\Support\HasLockVersion;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -43,7 +44,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasUlids, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, HasLockVersion, HasUlids, Notifiable, TwoFactorAuthenticatable;
 
     public const SUPER_ADMIN = 'SUPER_ADMIN';
 

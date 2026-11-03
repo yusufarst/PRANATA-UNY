@@ -1,5 +1,6 @@
-import { Link } from '@inertiajs/react';
-import { House } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { House, Users } from 'lucide-react';
+import UserAdministrationController from '@/actions/App/Modules/Identity/Http/Controllers/UserAdministrationController';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import {
@@ -13,15 +14,27 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'common:nav.home',
-        href: dashboard(),
-        icon: House,
-    },
-];
-
 export function AppSidebar() {
+    const { auth } = usePage().props;
+
+    // The menu offers only what the account may open; the server checks every route again.
+    const mainNavItems: NavItem[] = [
+        {
+            title: 'common:nav.home',
+            href: dashboard(),
+            icon: House,
+        },
+        ...(auth.can.manageUsers
+            ? [
+                  {
+                      title: 'common:nav.users',
+                      href: UserAdministrationController.index(),
+                      icon: Users,
+                  },
+              ]
+            : []),
+    ];
+
     return (
         <Sidebar collapsible="icon" variant="sidebar">
             <SidebarHeader>

@@ -140,7 +140,7 @@ test('an account that is no longer active loses the session on the next request'
     $user = User::factory()->create();
 
     $this->actingAs($user)->get(route('dashboard'))->assertOk();
-    $user->forceFill(['status' => $status])->save();
+    $user->forceFill(['status' => $status, 'deactivated_at' => $status === User::DEACTIVATED ? now() : null])->save();
 
     $this->get(route('dashboard'))->assertRedirect(route('login'));
     $this->assertGuest();

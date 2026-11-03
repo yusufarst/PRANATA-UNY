@@ -1,0 +1,94 @@
+{
+    "users": {
+        "title": "Users",
+        "intro": "Manage the accounts that can sign in to PRANATA.",
+        "create": "Create user",
+        "edit": "Edit details",
+        "deactivate": "Deactivate",
+        "back_to_list": "User list",
+        "back_to_detail": "Back to details",
+        "filters": {
+            "label": "Filter users",
+            "search": "Search",
+            "search_placeholder": "Name, username or email",
+            "status": "Status",
+            "role_group": "Role group",
+            "all": "All",
+            "apply": "Apply",
+            "reset": "Clear filters"
+        },
+        "empty_title": "No users yet",
+        "empty_description": "Create the first account, then hand over its activation code in person.",
+        "empty_filtered_title": "No users match",
+        "empty_filtered_description": "Change or clear the filters to see other users.",
+        "pagination": {
+            "label": "List pages",
+            "previous": "Previous",
+            "next": "Next",
+            "summary": "Page {{current}} of {{last}} · {{total}} users"
+        },
+        "fields": {
+            "name": "Name",
+            "username": "Username",
+            "email": "Email",
+            "email_hint": "Optional. The account works without an email.",
+            "staff_identifier": "Staff or identity number",
+            "staff_identifier_hint": "Optional, such as an employee number or a vendor identity number.",
+            "role_group": "Role group",
+            "role_group_hint": "Can only be chosen when the account is created.",
+            "status": "Status",
+            "locale": "Language",
+            "last_login_at": "Last sign-in",
+            "created_at": "Created",
+            "deactivated_at": "Deactivated",
+            "must_change_password": "Must change password",
+            "never": "Never",
+            "yes": "Yes",
+            "no": "No",
+            "none": "—"
+        },
+        "role_group": {
+            "SUPER_ADMIN": "Super admin",
+            "INTERNAL": "Internal",
+            "VENDOR": "Vendor"
+        },
+        "status": {
+            "ACTIVE": "Active",
+            "SUSPENDED": "Suspended",
+            "LOCKED": "Locked",
+            "DEACTIVATED": "Deactivated"
+        },
+        "locale": {
+            "id": "Indonesian",
+            "en": "English"
+        },
+        "form": {
+            "create_title": "Create user",
+            "create_intro": "A new account gets a one-time activation code. You never know the user's password.",
+            "edit_title": "Edit user details",
+            "edit_intro": "Changes are recorded in the audit trail.",
+            "submit_create": "Create user",
+            "submit_edit": "Save changes"
+        },
+        "detail": {
+            "title": "User details",
+            "section": "Account details",
+            "deactivated_note": "This account has been deactivated. Its data and audit history are kept."
+        },
+        "secret": {
+            "activation_title": "Activation code",
+            "activation_intro": "Hand this code to the user in person. It is shown only once and cannot be viewed again.",
+            "use_note": "The user signs in with their username and this code, then must set a new password.",
+            "expires": "Valid until {{time}}",
+            "copy": "Copy code",
+            "copied": "Code copied"
+        },
+        "deactivation": {
+            "title": "Deactivate this account?",
+            "description": "The account can no longer sign in and all of its sessions end at once. Its data and audit history are kept. This cannot be undone from this screen.",
+            "reason": "Reason",
+            "reason_placeholder": "For example: transferred to another unit since 1 November",
+            "confirm": "Yes, deactivate"
+        }
+    }
+}

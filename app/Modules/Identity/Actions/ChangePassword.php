@@ -4,6 +4,7 @@ namespace App\Modules\Identity\Actions;
 
 use App\Models\User;
 use App\Modules\Identity\Events\PasswordChanged;
+use App\Modules\Identity\Models\PasswordReset;
 use App\Modules\Platform\Support\Action;
 use Illuminate\Support\Str;
 
@@ -24,6 +25,13 @@ final class ChangePassword extends Action
         $this->transaction(function () use ($user, $password, $via, $keepSessionId): void {
             // A retry starts from the stored row: the save of a rolled-back attempt left nothing dirty.
             $user->refresh();
+
+            // A one-time secret from an administrator that was the password is used up by this change.
+            PasswordReset::query()
+                ->where('user_id', $user->getKey())
+                ->where('status', PasswordReset::ISSUED)
+                ->where('temp_secret_hash', $user->password)
+                ->update(['status' => PasswordReset::USED, 'used_at' => now()]);
 
             $user->forceFill([
                 'password' => $password,
