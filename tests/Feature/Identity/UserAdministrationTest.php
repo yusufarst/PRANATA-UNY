@@ -237,7 +237,11 @@ test('a change made at an old version is refused with 409', function () {
             'locale' => 'id',
             'lock_version' => 0,
         ])
-        ->assertStatus(409);
+        ->assertStatus(409)
+        ->assertInertia(fn (Assert $page) => $page->component('admin/users/form')
+            ->where('account.name', 'Diubah Orang Lain')
+            ->where('account.lock_version', 1)
+            ->has('errors.lock_version'));
 
     expect($user->refresh()->name)->toBe('Diubah Orang Lain');
 });

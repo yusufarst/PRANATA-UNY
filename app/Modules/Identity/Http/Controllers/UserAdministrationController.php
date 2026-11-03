@@ -9,6 +9,7 @@ use App\Modules\Identity\Actions\UpdateAccount;
 use App\Modules\Identity\Http\Requests\AccountRequest;
 use App\Modules\Identity\Http\Requests\DeactivateAccountRequest;
 use App\Modules\Identity\Providers\IdentityServiceProvider;
+use App\Modules\Platform\Exceptions\StaleVersionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -111,7 +112,11 @@ class UserAdministrationController
     {
         Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
 
-        $updateAccount->handle($user, $request->details(), $request->integer('lock_version'));
+        try {
+            $updateAccount->handle($user, $request->details(), $request->integer('lock_version'));
+        } catch (StaleVersionException $exception) {
+            throw $exception->showing('admin/users/form', ['account' => self::account($user->fresh() ?? $user)]);
+        }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.account_saved')]);
 
@@ -122,7 +127,11 @@ class UserAdministrationController
     {
         Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
 
-        $deactivateAccount->handle($request->user(), $user, $request->string('reason')->trim()->value(), $request->integer('lock_version'));
+        try {
+            $deactivateAccount->handle($request->user(), $user, $request->string('reason')->trim()->value(), $request->integer('lock_version'));
+        } catch (StaleVersionException $exception) {
+            throw $exception->showing('admin/users/show', $this->detail($request, $user->fresh() ?? $user));
+        }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.account_deactivated_done')]);
 

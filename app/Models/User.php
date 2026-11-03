@@ -61,6 +61,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public const DEACTIVATED = 'DEACTIVATED';
 
     /**
+     * The column default, so a new model in memory already has the version an administrator would see.
+     *
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'lock_version' => 0,
+    ];
+
+    /**
      * The id stays the bigint key; only public_id is a ULID.
      *
      * @return list<string>
