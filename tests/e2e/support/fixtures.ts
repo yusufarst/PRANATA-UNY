@@ -37,6 +37,18 @@ export function collectCriticalErrors(page: Page): string[] {
 }
 
 export async function axeViolations(page: Page): Promise<AxeViolation[]> {
+    // A dialog fading in or out is half transparent, and axe would measure its contrast mid-way. Endless animations,
+    // such as a spinner, never settle and are left alone.
+    await page.waitForFunction(() =>
+        document
+            .getAnimations()
+            .every(
+                (animation) =>
+                    animation.playState !== 'running' ||
+                    animation.effect?.getComputedTiming().endTime === Infinity,
+            ),
+    );
+
     const { violations } = await new AxeBuilder({ page }).analyze();
 
     return violations.map(({ id, impact, nodes }) => ({
