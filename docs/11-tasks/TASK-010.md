@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: READY
-EXECUTION STAGE: READY
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: NO
@@ -236,19 +236,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- [x] Authorization
+- [x] Route integrity
+- [x] Interaction behavior
+- [x] Browser E2E if required
+- [x] Responsive/adaptive if required
+- [x] Visual breathing room/density if UI
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -263,18 +263,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41597084810](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41597084810) pada HEAD `3e9c9eb`: `changes`, `docs-check`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)` dan `ci-gate` sukses; log Pest per uji tidak dibaca, keberhasilan job adalah buktinya. TAC-01: `AuthenticationTest` (masuk dengan username atau email tanpa memandang huruf besar, akun tanpa email masuk dengan username). TAC-02: `AuthenticationTest` (akun bukan ACTIVE tidak dapat masuk, identitas tak dikenal mendapat pesan yang sama dengan password salah) dan `SessionAndPasswordTest` (akun yang tidak lagi aktif kehilangan sesi pada permintaan berikutnya). TAC-03: batas 5/menit per identitas+alamat, penguncian setelah 10 gagal selama 15 menit, kegagalan di luar jendela tidak mengunci, masuk berhasil menghapus kegagalan. TAC-04: akun dengan ganti password wajib ditahan di PG-002 `/password/change` (303 untuk mutasi), keluar dan pilihan bahasa tetap terbuka. TAC-05: keluar mengakhiri sesi; ganti atau reset password mencabut sesi lain dan token remember; timeout idle (lebih pendek untuk SUPER_ADMIN) dan absolut. TAC-06: halaman masuk lolos axe dalam dua bahasa pada 390×844 dan 1440×900. TAC-07: `RouteIntegrityTest` membuktikan `profile.destroy` tidak terdaftar, UI hapus akun dihapus, uji kit diganti; tidak adanya DELETE `users` untuk `pranata_app` dirujuk dari `DatabaseRolesTest` (TASK-008). Migrasi kolom akun `users` lulus `migrate:fresh` dan rollback di `ci-fast`.
+- Build result: `npm run build` lulus di `ci-fast`; Pint, Larastan, ESLint, Prettier dan TypeScript lulus.
+- Route evidence: `RouteIntegrityTest` lulus; rute PG-002 `/password/change` terdaftar, `profile.destroy` tidak ada.
+- Interaction evidence: identitas yang diketik dipertahankan setelah gagal; pesan generik; pengalihan 303 untuk mutasi yang kehabisan waktu atau tertahan ganti password.
+- Browser evidence: alur E2E login, shell dan bahasa lulus di Chromium dan WebKit pada kedua shard; axe halaman masuk lulus.
+- Localization evidence: teks baru di `lang/{id,en}/auth.php` dan `resources/js/locales/{id,en}/{auth,account}.json`; `translations:check` lulus; bahasa tersimpan `users.locale` disalin ke sesi saat masuk.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Codex review 5748507514 pada `9fca296` (`COMPLETED_WITH_FINDINGS`): P1 remember-me SUPER_ADMIN, P1 audit ganti password setelah commit, P2 rute terverifikasi untuk akun tanpa email; ketiganya valid dan diperbaiki di `3e9c9eb`, dibalas (4452001264, 4452002040, 4452002578); thread dibiarkan unresolved untuk Owner karena token eksekutor tidak dapat me-resolve; Codex tidak diminta ulang. Review independen HIGH pada `9fca296`: FAIL dengan P1 konfirmasi password lewat username Fortify `login`, P1 remember SUPER_ADMIN, P2 sesi LOCKED tetap hidup, P2 umur sesi sama dengan idle; semuanya diperbaiki di `3e9c9eb` bersama P3 pengalihan 303, waktu jalur terkunci dan retry `ChangePassword`. Review delta `9fca296..3e9c9eb`: PASS tanpa P0/P1/P2. P3 yang ditunda: cookie remember lama setelah promosi ke SUPER_ADMIN belum ditolak (perubahan peran TASK-011); race cek-lalu-hash penguncian; penulisan locale di luar Action; bahasa tamu diganti bahasa tersimpan saat masuk; `SESSION_SECURE_COOKIE=false` di `.env.example` perlu cek saat deploy; uji dua faktor berhenti di challenge; listener `PasswordChanged` harus tetap hanya basis data. Journey browser PG-002 opsional tidak ditambahkan.
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 61 berkas di [PR #38](https://github.com/yusufarst/PRANATA-UNY/pull/38), terutama `app/Modules/Identity/` (Action `ChangePassword`, middleware `EnsurePasswordIsChanged` dan `EnsureSessionIsCurrent`, `CredentialAuthenticator`, `LoginLockout`, migrasi kolom akun), `app/Modules/Audit/Listeners/RecordAuthenticationEvents.php`, `config/auth.php`, `config/session.php`, `config/fortify.php`, `resources/js/pages/auth/`, `routes/settings.php`, `.github/workflows/ci.yml`, `.gitleaks.toml`, serta uji di `tests/Feature/Auth`, `tests/Feature/Identity` dan `tests/Feature/Settings`.
+- PR / CI run: [PR #38](https://github.com/yusufarst/PRANATA-UNY/pull/38) MERGED; run di atas. Run gagal sebelumnya: 41585417711 dan 41588911075 (probe arsitektur `ci-fast` menghapus modul Identity yang asli, diperbaiki di `561baa6`), 41594312253 (pemindaian rahasia menandai password uji sintetis, di-allowlist sempit di `fbd675b`). Run hijau antara: 41588481276 (`41b2820`), 41594982055 (`fbd675b`).
+- Commit SHA: `3e9c9eb300fc2db16ef3c9c12d7cbcbc474d4749`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode SUPERVISED karena PR menyentuh `.github/workflows/ci.yml` (§8.1.6).
+- Notes: TAC-01–TAC-07 terbukti di CI. Default SEC-D2 (timeout idle) dan SEC-D3 (profil password COMPAT-8) diterapkan dan dapat dikonfigurasi. Tanpa registrasi publik dan tanpa login Google.
 
 ## SAFE NEXT TASK
 
