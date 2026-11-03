@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: NO
@@ -223,19 +223,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- [x] Authorization
+- [x] Route integrity
+- [x] Interaction behavior
+- [x] Browser E2E if required
+- [x] Responsive/adaptive if required
+- [x] Visual breathing room/density if UI
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -250,18 +250,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41666639423](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41666639423) pada HEAD `1babc34`: `changes`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)` dan `ci-gate` sukses; `docs-check` dilewati (tanpa perubahan dokumen); log Pest per uji tidak dibaca, keberhasilan job adalah buktinya. `tests/Feature/Organization/OrganizationTest.php`: TAC-01 pohon berurutan path dengan leluhur unit terpilih, pindah induk memindahkan seluruh subtree dengan path ltree dan `depth` konsisten, unit tidak dapat dipindah ke bawah dirinya atau subtree-nya, dua pindah yang bersilangan tidak pernah membentuk siklus; TAC-02 ganti nama menambah versi `org_unit_history` tanpa menimpa yang lama dan riwayat tidak dapat diubah; TAC-03 penunjukan berjangka dengan rujukan SK tanpa memberi izin, SK, akun staf yang layak dan jabatan yang belum dipegang wajib, jabatan milik unit tidak dapat dipegang di unit lain, masa jabatan yang sudah habis tidak menghalangi penunjukan baru atau penutupan unit; TAC-04 tanpa versi kebijakan resmi dan tanpa simulasi keputusan TR-285 ditolak, produksi tidak pernah mencatat keputusan simulasi, dengan versi kebijakan resmi keputusan tercatat resmi; alur WF-029 draft, validasi, kembali, koreksi, keputusan, penolakan beralasan dan penerapan (organisasi hanya berubah pada penerapan, keputusan tidak dapat dimundurkan tanggalnya, penerapan tidak sebelum tanggal berlaku); izin negatif pada rute organisasi dan menu. Migrasi organisasi lulus `migrate:fresh` dan rollback di `ci-fast`; hak peran DB lewat `DatabaseRoles`.
+- Build result: `npm run build` lulus di `ci-fast`; Pint, Larastan, ESLint, Prettier, TypeScript, `translations:check` dan pemindaian rahasia lulus.
+- Route evidence: RT-032 di `app/Modules/Organization/routes.php` di bawah `auth` + `can:admin.org.manage` + `two-factor`; uji "every organization route carries admin.org.manage" dan `RouteIntegrityTest` lulus.
+- Interaction evidence: PG-505 Administrasi → Organisasi: pohon unit yang dapat dicari (hasil mempertahankan leluhur), detail unit dengan riwayat, jabatan, penunjukan dan permintaan, satu aksi utama Ajukan perubahan, unit terpilih di URL; form permintaan perubahan (dibuka dari unit mengusulkan sub-unit; pindah tidak menawarkan unit itu atau subtree-nya); halaman permintaan dengan isu validasi, transisi dan dialog keputusan; keputusan simulasi ditandai pada permintaan dan riwayat.
+- Browser evidence: `tests/e2e/journeys/organization.spec.ts` (Kelola unit: cari, pilih, usulkan sub-unit, ajukan, eskalasi, putuskan, terapkan, riwayat; axe tanpa pelanggaran di tiap langkah) lulus di semua proyek browser, desktop dan mobile, pada kedua shard.
+- Localization evidence: teks baru di `lang/{id,en}/organization.php` dan `resources/js/locales/{id,en}/{admin,common}.json`; `translations:check` lulus.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Review independen HIGH pada `5d4ad06...b74be0c`: P1 R1 dua pindah bersilangan yang divalidasi pada pohon lama dapat membentuk siklus (TAC-01); P2 R2 race periksa-sebelum-kunci lain (nonaktifkan vs buat anak, kode ganda → 23505); keduanya diperbaiki di `5ac77ea` (TR-286 mengambil `pg_advisory_xact_lock` sebelum validasi ulang, siklus diperiksa ulang pada baris terkunci, uji regresi). Codex review 5755040281 pada `5ac77ea`: P2 C1 penunjukan ACTIVE yang masa jabatannya habis dianggap bentrok saat menunjuk atau menonaktifkan unit; P2 C2 jabatan milik unit dapat ditunjuk di unit lain; keduanya diperbaiki di `1babc34` dengan uji regresi (balasan 4456940037 dan 4456941112), delta diverifikasi dengan pembacaan terarah. Yang ditunda, tidak menghalangi: P2 R3 keputusan simulasi (hanya di luar produksi, data sintetis) membuat baris organisasi tanpa penanda simulasi pada baris itu sendiri, sedangkan permintaan, transisi dan riwayat unit ditandai; TAC-04 tetap berlaku karena produksi menolak TR-285 tanpa versi kebijakan resmi. P3 R4 tanpa pemisahan tugas pada TR-285 dan aktor penyetuju belum dipetakan (menunggu resolver kebijakan, tergerbang di produksi); R5 APPOINT dapat disetujui dengan `effective_from` ≥ `effective_to` muatan lalu tidak pernah dapat diterapkan (penerapan menolak dengan aman, permintaan dapat ditarik); R6 END_APPOINTMENT dapat memperpanjang masa jabatan dan penunjukan yang habis tetap ACTIVE; R7 isu validasi yang ditemukan saat penerapan ikut dibatalkan bersama penolakan; R8 celah uji (izin negatif untuk ubah/kembalikan, `lock_version` usang pada transisi, tarik dari S4), sebagian ditutup dengan uji pindah bersilangan; R9 N+1 pada ringkasan permintaan dan tanpa baris riwayat untuk turunan saat pindah (cek jabatan/unit dari R9 sudah ditutup C2).
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 51 berkas di [PR #44](https://github.com/yusufarst/PRANATA-UNY/pull/44), terutama `app/Modules/Organization/` (Action WF-029 per perintah, kontrak `MaintenancePolicy`, `ChangeValidator`, `ChangeApplier`, `UnitPath`, model, controller, form request, migrasi `org_units`/`org_unit_history`/`org_positions`/`org_appointments` dan permintaan perubahan beserta log transisinya, rute), `app/Modules/Platform/Support/DatabaseRoles.php`, `config/policy.php`, `database/seeders/OrganizationSeeder.php`, `resources/js/pages/admin/organization/`, `resources/js/components/admin/organization.tsx`, locale dan `lang/{id,en}/organization.php`, serta uji di `tests/Feature/Organization` dan `tests/e2e`. Tanpa perubahan `.github/workflows` atau `.gitleaks.toml`.
+- PR / CI run: [PR #44](https://github.com/yusufarst/PRANATA-UNY/pull/44) MERGED; run di atas. Run gagal yang tercatat (semuanya `ci-fast`): 41648096126 pada `33a5b25` (Larastan, diperbaiki di `eeb0a5a`), 41649112093 pada `eeb0a5a` (Prettier, diperbaiki di `53da081`), 41650352176 pada `53da081` (Larastan, diperbaiki di `b74be0c`). Run hijau antara: 41651505352 (`b74be0c`), 41664231511 (`5ac77ea`).
+- Commit SHA: `1babc3497b2db8e9b15006c5039714cf67b05259`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode AUTONOMOUS (opsi A).
+- Notes: TAC-01–TAC-04 terbukti di CI. TR-285 tergerbang `MaintenancePolicy`; selama resolver kebijakan (TASK-018) belum ada, `UnresolvedMaintenancePolicy` tidak pernah melaporkan versi resmi, sehingga di produksi keputusan selalu ditolak dan di luar produksi hanya dicatat sebagai simulasi bila `policy.allow_draft` aktif. Semua penulisan organisasi melewati TR-286 yang diserialkan. Kolom `evidence_file_id` belum ada; ditambahkan TASK-016. Seeder organisasi sintetis menolak produksi.
 
 ## SAFE NEXT TASK
 
