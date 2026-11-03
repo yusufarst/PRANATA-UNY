@@ -31,7 +31,7 @@ final class UnitScope
      */
     public static function choices(): array
     {
-        return DB::table('org_units')
+        return array_values(DB::table('org_units')
             ->where('status', 'ACTIVE')
             ->orderBy('path')
             ->get(['public_id', 'code', 'name', 'depth'])
@@ -41,8 +41,7 @@ final class UnitScope
                 'name' => (string) $unit->name,
                 'depth' => (int) $unit->depth,
             ])
-            ->values()
-            ->all();
+            ->all());
     }
 
     /**

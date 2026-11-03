@@ -59,7 +59,7 @@ class GrantController
             ->paginate(20)
             ->withQueryString();
 
-        $units = UnitScope::labels($this->unitIds($grants->getCollection()->values()->all()));
+        $units = UnitScope::labels($this->unitIds(array_values($grants->getCollection()->all())));
 
         return Inertia::render('admin/access/index', [
             'grants' => $grants->through(fn (AccessGrant $grant): array => self::summary($grant, $units)),
@@ -224,7 +224,7 @@ class GrantController
             'can' => [
                 'approve' => $grant->status === AccessGrant::PENDING_APPROVAL
                     && ($actor?->can('admin.access.approve') ?? false)
-                    && $grant->granted_by !== $actor?->id
+                    && $grant->granted_by !== $actor->id
                     && ! $own,
                 'revoke' => in_array($grant->status, [AccessGrant::PENDING_APPROVAL, AccessGrant::ACTIVE], true)
                     && ($actor?->can('admin.access.grant') ?? false),

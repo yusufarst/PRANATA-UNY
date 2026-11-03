@@ -13,12 +13,12 @@ const UNIT_OF_PROJECT: Record<string, string> = {
     'webkit-desktop': 'BUK.PBJ',
 };
 
-const MENU_TOGGLE = 'Buka atau tutup menu';
-
-// On a phone the menu is in the drawer; on a wide screen it is the sidebar.
+// On a phone the menu is in the drawer; on a wide screen it is the sidebar. By attribute: the toggle's name follows the
+// language of the account.
 async function openMenu(page: Page): Promise<void> {
     if ((page.viewportSize()?.width ?? 0) < 640) {
-        await page.getByRole('button', { name: MENU_TOGGLE }).click();
+        await page.locator('[data-sidebar="trigger"]').first().click();
+        await expect(page.getByRole('dialog')).toBeVisible();
     }
 }
 
@@ -31,6 +31,7 @@ test.describe('an account without a grant', () => {
         criticalErrors,
     }) => {
         await page.goto('/home');
+        await openMenu(page);
         await expect(page.locator('a[href="/home"]').first()).toBeAttached();
         await expect(page.locator('a[href="/admin/access"]')).toHaveCount(0);
         await expect(page.locator('a[href="/admin/users"]')).toHaveCount(0);
