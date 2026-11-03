@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: IN_PROGRESS
-EXECUTION STAGE: IN_PROGRESS
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: NO
@@ -236,19 +236,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- [x] Authorization
+- [x] Route integrity
+- [x] Interaction behavior
+- [x] Browser E2E if required
+- [x] Responsive/adaptive if required
+- [x] Visual breathing room/density if UI
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -263,18 +263,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41688261173](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41688261173) pada HEAD `4bf4cb8`: `changes`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)`, `docs-check` dan `ci-gate` sukses; log Pest per uji tidak dibaca, keberhasilan job adalah buktinya. `tests/Feature/Access/AccessModelTest.php`: katalog kapabilitas (modul dan huruf cakupan), profil awal ACCESS_CONTROL §9 dan matriks profil×kapabilitas×cakupan dari katalog; setiap kapabilitas adalah ability Gate yang diputuskan evaluator; TAC-02/TAC-07 scope subtree (unit dan turunannya, bukan saudara), unit, gudang, keluarga kebijakan (termasuk kunci satu kata) dan global pada resource uji, daftar sama dengan cek detail, pencarian tidak pernah melebarkan scope, scope tanpa kolom menampilkan nol baris (fail closed); Super Admin tanpa kapabilitas bisnis (INV-021); akun nonaktif dan vendor tidak memegang apa pun; AUTHZ-20 tidak memberi grant ke diri sendiri; TAC-03 grant istimewa PENDING_APPROVAL sampai orang lain menyetujui; TAC-06 DB menolak grant istimewa ACTIVE tanpa penyetuju kedua atau dengan penyetuju = pemberi/penerima; TAC-04/AUTHZ-22 pencabutan berlaku pada permintaan berikutnya, grant berlaku dari hari pertama sampai sehari sebelum akhirnya, lewat akhir menjadi EXPIRED; persetujuan menolak grant kedaluwarsa atau penerima yang dinonaktifkan; beri/setujui/cabut diaudit dengan aktor dan alasan, perubahan yang ditolak tidak diaudit. `tests/Feature/Access/GrantAdministrationTest.php`: TAC-05 tamu ke halaman masuk, akun tanpa `admin.access.grant`/`admin.access.approve` tidak dapat membuka atau mengubah grant, grant tak dikenal 404; TAC-01 pengguna tanpa grant hanya melihat Beranda, menu tidak pernah mengarah ke halaman mati, admin akses terdelegasi mendapat entri Akses dan kehilangannya pada permintaan berikutnya setelah dicabut; form, daftar dengan filter di URL, detail, pencabutan beralasan dengan `lock_version` usang ditolak. Migrasi akses lulus `migrate:fresh` dan rollback di `ci-fast`; hak peran DB lewat `DatabaseRoles`.
+- Build result: `npm run build` lulus di `ci-fast`; Pint, Larastan, ESLint, Prettier, TypeScript, `translations:check`, uji arsitektur modul dan pemindaian rahasia lulus.
+- Route evidence: RT-002 di `app/Modules/Access/routes.php` di bawah `auth` + `can:access.administer` + `two-factor`, perintah dengan middleware `idempotent`; uji "every access route carries the access administration gate and confirmed TOTP" dan `RouteIntegrityTest` lulus.
+- Interaction evidence: PG-503 Administrasi → Akses: daftar grant dengan filter pengguna dan status di URL (termasuk Kedaluwarsa), satu aksi utama Beri akses, form dengan profil aktif, kapabilitas yang dapat diberikan beserta cakupannya dan unit aktif (galat per field, input dipertahankan), detail dengan langkah persetujuan, Setujui untuk penyetuju lain dan Cabut dengan alasan lewat dialog konfirmasi; Beri akses dibuka dari detail pengguna PG-502 (tidak untuk akun sendiri, nonaktif atau vendor); menu dan ruang kerja mengikuti grant lewat props bersama dan `resources/js/lib/access.ts`; drawer ponsel menutup saat entri menu dipilih.
+- Browser evidence: `tests/e2e/journeys/access.spec.ts` (akun tanpa grant tidak melihat entri administrasi dan tidak dapat membuka PG-503 langsung; admin akses membuka Akses dari menu, memberi grant biasa dan mencabutnya dengan alasan; axe tanpa pelanggaran di tiap langkah) lulus di semua proyek browser, desktop dan mobile, pada kedua shard.
+- Localization evidence: teks baru di `lang/{id,en}/access.php` dan `resources/js/locales/{id,en}/{admin,common}.json`; `translations:check` lulus.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Review independen HIGH pertama pada `c7aa156`: P1 R0 beri/setujui/cabut grant belum diaudit (SECURITY_MODEL §9, T-04), grant lewat akhir tidak EXPIRED, persetujuan untuk penerima yang dinonaktifkan, grant/persetujuan oleh diri sendiri belum ditolak DB, unit nonaktif dalam scope, Beri akses untuk vendor, parameter `user` array menyebabkan galat; semuanya diperbaiki di `d22dafe` dan dikonfirmasi review ulang `origin/main...d22dafe`. Review independen kedua: P2 R1 kunci keluarga kebijakan satu kata (`reconciliation`, `numbering`, `retention`) tidak dapat dicakup (AUTHZ-25) dan P3 R4 parameter `q` array menyebabkan 500; keduanya diperbaiki di `4bf4cb8` dengan uji regresi. Codex review pada `4bf4cb8`: tanpa temuan. Yang ditunda, tidak menghalangi: **P2 R2 — pertanyaan untuk Owner/Planning**: admin akses terdelegasi (INTERNAL, profil ACCESS_ADMIN dengan `admin.users.manage` menurut ACCESS_CONTROL §9) dapat menangguhkan, menonaktifkan dan mengakhiri sesi akun SUPER_ADMIN, karena tidak ada dokumen yang melindungi target SUPER_ADMIN; perlu diputuskan apakah aksi identitas atas SUPER_ADMIN oleh non-SUPER_ADMIN ditolak. P3 R3 tanpa trigger yang membekukan kolom grant dan membuat transisi status satu arah, evaluator mempercayai `requires_approval` dan kapabilitas profil yang hidup (pertahanan berlapis); R5 detail grant menampilkan semua kapabilitas profil termasuk yang dibuang katalog untuk cakupan grant; R6 persetujuan tidak memeriksa ulang bahwa pemberi masih memegang `admin.access.grant` atau masih aktif; R7 tabel modul ARCHITECTURE hanya menyebut Identity sebagai dependensi Audit, sedangkan §5.3 mengizinkan Access (usulan koreksi dokumen ke Planning Agent).
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 59 berkas di [PR #46](https://github.com/yusufarst/PRANATA-UNY/pull/46), terutama `app/Modules/Access/` (katalog kapabilitas, `AccessEvaluator`, `AccessSubject`, `GrantScope`, `Navigation`, kueri `VisibleTo`, Action beri/setujui/cabut dengan event, model, controller, form request, migrasi `access_profiles`/`access_profile_capabilities`/`access_grants` dengan constraint maker-checker, rute), `app/Modules/Audit/Listeners/RecordAccessAdministration.php`, `app/Modules/Organization/Queries/UnitScope.php`, `app/Http/Middleware/HandleInertiaRequests.php`, `database/seeders/AccessProfileSeeder.php`, `resources/js/pages/admin/access/`, `resources/js/lib/access.ts`, menu samping, locale dan `lang/{id,en}/access.php`, serta uji di `tests/Feature/Access`, `tests/Arch/ModuleBoundaryTest.php` dan `tests/e2e`. Tanpa perubahan `.github/workflows` atau `.gitleaks.toml`.
+- PR / CI run: [PR #46](https://github.com/yusufarst/PRANATA-UNY/pull/46) MERGED; run di atas. Run yang tidak hijau: 41672501833 pada `6d4249f` (dibatalkan oleh push berikutnya), 41673016995 pada `af66d43` (`ci-fast`, diperbaiki di `9f86ab3`), 41676959373 pada `6666ac9` (`ci-e2e (1)`, `ci-e2e (2)`, `ci-fast`, diperbaiki di `f602db6`), 41678257719 pada `f602db6` (`ci-fast`, diperbaiki di `c7aa156`), 41686851434 pada `d22dafe` (`ci-fast`, uji yang menonaktifkan pengguna tanpa `deactivated_at`, diperbaiki di `4bf4cb8`). Run hijau antara: 41674406861 (`9f86ab3`), 41679390980 (`c7aa156`).
+- Commit SHA: `4bf4cb89167f713437f1dcf808b08ea8e398ae20`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode AUTONOMOUS (opsi A).
+- Notes: TAC-01–TAC-07 terbukti di CI; skenario AUTHZ-01/02 pada paket nyata tetap milik TASK-027 dan AUTHZ-03 pada aset milik TASK-059. Tanpa cache izin lintas permintaan. Kapabilitas modul yang belum ada ditambahkan Task modulnya ke katalog. Ruang kerja Gudang terpisah sesuai D-05 (a). Profil awal ACCESS_CONTROL §9 dari seeder; menjalankan seeder lagi tidak menimpa profil yang diubah Super Admin.
 
 ## SAFE NEXT TASK
 
