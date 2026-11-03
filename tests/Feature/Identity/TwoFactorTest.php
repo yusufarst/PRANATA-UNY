@@ -284,6 +284,19 @@ test('a privileged account cannot turn its TOTP off, an ordinary one can', funct
     'INTERNAL' => [User::INTERNAL, false],
 ]);
 
+test('a privileged account cannot force a new TOTP secret over its confirmed one', function () {
+    $secret = totpSecret();
+    $user = totpAccount(User::SUPER_ADMIN, $secret);
+
+    $this->actingAs($user)
+        ->withSession(['auth.password_confirmed_at' => time()])
+        ->post(route('two-factor.enable'), ['force' => true])
+        ->assertSessionHasErrors('_domain');
+
+    expect(decrypt($user->refresh()->two_factor_secret))->toBe($secret)
+        ->and(auditCount('identity.two_factor_setup_started'))->toBe(0);
+});
+
 // TAC-03: removing the TOTP of an account needs a second administrator.
 test('removing the TOTP of an account waits for a second administrator, then ends every session', function () {
     $maker = totpAdministrator();
