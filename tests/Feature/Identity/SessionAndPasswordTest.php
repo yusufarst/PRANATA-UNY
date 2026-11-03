@@ -1,10 +1,14 @@
 <?php
 
 use App\Models\User;
+use App\Modules\Identity\Events\PasswordChanged;
 use App\Modules\Identity\Http\Middleware\EnsureSessionIsCurrent;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia as Assert;
+use Laravel\Fortify\Features;
 
 function auditActions(): array
 {
@@ -132,14 +136,108 @@ test('a session ends after the absolute minutes whatever the activity', function
     $this->assertGuest();
 });
 
-test('an account suspended during its session loses the session on the next request', function () {
+test('an account that is no longer active loses the session on the next request', function (string $status) {
     $user = User::factory()->create();
 
     $this->actingAs($user)->get(route('dashboard'))->assertOk();
-    $user->forceFill(['status' => User::SUSPENDED])->save();
+    $user->forceFill(['status' => $status])->save();
 
     $this->get(route('dashboard'))->assertRedirect(route('login'));
     $this->assertGuest();
+})->with([User::SUSPENDED, User::LOCKED, User::DEACTIVATED]);
+
+test('a timed-out mutation is sent to the sign-in page with 303', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)->get(route('dashboard'))->assertOk();
+    $this->travel(config('session.idle_minutes') + 1)->minutes();
+
+    $this->put(route('user-password.update'), [])->assertStatus(303)->assertRedirect(route('login'));
+});
+
+test('a mutation during the forced change is sent to the change page with 303', function () {
+    $user = User::factory()->mustChangePassword()->create();
+
+    $this->actingAs($user)
+        ->put(route('user-password.update'), [])
+        ->assertStatus(303)
+        ->assertRedirect(route('identity.password.edit'));
+});
+
+test('the stored session outlives the idle timeout, so the timeout is what ends it', function () {
+    expect(config('session.lifetime'))->toBeGreaterThan(config('session.idle_minutes'));
+});
+
+// SECURITY_MODEL section 4: no remember cookie for a SUPER_ADMIN.
+test('remember me gives the cookie to an ordinary account only', function (string $roleGroup, bool $remembered) {
+    $user = User::factory()->inRoleGroup($roleGroup)->create();
+    $cookie = Auth::guard('web')->getRecallerName();
+
+    $response = $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password', 'remember' => 'on']);
+
+    $this->assertAuthenticatedAs($user);
+    $remembered ? $response->assertCookie($cookie) : $response->assertCookieMissing($cookie);
+    expect(DB::table('audit_events')->where('action', 'identity.login_succeeded')->value('metadata'))
+        ->toContain($remembered ? 'true' : 'false');
+})->with([
+    'INTERNAL' => [User::INTERNAL, true],
+    'SUPER_ADMIN' => [User::SUPER_ADMIN, false],
+]);
+
+test('a SUPER_ADMIN with two-factor sign-in is not remembered after the challenge either', function () {
+    $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
+
+    Features::twoFactorAuthentication(['confirm' => true, 'confirmPassword' => true]);
+
+    $user = User::factory()->inRoleGroup(User::SUPER_ADMIN)->withTwoFactor()->create();
+
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password', 'remember' => 'on'])
+        ->assertRedirect(route('two-factor.login'))
+        ->assertSessionHas('login.remember', false);
+});
+
+// The password confirmation of Security settings checks the password of the signed-in account.
+test('the password confirmation accepts the right password and refuses a wrong one', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->post(route('password.confirm.store'), ['password' => 'wrong-password'])
+        ->assertSessionHasErrors('password');
+
+    $this->post(route('password.confirm.store'), ['password' => 'password'])
+        ->assertSessionHasNoErrors()
+        ->assertSessionHas('auth.password_confirmed_at');
+});
+
+test('a password change that cannot be audited is not made', function () {
+    $user = User::factory()->mustChangePassword()->create();
+    DB::table('sessions')->insert(['id' => 'other-device', 'user_id' => $user->id, 'payload' => '', 'last_activity' => time()]);
+    Event::listen(PasswordChanged::class, fn () => throw new RuntimeException('audit write failed'));
+
+    $this->actingAs($user)
+        ->put(route('identity.password.update'), [
+            'current_password' => 'password',
+            'password' => 'Sandi-Baru-2026',
+            'password_confirmation' => 'Sandi-Baru-2026',
+        ])
+        ->assertServerError();
+
+    $user->refresh();
+
+    expect(Hash::check('password', $user->password))->toBeTrue()
+        ->and($user->must_change_password)->toBeTrue()
+        ->and(DB::table('sessions')->where('id', 'other-device')->exists())->toBeTrue();
+});
+
+// An account without an email (DATA_MODEL section 5) has nothing to verify.
+test('an account without an email reaches the verified pages after signing in', function () {
+    $user = User::factory()->create(['username' => 'tanpa_email', 'email' => null, 'email_verified_at' => null]);
+
+    $this->post(route('login.store'), ['login' => 'tanpa_email', 'password' => 'password']);
+
+    $this->assertAuthenticatedAs($user);
+    $this->get(route('dashboard'))->assertOk();
+    $this->get(route('profile.edit'))->assertInertia(fn (Assert $page) => $page->where('mustVerifyEmail', false));
 });
 
 // TASK-010 TAC-05 and the audit of sign-in events.

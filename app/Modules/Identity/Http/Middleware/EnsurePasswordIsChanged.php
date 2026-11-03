@@ -33,6 +33,7 @@ class EnsurePasswordIsChanged
             abort(403);
         }
 
-        return redirect()->route('identity.password.edit');
+        // 303, so the browser follows a PUT, PATCH or DELETE with a GET instead of sending it again.
+        return redirect()->route('identity.password.edit', status: 303);
     }
 }

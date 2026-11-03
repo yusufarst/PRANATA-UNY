@@ -32,7 +32,8 @@ return [
     |
     */
 
-    'lifetime' => (int) env('SESSION_LIFETIME', 60),
+    // As long as the absolute timeout below, so the idle timeout, not the expiry of the stored row, ends the session.
+    'lifetime' => (int) env('SESSION_LIFETIME', 12 * 60),
 
     'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),
 
@@ -43,7 +44,7 @@ return [
     |
     | SECURITY_MODEL section 4 (SEC-D2): a signed-in session ends after this
     | many idle minutes, or 30 for a SUPER_ADMIN, and after 12 hours in any
-    | case. The lifetime above should not be shorter than the idle timeout.
+    | case. The lifetime above should be longer than the idle timeout.
     |
     */
 

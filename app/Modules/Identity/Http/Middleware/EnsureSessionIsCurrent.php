@@ -90,6 +90,7 @@ class EnsureSessionIsCurrent
             abort(401);
         }
 
-        return redirect()->guest(route('login'))->with('status', __('auth.session_ended'));
+        // 303, so the browser follows a PUT, PATCH or DELETE with a GET instead of sending it again.
+        return redirect()->guest(route('login'), 303)->with('status', __('auth.session_ended'));
     }
 }

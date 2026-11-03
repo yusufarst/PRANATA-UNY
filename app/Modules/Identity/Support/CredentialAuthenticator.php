@@ -33,7 +33,16 @@ class CredentialAuthenticator
         $identity = (string) $request->input('login');
         $password = (string) $request->input('password');
 
-        return (new Timebox)->call(fn () => $this->authenticate($identity, $password), self::MINIMUM_MICROSECONDS);
+        /** @var User|null $user */
+        $user = (new Timebox)->call(fn () => $this->authenticate($identity, $password), self::MINIMUM_MICROSECONDS);
+
+        // A SUPER_ADMIN never gets the remember cookie (SECURITY_MODEL section 4). Fortify reads "remember" from the
+        // request after this callback, both for the sign-in and for the two-factor challenge, so it is turned off here.
+        if ($user?->role_group === User::SUPER_ADMIN) {
+            $request->merge(['remember' => false]);
+        }
+
+        return $user;
     }
 
     private function authenticate(string $identity, string $password): ?User
@@ -48,6 +57,9 @@ class CredentialAuthenticator
         }
 
         if ($this->lockout->isLocked($user)) {
+            // Hash anyway, so a locked account answers as slowly as an unknown identity.
+            Hash::make($password);
+
             return $this->refuse($user, SignInFailed::ACCOUNT_LOCKED);
         }
 

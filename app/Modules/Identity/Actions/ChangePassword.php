@@ -22,6 +22,9 @@ final class ChangePassword extends Action
     public function handle(User $user, string $password, string $via, ?string $keepSessionId = null): void
     {
         $this->transaction(function () use ($user, $password, $via, $keepSessionId): void {
+            // A retry starts from the stored row: the save of a rolled-back attempt left nothing dirty.
+            $user->refresh();
+
             $user->forceFill([
                 'password' => $password,
                 'must_change_password' => false,
@@ -39,7 +42,9 @@ final class ChangePassword extends Action
 
             $ended = $sessions->delete();
 
-            $this->afterCommit(static fn () => PasswordChanged::dispatch($user, $via, $ended));
+            // Inside the transaction: the audit listener writes on the same connection, so the change and its audit
+            // record commit or roll back together (fail closed).
+            PasswordChanged::dispatch($user, $via, $ended);
         });
     }
 }

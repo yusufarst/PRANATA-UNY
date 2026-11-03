@@ -70,11 +70,29 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Whether the account may hold a session: a suspended or deactivated account may not, whatever cookie it brings.
+     * Whether the account may hold a session: only an ACTIVE one may, whatever cookie it brings (TASK-010 TAC-02).
      */
     public function mayHoldSession(): bool
     {
-        return ! in_array($this->status, [self::SUSPENDED, self::DEACTIVATED], true);
+        return $this->status === self::ACTIVE;
+    }
+
+    /**
+     * An account without an email has nothing to verify, so the verified routes stay open to it.
+     */
+    public function hasVerifiedEmail(): bool
+    {
+        return $this->email === null || $this->email_verified_at !== null;
+    }
+
+    /**
+     * No verification mail for an account without an email.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        if ($this->email !== null) {
+            parent::sendEmailVerificationNotification();
+        }
     }
 
     /**

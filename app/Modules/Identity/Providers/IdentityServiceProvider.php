@@ -10,6 +10,7 @@ use App\Modules\Identity\Support\LoginLockout;
 use App\Modules\ModuleServiceProvider;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Fortify;
 
 class IdentityServiceProvider extends ModuleServiceProvider
@@ -31,6 +32,9 @@ class IdentityServiceProvider extends ModuleServiceProvider
 
         // Sign-in by username or email (field "login") with the status gate and the account lock.
         Fortify::authenticateUsing(fn ($request) => $this->app->make(CredentialAuthenticator::class)($request));
+
+        // Fortify would otherwise look the account up by its username field, "login", which is no column.
+        Fortify::confirmPasswordsUsing(fn (User $user, ?string $password): bool => Hash::check((string) $password, $user->password));
 
         // A sign-in, also through the remember cookie, starts the session clock in the saved language and is noted on
         // the account.
