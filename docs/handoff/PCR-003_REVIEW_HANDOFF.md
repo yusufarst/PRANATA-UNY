@@ -2,6 +2,8 @@
 
 Status: PCR-003 — lihat [APPROVAL_RECORDS PCR-003](../00-governance/APPROVAL_RECORDS.md#pcr-003) | Updated: 2026-11-02 (Asia/Jakarta) | Custodian: Planning Agent | Untuk: Second Review Agent independen (ChatGPT)
 
+> Selesai: review atas `78bd8c1` memberi verdict APPROVED WITH CONDITIONS; syarat PCR003-SR-C1 diterapkan di `50753d3`, dan PCR-003 terbit di `main` pada 2026-11-03. Handoff ini kini historis.
+
 Review **terfokus dan proporsional** (FRZ-001, GOV-11): hanya delta PCR-003. Baseline P0–P11, PCR-001, PCR-002 dan Task yang sudah DONE tidak direview ulang.
 
 ## 1. Identitas

@@ -1,6 +1,6 @@
 # Current handoff
 
-Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · PCR-002 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-009 DONE, TASK-010 BLOCKED, runner held | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
+Status: Approved P0–P11 baseline (APPR-005, APPR-006) frozen as FRZ-001 and published · PCR-001 published · PCR-002 published · PCR-003 published · Execution: AUTH-013 | Updated: 2026-11-01 (Asia/Jakarta) | Role: EXECUTION AGENT (GOV-10) | Phase: execution, TASK-009 DONE, TASK-010 READY, runner held | Authorization: AUTH-013 (execution), FRZ-001 change control (planning)
 
 ## Current state
 
@@ -17,11 +17,11 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Field | Current value |
 |---|---|
 | Current phase | Execution; approved phases 12/12. |
-| Current Task / status | None active. No READY Task: **TASK-010 BLOCKED** on the account-deletion TASK PLAN CHANGE below. The Owner's hold `SHUTDOWN_AFTER_CURRENT_TASK` stops the runner now that TASK-009 is reconciled. |
+| Current Task / status | None active. **TASK-010 READY**: PCR-003 (account deactivation, OD-38) published 2026-11-03 ([APPROVAL_RECORDS](../00-governance/APPROVAL_RECORDS.md#pcr-003-publication-record)). The Owner's hold `SHUTDOWN_AFTER_CURRENT_TASK` still stops the runner. |
 | Last completed action | 2026-11-03: PR #34 merged by verified fast-forward at `def83d2` in AUTONOMOUS mode under AUTH-013, after valid Codex findings (P1, P2), two valid independent-review P2 findings and a Larastan failure of run 41493612941 were fixed; run 41494819346 green; TASK-009 reconciled DONE. |
 | Evidence | [TASK-009 COMPLETION EVIDENCE](../11-tasks/TASK-009.md#completion-evidence); [TASK-008](../11-tasks/TASK-008.md#completion-evidence); [TASK-007](../11-tasks/TASK-007.md#completion-evidence); [TASK-006](../11-tasks/TASK-006.md#completion-evidence); [TASK-005](../11-tasks/TASK-005.md#completion-evidence); [TASK-004](../11-tasks/TASK-004.md#completion-evidence); [TASK-003](../11-tasks/TASK-003.md#completion-evidence); [TASK-002](../11-tasks/TASK-002.md#completion-evidence); [EXECUTOR_CAPABILITY_REPORT](../11-tasks/evidence/EXECUTOR_CAPABILITY_REPORT.md). |
 | Task plan | Baseline 78 · Current 78 · DONE 9 · READY 0 · IN_PROGRESS 0 · BLOCKED 1 · VERIFYING 0 · TODO 68 · SUPERSEDED 0 · 12%. |
-| Open blockers | TASK-010 BLOCKED until Claude Planning publishes the account-deletion TASK PLAN CHANGE below; the Owner's hold `SHUTDOWN_AFTER_CURRENT_TASK` keeps the runner stopped until the Owner releases it. TASK-040 waits on the staging decision. |
+| Open blockers | The Owner's hold `SHUTDOWN_AFTER_CURRENT_TASK` keeps the runner stopped until the Owner releases it. TASK-040 waits on the staging decision. |
 | Open non-blocking gaps | GAP-001–GAP-029 OPEN; handled as policy activation, release/cutover or V1-acceptance gates (D-28), never as invented rules. |
 | Decisions made | OD-01–OD-36, GOV-01–GOV-12, D-01–D-29, and OD-37 (no local Docker; GitHub-hosted testing). Owner decision 2026-11-02 on account deletion, recorded below for Claude Planning to register. |
 | Decisions pending | Ruleset `release-tags` keeps the admin role's `always` bypass ([MAIN_RULESET](../09-operations/MAIN_RULESET.md)); it applies to the runner token too, so the guard is what holds the executor back from tags. For Claude Planning, non-blocking: the current starter kit ships Inertia 3 where the plan names Inertia 2 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#application-versions--task-002-2026-11-01)); ARCHITECTURE §5 rule 3 conflicts with the dependency column of §4 ([TOOLCHAIN](../00-governance/TOOLCHAIN.md#quality-tooling--task-004-2026-11-02)). Before TASK-040: where staging runs (D-19 as limited by OD-37). |
@@ -30,11 +30,11 @@ Project **PRANATA UNY**. The remote repository `https://github.com/yusufarst/PRA
 | Cost | New recurring cost: NONE. Paid exception: NONE. |
 | Database | Direct production DB touched: NO. Schema: Laravel skeleton tables, database roles, integrity trigger functions, `audit_events`, `platform_settings` and `platform_idempotency_keys`, tested on a runner service container. |
 | Cleanup for the Owner | Public synthetic sandbox `yusufarst/pranata-uny-sandbox-c10` (used for C-10 and C-16) may be deleted by the Owner; the executor token cannot delete repositories. Disposable branches stay as they are. |
-| Next READY Task | None; TASK-010 once the account-deletion change is published and the hold is released. Deferred P3 findings of TASK-008 and TASK-009 are listed in their COMPLETION EVIDENCE; the Codex threads of PR #34 stay unresolved for the Owner (the executor token cannot resolve them). Commands that need idempotency use the `idempotent` route middleware and `useCommand`; `profile.destroy` (starter-kit account deletion) fails under `pranata_app`, which holds no DELETE on `users`. Browser tests sign in once per project (login limit 5 a minute per address); a 419 cannot be provoked from a same-origin browser. SSR is off (`config/inertia.php`); turning it on first needs a per-request translation instance. |
+| Next READY Task | TASK-010, once the Owner releases the hold. Deferred P3 findings of TASK-008 and TASK-009 are listed in their COMPLETION EVIDENCE; the Codex threads of PR #34 stay unresolved for the Owner (the executor token cannot resolve them). Commands that need idempotency use the `idempotent` route middleware and `useCommand`; `profile.destroy` (starter-kit account deletion) fails under `pranata_app`, which holds no DELETE on `users`. Browser tests sign in once per project (login limit 5 a minute per address); a 419 cannot be provoked from a same-origin browser. SSR is off (`config/inertia.php`); turning it on first needs a per-request translation instance. |
 
 ## TASK PLAN CHANGE proposal — account deletion (for Claude Planning)
 
-Status: **PROPOSED**; Owner decision 2026-11-02, to be published by Claude Planning before TASK-010 starts. No contract was changed by the executor. This record is not part of the TASK-009 contract; it merged on a `fix/task-009-*` branch only because the merge gate takes the active Task.
+Status: **INCORPORATED into PCR-003** (OD-38; published 2026-11-03; TASK-010 TAC-07, TASK-011 TAC-06 with PCR003-SR-C1); kept for provenance. No contract was changed by the executor. This record is not part of the TASK-009 contract; it merged on a `fix/task-009-*` branch only because the merge gate takes the active Task.
 
 Owner decision, binding for TASK-010 and every later Identity Task:
 
@@ -79,7 +79,7 @@ Status: **INCORPORATED into PCR-002** (published; mapping in [PCR-002_REVIEW_HAN
 
 ## Exact next safe action
 
-**Executor:** stopped by the Owner's hold `SHUTDOWN_AFTER_CURRENT_TASK`; start nothing. TASK-010 stays **BLOCKED** (GOV-10) until Claude Planning publishes the account-deletion TASK PLAN CHANGE and the Owner releases the hold; then reconcile TASK-010 to READY and start it from `.pranata/executor/checkpoint.json` under the single runner and watcher. No local Docker, PHP, Composer or PostgreSQL (OD-37).
+**Executor:** stopped by the Owner's hold `SHUTDOWN_AFTER_CURRENT_TASK`; start nothing. TASK-010 is **READY** (PCR-003 published); once the Owner releases the hold, start it from `.pranata/executor/checkpoint.json` under the single runner and watcher. No local Docker, PHP, Composer or PostgreSQL (OD-37).
 
 **Claude Planning:** publish the account-deletion TASK PLAN CHANGE below.
 
