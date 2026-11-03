@@ -17,7 +17,7 @@ abstract class ChangeRequestAction extends Action
      */
     protected function locked(ChangeRequest $request, array $from): ChangeRequest
     {
-        $current = ChangeRequest::query()->lockForUpdate()->findOrFail($request->getKey());
+        $current = ChangeRequest::query()->whereKey($request->id)->lockForUpdate()->firstOrFail();
 
         if (! in_array($current->status, $from, true)) {
             throw DomainRuleViolation::because('organization.transition_not_allowed');

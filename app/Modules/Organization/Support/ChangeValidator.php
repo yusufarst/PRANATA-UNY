@@ -248,7 +248,7 @@ final class ChangeValidator
      */
     private function endAppointment(?OrgUnit $unit, array $payload): array
     {
-        $appointment = OrgAppointment::query()->find($payload['appointment'] ?? null);
+        $appointment = OrgAppointment::query()->whereKey($payload['appointment'] ?? null)->first();
 
         if ($appointment === null || $appointment->org_unit_id !== $unit?->id) {
             return [self::blocking('appointment_missing')];

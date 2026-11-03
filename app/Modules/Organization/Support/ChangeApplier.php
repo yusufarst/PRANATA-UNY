@@ -10,6 +10,7 @@ use App\Modules\Organization\Models\OrgUnit;
 use App\Modules\Organization\Models\OrgUnitHistory;
 use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use Illuminate\Support\Facades\DB;
+use LogicException;
 
 /**
  * The effect of TR-286: writes the approved change into the organization, inside the transaction of the Action. Every unit
@@ -28,6 +29,7 @@ final class ChangeApplier
             ChangeRequest::CREATE_POSITION => $this->createPosition($request, $actor),
             ChangeRequest::APPOINT => $this->appoint($request, $actor),
             ChangeRequest::END_APPOINTMENT => $this->endAppointment($request, $actor),
+            default => throw new LogicException("Unknown change kind [{$request->kind}]."),
         };
     }
 
@@ -158,7 +160,7 @@ final class ChangeApplier
 
     private function endAppointment(ChangeRequest $request, User $actor): void
     {
-        $appointment = OrgAppointment::query()->lockForUpdate()->findOrFail($request->payload['appointment']);
+        $appointment = OrgAppointment::query()->whereKey($request->payload['appointment'])->lockForUpdate()->firstOrFail();
 
         if ($request->effective_from?->toDateString() <= $appointment->effective_from->toDateString()) {
             throw DomainRuleViolation::because('organization.appointment_ends_before_start');

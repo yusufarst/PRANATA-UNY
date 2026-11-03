@@ -302,7 +302,7 @@ class ChangeRequestController
         }
 
         if (isset($payload['appointment'])) {
-            $appointment = OrgAppointment::query()->with(['user:id,name', 'position:id,name'])->find($payload['appointment']);
+            $appointment = OrgAppointment::query()->with(['user:id,name', 'position:id,name'])->whereKey($payload['appointment'])->first();
             $labels['appointment'] = $appointment === null ? null : "{$appointment->user->name} — {$appointment->position->name}";
         }
 
