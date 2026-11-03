@@ -432,12 +432,12 @@ function UnitDetail({
                 ) : (
                     <ol className="grid gap-3">
                         {detail.history.map((entry) => {
+                            const { after, before } = entry;
                             const changed = comparedFields.filter(
                                 (field) =>
-                                    entry.after &&
-                                    (entry.before === null ||
-                                        entry.before[field] !==
-                                            entry.after[field]),
+                                    after !== null &&
+                                    (before === null ||
+                                        before[field] !== after[field]),
                             );
 
                             return (
@@ -464,7 +464,7 @@ function UnitDetail({
                                             time: dateTime(entry.changed_at),
                                         })}
                                     </p>
-                                    {changed.length > 0 && entry.after && (
+                                    {changed.length > 0 && after !== null && (
                                         <dl className="grid gap-1 text-sm">
                                             {changed.map((field) => (
                                                 <div
@@ -477,11 +477,11 @@ function UnitDetail({
                                                         )}
                                                     </dt>
                                                     <dd className="break-words text-foreground">
-                                                        {entry.before &&
-                                                            `${fieldValue(field, entry.before)} → `}
+                                                        {before !== null &&
+                                                            `${fieldValue(field, before)} → `}
                                                         {fieldValue(
                                                             field,
-                                                            entry.after,
+                                                            after,
                                                         )}
                                                     </dd>
                                                 </div>
