@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: TODO
-EXECUTION STAGE: —
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: NO
@@ -238,19 +238,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- [x] Authorization
+- [x] Route integrity
+- [x] Interaction behavior
+- [x] Browser E2E if required
+- [x] Responsive/adaptive if required
+- [x] Visual breathing room/density if UI
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -265,18 +265,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [41625273188](https://github.com/yusufarst/PRANATA-UNY/actions/runs/41625273188) pada HEAD `da765f1`: `changes`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)` dan `ci-gate` sukses; `docs-check` dilewati (tanpa perubahan dokumen); log Pest per uji tidak dibaca, keberhasilan job adalah buktinya. TAC-01: `UserAdministrationTest` (akun INTERNAL/VENDOR dibuat dengan kode aktivasi sekali tampil, ditolak saat masuk setelah 24 jam, habis dipakai oleh ganti password wajib). TAC-02: reset dibantu dengan metode pemeriksaan identitas tercatat, password sementara sekali tampil, kedaluwarsa 24 jam, wajib ganti; rahasia yang kedaluwarsa atau dicabut ditolak saat masuk dan saat ganti password wajib; tanpa cookie remember selama ganti password wajib. TAC-03: akun istimewa butuh admin kedua yang bukan peminta dan bukan target; email akun istimewa tidak dapat diubah oleh satu admin; pemilik akun tidak dapat membatalkan reset untuk dirinya. TAC-04: `SessionAndPasswordTest` dan `UserAdministrationTest` (pengguna melihat dan mencabut sesinya, admin mencabut sesi pengguna). TAC-05: `PasswordResetTest` (tanpa SMTP tautan reset email tidak tampil dan rutenya 404 lewat `EnsureEmailResetIsAvailable`). TAC-06: penonaktifan mengisi DEACTIVATED dan `deactivated_at`, mengakhiri semua sesi, mengganti `remember_token`, mencabut rahasia terbuka, tercatat di `audit_events` dengan alasan; baris `users` tetap; cek basis data `users_deactivated_at_matches_status`. Migrasi `identity_password_resets` dan `notifications` lulus `migrate:fresh` dan rollback di `ci-fast`.
+- Build result: `npm run build` lulus di `ci-fast`; Pint, Larastan, ESLint, Prettier, TypeScript, `translations:check` dan pemindaian rahasia lulus.
+- Route evidence: `RouteIntegrityTest` lulus dengan rute PG-502 di bawah `auth` + `can:MANAGE_USERS`; alamat GET reset dan persetujuan reset mengalihkan ke detail akun tanpa rahasia.
+- Interaction evidence: filter daftar di URL; tabel pada layar lebar, kartu pada layar sempit; Action per perintah (buat, ubah, suspend, aktifkan kembali, nonaktifkan) dengan konflik `lock_version` 409; rahasia yang diterbitkan dihapus dari riwayat Inertia (`router.replaceProp`) sehingga Back tidak menampilkannya lagi; notifikasi in-app setelah reset.
+- Browser evidence: J-18 `tests/e2e/journeys/account-recovery.spec.ts` (reset dibantu, persetujuan admin kedua, ganti password wajib, Back tidak menampilkan rahasia, axe) lulus di semua proyek browser pada kedua shard.
+- Localization evidence: teks baru di `lang/{id,en}/{auth,identity}.php` dan `resources/js/locales/`; `translations:check` lulus.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Review independen HIGH pada `66523ff`: P1 suspend/aktifkan kembali belum ada; P1 satu admin dapat mengubah email akun istimewa lalu mengambil alih lewat reset email; P2 rahasia sementara tertinggal di riwayat; P2 pemilik dapat membatalkan reset dibantu untuk dirinya; semuanya diperbaiki di `f5634b0` dengan uji di `e1c5cbd` dan `4d04993`. Codex review 5751037269 pada `4d04993` (`COMPLETED_WITH_FINDINGS`): P2 sesi remember dapat menyelesaikan ganti password wajib dengan rahasia kedaluwarsa; P2 password sementara tertinggal di alamat POST reset/persetujuan (405 saat muat ulang atau ganti bahasa); keduanya diperbaiki di `da765f1`, diverifikasi delta dan dibalas (4453872423, 4453873162); thread dibiarkan unresolved untuk Owner karena token eksekutor tidak dapat me-resolve; Codex tidak diminta ulang. P3 yang ditunda: reset dibantu tidak menghapus penguncian masuk (kedaluwarsa sendiri); reset email berjalan untuk akun DEACTIVATED/SUSPENDED (masuk tetap menolaknya); email yang dimasukkan admin ditandai terverifikasi untuk akun biasa; pembuatan bersamaan dengan username atau email sama memberi 500 alih-alih galat field (constraint unik tetap menahan); sesi kedaluwarsa masih terdaftar sampai dibersihkan garbage collector.
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 74 berkas di [PR #40](https://github.com/yusufarst/PRANATA-UNY/pull/40), terutama `app/Modules/Identity/` (38 berkas: Action, kontroler, request, `OneTimeSecret`, model dan migrasi `identity_password_resets`), `app/Modules/Audit/` (listener administrasi akun), migrasi `notifications`, `config/auth.php`, `resources/js/pages/`, `resources/js/components/`, `resources/js/locales/`, `lang/{id,en}/`, serta uji di `tests/Feature/Identity`, `tests/Feature/Auth`, `tests/Feature/RouteIntegrityTest.php` dan `tests/e2e/journeys`. Tanpa perubahan `.github/workflows` atau `.gitleaks.toml`.
+- PR / CI run: [PR #40](https://github.com/yusufarst/PRANATA-UNY/pull/40) MERGED; run di atas. Run gagal yang tercatat: 41621177943 pada `f5634b0` (satu uji mengharapkan kunci izin lama, diperbaiki di `e1c5cbd`), 41622182480 pada `e1c5cbd` (J-18 mengharapkan URL yang salah setelah Back, diperbaiki di `4d04993`). Run hijau antara: 41623080072 (`4d04993`).
+- Commit SHA: `da765f1004761669c6af7ba4ab77093825ad7d0f`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode AUTONOMOUS (opsi A).
+- Notes: TAC-01–TAC-06 terbukti di CI. Default SEC-D6 (SMTP opsional) dan SEC-D7 (kode aktivasi diserahkan langsung) diterapkan. Tidak ada baris `users` yang dihapus (OD-38). Modul `app/Modules/Administration` tidak dibuat; administrasi akun berada di modul Identity.
 
 ## SAFE NEXT TASK
 
