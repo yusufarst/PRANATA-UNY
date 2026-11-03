@@ -11,9 +11,3 @@ parameters:
         - routes/
 
     level: 7
-
-    ignoreErrors:
-        # No aggregate uses the lock version yet; tests/Feature/Platform/CommandContractTest.php covers it until one does.
-        -
-            identifier: trait.unused
-            path: app/Modules/Platform/Support/HasLockVersion.php

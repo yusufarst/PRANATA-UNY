@@ -49,14 +49,19 @@ class AccountRequest extends FormRequest
     /**
      * Sign-in matches both columns without regard to case, so they are unique that way too (users_*_lower_unique).
      */
+    /**
+     * @param  'username'|'email'  $column
+     */
     private function uniqueIgnoringCase(string $column): Closure
     {
         $user = $this->route('user');
+        $ignoredKey = $user instanceof User ? $user->getKey() : null;
+        $sql = $column === 'username' ? 'lower(username) = lower(?)' : 'lower(email) = lower(?)';
 
-        return function (string $attribute, mixed $value, Closure $fail) use ($column, $user): void {
+        return function (string $attribute, mixed $value, Closure $fail) use ($column, $sql, $ignoredKey): void {
             $taken = User::query()
-                ->whereRaw("lower({$column}) = lower(?)", [(string) $value])
-                ->when($user instanceof User, fn ($query) => $query->whereKeyNot($user->getKey()))
+                ->whereRaw($sql, [(string) $value])
+                ->when($ignoredKey !== null, fn ($query) => $query->whereKeyNot($ignoredKey))
                 ->exists();
 
             if ($taken) {

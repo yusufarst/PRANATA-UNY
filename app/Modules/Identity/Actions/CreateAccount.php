@@ -7,7 +7,7 @@ use App\Modules\Identity\Events\AccountCreated;
 use App\Modules\Identity\Models\PasswordReset;
 use App\Modules\Identity\Support\OneTimeSecret;
 use App\Modules\Platform\Support\Action;
-use Illuminate\Support\Carbon;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -21,7 +21,7 @@ final class CreateAccount extends Action
 {
     /**
      * @param  array{role_group: string, username: string, name: string, email: ?string, staff_identifier: ?string, locale: string}  $details
-     * @return array{user: User, code: string, expires_at: Carbon}
+     * @return array{user: User, code: string, expires_at: CarbonImmutable}
      */
     public function handle(User $actor, array $details): array
     {

@@ -18,7 +18,7 @@ final class UpdateAccount extends Action
     /**
      * @param  array{username: string, name: string, email: ?string, staff_identifier: ?string, locale: string}  $details
      *
-     * @throws StaleVersionException when someone changed the account first
+     * A {@see StaleVersionException} from inside the transaction reaches the caller when someone changed the account first.
      */
     public function handle(User $user, array $details, int $seenVersion): void
     {

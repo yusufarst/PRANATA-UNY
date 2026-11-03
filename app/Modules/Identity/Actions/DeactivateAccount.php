@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 final class DeactivateAccount extends Action
 {
     /**
-     * @throws StaleVersionException when someone changed the account first
+     * A {@see StaleVersionException} from inside the transaction reaches the caller when someone changed the account first.
      */
     public function handle(User $actor, User $user, string $reason, int $seenVersion): void
     {
