@@ -28,4 +28,7 @@ Route::middleware(['auth', 'can:'.IdentityServiceProvider::MANAGE_USERS])
         Route::get('{user:public_id}/edit', 'edit')->name('edit');
         Route::put('{user:public_id}', 'update')->middleware('idempotent')->name('update');
         Route::post('{user:public_id}/deactivate', 'deactivate')->middleware('idempotent')->name('deactivate');
+        Route::post('{user:public_id}/resets', 'requestReset')->middleware('idempotent')->name('resets.store');
+        Route::post('{user:public_id}/resets/{reset}/approve', 'approveReset')->middleware('idempotent')->name('resets.approve');
+        Route::post('{user:public_id}/resets/{reset}/revoke', 'revokeReset')->middleware('idempotent')->name('resets.revoke');
     });

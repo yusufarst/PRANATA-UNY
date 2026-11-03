@@ -78,10 +78,37 @@
         "secret": {
             "activation_title": "Kode aktivasi",
             "activation_intro": "Serahkan kode ini secara langsung kepada pengguna. Kode hanya tampil sekali dan tidak dapat dilihat lagi.",
-            "use_note": "Pengguna masuk dengan username dan kode ini, lalu wajib membuat password baru.",
+            "activation_use_note": "Pengguna masuk dengan username dan kode ini, lalu wajib membuat password baru.",
+            "temporary_password_title": "Password sementara",
+            "temporary_password_intro": "Serahkan password ini secara langsung kepada pemilik akun. Password hanya tampil sekali dan tidak dapat dilihat lagi. Semua sesi akun ini sudah diakhiri.",
+            "temporary_password_use_note": "Pengguna masuk dengan username dan password ini, lalu wajib membuat password baru.",
             "expires": "Berlaku sampai {{time}}",
-            "copy": "Salin kode",
-            "copied": "Kode tersalin"
+            "copy": "Salin",
+            "copied": "Tersalin"
+        },
+        "reset": {
+            "open": "Reset password",
+            "title": "Reset password dibantu admin",
+            "description": "Pastikan dulu bahwa yang meminta adalah pemilik akun. Sistem membuat password sementara yang tampil sekali dan berlaku 24 jam; pengguna wajib menggantinya saat masuk.",
+            "privileged_description": "Akun ini akun istimewa. Permintaan Anda menunggu persetujuan admin kedua; password sementara baru dibuat setelah disetujui.",
+            "method": "Cara memeriksa identitas",
+            "method_placeholder": "Pilih cara pemeriksaan",
+            "methods": {
+                "IN_PERSON": "Tatap muka",
+                "STAFF_CARD": "Kartu pegawai",
+                "VENDOR_LETTER": "Surat resmi penyedia"
+            },
+            "note": "Catatan (opsional)",
+            "note_placeholder": "Misalnya: nomor surat atau nama petugas yang menyaksikan",
+            "confirm": "Buat password sementara",
+            "confirm_privileged": "Ajukan reset",
+            "pending_title": "Reset menunggu persetujuan admin kedua",
+            "pending_detail": "Diajukan oleh {{name}} pada {{time}} · identitas diperiksa: {{method}}",
+            "pending_expires": "Permintaan berakhir {{time}} bila tidak disetujui.",
+            "pending_own": "Anda yang mengajukan reset ini. Admin lain perlu menyetujuinya.",
+            "approve": "Setujui dan buat password",
+            "revoke": "Batalkan permintaan",
+            "unknown_requester": "admin"
         },
         "deactivation": {
             "title": "Nonaktifkan akun ini?",

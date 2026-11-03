@@ -1,13 +1,15 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { ArrowLeft, KeyRound, Pencil } from 'lucide-react';
+import { ArrowLeft, KeyRound, Pencil, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import UserAdministrationController from '@/actions/App/Modules/Identity/Http/Controllers/UserAdministrationController';
-import type { Account } from '@/components/admin/users';
+import type { Account, IdentityCheck } from '@/components/admin/users';
 import {
     AccountStatusBadge,
+    identityChecks,
     rememberedListQuery,
+    selectClassName,
     useDateTime,
 } from '@/components/admin/users';
 import { ConflictDialog } from '@/components/app/ConflictDialog';
@@ -30,20 +32,43 @@ type Props = {
         last_login_at: string | null;
         deactivated_at: string | null;
         created_at: string | null;
+        /** A reset of this account needs a second administrator (TASK-011 TAC-03). */
+        privileged: boolean;
     };
-    can: { update: boolean; deactivate: boolean };
+    pendingReset: {
+        id: number;
+        requested_by: string | null;
+        requested_by_me: boolean;
+        identity_check_method: IdentityCheck;
+        identity_check_note: string | null;
+        created_at: string | null;
+        expires_at: string;
+    } | null;
+    can: {
+        update: boolean;
+        deactivate: boolean;
+        reset: boolean;
+        approveReset: boolean;
+        revokeReset: boolean;
+    };
     /** Present only in the answer that issued it; it is never shown again. */
     issuedSecret?: {
-        kind: 'activation';
+        kind: 'activation' | 'temporary_password';
         value: string;
         expires_at: string;
     };
 };
 
-export default function UserShow({ account, can, issuedSecret }: Props) {
+export default function UserShow({
+    account,
+    pendingReset,
+    can,
+    issuedSecret,
+}: Props) {
     const { t } = useTranslation();
     const dateTime = useDateTime();
     const [deactivating, setDeactivating] = useState(false);
+    const [resetting, setResetting] = useState(false);
     const command = useCommand();
     const none = t('admin:users.fields.none');
 
@@ -119,15 +144,29 @@ export default function UserShow({ account, can, issuedSecret }: Props) {
                     description={t('admin:users.detail.title')}
                     status={<AccountStatusBadge status={account.status} />}
                     secondaryActions={
-                        can.deactivate && (
-                            <Button
-                                variant="outline"
-                                className="text-danger"
-                                onClick={() => setDeactivating(true)}
-                                data-test="deactivate-account-button"
-                            >
-                                {t('admin:users.deactivate')}
-                            </Button>
+                        (can.reset || can.deactivate) && (
+                            <>
+                                {can.reset && (
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setResetting(true)}
+                                        data-test="reset-password-button"
+                                    >
+                                        <KeyRound aria-hidden="true" />
+                                        {t('admin:users.reset.open')}
+                                    </Button>
+                                )}
+                                {can.deactivate && (
+                                    <Button
+                                        variant="outline"
+                                        className="text-danger"
+                                        onClick={() => setDeactivating(true)}
+                                        data-test="deactivate-account-button"
+                                    >
+                                        {t('admin:users.deactivate')}
+                                    </Button>
+                                )}
+                            </>
                         )
                     }
                     action={
@@ -150,10 +189,14 @@ export default function UserShow({ account, can, issuedSecret }: Props) {
                     <Alert data-test="issued-secret">
                         <KeyRound aria-hidden="true" />
                         <AlertTitle>
-                            {t('admin:users.secret.activation_title')}
+                            {t(`admin:users.secret.${issuedSecret.kind}_title`)}
                         </AlertTitle>
                         <AlertDescription className="gap-3">
-                            <p>{t('admin:users.secret.activation_intro')}</p>
+                            <p>
+                                {t(
+                                    `admin:users.secret.${issuedSecret.kind}_intro`,
+                                )}
+                            </p>
                             <p
                                 className="font-mono text-2xl font-semibold tracking-widest text-foreground select-all"
                                 data-test="issued-secret-value"
@@ -165,7 +208,11 @@ export default function UserShow({ account, can, issuedSecret }: Props) {
                                     time: dateTime(issuedSecret.expires_at),
                                 })}
                             </p>
-                            <p>{t('admin:users.secret.use_note')}</p>
+                            <p>
+                                {t(
+                                    `admin:users.secret.${issuedSecret.kind}_use_note`,
+                                )}
+                            </p>
                             <Button
                                 type="button"
                                 variant="secondary"
@@ -174,6 +221,100 @@ export default function UserShow({ account, can, issuedSecret }: Props) {
                             >
                                 {t('admin:users.secret.copy')}
                             </Button>
+                        </AlertDescription>
+                    </Alert>
+                )}
+
+                {pendingReset && (
+                    <Alert data-test="pending-reset">
+                        <ShieldCheck aria-hidden="true" />
+                        <AlertTitle>
+                            {t('admin:users.reset.pending_title')}
+                        </AlertTitle>
+                        <AlertDescription className="gap-3">
+                            <p>
+                                {t('admin:users.reset.pending_detail', {
+                                    name:
+                                        pendingReset.requested_by ??
+                                        t(
+                                            'admin:users.reset.unknown_requester',
+                                        ),
+                                    time:
+                                        dateTime(pendingReset.created_at) ??
+                                        none,
+                                    method: t(
+                                        `admin:users.reset.methods.${pendingReset.identity_check_method}`,
+                                    ),
+                                })}
+                            </p>
+                            {pendingReset.identity_check_note && (
+                                <p className="break-words">
+                                    {pendingReset.identity_check_note}
+                                </p>
+                            )}
+                            <p>
+                                {t('admin:users.reset.pending_expires', {
+                                    time: dateTime(pendingReset.expires_at),
+                                })}
+                            </p>
+                            {pendingReset.requested_by_me && (
+                                <p>{t('admin:users.reset.pending_own')}</p>
+                            )}
+                            {(can.approveReset || can.revokeReset) && (
+                                <div className="flex flex-wrap gap-2">
+                                    {can.approveReset && (
+                                        <Form
+                                            {...UserAdministrationController.approveReset.form(
+                                                {
+                                                    user: account.public_id,
+                                                    reset: pendingReset.id,
+                                                },
+                                            )}
+                                            {...command.visit}
+                                            options={{ preserveScroll: true }}
+                                        >
+                                            {({ processing }) => (
+                                                <Button
+                                                    type="submit"
+                                                    size="sm"
+                                                    disabled={processing}
+                                                    data-test="approve-reset-button"
+                                                >
+                                                    {t(
+                                                        'admin:users.reset.approve',
+                                                    )}
+                                                </Button>
+                                            )}
+                                        </Form>
+                                    )}
+                                    {can.revokeReset && (
+                                        <Form
+                                            {...UserAdministrationController.revokeReset.form(
+                                                {
+                                                    user: account.public_id,
+                                                    reset: pendingReset.id,
+                                                },
+                                            )}
+                                            {...command.visit}
+                                            options={{ preserveScroll: true }}
+                                        >
+                                            {({ processing }) => (
+                                                <Button
+                                                    type="submit"
+                                                    size="sm"
+                                                    variant="outline"
+                                                    disabled={processing}
+                                                    data-test="revoke-reset-button"
+                                                >
+                                                    {t(
+                                                        'admin:users.reset.revoke',
+                                                    )}
+                                                </Button>
+                                            )}
+                                        </Form>
+                                    )}
+                                </div>
+                            )}
                         </AlertDescription>
                     </Alert>
                 )}
@@ -277,6 +418,113 @@ export default function UserShow({ account, can, issuedSecret }: Props) {
                                         data-test="confirm-deactivate-button"
                                     >
                                         {t('admin:users.deactivation.confirm')}
+                                    </Button>
+                                </DialogFooter>
+                            </>
+                        )}
+                    </Form>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={resetting} onOpenChange={setResetting}>
+                <DialogContent>
+                    <DialogTitle>{t('admin:users.reset.title')}</DialogTitle>
+                    <DialogDescription>
+                        {t(
+                            account.privileged
+                                ? 'admin:users.reset.privileged_description'
+                                : 'admin:users.reset.description',
+                        )}
+                    </DialogDescription>
+                    <Form
+                        {...UserAdministrationController.requestReset.form(
+                            account.public_id,
+                        )}
+                        {...command.visit}
+                        onSuccess={() => {
+                            command.visit.onSuccess();
+                            setResetting(false);
+                        }}
+                        options={{ preserveScroll: true }}
+                        className="grid gap-4"
+                    >
+                        {({ processing, errors }) => (
+                            <>
+                                <InputError
+                                    message={
+                                        errors._idempotency ?? errors._domain
+                                    }
+                                />
+                                <div className="grid gap-2">
+                                    <Label htmlFor="identity_check_method">
+                                        {t('admin:users.reset.method')}
+                                    </Label>
+                                    <select
+                                        id="identity_check_method"
+                                        name="identity_check_method"
+                                        required
+                                        defaultValue=""
+                                        aria-invalid={
+                                            !!errors.identity_check_method
+                                        }
+                                        className={selectClassName}
+                                    >
+                                        <option value="" disabled>
+                                            {t(
+                                                'admin:users.reset.method_placeholder',
+                                            )}
+                                        </option>
+                                        {identityChecks.map((method) => (
+                                            <option key={method} value={method}>
+                                                {t(
+                                                    `admin:users.reset.methods.${method}`,
+                                                )}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <InputError
+                                        message={errors.identity_check_method}
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="identity_check_note">
+                                        {t('admin:users.reset.note')}
+                                    </Label>
+                                    <textarea
+                                        id="identity_check_note"
+                                        name="identity_check_note"
+                                        maxLength={500}
+                                        rows={3}
+                                        placeholder={t(
+                                            'admin:users.reset.note_placeholder',
+                                        )}
+                                        aria-invalid={
+                                            !!errors.identity_check_note
+                                        }
+                                        className="w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm"
+                                    />
+                                    <InputError
+                                        message={errors.identity_check_note}
+                                    />
+                                </div>
+                                <DialogFooter className="gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={() => setResetting(false)}
+                                    >
+                                        {t('common:actions.cancel')}
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        disabled={processing}
+                                        data-test="confirm-reset-button"
+                                    >
+                                        {t(
+                                            account.privileged
+                                                ? 'admin:users.reset.confirm_privileged'
+                                                : 'admin:users.reset.confirm',
+                                        )}
                                     </Button>
                                 </DialogFooter>
                             </>

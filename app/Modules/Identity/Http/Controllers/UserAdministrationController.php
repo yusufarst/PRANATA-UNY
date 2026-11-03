@@ -3,13 +3,20 @@
 namespace App\Modules\Identity\Http\Controllers;
 
 use App\Models\User;
+use App\Modules\Identity\Actions\ApproveAssistedReset;
 use App\Modules\Identity\Actions\CreateAccount;
 use App\Modules\Identity\Actions\DeactivateAccount;
+use App\Modules\Identity\Actions\RequestAssistedReset;
+use App\Modules\Identity\Actions\RevokeAssistedReset;
 use App\Modules\Identity\Actions\UpdateAccount;
 use App\Modules\Identity\Http\Requests\AccountRequest;
+use App\Modules\Identity\Http\Requests\AssistedResetRequest;
 use App\Modules\Identity\Http\Requests\DeactivateAccountRequest;
+use App\Modules\Identity\Models\PasswordReset;
 use App\Modules\Identity\Providers\IdentityServiceProvider;
+use App\Modules\Identity\Support\PrivilegedAccounts;
 use App\Modules\Platform\Exceptions\StaleVersionException;
+use Carbon\CarbonInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -26,6 +33,8 @@ class UserAdministrationController
     private const STATUSES = [User::ACTIVE, User::SUSPENDED, User::LOCKED, User::DEACTIVATED];
 
     private const ROLE_GROUPS = [User::SUPER_ADMIN, User::INTERNAL, User::VENDOR];
+
+    public function __construct(private readonly PrivilegedAccounts $privileged) {}
 
     public function index(Request $request): Response
     {
@@ -139,11 +148,78 @@ class UserAdministrationController
     }
 
     /**
+     * Like the activation code, the temporary password is in this answer only (TASK-011 TAC-02). A privileged account gets a
+     * request for a second administrator instead (TAC-03).
+     */
+    public function requestReset(AssistedResetRequest $request, User $user, RequestAssistedReset $requestReset): Response|RedirectResponse
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+
+        $result = $requestReset->handle(
+            $request->user(),
+            $user,
+            $request->string('identity_check_method')->value(),
+            $request->note(),
+        );
+
+        if ($result['password'] === null) {
+            Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.reset_awaits_approval')]);
+
+            return to_route('identity.admin.users.show', $user->public_id);
+        }
+
+        return $this->showingTemporaryPassword($request, $user, $result['password'], $result['expires_at']);
+    }
+
+    public function approveReset(Request $request, User $user, PasswordReset $reset, ApproveAssistedReset $approveReset): Response
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+        abort_unless($reset->user_id === $user->id, 404);
+
+        $issued = $approveReset->handle($request->user(), $reset);
+
+        return $this->showingTemporaryPassword($request, $user, $issued['password'], $issued['expires_at']);
+    }
+
+    public function revokeReset(User $user, PasswordReset $reset, RevokeAssistedReset $revokeReset): RedirectResponse
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+        abort_unless($reset->user_id === $user->id, 404);
+
+        $revokeReset->handle($reset);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.reset_revoked')]);
+
+        return to_route('identity.admin.users.show', $user->public_id);
+    }
+
+    private function showingTemporaryPassword(Request $request, User $user, string $password, CarbonInterface $expiresAt): Response
+    {
+        return Inertia::render('admin/users/show', [
+            ...$this->detail($request, $user->refresh()),
+            'issuedSecret' => [
+                'kind' => 'temporary_password',
+                'value' => $password,
+                'expires_at' => $expiresAt->toIso8601String(),
+            ],
+        ]);
+    }
+
+    /**
      * @return array<string, mixed>
      */
     private function detail(Request $request, User $user): array
     {
         $deactivated = $user->status === User::DEACTIVATED;
+        $own = $user->is($request->user());
+
+        $pending = PasswordReset::query()
+            ->with('requester')
+            ->where('user_id', $user->getKey())
+            ->where('status', PasswordReset::PENDING_APPROVAL)
+            ->where('expires_at', '>', now())
+            ->latest('id')
+            ->first();
 
         return [
             'account' => [
@@ -151,10 +227,25 @@ class UserAdministrationController
                 'last_login_at' => $user->last_login_at?->toIso8601String(),
                 'deactivated_at' => $user->deactivated_at?->toIso8601String(),
                 'created_at' => $user->created_at?->toIso8601String(),
+                'privileged' => $this->privileged->isPrivileged($user),
+            ],
+            'pendingReset' => $pending === null ? null : [
+                'id' => $pending->id,
+                'requested_by' => $pending->requester?->name,
+                'requested_by_me' => $pending->requested_by === $request->user()?->getKey(),
+                'identity_check_method' => $pending->identity_check_method,
+                'identity_check_note' => $pending->identity_check_note,
+                'created_at' => $pending->created_at?->toIso8601String(),
+                'expires_at' => $pending->expires_at->toIso8601String(),
             ],
             'can' => [
                 'update' => ! $deactivated,
-                'deactivate' => ! $deactivated && ! $user->is($request->user()),
+                'deactivate' => ! $deactivated && ! $own,
+                // An administrator never resets their own account through the assisted path (TASK-011).
+                'reset' => ! $deactivated && ! $own && $pending === null,
+                // The second administrator is neither the requester nor the account (TASK-011 TAC-03).
+                'approveReset' => $pending !== null && $pending->requested_by !== $request->user()?->getKey() && ! $own,
+                'revokeReset' => $pending !== null && ! $own,
             ],
         ];
     }

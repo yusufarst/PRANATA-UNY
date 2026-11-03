@@ -6,6 +6,10 @@ use App\Modules\Audit\Support\AuditLogger;
 use App\Modules\Identity\Events\AccountCreated;
 use App\Modules\Identity\Events\AccountDeactivated;
 use App\Modules\Identity\Events\AccountUpdated;
+use App\Modules\Identity\Events\PasswordResetIssued;
+use App\Modules\Identity\Events\PasswordResetRequested;
+use App\Modules\Identity\Events\PasswordResetRevoked;
+use App\Modules\Identity\Models\PasswordReset;
 use Illuminate\Events\Dispatcher;
 
 /**
@@ -28,6 +32,9 @@ final class RecordAccountAdministration
             AccountCreated::class => 'accountCreated',
             AccountUpdated::class => 'accountUpdated',
             AccountDeactivated::class => 'accountDeactivated',
+            PasswordResetRequested::class => 'passwordResetRequested',
+            PasswordResetIssued::class => 'passwordResetIssued',
+            PasswordResetRevoked::class => 'passwordResetRevoked',
         ];
     }
 
@@ -50,5 +57,44 @@ final class RecordAccountAdministration
             'ended_sessions' => $event->endedSessions,
             'revoked_secrets' => $event->revokedSecrets,
         ]);
+    }
+
+    public function passwordResetRequested(PasswordResetRequested $event): void
+    {
+        $this->audit->record('identity.reset_requested', self::MODULE, $event->reset->user, metadata: [
+            ...self::reset($event->reset),
+            'awaits_second_admin' => true,
+        ]);
+    }
+
+    /**
+     * Recorded with the identity check, and with the second administrator when the account is privileged (TASK-011 TAC-02).
+     */
+    public function passwordResetIssued(PasswordResetIssued $event): void
+    {
+        $this->audit->record('identity.reset_issued', self::MODULE, $event->reset->user, metadata: [
+            ...self::reset($event->reset),
+            'approved_by' => $event->reset->approved_by,
+            'ended_sessions' => $event->endedSessions,
+        ]);
+    }
+
+    public function passwordResetRevoked(PasswordResetRevoked $event): void
+    {
+        $this->audit->record('identity.reset_revoked', self::MODULE, $event->reset->user, metadata: self::reset($event->reset));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function reset(PasswordReset $reset): array
+    {
+        return [
+            'reset_id' => $reset->id,
+            'requested_by' => $reset->requested_by,
+            'identity_check_method' => $reset->identity_check_method,
+            'identity_check_note' => $reset->identity_check_note,
+            'expires_at' => $reset->expires_at->toIso8601String(),
+        ];
     }
 }

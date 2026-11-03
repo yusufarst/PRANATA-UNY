@@ -10,7 +10,8 @@ use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 /*
- * PG-502 Pengguna (TASK-011): the list, detail and form of accounts, the activation code and the deactivation (OD-38).
+ * PG-502 Pengguna (TASK-011): the list, detail and form of accounts, the activation code, the deactivation (OD-38) and the
+ * assisted reset with its second administrator for a privileged account (RB-08).
  */
 
 function administrator(): User
@@ -333,7 +334,13 @@ test('a deactivated account cannot be edited', function () {
         ->assertRedirect(route('identity.admin.users.show', $gone->public_id));
 
     $this->get(route('identity.admin.users.show', $gone->public_id))
-        ->assertInertia(fn (Assert $page) => $page->where('can', ['update' => false, 'deactivate' => false]));
+        ->assertInertia(fn (Assert $page) => $page->where('can', [
+            'update' => false,
+            'deactivate' => false,
+            'reset' => false,
+            'approveReset' => false,
+            'revokeReset' => false,
+        ]));
 });
 
 test('the database refuses a DEACTIVATED account without its moment and the reverse', function (string $status, bool $withMoment) {
@@ -347,6 +354,282 @@ test('the database refuses a DEACTIVATED account without its moment and the reve
     'deactivated without a moment' => [User::DEACTIVATED, false],
     'active with a moment' => [User::ACTIVE, true],
 ]);
+
+/**
+ * @return array<string, string>
+ */
+function identityCheck(array $overrides = []): array
+{
+    return ['identity_check_method' => 'STAFF_CARD', 'identity_check_note' => 'Kartu pegawai diperiksa di loket', ...$overrides];
+}
+
+// TASK-011 TAC-02, SECURITY_MODEL section 3.1, RB-08.
+test('an assisted reset shows a temporary password once, ends every session and records the identity check', function () {
+    $admin = administrator();
+    $user = User::factory()->create();
+    $oldToken = $user->remember_token;
+    DB::table('sessions')->insert(['id' => 'laptop', 'user_id' => $user->id, 'payload' => '', 'last_activity' => time()]);
+
+    $response = $this->actingAs($admin)
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $user->public_id), identityCheck())
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->component('admin/users/show')
+            ->where('issuedSecret.kind', 'temporary_password')
+            ->where('account.must_change_password', true)
+            ->has('issuedSecret.value'));
+
+    $password = $response->viewData('page')['props']['issuedSecret']['value'];
+    $user->refresh();
+    $reset = PasswordReset::query()->where('user_id', $user->id)->sole();
+    $audit = DB::table('audit_events')->where('action', 'identity.reset_issued')->sole();
+
+    expect($password)->toMatch('/^[A-Z2-9]{4}(-[A-Z2-9]{4}){3}$/')
+        ->and(Hash::check($password, $user->password))->toBeTrue()
+        ->and($user->must_change_password)->toBeTrue()
+        ->and($user->remember_token)->not->toBe($oldToken)
+        ->and(DB::table('sessions')->where('user_id', $user->id)->exists())->toBeFalse()
+        ->and($reset->channel)->toBe(PasswordReset::ADMIN_ASSISTED)
+        ->and($reset->status)->toBe(PasswordReset::ISSUED)
+        ->and($reset->requested_by)->toBe($admin->id)
+        ->and($reset->temp_secret_hash)->toBe($user->password)
+        ->and($reset->expires_at->diffInHours(now()->addHours(24)))->toBeLessThan(1)
+        ->and($audit->metadata)->toContain('STAFF_CARD')
+        ->and($audit->metadata)->toContain('"ended_sessions": 1')
+        ->and(DB::table('audit_events')->whereRaw('coalesce(metadata::text, \'\') like ?', ["%{$password}%"])->exists())->toBeFalse();
+
+    $this->get(route('identity.admin.users.show', $user->public_id))
+        ->assertInertia(fn (Assert $page) => $page->missing('issuedSecret'));
+});
+
+test('a reset revokes the activation code still open for the account', function () {
+    activationCodeOfNewAccount($this);
+    $user = User::query()->where('username', 'budi.santoso')->firstOrFail();
+
+    $this->actingAs(administrator())
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $user->public_id), identityCheck())
+        ->assertOk();
+
+    expect(PasswordReset::query()->where('user_id', $user->id)->where('channel', PasswordReset::ACTIVATION)->value('status'))
+        ->toBe(PasswordReset::REVOKED);
+});
+
+test('the user signs in with the temporary password and must change it, which uses it up', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs(administrator())
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $user->public_id), identityCheck())
+        ->assertOk();
+    $password = $response->viewData('page')['props']['issuedSecret']['value'];
+    $this->post(route('logout'));
+
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => $password]);
+    $this->assertAuthenticatedAs($user);
+    $this->get(route('dashboard'))->assertRedirect(route('identity.password.edit'));
+
+    $this->put(route('identity.password.update'), [
+        'current_password' => $password,
+        'password' => 'Sandi-Baru-2026',
+        'password_confirmation' => 'Sandi-Baru-2026',
+    ])->assertSessionHasNoErrors();
+
+    expect(PasswordReset::query()->where('user_id', $user->id)->value('status'))->toBe(PasswordReset::USED)
+        ->and($user->refresh()->must_change_password)->toBeFalse();
+});
+
+test('a temporary password past 24 hours no longer signs in', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs(administrator())
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $user->public_id), identityCheck())
+        ->assertOk();
+    $password = $response->viewData('page')['props']['issuedSecret']['value'];
+    $this->post(route('logout'));
+
+    $this->travel(25)->hours();
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => $password])->assertSessionHasErrors('login');
+
+    $this->assertGuest();
+    expect(PasswordReset::query()->where('user_id', $user->id)->value('status'))->toBe(PasswordReset::EXPIRED);
+});
+
+test('a reset names a known identity check', function (array $input) {
+    $user = User::factory()->create();
+
+    $this->actingAs(administrator())
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $user->public_id), $input)
+        ->assertSessionHasErrors('identity_check_method');
+
+    expect(PasswordReset::query()->exists())->toBeFalse();
+})->with([
+    'missing' => [['identity_check_note' => 'Tanpa cara']],
+    'unknown' => [['identity_check_method' => 'PHONE_CALL']],
+]);
+
+test('an administrator cannot reset their own account or a deactivated one through the assisted path', function () {
+    $admin = administrator();
+    $gone = User::factory()->withStatus(User::DEACTIVATED)->create();
+    $password = $admin->password;
+
+    $this->actingAs($admin)
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $admin->public_id), identityCheck())
+        ->assertSessionHasErrors('_domain');
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $gone->public_id), identityCheck())
+        ->assertSessionHasErrors('_domain');
+
+    expect($admin->refresh()->password)->toBe($password)
+        ->and(PasswordReset::query()->exists())->toBeFalse();
+
+    $this->get(route('identity.admin.users.show', $admin->public_id))
+        ->assertInertia(fn (Assert $page) => $page->where('can.reset', false));
+});
+
+test('an account without admin.users.manage cannot reset, approve or revoke', function () {
+    $other = User::factory()->create();
+    $reset = PasswordReset::query()->create([
+        'user_id' => $other->id,
+        'channel' => PasswordReset::ADMIN_ASSISTED,
+        'status' => PasswordReset::PENDING_APPROVAL,
+        'identity_check_method' => 'IN_PERSON',
+        'expires_at' => now()->addDay(),
+    ]);
+
+    $this->actingAs(User::factory()->create());
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $other->public_id), identityCheck())
+        ->assertForbidden();
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.approve', [$other->public_id, $reset->id]))
+        ->assertForbidden();
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.revoke', [$other->public_id, $reset->id]))
+        ->assertForbidden();
+
+    expect($reset->refresh()->status)->toBe(PasswordReset::PENDING_APPROVAL);
+});
+
+// TASK-011 TAC-03: a privileged account needs a second administrator.
+test('the reset of a privileged account waits for a second administrator, who gets the temporary password', function () {
+    $maker = administrator();
+    $checker = administrator();
+    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->create();
+    $password = $target->password;
+
+    $this->actingAs($maker)
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $target->public_id), identityCheck(['identity_check_method' => 'IN_PERSON']))
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('identity.admin.users.show', $target->public_id));
+
+    $reset = PasswordReset::query()->where('user_id', $target->id)->sole();
+
+    expect($reset->status)->toBe(PasswordReset::PENDING_APPROVAL)
+        ->and($reset->temp_secret_hash)->toBeNull()
+        ->and($target->refresh()->password)->toBe($password)
+        ->and(DB::table('audit_events')->where('action', 'identity.reset_requested')->count())->toBe(1);
+
+    // The maker sees the request but cannot approve it, nor ask again.
+    $this->get(route('identity.admin.users.show', $target->public_id))
+        ->assertInertia(fn (Assert $page) => $page->where('account.privileged', true)
+            ->where('pendingReset.id', $reset->id)
+            ->where('pendingReset.requested_by_me', true)
+            ->where('can.reset', false)
+            ->where('can.approveReset', false)
+            ->where('can.revokeReset', true));
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.approve', [$target->public_id, $reset->id]))
+        ->assertSessionHasErrors('_domain');
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $target->public_id), identityCheck())
+        ->assertSessionHasErrors('_domain');
+
+    $response = $this->actingAs($checker)
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.approve', [$target->public_id, $reset->id]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->where('issuedSecret.kind', 'temporary_password')
+            ->where('pendingReset', null));
+
+    $temporary = $response->viewData('page')['props']['issuedSecret']['value'];
+    $reset->refresh();
+    $audit = DB::table('audit_events')->where('action', 'identity.reset_issued')->sole();
+
+    expect($reset->status)->toBe(PasswordReset::ISSUED)
+        ->and($reset->approved_by)->toBe($checker->id)
+        ->and(Hash::check($temporary, $target->refresh()->password))->toBeTrue()
+        ->and($target->must_change_password)->toBeTrue()
+        ->and($audit->metadata)->toContain('"approved_by": '.$checker->id)
+        ->and(DB::table('audit_events')->whereRaw('coalesce(metadata::text, \'\') like ?', ["%{$temporary}%"])->exists())->toBeFalse();
+});
+
+test('a reset request of a privileged account can be cancelled and then no longer approved', function () {
+    $maker = administrator();
+    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->create();
+    $password = $target->password;
+
+    $this->actingAs($maker)
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $target->public_id), identityCheck())
+        ->assertSessionHasNoErrors();
+    $reset = PasswordReset::query()->where('user_id', $target->id)->sole();
+
+    $this->actingAs(administrator())
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.revoke', [$target->public_id, $reset->id]))
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('identity.admin.users.show', $target->public_id));
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.approve', [$target->public_id, $reset->id]))
+        ->assertSessionHasErrors('_domain');
+
+    expect($reset->refresh()->status)->toBe(PasswordReset::REVOKED)
+        ->and($target->refresh()->password)->toBe($password)
+        ->and(DB::table('audit_events')->where('action', 'identity.reset_revoked')->count())->toBe(1);
+});
+
+test('a reset request is approved only under its own account', function () {
+    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->create();
+    $other = User::factory()->create();
+
+    $this->actingAs(administrator())
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $target->public_id), identityCheck())
+        ->assertSessionHasNoErrors();
+    $reset = PasswordReset::query()->where('user_id', $target->id)->sole();
+
+    $this->actingAs(administrator())
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.approve', [$other->public_id, $reset->id]))
+        ->assertNotFound();
+
+    expect($reset->refresh()->status)->toBe(PasswordReset::PENDING_APPROVAL);
+});
+
+test('the database refuses an approval by the administrator who asked for the reset', function () {
+    $maker = administrator();
+    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->create();
+
+    expect(fn () => PasswordReset::query()->create([
+        'user_id' => $target->id,
+        'channel' => PasswordReset::ADMIN_ASSISTED,
+        'requested_by' => $maker->id,
+        'approved_by' => $maker->id,
+        'temp_secret_hash' => 'x',
+        'status' => PasswordReset::ISSUED,
+        'expires_at' => now()->addDay(),
+    ]))->toThrow(QueryException::class);
+});
 
 test('the database refuses a reset record an account requested for itself', function () {
     $user = User::factory()->create();

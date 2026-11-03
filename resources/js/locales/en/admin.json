@@ -78,10 +78,37 @@
         "secret": {
             "activation_title": "Activation code",
             "activation_intro": "Hand this code to the user in person. It is shown only once and cannot be viewed again.",
-            "use_note": "The user signs in with their username and this code, then must set a new password.",
+            "activation_use_note": "The user signs in with their username and this code, then must set a new password.",
+            "temporary_password_title": "Temporary password",
+            "temporary_password_intro": "Hand this password to the account owner in person. It is shown only once and cannot be viewed again. All sessions of this account have ended.",
+            "temporary_password_use_note": "The user signs in with their username and this password, then must set a new password.",
             "expires": "Valid until {{time}}",
-            "copy": "Copy code",
-            "copied": "Code copied"
+            "copy": "Copy",
+            "copied": "Copied"
+        },
+        "reset": {
+            "open": "Reset password",
+            "title": "Administrator-assisted password reset",
+            "description": "First make sure the person asking owns the account. The system makes a temporary password that is shown once and valid for 24 hours; the user must change it when signing in.",
+            "privileged_description": "This is a privileged account. Your request waits for a second administrator; the temporary password is made only after approval.",
+            "method": "How identity was checked",
+            "method_placeholder": "Choose a check",
+            "methods": {
+                "IN_PERSON": "In person",
+                "STAFF_CARD": "Staff card",
+                "VENDOR_LETTER": "Official vendor letter"
+            },
+            "note": "Note (optional)",
+            "note_placeholder": "For example: the letter number or the officer who witnessed it",
+            "confirm": "Make temporary password",
+            "confirm_privileged": "Request reset",
+            "pending_title": "Reset waiting for a second administrator",
+            "pending_detail": "Requested by {{name}} on {{time}} · identity checked: {{method}}",
+            "pending_expires": "The request ends {{time}} if not approved.",
+            "pending_own": "You asked for this reset. Another administrator must approve it.",
+            "approve": "Approve and make password",
+            "revoke": "Cancel request",
+            "unknown_requester": "an administrator"
         },
         "deactivation": {
             "title": "Deactivate this account?",

@@ -14,6 +14,15 @@ export const roleGroups = ['SUPER_ADMIN', 'INTERNAL', 'VENDOR'] as const;
 /** The role groups an administrator may give a new account (TASK-011 TAC-01). */
 export const creatableRoleGroups = ['INTERNAL', 'VENDOR'] as const;
 
+/** How the administrator checked who asked for an assisted reset (OPERATIONS_RUNBOOK RB-08). */
+export const identityChecks = [
+    'IN_PERSON',
+    'STAFF_CARD',
+    'VENDOR_LETTER',
+] as const;
+
+export type IdentityCheck = (typeof identityChecks)[number];
+
 export type AccountStatus = (typeof accountStatuses)[number];
 
 export type RoleGroup = (typeof roleGroups)[number];
