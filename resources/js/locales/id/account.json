@@ -55,6 +55,7 @@
         "modal_setup_title": "Aktifkan autentikasi dua faktor",
         "modal_setup_description": "Untuk menyelesaikan, pindai kode QR atau masukkan kunci penyiapan di aplikasi autentikator Anda",
         "manual": "atau masukkan kode secara manual",
+        "setup_key": "Kunci penyiapan",
         "copy_key": "Salin kunci penyiapan",
         "fetch_qr_failed": "Kode QR gagal diambil.",
         "fetch_key_failed": "Kunci penyiapan gagal diambil.",

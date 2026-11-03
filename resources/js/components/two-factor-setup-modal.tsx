@@ -114,6 +114,9 @@ function TwoFactorSetupStep({
                                         type="text"
                                         readOnly
                                         value={manualSetupKey}
+                                        aria-label={t(
+                                            'account:two_factor.setup_key',
+                                        )}
                                         className="h-full w-full bg-background p-3 text-foreground outline-none"
                                     />
                                     <button
@@ -175,6 +178,7 @@ function TwoFactorVerificationStep({
                             <InputOTP
                                 id="otp"
                                 name="code"
+                                aria-label={t('auth:two_factor.code_title')}
                                 maxLength={OTP_MAX_LENGTH}
                                 onChange={setCode}
                                 disabled={processing}

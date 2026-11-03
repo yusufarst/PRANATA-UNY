@@ -87,7 +87,7 @@ final class RecordAuthenticationEvents
      */
     public function twoFactorFailed(TwoFactorAuthenticationFailed $event): void
     {
-        $this->audit->record('identity.two_factor_failed', self::MODULE, $event->user instanceof User ? $event->user : null);
+        $this->audit->record('identity.two_factor_failed', self::MODULE, $event->user);
     }
 
     /**

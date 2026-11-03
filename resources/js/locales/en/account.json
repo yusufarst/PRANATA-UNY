@@ -55,6 +55,7 @@
         "modal_setup_title": "Enable two-factor authentication",
         "modal_setup_description": "To finish, scan the QR code or enter the setup key in your authenticator app",
         "manual": "or enter the code manually",
+        "setup_key": "Setup key",
         "copy_key": "Copy the setup key",
         "fetch_qr_failed": "The QR code could not be fetched.",
         "fetch_key_failed": "The setup key could not be fetched.",

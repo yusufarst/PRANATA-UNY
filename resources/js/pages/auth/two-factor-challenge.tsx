@@ -67,6 +67,9 @@ export default function TwoFactorChallenge() {
                                     <Input
                                         name="recovery_code"
                                         type="text"
+                                        aria-label={t(
+                                            'auth:two_factor.recovery_title',
+                                        )}
                                         placeholder={t(
                                             'auth:two_factor.recovery_placeholder',
                                         )}
@@ -82,6 +85,9 @@ export default function TwoFactorChallenge() {
                                     <div className="flex w-full items-center justify-center">
                                         <InputOTP
                                             name="code"
+                                            aria-label={t(
+                                                'auth:two_factor.code_title',
+                                            )}
                                             maxLength={OTP_MAX_LENGTH}
                                             value={code}
                                             onChange={(value) => setCode(value)}
