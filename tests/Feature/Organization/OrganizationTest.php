@@ -8,7 +8,9 @@ use App\Modules\Organization\Models\OrgPosition;
 use App\Modules\Organization\Models\OrgUnit;
 use App\Modules\Organization\Models\OrgUnitHistory;
 use App\Modules\Organization\Support\BusinessDate;
+use App\Modules\Organization\Support\ChangeApplier;
 use App\Modules\Organization\Support\UnresolvedMaintenancePolicy;
+use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use App\Modules\Platform\Support\IntegrityTriggers;
 use Carbon\CarbonImmutable;
 use Database\Seeders\OrganizationSeeder;
@@ -359,6 +361,32 @@ test('a unit cannot move below itself or below one of its own units', function (
 
     expect($request->refresh()->status)->toBe(ChangeRequest::VALIDATED)
         ->and(OrgUnit::query()->orderBy('id')->pluck('path', 'code')->all())->toBe($before);
+});
+
+test('two approved moves that cross each other never make a cycle, whichever is applied second', function () {
+    $this->seed(OrganizationSeeder::class);
+    $ft = seededUnit('FT');
+    $lppm = seededUnit('LPPM');
+    $admin = organizationAdmin();
+    $this->actingAs($admin);
+
+    // Both are checked against the same tree and both pass; together they would put each unit below the other.
+    $ftIntoLppm = approveOrganizationChange($this, draftOrganizationChange($this, ChangeRequest::MOVE_UNIT, $ft, ['parent' => $lppm->public_id]));
+    $lppmIntoFt = approveOrganizationChange($this, draftOrganizationChange($this, ChangeRequest::MOVE_UNIT, $lppm, ['parent' => $ft->public_id]));
+
+    organizationStep($this, $ftIntoLppm, 'apply')->assertSessionHasNoErrors();
+    $after = OrgUnit::query()->orderBy('id')->pluck('path', 'code')->all();
+
+    // The write itself refuses a cycle on the locked rows, even when the earlier checks were passed.
+    expect(fn () => DB::transaction(fn () => app(ChangeApplier::class)->apply($lppmIntoFt->refresh(), $admin)))
+        ->toThrow(DomainRuleViolation::class);
+
+    organizationStep($this, $lppmIntoFt, 'apply')->assertSessionHasErrors('_domain');
+
+    expect($lppmIntoFt->refresh()->status)->toBe(ChangeRequest::APPROVED)
+        ->and(OrgUnit::query()->orderBy('id')->pluck('path', 'code')->all())->toBe($after)
+        ->and($ft->refresh()->parent_id)->toBe($lppm->id)
+        ->and($lppm->refresh()->parent_id)->not->toBe($ft->id);
 });
 
 // TAC-02: a change never overwrites an earlier version.

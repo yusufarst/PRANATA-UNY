@@ -79,14 +79,18 @@ final class ChangeApplier
     }
 
     /**
-     * The whole subtree takes the new path prefix in one statement (TAC-01). The moved unit and its subtree are locked first,
-     * so a move that races this one waits and then validates against the new tree.
+     * The whole subtree takes the new path prefix in one statement (TAC-01). Applies run one at a time (ApplyChangeRequest),
+     * and the cycle check is repeated on the locked rows, so a unit is never written below itself.
      */
     private function moveUnit(ChangeRequest $request, User $actor): void
     {
         $unit = self::lockedSubject($request);
         $parent = self::lockedUnit($request->payload['parent'] ?? null);
         $before = $unit->snapshot();
+
+        if ($parent !== null && ($parent->path === $unit->path || str_starts_with($parent->path, $unit->path.'.'))) {
+            throw DomainRuleViolation::because('organization.blocking_issues');
+        }
 
         OrgUnit::query()->withinSubtreeOf($unit)->lockForUpdate()->get(['id']);
 

@@ -8,6 +8,7 @@ use App\Modules\Organization\Support\BusinessDate;
 use App\Modules\Organization\Support\ChangeApplier;
 use App\Modules\Organization\Support\ChangeValidator;
 use App\Modules\Platform\Exceptions\DomainRuleViolation;
+use Illuminate\Support\Facades\DB;
 
 /**
  * TR-286 (S4 to S5): record that the approved change is in force, once its effective date is reached. The change is written
@@ -29,6 +30,10 @@ final class ApplyChangeRequest extends ChangeRequestAction
             if ($current->effective_from === null || $current->effective_from->toDateString() > BusinessDate::today()->toDateString()) {
                 throw DomainRuleViolation::because('organization.not_yet_effective');
             }
+
+            // Changes are applied one at a time, so the checks below read the tree that the change is written into. Without
+            // this, two moves checked against the same old tree could each pass and together make a cycle (TAC-01).
+            DB::statement("select pg_advisory_xact_lock(hashtext('organization.apply'))");
 
             // The organization may have changed since the decision; a request that no longer fits stays S4 for withdrawal.
             $current->validation = ['checked_at' => now()->toIso8601String(), 'issues' => $this->validator->issues($current)];
