@@ -331,6 +331,107 @@ test('an administrator cannot deactivate their own account or one already deacti
     expect($admin->refresh()->status)->toBe(User::ACTIVE);
 });
 
+test('suspending ends every session and changes the remember token, and reinstating lets the own password sign in again', function () {
+    $admin = administrator();
+    $user = User::factory()->create();
+    $oldToken = $user->remember_token;
+    DB::table('sessions')->insert(['id' => 'laptop', 'user_id' => $user->id, 'payload' => '', 'last_activity' => time()]);
+
+    $this->actingAs($admin)
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.suspend', $user->public_id), ['reason' => 'Cuti panjang', 'lock_version' => $user->lock_version])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('identity.admin.users.show', $user->public_id));
+
+    $user->refresh();
+
+    expect($user->status)->toBe(User::SUSPENDED)
+        ->and($user->deactivated_at)->toBeNull()
+        ->and($user->remember_token)->not->toBe($oldToken)
+        ->and(DB::table('sessions')->where('user_id', $user->id)->exists())->toBeFalse()
+        ->and(DB::table('audit_events')->where('action', 'identity.account_suspended')->value('reason'))->toBe('Cuti panjang');
+
+    $this->get(route('identity.admin.users.show', $user->public_id))
+        ->assertInertia(fn (Assert $page) => $page->where('can.suspend', false)->where('can.reinstate', true));
+
+    $this->post(route('logout'));
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password']);
+    $this->assertGuest();
+
+    $this->actingAs($admin)
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.reinstate', $user->public_id), ['reason' => 'Kembali bertugas', 'lock_version' => $user->lock_version])
+        ->assertSessionHasNoErrors();
+
+    expect($user->refresh()->status)->toBe(User::ACTIVE)
+        ->and(DB::table('audit_events')->where('action', 'identity.account_reinstated')->count())->toBe(1);
+
+    $this->post(route('logout'));
+    $this->post(route('login.store'), ['login' => $user->username, 'password' => 'password']);
+    $this->assertAuthenticatedAs($user);
+});
+
+test('an administrator cannot suspend their own account, a deactivated one or one at an old version, nor reinstate an active one', function () {
+    $admin = administrator();
+    $gone = User::factory()->withStatus(User::DEACTIVATED)->create();
+    $user = User::factory()->create();
+    $user->forceFill(['name' => 'Diubah Orang Lain', 'lock_version' => 1])->save();
+
+    $this->actingAs($admin)
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.suspend', $admin->public_id), ['reason' => 'Coba sendiri', 'lock_version' => $admin->lock_version])
+        ->assertSessionHasErrors('_domain');
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.suspend', $gone->public_id), ['reason' => 'Sudah nonaktif', 'lock_version' => $gone->lock_version])
+        ->assertSessionHasErrors('_domain');
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.reinstate', $user->public_id), ['reason' => 'Tidak ditangguhkan', 'lock_version' => 1])
+        ->assertSessionHasErrors('_domain');
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.suspend', $user->public_id), ['reason' => 'Versi lama', 'lock_version' => 0])
+        ->assertStatus(409);
+
+    expect($admin->refresh()->status)->toBe(User::ACTIVE)
+        ->and($gone->refresh()->status)->toBe(User::DEACTIVATED)
+        ->and($user->refresh()->status)->toBe(User::ACTIVE);
+});
+
+test('another administrator cannot change the email of a privileged account, which its owner still can', function () {
+    $admin = administrator();
+    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->create(['email' => 'pemilik@example.test']);
+    $details = fn (User $user, string $email) => [
+        'username' => $user->username,
+        'name' => $user->name,
+        'email' => $email,
+        'staff_identifier' => null,
+        'locale' => 'id',
+        'lock_version' => $user->lock_version,
+    ];
+
+    $this->actingAs($admin)
+        ->get(route('identity.admin.users.edit', $target->public_id))
+        ->assertInertia(fn (Assert $page) => $page->where('emailLocked', true));
+
+    $this->withHeaders(commandKey())
+        ->put(route('identity.admin.users.update', $target->public_id), $details($target, 'penyerang@example.test'))
+        ->assertSessionHasErrors('_domain');
+
+    expect($target->refresh()->email)->toBe('pemilik@example.test');
+
+    $this->actingAs($target)
+        ->get(route('identity.admin.users.edit', $target->public_id))
+        ->assertInertia(fn (Assert $page) => $page->where('emailLocked', false));
+
+    $this->withHeaders(commandKey())
+        ->put(route('identity.admin.users.update', $target->public_id), $details($target, 'baru@example.test'))
+        ->assertSessionHasNoErrors();
+
+    expect($target->refresh()->email)->toBe('baru@example.test');
+});
+
 test('a deactivated account cannot be edited', function () {
     $gone = User::factory()->withStatus(User::DEACTIVATED)->create();
 
@@ -612,6 +713,23 @@ test('a reset request of a privileged account can be cancelled and then no longe
     expect($reset->refresh()->status)->toBe(PasswordReset::REVOKED)
         ->and($target->refresh()->password)->toBe($password)
         ->and(DB::table('audit_events')->where('action', 'identity.reset_revoked')->count())->toBe(1);
+});
+
+test('the account a reset is meant to recover cannot cancel it', function () {
+    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->create();
+
+    $this->actingAs(administrator())
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.store', $target->public_id), identityCheck())
+        ->assertSessionHasNoErrors();
+    $reset = PasswordReset::query()->where('user_id', $target->id)->sole();
+
+    $this->actingAs($target)
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.resets.revoke', [$target->public_id, $reset->id]))
+        ->assertSessionHasErrors('_domain');
+
+    expect($reset->refresh()->status)->toBe(PasswordReset::PENDING_APPROVAL);
 });
 
 test('a reset request is approved only under its own account', function () {

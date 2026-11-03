@@ -5,6 +5,8 @@ namespace App\Modules\Audit\Listeners;
 use App\Modules\Audit\Support\AuditLogger;
 use App\Modules\Identity\Events\AccountCreated;
 use App\Modules\Identity\Events\AccountDeactivated;
+use App\Modules\Identity\Events\AccountReinstated;
+use App\Modules\Identity\Events\AccountSuspended;
 use App\Modules\Identity\Events\AccountUpdated;
 use App\Modules\Identity\Events\PasswordResetIssued;
 use App\Modules\Identity\Events\PasswordResetRequested;
@@ -33,6 +35,8 @@ final class RecordAccountAdministration
             AccountCreated::class => 'accountCreated',
             AccountUpdated::class => 'accountUpdated',
             AccountDeactivated::class => 'accountDeactivated',
+            AccountSuspended::class => 'accountSuspended',
+            AccountReinstated::class => 'accountReinstated',
             PasswordResetRequested::class => 'passwordResetRequested',
             PasswordResetIssued::class => 'passwordResetIssued',
             PasswordResetRevoked::class => 'passwordResetRevoked',
@@ -59,6 +63,18 @@ final class RecordAccountAdministration
             'ended_sessions' => $event->endedSessions,
             'revoked_secrets' => $event->revokedSecrets,
         ]);
+    }
+
+    public function accountSuspended(AccountSuspended $event): void
+    {
+        $this->audit->record('identity.account_suspended', self::MODULE, $event->user, reason: $event->reason, metadata: [
+            'ended_sessions' => $event->endedSessions,
+        ]);
+    }
+
+    public function accountReinstated(AccountReinstated $event): void
+    {
+        $this->audit->record('identity.account_reinstated', self::MODULE, $event->user, reason: $event->reason);
     }
 
     public function passwordResetRequested(PasswordResetRequested $event): void

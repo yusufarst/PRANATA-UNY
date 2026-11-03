@@ -18,9 +18,11 @@ import { useCommand } from '@/lib/command';
 type Props = {
     /** The account to change, or null for a new one. */
     account: Account | null;
+    /** The email of another privileged account is changed only by its owner. */
+    emailLocked: boolean;
 };
 
-export default function UserForm({ account }: Props) {
+export default function UserForm({ account, emailLocked }: Props) {
     const { t } = useTranslation();
     const command = useCommand();
     const creating = account === null;
@@ -151,6 +153,7 @@ export default function UserForm({ account }: Props) {
                                     maxLength={255}
                                     autoComplete="off"
                                     defaultValue={account?.email ?? ''}
+                                    readOnly={emailLocked}
                                     aria-describedby="email-hint"
                                     aria-invalid={!!errors.email}
                                 />
@@ -158,7 +161,11 @@ export default function UserForm({ account }: Props) {
                                     id="email-hint"
                                     className="text-sm text-muted-foreground"
                                 >
-                                    {t('admin:users.fields.email_hint')}
+                                    {t(
+                                        emailLocked
+                                            ? 'admin:users.fields.email_locked_hint'
+                                            : 'admin:users.fields.email_hint',
+                                    )}
                                 </p>
                                 <InputError message={errors.email} />
                             </div>

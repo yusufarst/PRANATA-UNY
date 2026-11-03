@@ -74,7 +74,7 @@ class CredentialAuthenticator
             return $this->refuse($user, SignInFailed::NOT_ACTIVE);
         }
 
-        if ($this->usesExpiredSecret($user)) {
+        if ($this->usesClosedSecret($user)) {
             return $this->refuse($user, SignInFailed::SECRET_EXPIRED);
         }
 
@@ -91,10 +91,11 @@ class CredentialAuthenticator
     }
 
     /**
-     * Whether the password is a one-time secret from an administrator that is past its life (SECURITY_MODEL section 3.1).
-     * Such a secret is the password only until the forced change, and its record holds the same hash.
+     * Whether the password is a one-time secret from an administrator that no longer signs in (SECURITY_MODEL section 3.1):
+     * past its life, or already marked expired or revoked. Such a secret is the password only until the forced change, and
+     * its record holds the same hash; the record is found by that hash whatever its status, so a refusal stays a refusal.
      */
-    private function usesExpiredSecret(User $user): bool
+    private function usesClosedSecret(User $user): bool
     {
         if (! $user->must_change_password) {
             return false;
@@ -102,16 +103,21 @@ class CredentialAuthenticator
 
         $secret = PasswordReset::query()
             ->where('user_id', $user->getKey())
-            ->where('status', PasswordReset::ISSUED)
             ->where('temp_secret_hash', $user->password)
             ->latest('id')
             ->first();
 
-        if ($secret === null || $secret->expires_at->isFuture()) {
+        if ($secret === null) {
             return false;
         }
 
-        $secret->forceFill(['status' => PasswordReset::EXPIRED])->save();
+        if ($secret->status === PasswordReset::ISSUED && $secret->expires_at->isFuture()) {
+            return false;
+        }
+
+        if ($secret->status === PasswordReset::ISSUED) {
+            $secret->forceFill(['status' => PasswordReset::EXPIRED])->save();
+        }
 
         return true;
     }

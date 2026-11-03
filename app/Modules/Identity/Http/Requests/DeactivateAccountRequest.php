@@ -6,7 +6,8 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * A deactivation states its reason (OPERATIONS_RUNBOOK RB-13) and the version the administrator saw.
+ * A deactivation states its reason (OPERATIONS_RUNBOOK RB-13) and the version the administrator saw; so do a suspension and
+ * its reinstatement.
  */
 class DeactivateAccountRequest extends FormRequest
 {

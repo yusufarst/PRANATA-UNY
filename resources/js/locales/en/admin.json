@@ -5,6 +5,8 @@
         "create": "Create user",
         "edit": "Edit details",
         "deactivate": "Deactivate",
+        "suspend": "Suspend",
+        "reinstate": "Reinstate",
         "back_to_list": "User list",
         "back_to_detail": "Back to details",
         "filters": {
@@ -32,6 +34,7 @@
             "username": "Username",
             "email": "Email",
             "email_hint": "Optional. The account works without an email.",
+            "email_locked_hint": "Privileged account: only its owner can change its email, because a reset by email is sent to this address.",
             "staff_identifier": "Staff or identity number",
             "staff_identifier_hint": "Optional, such as an employee number or a vendor identity number.",
             "role_group": "Role group",
@@ -73,7 +76,8 @@
         "detail": {
             "title": "User details",
             "section": "Account details",
-            "deactivated_note": "This account has been deactivated. Its data and audit history are kept."
+            "deactivated_note": "This account has been deactivated. Its data and audit history are kept.",
+            "suspended_note": "This account is suspended and cannot sign in until it is reinstated."
         },
         "secret": {
             "activation_title": "Activation code",
@@ -116,6 +120,18 @@
             "reason": "Reason",
             "reason_placeholder": "For example: transferred to another unit since 1 November",
             "confirm": "Yes, deactivate"
+        },
+        "suspension": {
+            "title": "Suspend this account?",
+            "description": "The account cannot sign in and all of its sessions end now. The password does not change; the account can be reinstated at any time.",
+            "reason_placeholder": "For example: long leave until 1 December",
+            "confirm": "Yes, suspend"
+        },
+        "reinstatement": {
+            "title": "Reinstate this account?",
+            "description": "The user can sign in again with their own password.",
+            "reason_placeholder": "For example: the employee is back on duty",
+            "confirm": "Yes, reinstate"
         },
         "sessions": {
             "section": "Active sessions",

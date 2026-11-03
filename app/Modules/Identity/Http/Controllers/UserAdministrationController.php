@@ -6,9 +6,11 @@ use App\Models\User;
 use App\Modules\Identity\Actions\ApproveAssistedReset;
 use App\Modules\Identity\Actions\CreateAccount;
 use App\Modules\Identity\Actions\DeactivateAccount;
+use App\Modules\Identity\Actions\ReinstateAccount;
 use App\Modules\Identity\Actions\RequestAssistedReset;
 use App\Modules\Identity\Actions\RevokeAssistedReset;
 use App\Modules\Identity\Actions\RevokeSessions;
+use App\Modules\Identity\Actions\SuspendAccount;
 use App\Modules\Identity\Actions\UpdateAccount;
 use App\Modules\Identity\Events\SessionsRevoked;
 use App\Modules\Identity\Http\Requests\AccountRequest;
@@ -77,7 +79,7 @@ class UserAdministrationController
     {
         Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
 
-        return Inertia::render('admin/users/form', ['account' => null]);
+        return Inertia::render('admin/users/form', ['account' => null, 'emailLocked' => false]);
     }
 
     /**
@@ -110,7 +112,7 @@ class UserAdministrationController
         return Inertia::render('admin/users/show', $this->detail($request, $user));
     }
 
-    public function edit(User $user): Response|RedirectResponse
+    public function edit(Request $request, User $user): Response|RedirectResponse
     {
         Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
 
@@ -118,7 +120,7 @@ class UserAdministrationController
             return to_route('identity.admin.users.show', $user->public_id);
         }
 
-        return Inertia::render('admin/users/form', ['account' => self::account($user)]);
+        return Inertia::render('admin/users/form', $this->form($request, $user));
     }
 
     public function update(AccountRequest $request, User $user, UpdateAccount $updateAccount): RedirectResponse
@@ -126,9 +128,9 @@ class UserAdministrationController
         Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
 
         try {
-            $updateAccount->handle($user, $request->details(), $request->integer('lock_version'));
+            $updateAccount->handle($request->user(), $user, $request->details(), $request->integer('lock_version'));
         } catch (StaleVersionException $exception) {
-            throw $exception->showing('admin/users/form', ['account' => self::account($user->fresh() ?? $user)]);
+            throw $exception->showing('admin/users/form', $this->form($request, $user->fresh() ?? $user));
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.account_saved')]);
@@ -147,6 +149,36 @@ class UserAdministrationController
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.account_deactivated_done')]);
+
+        return to_route('identity.admin.users.show', $user->public_id);
+    }
+
+    public function suspend(DeactivateAccountRequest $request, User $user, SuspendAccount $suspendAccount): RedirectResponse
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+
+        try {
+            $suspendAccount->handle($request->user(), $user, $request->string('reason')->trim()->value(), $request->integer('lock_version'));
+        } catch (StaleVersionException $exception) {
+            throw $exception->showing('admin/users/show', $this->detail($request, $user->fresh() ?? $user));
+        }
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.account_suspended_done')]);
+
+        return to_route('identity.admin.users.show', $user->public_id);
+    }
+
+    public function reinstate(DeactivateAccountRequest $request, User $user, ReinstateAccount $reinstateAccount): RedirectResponse
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+
+        try {
+            $reinstateAccount->handle($request->user(), $user, $request->string('reason')->trim()->value(), $request->integer('lock_version'));
+        } catch (StaleVersionException $exception) {
+            throw $exception->showing('admin/users/show', $this->detail($request, $user->fresh() ?? $user));
+        }
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.account_reinstated_done')]);
 
         return to_route('identity.admin.users.show', $user->public_id);
     }
@@ -185,12 +217,12 @@ class UserAdministrationController
         return $this->showingTemporaryPassword($request, $user, $issued['password'], $issued['expires_at']);
     }
 
-    public function revokeReset(User $user, PasswordReset $reset, RevokeAssistedReset $revokeReset): RedirectResponse
+    public function revokeReset(Request $request, User $user, PasswordReset $reset, RevokeAssistedReset $revokeReset): RedirectResponse
     {
         Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
         abort_unless($reset->user_id === $user->id, 404);
 
-        $revokeReset->handle($reset);
+        $revokeReset->handle($request->user(), $reset);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.reset_revoked')]);
 
@@ -225,6 +257,19 @@ class UserAdministrationController
                 'expires_at' => $expiresAt->toIso8601String(),
             ],
         ]);
+    }
+
+    /**
+     * The email of another privileged account stays as its owner set it, since a reset by email would go there (UpdateAccount).
+     *
+     * @return array<string, mixed>
+     */
+    private function form(Request $request, User $user): array
+    {
+        return [
+            'account' => self::account($user),
+            'emailLocked' => ! $user->is($request->user()) && $this->privileged->isPrivileged($user),
+        ];
     }
 
     /**
@@ -265,6 +310,8 @@ class UserAdministrationController
             'sessions' => $sessions,
             'can' => [
                 'update' => ! $deactivated,
+                'suspend' => ! $own && in_array($user->status, [User::ACTIVE, User::LOCKED], true),
+                'reinstate' => ! $own && $user->status === User::SUSPENDED,
                 'deactivate' => ! $deactivated && ! $own,
                 // An administrator never resets their own account through the assisted path (TASK-011).
                 'reset' => ! $deactivated && ! $own && $pending === null,

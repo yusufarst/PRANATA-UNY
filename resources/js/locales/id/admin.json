@@ -5,6 +5,8 @@
         "create": "Buat pengguna",
         "edit": "Ubah data",
         "deactivate": "Nonaktifkan",
+        "suspend": "Tangguhkan",
+        "reinstate": "Aktifkan kembali",
         "back_to_list": "Daftar pengguna",
         "back_to_detail": "Kembali ke detail",
         "filters": {
@@ -32,6 +34,7 @@
             "username": "Username",
             "email": "Email",
             "email_hint": "Opsional. Akun tetap dapat dipakai tanpa email.",
+            "email_locked_hint": "Akun istimewa: emailnya hanya dapat diubah oleh pemilik akun sendiri, karena reset lewat email dikirim ke alamat ini.",
             "staff_identifier": "Nomor pegawai atau identitas",
             "staff_identifier_hint": "Opsional, misalnya NIP atau nomor identitas penyedia.",
             "role_group": "Kelompok peran",
@@ -73,7 +76,8 @@
         "detail": {
             "title": "Detail pengguna",
             "section": "Data akun",
-            "deactivated_note": "Akun ini sudah dinonaktifkan. Datanya dan riwayat auditnya tetap disimpan."
+            "deactivated_note": "Akun ini sudah dinonaktifkan. Datanya dan riwayat auditnya tetap disimpan.",
+            "suspended_note": "Akun ini sedang ditangguhkan dan tidak dapat masuk sampai diaktifkan kembali."
         },
         "secret": {
             "activation_title": "Kode aktivasi",
@@ -116,6 +120,18 @@
             "reason": "Alasan",
             "reason_placeholder": "Misalnya: pegawai pindah tugas sejak 1 November",
             "confirm": "Ya, nonaktifkan"
+        },
+        "suspension": {
+            "title": "Tangguhkan akun ini?",
+            "description": "Akun tidak dapat masuk dan semua sesinya langsung berakhir. Password tidak berubah; akun dapat diaktifkan kembali kapan saja.",
+            "reason_placeholder": "Misalnya: cuti panjang sampai 1 Desember",
+            "confirm": "Ya, tangguhkan"
+        },
+        "reinstatement": {
+            "title": "Aktifkan kembali akun ini?",
+            "description": "Pengguna dapat masuk lagi dengan password miliknya.",
+            "reason_placeholder": "Misalnya: pegawai kembali bertugas",
+            "confirm": "Ya, aktifkan kembali"
         },
         "sessions": {
             "section": "Sesi aktif",

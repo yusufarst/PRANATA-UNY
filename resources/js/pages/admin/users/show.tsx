@@ -1,6 +1,6 @@
-import { Form, Head, Link } from '@inertiajs/react';
+import { Form, Head, Link, router } from '@inertiajs/react';
 import { ArrowLeft, KeyRound, LogOut, Pencil, ShieldCheck } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import UserAdministrationController from '@/actions/App/Modules/Identity/Http/Controllers/UserAdministrationController';
@@ -49,6 +49,8 @@ type Props = {
     sessions: ActiveSession[];
     can: {
         update: boolean;
+        suspend: boolean;
+        reinstate: boolean;
         deactivate: boolean;
         reset: boolean;
         approveReset: boolean;
@@ -56,11 +58,13 @@ type Props = {
         revokeSessions: boolean;
     };
     /** Present only in the answer that issued it; it is never shown again. */
-    issuedSecret?: {
-        kind: 'activation' | 'temporary_password';
-        value: string;
-        expires_at: string;
-    };
+    issuedSecret?: IssuedSecret | null;
+};
+
+type IssuedSecret = {
+    kind: 'activation' | 'temporary_password';
+    value: string;
+    expires_at: string;
 };
 
 export default function UserShow({
@@ -72,6 +76,34 @@ export default function UserShow({
 }: Props) {
     const { t } = useTranslation();
     const dateTime = useDateTime();
+
+    // The secret stays on screen for this visit only. It is taken out of the page kept in the browser history, so Back
+    // does not show it again (TASK-011 TAC-02), and a later answer about the account no longer carries it.
+    const [secret, setSecret] = useState<IssuedSecret | null>(
+        issuedSecret ?? null,
+    );
+    const [secretVersion, setSecretVersion] = useState(account.lock_version);
+
+    if (issuedSecret && issuedSecret !== secret) {
+        setSecret(issuedSecret);
+        setSecretVersion(account.lock_version);
+    } else if (
+        !issuedSecret &&
+        secret &&
+        account.lock_version !== secretVersion
+    ) {
+        setSecret(null);
+    }
+
+    useEffect(() => {
+        if (issuedSecret) {
+            router.replaceProp('issuedSecret', null);
+        }
+    }, [issuedSecret]);
+
+    const [statusChange, setStatusChange] = useState<
+        'suspend' | 'reinstate' | null
+    >(null);
     const [deactivating, setDeactivating] = useState(false);
     const [resetting, setResetting] = useState(false);
     const [endingSessions, setEndingSessions] = useState(false);
@@ -150,8 +182,22 @@ export default function UserShow({
                     description={t('admin:users.detail.title')}
                     status={<AccountStatusBadge status={account.status} />}
                     secondaryActions={
-                        (can.reset || can.deactivate) && (
+                        (can.reset ||
+                            can.suspend ||
+                            can.reinstate ||
+                            can.deactivate) && (
                             <>
+                                {can.reinstate && (
+                                    <Button
+                                        variant="outline"
+                                        onClick={() =>
+                                            setStatusChange('reinstate')
+                                        }
+                                        data-test="reinstate-account-button"
+                                    >
+                                        {t('admin:users.reinstate')}
+                                    </Button>
+                                )}
                                 {can.reset && (
                                     <Button
                                         variant="outline"
@@ -160,6 +206,17 @@ export default function UserShow({
                                     >
                                         <KeyRound aria-hidden="true" />
                                         {t('admin:users.reset.open')}
+                                    </Button>
+                                )}
+                                {can.suspend && (
+                                    <Button
+                                        variant="outline"
+                                        onClick={() =>
+                                            setStatusChange('suspend')
+                                        }
+                                        data-test="suspend-account-button"
+                                    >
+                                        {t('admin:users.suspend')}
                                     </Button>
                                 )}
                                 {can.deactivate && (
@@ -191,39 +248,37 @@ export default function UserShow({
                     }
                 />
 
-                {issuedSecret && (
+                {secret && (
                     <Alert data-test="issued-secret">
                         <KeyRound aria-hidden="true" />
                         <AlertTitle>
-                            {t(`admin:users.secret.${issuedSecret.kind}_title`)}
+                            {t(`admin:users.secret.${secret.kind}_title`)}
                         </AlertTitle>
                         <AlertDescription className="gap-3">
                             <p>
-                                {t(
-                                    `admin:users.secret.${issuedSecret.kind}_intro`,
-                                )}
+                                {t(`admin:users.secret.${secret.kind}_intro`)}
                             </p>
                             <p
                                 className="font-mono text-2xl font-semibold tracking-widest text-foreground select-all"
                                 data-test="issued-secret-value"
                             >
-                                {issuedSecret.value}
+                                {secret.value}
                             </p>
                             <p>
                                 {t('admin:users.secret.expires', {
-                                    time: dateTime(issuedSecret.expires_at),
+                                    time: dateTime(secret.expires_at),
                                 })}
                             </p>
                             <p>
                                 {t(
-                                    `admin:users.secret.${issuedSecret.kind}_use_note`,
+                                    `admin:users.secret.${secret.kind}_use_note`,
                                 )}
                             </p>
                             <Button
                                 type="button"
                                 variant="secondary"
                                 size="sm"
-                                onClick={() => copySecret(issuedSecret.value)}
+                                onClick={() => copySecret(secret.value)}
                             >
                                 {t('admin:users.secret.copy')}
                             </Button>
@@ -329,6 +384,14 @@ export default function UserShow({
                     <Alert>
                         <AlertDescription>
                             {t('admin:users.detail.deactivated_note')}
+                        </AlertDescription>
+                    </Alert>
+                )}
+
+                {account.status === 'SUSPENDED' && (
+                    <Alert>
+                        <AlertDescription>
+                            {t('admin:users.detail.suspended_note')}
                         </AlertDescription>
                     </Alert>
                 )}
@@ -513,6 +576,105 @@ export default function UserShow({
                                         data-test="confirm-deactivate-button"
                                     >
                                         {t('admin:users.deactivation.confirm')}
+                                    </Button>
+                                </DialogFooter>
+                            </>
+                        )}
+                    </Form>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog
+                open={statusChange !== null}
+                onOpenChange={(open) => !open && setStatusChange(null)}
+            >
+                <DialogContent>
+                    <DialogTitle>
+                        {t(
+                            statusChange === 'reinstate'
+                                ? 'admin:users.reinstatement.title'
+                                : 'admin:users.suspension.title',
+                        )}
+                    </DialogTitle>
+                    <DialogDescription>
+                        {t(
+                            statusChange === 'reinstate'
+                                ? 'admin:users.reinstatement.description'
+                                : 'admin:users.suspension.description',
+                        )}
+                    </DialogDescription>
+                    <Form
+                        {...(statusChange === 'reinstate'
+                            ? UserAdministrationController.reinstate.form(
+                                  account.public_id,
+                              )
+                            : UserAdministrationController.suspend.form(
+                                  account.public_id,
+                              ))}
+                        {...command.visit}
+                        onSuccess={() => {
+                            command.visit.onSuccess();
+                            setStatusChange(null);
+                        }}
+                        options={{ preserveScroll: true }}
+                        className="grid gap-4"
+                    >
+                        {({ processing, errors }) => (
+                            <>
+                                <InputError
+                                    message={
+                                        errors._idempotency ?? errors._domain
+                                    }
+                                />
+                                <input
+                                    type="hidden"
+                                    name="lock_version"
+                                    value={account.lock_version}
+                                />
+                                <div className="grid gap-2">
+                                    <Label htmlFor="status_reason">
+                                        {t('admin:users.deactivation.reason')}
+                                    </Label>
+                                    <textarea
+                                        id="status_reason"
+                                        name="reason"
+                                        required
+                                        minLength={5}
+                                        maxLength={500}
+                                        rows={3}
+                                        placeholder={t(
+                                            statusChange === 'reinstate'
+                                                ? 'admin:users.reinstatement.reason_placeholder'
+                                                : 'admin:users.suspension.reason_placeholder',
+                                        )}
+                                        aria-invalid={!!errors.reason}
+                                        className="w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm"
+                                    />
+                                    <InputError message={errors.reason} />
+                                </div>
+                                <DialogFooter className="gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={() => setStatusChange(null)}
+                                    >
+                                        {t('common:actions.cancel')}
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        variant={
+                                            statusChange === 'reinstate'
+                                                ? 'default'
+                                                : 'destructive'
+                                        }
+                                        disabled={processing}
+                                        data-test="confirm-status-change-button"
+                                    >
+                                        {t(
+                                            statusChange === 'reinstate'
+                                                ? 'admin:users.reinstatement.confirm'
+                                                : 'admin:users.suspension.confirm',
+                                        )}
                                     </Button>
                                 </DialogFooter>
                             </>
