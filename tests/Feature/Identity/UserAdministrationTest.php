@@ -22,7 +22,8 @@ use Tests\TestCase;
 
 function administrator(): User
 {
-    return User::factory()->inRoleGroup(User::SUPER_ADMIN)->create(['name' => 'Admin Utama']);
+    // With confirmed TOTP, which Administration requires of a privileged account (TASK-012 TAC-02).
+    return User::factory()->inRoleGroup(User::SUPER_ADMIN)->withTwoFactor()->create(['name' => 'Admin Utama']);
 }
 
 /**
@@ -432,7 +433,7 @@ test('an administrator cannot suspend their own account, a deactivated one or on
 
 test('another administrator cannot change the email of a privileged account, which its owner still can', function () {
     $admin = administrator();
-    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->create(['email' => 'pemilik@example.test']);
+    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->withTwoFactor()->create(['email' => 'pemilik@example.test']);
     $details = fn (User $user, string $email) => [
         'username' => $user->username,
         'name' => $user->name,
@@ -763,7 +764,8 @@ test('a reset request of a privileged account can be cancelled and then no longe
 });
 
 test('the account a reset is meant to recover cannot cancel it', function () {
-    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->create();
+    // With confirmed TOTP, so it reaches the cancel action itself rather than its TOTP setup (TASK-012 TAC-02).
+    $target = User::factory()->inRoleGroup(User::SUPER_ADMIN)->withTwoFactor()->create();
 
     $this->actingAs(administrator())
         ->withHeaders(commandKey())

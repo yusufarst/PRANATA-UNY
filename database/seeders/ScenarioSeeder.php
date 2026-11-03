@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Fortify\RecoveryCode;
 use RuntimeException;
 
 /**
@@ -19,6 +21,11 @@ class ScenarioSeeder extends Seeder
      * @var list<string>
      */
     public const PROFILES = ['super-admin', 'internal', 'vendor'];
+
+    /**
+     * Synthetic; the same value as tests/e2e/support/totp.ts.
+     */
+    public const SUPER_ADMIN_TOTP_SECRET = 'E2EPRANATATOTPAB';
 
     public function run(): void
     {
@@ -38,9 +45,25 @@ class ScenarioSeeder extends Seeder
                     'name' => "E2E {$profile} {$run}",
                     'password' => Hash::make('password'),
                     'email_verified_at' => now(),
+                    ...($profile === 'super-admin' ? self::confirmedTotp() : []),
                 ],
             );
         }
+    }
+
+    /**
+     * The super-admin opens Administration only with confirmed TOTP (TASK-012 TAC-02); the browser tests answer its
+     * challenge from the same synthetic secret.
+     *
+     * @return array<string, mixed>
+     */
+    private static function confirmedTotp(): array
+    {
+        return [
+            'two_factor_secret' => encrypt(self::SUPER_ADMIN_TOTP_SECRET),
+            'two_factor_recovery_codes' => encrypt(json_encode(Collection::times(8, fn () => RecoveryCode::generate())->all())),
+            'two_factor_confirmed_at' => now(),
+        ];
     }
 
     /**

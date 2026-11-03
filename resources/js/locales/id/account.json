@@ -43,6 +43,8 @@
         "intro": "Kelola pengaturan autentikasi dua faktor Anda",
         "enabled_note": "Saat masuk, Anda akan diminta memasukkan kode dari aplikasi autentikator di ponsel Anda.",
         "disabled_note": "Bila autentikasi dua faktor diaktifkan, Anda akan diminta memasukkan kode dari aplikasi autentikator di ponsel saat masuk.",
+        "required_note": "Akun Anda wajib memakai autentikasi dua faktor sebelum dapat membuka Administrasi. Aktifkan sekarang dengan aplikasi autentikator di ponsel Anda.",
+        "required_enabled_note": "Akun Anda wajib memakai autentikasi dua faktor, jadi tidak dapat dimatikan di sini. Bila perangkat hilang, pakai kode pemulihan atau minta reset 2FA kepada admin.",
         "disable": "Nonaktifkan 2FA",
         "enable": "Aktifkan 2FA",
         "continue_setup": "Lanjutkan penyiapan",

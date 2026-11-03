@@ -43,6 +43,8 @@
         "intro": "Manage your two-factor authentication settings",
         "enabled_note": "When you log in, you will be asked for a code from the authenticator app on your phone.",
         "disabled_note": "When two-factor authentication is enabled, you will be asked for a code from the authenticator app on your phone when you log in.",
+        "required_note": "Your account must use two-factor authentication before it can open Administration. Turn it on now with the authenticator app on your phone.",
+        "required_enabled_note": "Your account must use two-factor authentication, so it cannot be turned off here. If you lose your device, use a recovery code or ask an administrator for a 2FA reset.",
         "disable": "Disable 2FA",
         "enable": "Enable 2FA",
         "continue_setup": "Continue setup",

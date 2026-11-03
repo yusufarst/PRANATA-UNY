@@ -1,5 +1,12 @@
 import { Form, Head, Link, router } from '@inertiajs/react';
-import { ArrowLeft, KeyRound, LogOut, Pencil, ShieldCheck } from 'lucide-react';
+import {
+    ArrowLeft,
+    KeyRound,
+    LogOut,
+    Pencil,
+    ShieldCheck,
+    ShieldOff,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -47,6 +54,26 @@ type Props = {
         expires_at: string;
     } | null;
     sessions: ActiveSession[];
+    /** Removing the TOTP always needs a second administrator (TASK-012 TAC-03). */
+    twoFactor: {
+        enabled: boolean;
+        started: boolean;
+        required: boolean;
+        pendingReset: {
+            id: number;
+            requested_by: string | null;
+            requested_by_me: boolean;
+            identity_check_method: IdentityCheck;
+            identity_check_note: string | null;
+            created_at: string | null;
+            expires_at: string;
+        } | null;
+        can: {
+            request: boolean;
+            approve: boolean;
+            revoke: boolean;
+        };
+    };
     can: {
         update: boolean;
         suspend: boolean;
@@ -71,6 +98,7 @@ export default function UserShow({
     account,
     pendingReset,
     sessions,
+    twoFactor,
     can,
     issuedSecret,
 }: Props) {
@@ -106,6 +134,7 @@ export default function UserShow({
     >(null);
     const [deactivating, setDeactivating] = useState(false);
     const [resetting, setResetting] = useState(false);
+    const [resettingTwoFactor, setResettingTwoFactor] = useState(false);
     const [endingSessions, setEndingSessions] = useState(false);
     const command = useCommand();
     const none = t('admin:users.fields.none');
@@ -421,6 +450,161 @@ export default function UserShow({
                 </section>
 
                 <section
+                    aria-labelledby="account-two-factor"
+                    className="rounded-lg border border-border bg-card p-4 shadow-card sm:p-6"
+                    data-test="account-two-factor"
+                >
+                    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="grid gap-1">
+                            <h2
+                                id="account-two-factor"
+                                className="text-lg font-semibold text-foreground"
+                            >
+                                {t('admin:users.two_factor.section')}
+                            </h2>
+                            <p className="text-sm text-muted-foreground">
+                                {t(
+                                    twoFactor.enabled
+                                        ? 'admin:users.two_factor.enabled'
+                                        : twoFactor.started
+                                          ? 'admin:users.two_factor.pending_setup'
+                                          : 'admin:users.two_factor.disabled',
+                                )}
+                            </p>
+                            {twoFactor.required && (
+                                <p className="text-sm text-muted-foreground">
+                                    {t('admin:users.two_factor.required')}
+                                </p>
+                            )}
+                        </div>
+                        {twoFactor.can.request && (
+                            <Button
+                                variant="outline"
+                                onClick={() => setResettingTwoFactor(true)}
+                                data-test="reset-two-factor-button"
+                            >
+                                <ShieldOff aria-hidden="true" />
+                                {t('admin:users.two_factor.reset')}
+                            </Button>
+                        )}
+                    </div>
+                    {twoFactor.pendingReset && (
+                        <Alert data-test="pending-two-factor-reset">
+                            <ShieldCheck aria-hidden="true" />
+                            <AlertTitle>
+                                {t('admin:users.two_factor.pending_title')}
+                            </AlertTitle>
+                            <AlertDescription className="gap-3">
+                                <p>
+                                    {t('admin:users.reset.pending_detail', {
+                                        name:
+                                            twoFactor.pendingReset
+                                                .requested_by ??
+                                            t(
+                                                'admin:users.reset.unknown_requester',
+                                            ),
+                                        time:
+                                            dateTime(
+                                                twoFactor.pendingReset
+                                                    .created_at,
+                                            ) ?? none,
+                                        method: t(
+                                            `admin:users.reset.methods.${twoFactor.pendingReset.identity_check_method}`,
+                                        ),
+                                    })}
+                                </p>
+                                {twoFactor.pendingReset.identity_check_note && (
+                                    <p className="break-words">
+                                        {
+                                            twoFactor.pendingReset
+                                                .identity_check_note
+                                        }
+                                    </p>
+                                )}
+                                <p>
+                                    {t('admin:users.reset.pending_expires', {
+                                        time: dateTime(
+                                            twoFactor.pendingReset.expires_at,
+                                        ),
+                                    })}
+                                </p>
+                                {twoFactor.pendingReset.requested_by_me && (
+                                    <p>
+                                        {t('admin:users.two_factor.pending_own')}
+                                    </p>
+                                )}
+                                {(twoFactor.can.approve ||
+                                    twoFactor.can.revoke) && (
+                                    <div className="flex flex-wrap gap-2">
+                                        {twoFactor.can.approve && (
+                                            <Form
+                                                {...UserAdministrationController.approveTwoFactorReset.form(
+                                                    {
+                                                        user: account.public_id,
+                                                        twoFactorReset:
+                                                            twoFactor
+                                                                .pendingReset
+                                                                .id,
+                                                    },
+                                                )}
+                                                {...command.visit}
+                                                options={{
+                                                    preserveScroll: true,
+                                                }}
+                                            >
+                                                {({ processing }) => (
+                                                    <Button
+                                                        type="submit"
+                                                        size="sm"
+                                                        disabled={processing}
+                                                        data-test="approve-two-factor-reset-button"
+                                                    >
+                                                        {t(
+                                                            'admin:users.two_factor.approve',
+                                                        )}
+                                                    </Button>
+                                                )}
+                                            </Form>
+                                        )}
+                                        {twoFactor.can.revoke && (
+                                            <Form
+                                                {...UserAdministrationController.revokeTwoFactorReset.form(
+                                                    {
+                                                        user: account.public_id,
+                                                        twoFactorReset:
+                                                            twoFactor
+                                                                .pendingReset
+                                                                .id,
+                                                    },
+                                                )}
+                                                {...command.visit}
+                                                options={{
+                                                    preserveScroll: true,
+                                                }}
+                                            >
+                                                {({ processing }) => (
+                                                    <Button
+                                                        type="submit"
+                                                        size="sm"
+                                                        variant="outline"
+                                                        disabled={processing}
+                                                        data-test="revoke-two-factor-reset-button"
+                                                    >
+                                                        {t(
+                                                            'admin:users.two_factor.revoke',
+                                                        )}
+                                                    </Button>
+                                                )}
+                                            </Form>
+                                        )}
+                                    </div>
+                                )}
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                </section>
+
+                <section
                     aria-labelledby="account-sessions"
                     className="rounded-lg border border-border bg-card p-4 shadow-card sm:p-6"
                     data-test="account-sessions"
@@ -712,58 +896,7 @@ export default function UserShow({
                                         errors._idempotency ?? errors._domain
                                     }
                                 />
-                                <div className="grid gap-2">
-                                    <Label htmlFor="identity_check_method">
-                                        {t('admin:users.reset.method')}
-                                    </Label>
-                                    <select
-                                        id="identity_check_method"
-                                        name="identity_check_method"
-                                        required
-                                        defaultValue=""
-                                        aria-invalid={
-                                            !!errors.identity_check_method
-                                        }
-                                        className={selectClassName}
-                                    >
-                                        <option value="" disabled>
-                                            {t(
-                                                'admin:users.reset.method_placeholder',
-                                            )}
-                                        </option>
-                                        {identityChecks.map((method) => (
-                                            <option key={method} value={method}>
-                                                {t(
-                                                    `admin:users.reset.methods.${method}`,
-                                                )}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <InputError
-                                        message={errors.identity_check_method}
-                                    />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="identity_check_note">
-                                        {t('admin:users.reset.note')}
-                                    </Label>
-                                    <textarea
-                                        id="identity_check_note"
-                                        name="identity_check_note"
-                                        maxLength={500}
-                                        rows={3}
-                                        placeholder={t(
-                                            'admin:users.reset.note_placeholder',
-                                        )}
-                                        aria-invalid={
-                                            !!errors.identity_check_note
-                                        }
-                                        className="w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm"
-                                    />
-                                    <InputError
-                                        message={errors.identity_check_note}
-                                    />
-                                </div>
+                                <IdentityCheckFields errors={errors} />
                                 <DialogFooter className="gap-2">
                                     <Button
                                         type="button"
@@ -789,7 +922,120 @@ export default function UserShow({
                     </Form>
                 </DialogContent>
             </Dialog>
+            <Dialog
+                open={resettingTwoFactor}
+                onOpenChange={setResettingTwoFactor}
+            >
+                <DialogContent>
+                    <DialogTitle>
+                        {t('admin:users.two_factor.title')}
+                    </DialogTitle>
+                    <DialogDescription>
+                        {t('admin:users.two_factor.description')}
+                    </DialogDescription>
+                    <Form
+                        {...UserAdministrationController.requestTwoFactorReset.form(
+                            account.public_id,
+                        )}
+                        {...command.visit}
+                        onSuccess={() => {
+                            command.visit.onSuccess();
+                            setResettingTwoFactor(false);
+                        }}
+                        options={{ preserveScroll: true }}
+                        className="grid gap-4"
+                    >
+                        {({ processing, errors }) => (
+                            <>
+                                <InputError
+                                    message={
+                                        errors._idempotency ?? errors._domain
+                                    }
+                                />
+                                <IdentityCheckFields
+                                    idPrefix="two_factor_"
+                                    errors={errors}
+                                />
+                                <DialogFooter className="gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={() =>
+                                            setResettingTwoFactor(false)
+                                        }
+                                    >
+                                        {t('common:actions.cancel')}
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        disabled={processing}
+                                        data-test="confirm-two-factor-reset-button"
+                                    >
+                                        {t('admin:users.two_factor.confirm')}
+                                    </Button>
+                                </DialogFooter>
+                            </>
+                        )}
+                    </Form>
+                </DialogContent>
+            </Dialog>
             <ConflictDialog command={command} />
+        </>
+    );
+}
+
+/**
+ * How the administrator checked who asked, for a password or a 2FA reset (SECURITY_MODEL section 3.1).
+ */
+function IdentityCheckFields({
+    idPrefix = '',
+    errors,
+}: {
+    idPrefix?: string;
+    errors: Partial<Record<string, string>>;
+}) {
+    const { t } = useTranslation();
+
+    return (
+        <>
+            <div className="grid gap-2">
+                <Label htmlFor={`${idPrefix}identity_check_method`}>
+                    {t('admin:users.reset.method')}
+                </Label>
+                <select
+                    id={`${idPrefix}identity_check_method`}
+                    name="identity_check_method"
+                    required
+                    defaultValue=""
+                    aria-invalid={!!errors.identity_check_method}
+                    className={selectClassName}
+                >
+                    <option value="" disabled>
+                        {t('admin:users.reset.method_placeholder')}
+                    </option>
+                    {identityChecks.map((method) => (
+                        <option key={method} value={method}>
+                            {t(`admin:users.reset.methods.${method}`)}
+                        </option>
+                    ))}
+                </select>
+                <InputError message={errors.identity_check_method} />
+            </div>
+            <div className="grid gap-2">
+                <Label htmlFor={`${idPrefix}identity_check_note`}>
+                    {t('admin:users.reset.note')}
+                </Label>
+                <textarea
+                    id={`${idPrefix}identity_check_note`}
+                    name="identity_check_note"
+                    maxLength={500}
+                    rows={3}
+                    placeholder={t('admin:users.reset.note_placeholder')}
+                    aria-invalid={!!errors.identity_check_note}
+                    className="w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm"
+                />
+                <InputError message={errors.identity_check_note} />
+            </div>
         </>
     );
 }

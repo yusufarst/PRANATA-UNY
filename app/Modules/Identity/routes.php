@@ -26,8 +26,8 @@ Route::middleware('auth')->group(function () {
         ->name('identity.sessions.revoke');
 });
 
-// PG-502 Pengguna (INFORMATION_ARCHITECTURE section 3.6).
-Route::middleware(['auth', 'can:'.IdentityServiceProvider::MANAGE_USERS])
+// PG-502 Pengguna (INFORMATION_ARCHITECTURE section 3.6). Administration needs confirmed TOTP where it is required (TASK-012 TAC-02).
+Route::middleware(['auth', 'can:'.IdentityServiceProvider::MANAGE_USERS, 'two-factor'])
     ->prefix('admin/users')
     ->name('identity.admin.users.')
     ->controller(UserAdministrationController::class)
@@ -46,5 +46,12 @@ Route::middleware(['auth', 'can:'.IdentityServiceProvider::MANAGE_USERS])
         Route::get('{user:public_id}/resets/{reset}/approve', 'resetAddress')->name('resets.approve-address');
         Route::post('{user:public_id}/resets/{reset}/approve', 'approveReset')->middleware('idempotent')->name('resets.approve');
         Route::post('{user:public_id}/resets/{reset}/revoke', 'revokeReset')->middleware('idempotent')->name('resets.revoke');
+        Route::post('{user:public_id}/two-factor-resets', 'requestTwoFactorReset')->middleware('idempotent')->name('two-factor-resets.store');
+        Route::post('{user:public_id}/two-factor-resets/{twoFactorReset}/approve', 'approveTwoFactorReset')
+            ->middleware('idempotent')
+            ->name('two-factor-resets.approve');
+        Route::post('{user:public_id}/two-factor-resets/{twoFactorReset}/revoke', 'revokeTwoFactorReset')
+            ->middleware('idempotent')
+            ->name('two-factor-resets.revoke');
         Route::post('{user:public_id}/sessions/revoke', 'revokeSessions')->middleware('idempotent')->name('sessions.revoke');
     });

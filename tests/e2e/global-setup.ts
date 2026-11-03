@@ -7,6 +7,7 @@ import {
     PROFILES,
     storageStateOf,
 } from './support/profiles';
+import { SUPER_ADMIN_TOTP_SECRET, totpCode } from './support/totp';
 
 const E2E_DATABASE = /^pranata_e2e_[a-z0-9_]+$/;
 
@@ -58,6 +59,18 @@ export default async function globalSetup(config: FullConfig): Promise<void> {
                 await page.locator('#login').fill(emailOf(profile));
                 await page.locator('#password').fill(PASSWORD);
                 await page.locator('[data-test="login-button"]').click();
+
+                // The super-admin has confirmed TOTP (TASK-012 TAC-02), so its sign-in answers the challenge.
+                if (profile === 'super-admin') {
+                    await page.waitForURL('**/two-factor-challenge');
+                    await page
+                        .locator('input[name="code"]')
+                        .pressSequentially(totpCode(SUPER_ADMIN_TOTP_SECRET));
+                    await page
+                        .getByRole('button', { name: 'Lanjutkan', exact: true })
+                        .click();
+                }
+
                 await page.waitForURL('**/home');
                 await context.storageState({ path: storageStateOf(profile) });
                 await context.close();

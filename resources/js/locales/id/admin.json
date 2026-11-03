@@ -141,6 +141,21 @@
             "confirm_title": "Akhiri semua sesi akun ini?",
             "confirm_description": "Sesi aktif: {{count}}. Semuanya berakhir sekarang dan pengguna perlu masuk lagi. Password tidak berubah.",
             "confirm": "Ya, akhiri sesi"
+        },
+        "two_factor": {
+            "section": "Verifikasi dua langkah (2FA)",
+            "enabled": "2FA aktif. Masuk memerlukan kode dari aplikasi autentikator.",
+            "pending_setup": "Pengaturan 2FA sudah dimulai tetapi belum dikonfirmasi.",
+            "disabled": "2FA belum aktif untuk akun ini.",
+            "required": "Akun ini wajib memakai 2FA sebelum dapat membuka Administrasi.",
+            "reset": "Reset 2FA",
+            "title": "Reset 2FA akun ini?",
+            "description": "Gunakan hanya bila pemilik kehilangan perangkat autentikatornya. Pastikan dulu bahwa peminta adalah pemilik akun. Admin kedua perlu menyetujui; setelah itu 2FA dan kode pemulihan dihapus dan semua sesi berakhir.",
+            "confirm": "Ajukan reset 2FA",
+            "pending_title": "Reset 2FA menunggu admin kedua",
+            "pending_own": "Anda yang mengajukan reset 2FA ini. Admin lain perlu menyetujuinya.",
+            "approve": "Setujui dan hapus 2FA",
+            "revoke": "Batalkan permintaan"
         }
     }
 }

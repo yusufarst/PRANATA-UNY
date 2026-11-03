@@ -141,6 +141,21 @@
             "confirm_title": "End all sessions of this account?",
             "confirm_description": "Active sessions: {{count}}. They all end now and the user must sign in again. The password does not change.",
             "confirm": "Yes, end sessions"
+        },
+        "two_factor": {
+            "section": "Two-factor authentication (2FA)",
+            "enabled": "2FA is on. Signing in needs a code from the authenticator app.",
+            "pending_setup": "2FA setup was started but not confirmed yet.",
+            "disabled": "2FA is off for this account.",
+            "required": "This account must have 2FA before it can open Administration.",
+            "reset": "Reset 2FA",
+            "title": "Reset this account's 2FA?",
+            "description": "Use this only when the owner has lost their authenticator device. First make sure the person asking owns the account. A second administrator must approve; then 2FA and the recovery codes are removed and every session ends.",
+            "confirm": "Request 2FA reset",
+            "pending_title": "2FA reset waiting for a second administrator",
+            "pending_own": "You asked for this 2FA reset. Another administrator must approve it.",
+            "approve": "Approve and remove 2FA",
+            "revoke": "Cancel request"
         }
     }
 }

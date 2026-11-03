@@ -11,6 +11,12 @@ use App\Modules\Identity\Events\SignInFailed;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Events\Dispatcher;
+use Laravel\Fortify\Events\RecoveryCodeReplaced;
+use Laravel\Fortify\Events\RecoveryCodesGenerated;
+use Laravel\Fortify\Events\TwoFactorAuthenticationConfirmed;
+use Laravel\Fortify\Events\TwoFactorAuthenticationDisabled;
+use Laravel\Fortify\Events\TwoFactorAuthenticationEnabled;
+use Laravel\Fortify\Events\TwoFactorAuthenticationFailed;
 
 /**
  * The audit trail of sign-in and account security (SECURITY_MODEL section 3, ARCHITECTURE section 6: login/security).
@@ -36,7 +42,62 @@ final class RecordAuthenticationEvents
             AccountLocked::class => 'accountLocked',
             SessionEnded::class => 'sessionEnded',
             PasswordChanged::class => 'passwordChanged',
+            TwoFactorAuthenticationEnabled::class => 'twoFactorEnabled',
+            TwoFactorAuthenticationConfirmed::class => 'twoFactorConfirmed',
+            TwoFactorAuthenticationDisabled::class => 'twoFactorDisabled',
+            RecoveryCodesGenerated::class => 'recoveryCodesGenerated',
+            RecoveryCodeReplaced::class => 'recoveryCodeUsed',
+            TwoFactorAuthenticationFailed::class => 'twoFactorFailed',
         ];
+    }
+
+    /**
+     * The account started its TOTP setup; it counts only once confirmed (TASK-012 TAC-01).
+     */
+    public function twoFactorEnabled(TwoFactorAuthenticationEnabled $event): void
+    {
+        $this->ownTwoFactorChange('identity.two_factor_setup_started', $event->user);
+    }
+
+    public function twoFactorConfirmed(TwoFactorAuthenticationConfirmed $event): void
+    {
+        $this->ownTwoFactorChange('identity.two_factor_confirmed', $event->user);
+    }
+
+    public function twoFactorDisabled(TwoFactorAuthenticationDisabled $event): void
+    {
+        $this->ownTwoFactorChange('identity.two_factor_disabled', $event->user);
+    }
+
+    public function recoveryCodesGenerated(RecoveryCodesGenerated $event): void
+    {
+        $this->ownTwoFactorChange('identity.two_factor_recovery_regenerated', $event->user);
+    }
+
+    /**
+     * A recovery code let the account through the challenge and was replaced; the code itself is never recorded.
+     */
+    public function recoveryCodeUsed(RecoveryCodeReplaced $event): void
+    {
+        $this->ownTwoFactorChange('identity.two_factor_recovery_used', $event->user);
+    }
+
+    /**
+     * A wrong code at the challenge, before the account is signed in.
+     */
+    public function twoFactorFailed(TwoFactorAuthenticationFailed $event): void
+    {
+        $this->audit->record('identity.two_factor_failed', self::MODULE, $event->user instanceof User ? $event->user : null);
+    }
+
+    /**
+     * The account is the actor: at the challenge it is not signed in yet.
+     */
+    private function ownTwoFactorChange(string $action, mixed $user): void
+    {
+        $user = $user instanceof User ? $user : null;
+
+        $this->audit->record($action, self::MODULE, $user, actor: $user);
     }
 
     public function login(Login $event): void

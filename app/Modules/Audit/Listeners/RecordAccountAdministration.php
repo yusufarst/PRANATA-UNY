@@ -12,6 +12,9 @@ use App\Modules\Identity\Events\PasswordResetIssued;
 use App\Modules\Identity\Events\PasswordResetRequested;
 use App\Modules\Identity\Events\PasswordResetRevoked;
 use App\Modules\Identity\Events\SessionsRevoked;
+use App\Modules\Identity\Events\TwoFactorResetApproved;
+use App\Modules\Identity\Events\TwoFactorResetRequested;
+use App\Modules\Identity\Events\TwoFactorResetRevoked;
 use Illuminate\Events\Dispatcher;
 
 /**
@@ -41,6 +44,9 @@ final class RecordAccountAdministration
             PasswordResetIssued::class => 'passwordResetIssued',
             PasswordResetRevoked::class => 'passwordResetRevoked',
             SessionsRevoked::class => 'sessionsRevoked',
+            TwoFactorResetRequested::class => 'twoFactorResetRequested',
+            TwoFactorResetApproved::class => 'twoFactorResetApproved',
+            TwoFactorResetRevoked::class => 'twoFactorResetRevoked',
         ];
     }
 
@@ -111,6 +117,44 @@ final class RecordAccountAdministration
             'scope' => $event->scope,
             'ended_sessions' => $event->endedSessions,
         ]);
+    }
+
+    public function twoFactorResetRequested(TwoFactorResetRequested $event): void
+    {
+        $this->audit->record('identity.two_factor_reset_requested', self::MODULE, $event->reset->user, metadata: self::twoFactorReset($event));
+    }
+
+    /**
+     * Recorded with the identity check and the second administrator (TASK-012 TAC-03).
+     */
+    public function twoFactorResetApproved(TwoFactorResetApproved $event): void
+    {
+        $this->audit->record('identity.two_factor_reset_approved', self::MODULE, $event->reset->user, metadata: [
+            ...self::twoFactorReset($event),
+            'approved_by' => $event->reset->approved_by,
+            'ended_sessions' => $event->endedSessions,
+        ]);
+    }
+
+    public function twoFactorResetRevoked(TwoFactorResetRevoked $event): void
+    {
+        $this->audit->record('identity.two_factor_reset_revoked', self::MODULE, $event->reset->user, metadata: self::twoFactorReset($event));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function twoFactorReset(TwoFactorResetRequested|TwoFactorResetApproved|TwoFactorResetRevoked $event): array
+    {
+        $reset = $event->reset;
+
+        return [
+            'two_factor_reset_id' => $reset->id,
+            'requested_by' => $reset->requested_by,
+            'identity_check_method' => $reset->identity_check_method,
+            'identity_check_note' => $reset->identity_check_note,
+            'expires_at' => $reset->expires_at->toIso8601String(),
+        ];
     }
 
     /**

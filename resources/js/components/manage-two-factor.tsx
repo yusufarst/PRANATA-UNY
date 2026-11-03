@@ -13,12 +13,15 @@ export type Props = {
     canManageTwoFactor?: boolean;
     requiresConfirmation?: boolean;
     twoFactorEnabled?: boolean;
+    /** The account must keep confirmed 2FA to open Administration (TASK-012 TAC-02); the server enforces it. */
+    twoFactorRequired?: boolean;
 };
 
 export default function ManageTwoFactor(props: Props) {
     const { t } = useTranslation();
     const requiresConfirmation = props.requiresConfirmation ?? false;
     const twoFactorEnabled = props.twoFactorEnabled ?? false;
+    const twoFactorRequired = props.twoFactorRequired ?? false;
 
     const {
         qrCodeSvg,
@@ -59,19 +62,25 @@ export default function ManageTwoFactor(props: Props) {
                         {t('account:two_factor.enabled_note')}
                     </p>
 
-                    <div className="relative inline">
-                        <Form {...disable.form()}>
-                            {({ processing }) => (
-                                <Button
-                                    variant="destructive"
-                                    type="submit"
-                                    disabled={processing}
-                                >
-                                    {t('account:two_factor.disable')}
-                                </Button>
-                            )}
-                        </Form>
-                    </div>
+                    {twoFactorRequired ? (
+                        <p className="text-sm text-muted-foreground">
+                            {t('account:two_factor.required_enabled_note')}
+                        </p>
+                    ) : (
+                        <div className="relative inline">
+                            <Form {...disable.form()}>
+                                {({ processing }) => (
+                                    <Button
+                                        variant="destructive"
+                                        type="submit"
+                                        disabled={processing}
+                                    >
+                                        {t('account:two_factor.disable')}
+                                    </Button>
+                                )}
+                            </Form>
+                        </div>
+                    )}
 
                     <TwoFactorRecoveryCodes
                         recoveryCodesList={recoveryCodesList}
@@ -82,7 +91,11 @@ export default function ManageTwoFactor(props: Props) {
             ) : (
                 <div className="flex flex-col items-start justify-start space-y-4">
                     <p className="text-sm text-muted-foreground">
-                        {t('account:two_factor.disabled_note')}
+                        {t(
+                            twoFactorRequired
+                                ? 'account:two_factor.required_note'
+                                : 'account:two_factor.disabled_note',
+                        )}
                     </p>
 
                     <div>

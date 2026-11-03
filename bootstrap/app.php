@@ -5,6 +5,7 @@ use App\Http\Middleware\SetLocale;
 use App\Modules\Identity\Http\Middleware\EnsureEmailResetIsAvailable;
 use App\Modules\Identity\Http\Middleware\EnsurePasswordIsChanged;
 use App\Modules\Identity\Http\Middleware\EnsureSessionIsCurrent;
+use App\Modules\Identity\Http\Middleware\EnsureTwoFactorIsEnabled;
 use App\Modules\Platform\Http\Middleware\AssignRequestId;
 use App\Modules\Platform\Http\Middleware\EnsureIdempotentCommand;
 use App\Modules\Platform\Support\RequestId;
@@ -29,7 +30,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // First, so a request refused by any later middleware still answers with its id.
         $middleware->prepend(AssignRequestId::class);
 
-        $middleware->alias(['idempotent' => EnsureIdempotentCommand::class]);
+        $middleware->alias([
+            'idempotent' => EnsureIdempotentCommand::class,
+            'two-factor' => EnsureTwoFactorIsEnabled::class,
+        ]);
 
         // The language first, so a session that ends says so in it; then the forced password change holds the account.
         $middleware->web(append: [

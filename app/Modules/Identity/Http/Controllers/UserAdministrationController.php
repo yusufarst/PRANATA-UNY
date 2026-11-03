@@ -4,12 +4,15 @@ namespace App\Modules\Identity\Http\Controllers;
 
 use App\Models\User;
 use App\Modules\Identity\Actions\ApproveAssistedReset;
+use App\Modules\Identity\Actions\ApproveTwoFactorReset;
 use App\Modules\Identity\Actions\CreateAccount;
 use App\Modules\Identity\Actions\DeactivateAccount;
 use App\Modules\Identity\Actions\ReinstateAccount;
 use App\Modules\Identity\Actions\RequestAssistedReset;
+use App\Modules\Identity\Actions\RequestTwoFactorReset;
 use App\Modules\Identity\Actions\RevokeAssistedReset;
 use App\Modules\Identity\Actions\RevokeSessions;
+use App\Modules\Identity\Actions\RevokeTwoFactorReset;
 use App\Modules\Identity\Actions\SuspendAccount;
 use App\Modules\Identity\Actions\UpdateAccount;
 use App\Modules\Identity\Events\SessionsRevoked;
@@ -17,9 +20,11 @@ use App\Modules\Identity\Http\Requests\AccountRequest;
 use App\Modules\Identity\Http\Requests\AssistedResetRequest;
 use App\Modules\Identity\Http\Requests\DeactivateAccountRequest;
 use App\Modules\Identity\Models\PasswordReset;
+use App\Modules\Identity\Models\TwoFactorReset;
 use App\Modules\Identity\Providers\IdentityServiceProvider;
 use App\Modules\Identity\Support\ActiveSessions;
 use App\Modules\Identity\Support\PrivilegedAccounts;
+use App\Modules\Identity\Support\TwoFactorPolicy;
 use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use App\Modules\Platform\Exceptions\StaleVersionException;
 use Carbon\CarbonInterface;
@@ -40,7 +45,10 @@ class UserAdministrationController
 
     private const ROLE_GROUPS = [User::SUPER_ADMIN, User::INTERNAL, User::VENDOR];
 
-    public function __construct(private readonly PrivilegedAccounts $privileged) {}
+    public function __construct(
+        private readonly PrivilegedAccounts $privileged,
+        private readonly TwoFactorPolicy $twoFactor,
+    ) {}
 
     public function index(Request $request): Response
     {
@@ -241,6 +249,49 @@ class UserAdministrationController
     }
 
     /**
+     * Every request to remove the TOTP of an account waits for a second administrator (TASK-012 TAC-03).
+     */
+    public function requestTwoFactorReset(AssistedResetRequest $request, User $user, RequestTwoFactorReset $requestReset): RedirectResponse
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+
+        $requestReset->handle(
+            $request->user(),
+            $user,
+            $request->string('identity_check_method')->value(),
+            $request->note(),
+        );
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.two_factor_reset_awaits_approval')]);
+
+        return to_route('identity.admin.users.show', $user->public_id);
+    }
+
+    public function approveTwoFactorReset(Request $request, User $user, TwoFactorReset $twoFactorReset, ApproveTwoFactorReset $approveReset): RedirectResponse
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+        abort_unless($twoFactorReset->user_id === $user->id, 404);
+
+        $approveReset->handle($request->user(), $twoFactorReset);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.two_factor_reset_done')]);
+
+        return to_route('identity.admin.users.show', $user->public_id);
+    }
+
+    public function revokeTwoFactorReset(Request $request, User $user, TwoFactorReset $twoFactorReset, RevokeTwoFactorReset $revokeReset): RedirectResponse
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+        abort_unless($twoFactorReset->user_id === $user->id, 404);
+
+        $revokeReset->handle($request->user(), $twoFactorReset);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('identity.two_factor_reset_revoked')]);
+
+        return to_route('identity.admin.users.show', $user->public_id);
+    }
+
+    /**
      * Ends every session of another account (TASK-011 TAC-04); an administrator ends their own on their sessions page.
      */
     public function revokeSessions(Request $request, User $user, RevokeSessions $revokeSessions): RedirectResponse
@@ -300,6 +351,7 @@ class UserAdministrationController
             ->first();
 
         $sessions = ActiveSessions::of($user, $own ? $request->session()->getId() : null);
+        $twoFactorReset = TwoFactorReset::pendingFor($user);
 
         return [
             'account' => [
@@ -319,6 +371,26 @@ class UserAdministrationController
                 'expires_at' => $pending->expires_at->toIso8601String(),
             ],
             'sessions' => $sessions,
+            // TASK-012 TAC-03: removing the TOTP always needs a second administrator, who is neither the requester nor the account.
+            'twoFactor' => [
+                'enabled' => $user->hasEnabledTwoFactorAuthentication(),
+                'started' => $user->two_factor_secret !== null,
+                'required' => $this->twoFactor->isRequiredFor($user),
+                'pendingReset' => $twoFactorReset === null ? null : [
+                    'id' => $twoFactorReset->id,
+                    'requested_by' => $twoFactorReset->requester?->name,
+                    'requested_by_me' => $twoFactorReset->requested_by === $request->user()?->getKey(),
+                    'identity_check_method' => $twoFactorReset->identity_check_method,
+                    'identity_check_note' => $twoFactorReset->identity_check_note,
+                    'created_at' => $twoFactorReset->created_at?->toIso8601String(),
+                    'expires_at' => $twoFactorReset->expires_at->toIso8601String(),
+                ],
+                'can' => [
+                    'request' => ! $deactivated && ! $own && $user->two_factor_secret !== null && $twoFactorReset === null,
+                    'approve' => $twoFactorReset !== null && $twoFactorReset->requested_by !== $request->user()?->getKey() && ! $own,
+                    'revoke' => $twoFactorReset !== null && ! $own,
+                ],
+            ],
             'can' => [
                 'update' => ! $deactivated,
                 'suspend' => ! $own && in_array($user->status, [User::ACTIVE, User::LOCKED], true),
