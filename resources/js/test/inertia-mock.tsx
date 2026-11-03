@@ -14,10 +14,16 @@ export const pageProps = {
             created_at: '2026-01-01T00:00:00Z',
             updated_at: '2026-01-01T00:00:00Z',
         },
-        can: { manageUsers: false, manageOrganization: false },
+        can: {
+            manageUsers: false,
+            manageOrganization: false,
+            grantAccess: false,
+            approveAccess: false,
+        },
     },
     sidebarOpen: true,
     locale: 'id',
+    menu: [{ key: 'home', workspace: 'home', href: '/home' }],
     workspaces: [{ key: 'home', href: '/home' }],
 };
 

@@ -4,6 +4,7 @@
         "home": "Beranda",
         "users": "Pengguna",
         "organization": "Organisasi",
+        "access": "Akses",
         "breadcrumb": "Lokasi halaman",
         "toggle": "Buka atau tutup menu",
         "drawer_title": "Menu",
@@ -11,7 +12,11 @@
     },
     "workspace": {
         "label": "Ruang kerja",
-        "home": "Beranda"
+        "home": "Beranda",
+        "procurement": "Pengadaan",
+        "warehouse": "Gudang",
+        "asset": "Aset",
+        "administration": "Administrasi"
     },
     "language": {
         "label": "Pilih bahasa",

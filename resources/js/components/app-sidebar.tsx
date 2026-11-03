@@ -1,7 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
-import { House, Network, Users } from 'lucide-react';
-import UserAdministrationController from '@/actions/App/Modules/Identity/Http/Controllers/UserAdministrationController';
-import OrganizationController from '@/actions/App/Modules/Organization/Http/Controllers/OrganizationController';
+import type { LucideIcon } from 'lucide-react';
+import { House, KeyRound, Network, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import {
@@ -15,35 +14,23 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 
-export function AppSidebar() {
-    const { auth } = usePage().props;
+// The icon of each menu entry the server may send; an entry without one still shows.
+const icons: Record<string, LucideIcon> = {
+    home: House,
+    users: Users,
+    organization: Network,
+    access: KeyRound,
+};
 
-    // The menu offers only what the account may open; the server checks every route again.
-    const mainNavItems: NavItem[] = [
-        {
-            title: 'common:nav.home',
-            href: dashboard(),
-            icon: House,
-        },
-        ...(auth.can.manageUsers
-            ? [
-                  {
-                      title: 'common:nav.users',
-                      href: UserAdministrationController.index(),
-                      icon: Users,
-                  },
-              ]
-            : []),
-        ...(auth.can.manageOrganization
-            ? [
-                  {
-                      title: 'common:nav.organization',
-                      href: OrganizationController.index(),
-                      icon: Network,
-                  },
-              ]
-            : []),
-    ];
+export function AppSidebar() {
+    const { menu } = usePage().props;
+
+    // TAC-01: the server sends only the entries this account may open; it checks every route again.
+    const mainNavItems: NavItem[] = menu.map((entry) => ({
+        title: `common:nav.${entry.key}`,
+        href: entry.href,
+        icon: icons[entry.key] ?? null,
+    }));
 
     return (
         <Sidebar collapsible="icon" variant="sidebar">

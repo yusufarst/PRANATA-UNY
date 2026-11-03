@@ -14,9 +14,16 @@ use Illuminate\Support\Facades\Gate;
 
 class AccessServiceProvider extends ModuleServiceProvider
 {
+    /**
+     * Opens PG-503: a user who may give grants or approve them. Not a capability of the catalog, only the union of two.
+     */
+    public const ADMINISTER_ACCESS = 'access.administer';
+
     public function boot(): void
     {
         parent::boot();
+
+        Gate::define(self::ADMINISTER_ACCESS, fn (User $user): bool => $user->can('admin.access.grant') || $user->can('admin.access.approve'));
 
         // Every capability of the catalog is a Gate ability decided by the evaluator, so can:…, Gate::authorize() and
         // $user->can() all ask the same layers (ACCESS_CONTROL section 1). An object passes as an AccessSubject or a

@@ -4,6 +4,7 @@
         "home": "Home",
         "users": "Users",
         "organization": "Organization",
+        "access": "Access",
         "breadcrumb": "Page location",
         "toggle": "Open or close the menu",
         "drawer_title": "Menu",
@@ -11,7 +12,11 @@
     },
     "workspace": {
         "label": "Workspace",
-        "home": "Home"
+        "home": "Home",
+        "procurement": "Procurement",
+        "warehouse": "Warehouse",
+        "asset": "Assets",
+        "administration": "Administration"
     },
     "language": {
         "label": "Choose language",

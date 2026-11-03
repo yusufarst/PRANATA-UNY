@@ -13,6 +13,7 @@ declare module '@inertiajs/core' {
             auth: Auth;
             sidebarOpen: boolean;
             locale: string;
+            menu: { key: string; workspace: string; href: string }[];
             workspaces: { key: string; href: string }[];
             [key: string]: unknown;
         };

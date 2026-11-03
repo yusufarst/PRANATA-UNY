@@ -17,6 +17,59 @@ final class UnitScope
         return DB::table('org_units')->where('id', $unitId)->exists();
     }
 
+    public static function idOf(string $publicId): ?int
+    {
+        $id = DB::table('org_units')->where('public_id', $publicId)->value('id');
+
+        return $id === null ? null : (int) $id;
+    }
+
+    /**
+     * The active units in tree order, to choose the unit of a scope.
+     *
+     * @return list<array{public_id: string, code: string, name: string, depth: int}>
+     */
+    public static function choices(): array
+    {
+        return DB::table('org_units')
+            ->where('status', 'ACTIVE')
+            ->orderBy('path')
+            ->get(['public_id', 'code', 'name', 'depth'])
+            ->map(fn (object $unit): array => [
+                'public_id' => (string) $unit->public_id,
+                'code' => (string) $unit->code,
+                'name' => (string) $unit->name,
+                'depth' => (int) $unit->depth,
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * The code and name of each unit, by id, to show the scope of a grant.
+     *
+     * @param  list<int>  $unitIds
+     * @return array<int, array{public_id: string, code: string, name: string}>
+     */
+    public static function labels(array $unitIds): array
+    {
+        if ($unitIds === []) {
+            return [];
+        }
+
+        $labels = [];
+
+        foreach (DB::table('org_units')->whereIn('id', $unitIds)->get(['id', 'public_id', 'code', 'name']) as $unit) {
+            $labels[(int) $unit->id] = [
+                'public_id' => (string) $unit->public_id,
+                'code' => (string) $unit->code,
+                'name' => (string) $unit->name,
+            ];
+        }
+
+        return $labels;
+    }
+
     /**
      * Whether the unit is the root itself or lies anywhere below it.
      */

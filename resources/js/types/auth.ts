@@ -16,6 +16,8 @@ export type Auth = {
     can: {
         manageUsers: boolean;
         manageOrganization: boolean;
+        grantAccess: boolean;
+        approveAccess: boolean;
     };
 };
 

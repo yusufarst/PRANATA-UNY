@@ -388,5 +388,104 @@
             "reason": "Reason (required for a rejection)",
             "confirm": "Save the decision"
         }
+    },
+    "access": {
+        "title": "Access",
+        "intro": "Who holds which access, and in which scope. Privileged access applies only after another administrator approves it.",
+        "create": "Give access",
+        "back_to_list": "Back to the access list",
+        "open_user": "Open user",
+        "approve": "Approve access",
+        "period": "{{from}} to {{to}}",
+        "period_open": "From {{from}}, no end",
+        "pending_notice": "Access waiting for approval: {{count}}.",
+        "pending_show": "Show the waiting ones",
+        "pending_title": "Waiting for approval",
+        "pending_description": "This privileged access does not apply yet. Check it, then approve it when it is right.",
+        "pending_other": "Another administrator must approve this access, not the one who gave or receives it.",
+        "empty_title": "No access given yet",
+        "empty_description": "Give the first access to a user by choosing a profile or a capability and its scope.",
+        "empty_filtered_title": "No matching access",
+        "empty_filtered_description": "Change the search words or the status, or clear the filters.",
+        "status": {
+            "PENDING_APPROVAL": "Waiting for approval",
+            "ACTIVE": "Active",
+            "REVOKED": "Revoked",
+            "EXPIRED": "Expired"
+        },
+        "scope": {
+            "GLOBAL": "The whole university",
+            "ORG_UNIT": "One unit",
+            "ORG_UNIT_SUBTREE": "A unit and the units below it",
+            "WAREHOUSE": "Warehouse",
+            "WORKSPACE": "Workspace",
+            "POLICY_FAMILY": "Policy family"
+        },
+        "fields": {
+            "user": "User",
+            "subject": "Access",
+            "scope": "Scope",
+            "period": "Period",
+            "status": "Status",
+            "username": "Username",
+            "target": "Kind of access",
+            "profile": "Access profile",
+            "capability": "Capability",
+            "scope_type": "Scope",
+            "unit": "Unit",
+            "scope_key": "Policy family",
+            "effective_from": "Starts",
+            "effective_to": "Ends",
+            "reason": "Reason",
+            "revoke_reason": "Reason for revoking",
+            "granted_by": "Given by",
+            "approved_by": "Approved by",
+            "revoked_by": "Revoked by",
+            "created_at": "Recorded",
+            "none": "—"
+        },
+        "filters": {
+            "label": "Filter access",
+            "search": "Search users",
+            "search_placeholder": "Name or username",
+            "status": "Status",
+            "all": "All",
+            "apply": "Apply",
+            "reset": "Clear filters"
+        },
+        "pagination": {
+            "label": "Access list pages",
+            "summary": "Page {{current}} of {{last}} · {{total}} access entries",
+            "previous": "Previous",
+            "next": "Next"
+        },
+        "form": {
+            "title": "Give access",
+            "intro": "Choose the user, a profile or a capability, and its scope. You cannot give access to yourself.",
+            "errors_title": "Check the following fields",
+            "username_hint": "The sign-in username, for example budi.santoso.",
+            "target_profile": "Access profile",
+            "target_capability": "One capability",
+            "choose": "Choose…",
+            "profile_hint": "A profile gives a set of capabilities at once.",
+            "scope_hint": "Only the scopes that apply to the chosen access are shown.",
+            "effective_to_hint": "Leave empty when the access has no end date.",
+            "reason_placeholder": "For example: appointed as PPK by Rector Decree 123/UN34/2026",
+            "privileged_title": "Privileged access",
+            "privileged_description": "This access applies only after another administrator approves it.",
+            "submit": "Give access"
+        },
+        "detail": {
+            "title": "Access for {{username}}",
+            "section": "Access details",
+            "capabilities": "Capabilities given"
+        },
+        "revoke": {
+            "open": "Revoke access",
+            "title": "Revoke this access?",
+            "description": "Its holder can no longer use this access from the next request on. Its history stays recorded.",
+            "reason_placeholder": "For example: the assignment has ended",
+            "confirm": "Revoke access"
+        }
     }
 }

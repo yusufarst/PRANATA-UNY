@@ -388,5 +388,104 @@
             "reason": "Alasan (wajib bila ditolak)",
             "confirm": "Simpan keputusan"
         }
+    },
+    "access": {
+        "title": "Akses",
+        "intro": "Siapa memegang akses apa dan di cakupan mana. Akses istimewa baru berlaku setelah disetujui admin lain.",
+        "create": "Beri akses",
+        "back_to_list": "Kembali ke daftar akses",
+        "open_user": "Buka pengguna",
+        "approve": "Setujui akses",
+        "period": "{{from}} s.d. {{to}}",
+        "period_open": "Mulai {{from}}, tanpa batas",
+        "pending_notice": "Akses yang menunggu persetujuan: {{count}}.",
+        "pending_show": "Lihat yang menunggu",
+        "pending_title": "Menunggu persetujuan",
+        "pending_description": "Akses istimewa ini belum berlaku. Periksa isinya, lalu setujui bila sudah tepat.",
+        "pending_other": "Akses ini harus disetujui admin lain, bukan pemberi atau penerimanya.",
+        "empty_title": "Belum ada akses yang diberikan",
+        "empty_description": "Beri akses pertama kepada pengguna dengan memilih profil atau kemampuan beserta cakupannya.",
+        "empty_filtered_title": "Tidak ada akses yang cocok",
+        "empty_filtered_description": "Ubah kata pencarian atau status, atau hapus penyaring.",
+        "status": {
+            "PENDING_APPROVAL": "Menunggu persetujuan",
+            "ACTIVE": "Aktif",
+            "REVOKED": "Dicabut",
+            "EXPIRED": "Kedaluwarsa"
+        },
+        "scope": {
+            "GLOBAL": "Seluruh universitas",
+            "ORG_UNIT": "Satu unit",
+            "ORG_UNIT_SUBTREE": "Unit dan unit di bawahnya",
+            "WAREHOUSE": "Gudang",
+            "WORKSPACE": "Ruang kerja",
+            "POLICY_FAMILY": "Keluarga kebijakan"
+        },
+        "fields": {
+            "user": "Pengguna",
+            "subject": "Akses",
+            "scope": "Cakupan",
+            "period": "Masa berlaku",
+            "status": "Status",
+            "username": "Nama pengguna",
+            "target": "Jenis akses",
+            "profile": "Profil akses",
+            "capability": "Kemampuan",
+            "scope_type": "Cakupan",
+            "unit": "Unit",
+            "scope_key": "Keluarga kebijakan",
+            "effective_from": "Mulai berlaku",
+            "effective_to": "Berakhir",
+            "reason": "Alasan",
+            "revoke_reason": "Alasan pencabutan",
+            "granted_by": "Diberikan oleh",
+            "approved_by": "Disetujui oleh",
+            "revoked_by": "Dicabut oleh",
+            "created_at": "Dicatat",
+            "none": "—"
+        },
+        "filters": {
+            "label": "Saring akses",
+            "search": "Cari pengguna",
+            "search_placeholder": "Nama atau nama pengguna",
+            "status": "Status",
+            "all": "Semua",
+            "apply": "Terapkan",
+            "reset": "Hapus penyaring"
+        },
+        "pagination": {
+            "label": "Halaman daftar akses",
+            "summary": "Halaman {{current}} dari {{last}} · {{total}} akses",
+            "previous": "Sebelumnya",
+            "next": "Berikutnya"
+        },
+        "form": {
+            "title": "Beri akses",
+            "intro": "Pilih pengguna, profil atau kemampuan, dan cakupannya. Anda tidak dapat memberi akses kepada diri sendiri.",
+            "errors_title": "Periksa kembali isian berikut",
+            "username_hint": "Nama pengguna untuk masuk, misalnya budi.santoso.",
+            "target_profile": "Profil akses",
+            "target_capability": "Satu kemampuan",
+            "choose": "Pilih…",
+            "profile_hint": "Profil memberi sekumpulan kemampuan sekaligus.",
+            "scope_hint": "Hanya cakupan yang berlaku untuk akses yang dipilih yang ditampilkan.",
+            "effective_to_hint": "Kosongkan bila akses berlaku tanpa batas waktu.",
+            "reason_placeholder": "Misalnya: penugasan sebagai PPK menurut SK Rektor 123/UN34/2026",
+            "privileged_title": "Akses istimewa",
+            "privileged_description": "Akses ini baru berlaku setelah disetujui admin lain.",
+            "submit": "Beri akses"
+        },
+        "detail": {
+            "title": "Akses untuk {{username}}",
+            "section": "Rincian akses",
+            "capabilities": "Kemampuan yang diberikan"
+        },
+        "revoke": {
+            "open": "Cabut akses",
+            "title": "Cabut akses ini?",
+            "description": "Pemegangnya tidak lagi dapat memakai akses ini mulai permintaan berikutnya. Riwayatnya tetap tersimpan.",
+            "reason_placeholder": "Misalnya: masa tugas sudah berakhir",
+            "confirm": "Cabut akses"
+        }
     }
 }
