@@ -98,7 +98,9 @@ export default function UserForm({ account }: Props) {
                                         id="role_group-hint"
                                         className="text-sm text-muted-foreground"
                                     >
-                                        {t('admin:users.fields.role_group_hint')}
+                                        {t(
+                                            'admin:users.fields.role_group_hint',
+                                        )}
                                     </p>
                                     <InputError message={errors.role_group} />
                                 </div>

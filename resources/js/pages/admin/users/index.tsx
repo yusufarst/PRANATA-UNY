@@ -231,7 +231,9 @@ export default function UserIndex({ users, filters }: Props) {
                                             </td>
                                             <td className="px-4 py-3 text-muted-foreground">
                                                 {dateTime(user.last_login_at) ??
-                                                    t('admin:users.fields.never')}
+                                                    t(
+                                                        'admin:users.fields.never',
+                                                    )}
                                             </td>
                                         </tr>
                                     ))}

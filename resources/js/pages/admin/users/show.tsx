@@ -83,7 +83,10 @@ export default function UserShow({ account, can, issuedSecret }: Props) {
             t('admin:users.fields.last_login_at'),
             dateTime(account.last_login_at) ?? t('admin:users.fields.never'),
         ],
-        [t('admin:users.fields.created_at'), dateTime(account.created_at) ?? none],
+        [
+            t('admin:users.fields.created_at'),
+            dateTime(account.created_at) ?? none,
+        ],
         ...(account.deactivated_at
             ? [
                   [
