@@ -530,7 +530,9 @@ export default function UserShow({
                                 </p>
                                 {twoFactor.pendingReset.requested_by_me && (
                                     <p>
-                                        {t('admin:users.two_factor.pending_own')}
+                                        {t(
+                                            'admin:users.two_factor.pending_own',
+                                        )}
                                     </p>
                                 )}
                                 {(twoFactor.can.approve ||

@@ -41,7 +41,8 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
             />
 
             <div className="flex flex-col lg:flex-row lg:space-x-12">
-                <aside className="w-full max-w-xl lg:w-48">
+                {/* A div, not an aside: the shell sidebar is already the unnamed complementary landmark. */}
+                <div className="w-full max-w-xl lg:w-48">
                     <nav
                         className="flex flex-col space-y-1 space-x-0"
                         aria-label={t('account:settings.nav_label')}
@@ -65,7 +66,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                             </Button>
                         ))}
                     </nav>
-                </aside>
+                </div>
 
                 <Separator className="my-6 lg:hidden" />
 

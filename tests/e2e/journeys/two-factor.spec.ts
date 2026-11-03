@@ -91,6 +91,8 @@ test('an account sets up TOTP and signs in with a code or a one-time recovery co
         const secret = (await manualKey.inputValue()).trim();
 
         expect(secret).toMatch(/^[A-Z2-7]{16,}$/);
+        // The key and the QR code load in parallel; a QR code swapped in while axe runs shifts what it measures.
+        await expect(dialog.getByRole('status')).toHaveCount(0);
         expect(await axeViolations(owner.page)).toEqual([]);
 
         await dialog
