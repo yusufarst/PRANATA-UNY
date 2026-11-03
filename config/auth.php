@@ -68,6 +68,10 @@ return [
     // How long an activation code or a temporary password from an administrator stays usable (SECURITY_MODEL section 3.1).
     'one_time_secret_hours' => (int) env('AUTH_ONE_TIME_SECRET_HOURS', 24),
 
+    // The self-service reset by email exists only while mail really goes out (SECURITY_MODEL section 3.1, SEC-D6, TASK-011
+    // TAC-05). The log and array mailers send nothing, so they leave it off; assisted reset stays the recovery path.
+    'email_reset' => (bool) env('AUTH_EMAIL_RESET', ! in_array(env('MAIL_MAILER', 'log'), ['log', 'array'], true)),
+
     /*
     |--------------------------------------------------------------------------
     | User Providers

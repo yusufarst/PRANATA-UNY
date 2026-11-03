@@ -5,6 +5,7 @@ namespace App\Modules\Identity\Actions;
 use App\Models\User;
 use App\Modules\Identity\Events\PasswordChanged;
 use App\Modules\Identity\Models\PasswordReset;
+use App\Modules\Identity\Notifications\PasswordWasReset;
 use App\Modules\Platform\Support\Action;
 use Illuminate\Support\Str;
 
@@ -53,6 +54,10 @@ final class ChangePassword extends Action
             // Inside the transaction: the audit listener writes on the same connection, so the change and its audit
             // record commit or roll back together (fail closed).
             PasswordChanged::dispatch($user, $via, $ended);
+
+            if ($via === PasswordChanged::RESET) {
+                $this->afterCommit(fn () => $user->notify(new PasswordWasReset(PasswordWasReset::EMAIL)));
+            }
         });
     }
 }

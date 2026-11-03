@@ -4,6 +4,7 @@ use App\Models\User;
 use App\Modules\Identity\Actions\RevokeSessions;
 use App\Modules\Identity\Events\SessionsRevoked;
 use App\Modules\Identity\Models\PasswordReset;
+use App\Modules\Identity\Notifications\PasswordWasReset;
 use App\Modules\Identity\Support\ActiveSessions;
 use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use Illuminate\Database\QueryException;
@@ -403,6 +404,14 @@ test('an assisted reset shows a temporary password once, ends every session and 
         ->and($audit->metadata)->toContain('"ended_sessions": 1')
         ->and(DB::table('audit_events')->whereRaw('coalesce(metadata::text, \'\') like ?', ["%{$password}%"])->exists())->toBeFalse();
 
+    // SEC-20: the owner is told in the app, without the password.
+    $notification = DB::table('notifications')->where('notifiable_id', $user->id)->sole();
+
+    expect($notification->type)->toBe(PasswordWasReset::class)
+        ->and($notification->notifiable_type)->toBe(User::class)
+        ->and(json_decode($notification->data, true))->toBe(['kind' => 'identity.password_reset', 'via' => 'assisted'])
+        ->and($notification->data)->not->toContain($password);
+
     $this->get(route('identity.admin.users.show', $user->public_id))
         ->assertInertia(fn (Assert $page) => $page->missing('issuedSecret'));
 });
@@ -539,7 +548,8 @@ test('the reset of a privileged account waits for a second administrator, who ge
     expect($reset->status)->toBe(PasswordReset::PENDING_APPROVAL)
         ->and($reset->temp_secret_hash)->toBeNull()
         ->and($target->refresh()->password)->toBe($password)
-        ->and(DB::table('audit_events')->where('action', 'identity.reset_requested')->count())->toBe(1);
+        ->and(DB::table('audit_events')->where('action', 'identity.reset_requested')->count())->toBe(1)
+        ->and(DB::table('notifications')->where('notifiable_id', $target->id)->exists())->toBeFalse();
 
     // The maker sees the request but cannot approve it, nor ask again.
     $this->get(route('identity.admin.users.show', $target->public_id))
@@ -574,7 +584,8 @@ test('the reset of a privileged account waits for a second administrator, who ge
         ->and(Hash::check($temporary, $target->refresh()->password))->toBeTrue()
         ->and($target->must_change_password)->toBeTrue()
         ->and($audit->metadata)->toContain('"approved_by": '.$checker->id)
-        ->and(DB::table('audit_events')->whereRaw('coalesce(metadata::text, \'\') like ?', ["%{$temporary}%"])->exists())->toBeFalse();
+        ->and(DB::table('audit_events')->whereRaw('coalesce(metadata::text, \'\') like ?', ["%{$temporary}%"])->exists())->toBeFalse()
+        ->and(DB::table('notifications')->where('notifiable_id', $target->id)->count())->toBe(1);
 });
 
 test('a reset request of a privileged account can be cancelled and then no longer approved', function () {

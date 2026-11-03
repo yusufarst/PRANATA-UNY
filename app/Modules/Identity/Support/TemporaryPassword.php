@@ -4,6 +4,7 @@ namespace App\Modules\Identity\Support;
 
 use App\Models\User;
 use App\Modules\Identity\Models\PasswordReset;
+use App\Modules\Identity\Notifications\PasswordWasReset;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\Hash;
@@ -14,7 +15,8 @@ use Illuminate\Support\Str;
  *
  * The password becomes the account's password at once, lives config('auth.one_time_secret_hours') hours and must be changed
  * on the next sign-in. Every session and remember cookie of the account ends, and any other secret still open for it is
- * revoked. Only the hash is stored. Runs inside the transaction of the calling Action, with the account row locked.
+ * revoked, and the owner finds an in-app notification. Only the hash is stored. Runs inside the transaction of the calling
+ * Action, with the account row locked.
  */
 final class TemporaryPassword
 {
@@ -49,6 +51,9 @@ final class TemporaryPassword
             ->table((string) config('session.table', 'sessions'))
             ->where('user_id', $user->getKey())
             ->delete();
+
+        // Once committed, so a reset that rolls back tells nobody.
+        $connection->afterCommit(fn () => $user->notify(new PasswordWasReset(PasswordWasReset::ASSISTED)));
 
         return ['password' => $password, 'expires_at' => $expiresAt, 'ended_sessions' => $ended];
     }

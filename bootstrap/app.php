@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetLocale;
+use App\Modules\Identity\Http\Middleware\EnsureEmailResetIsAvailable;
 use App\Modules\Identity\Http\Middleware\EnsurePasswordIsChanged;
 use App\Modules\Identity\Http\Middleware\EnsureSessionIsCurrent;
 use App\Modules\Platform\Http\Middleware\AssignRequestId;
@@ -33,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // The language first, so a session that ends says so in it; then the forced password change holds the account.
         $middleware->web(append: [
             SetLocale::class,
+            EnsureEmailResetIsAvailable::class,
             EnsureSessionIsCurrent::class,
             EnsurePasswordIsChanged::class,
             HandleInertiaRequests::class,
