@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Fortify\Features;
 
@@ -52,8 +53,8 @@ test('password can be reset with valid token', function () {
         $response = $this->post(route('password.update'), [
             'token' => $notification->token,
             'email' => $user->email,
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'Sandi-Baru-2026',
+            'password_confirmation' => 'Sandi-Baru-2026',
         ]);
 
         $response
@@ -62,6 +63,30 @@ test('password can be reset with valid token', function () {
 
         return true;
     });
+});
+
+// TASK-010 TAC-05: a reset by email ends every session of the account.
+test('a password reset ends every session of the account', function () {
+    Notification::fake();
+
+    $user = User::factory()->create(['must_change_password' => true]);
+    DB::table('sessions')->insert(['id' => 'old-device', 'user_id' => $user->id, 'payload' => '', 'last_activity' => time()]);
+
+    $this->post(route('password.email'), ['email' => $user->email]);
+
+    Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
+        $this->post(route('password.update'), [
+            'token' => $notification->token,
+            'email' => $user->email,
+            'password' => 'Sandi-Baru-2026',
+            'password_confirmation' => 'Sandi-Baru-2026',
+        ])->assertSessionHasNoErrors();
+
+        return true;
+    });
+
+    expect(DB::table('sessions')->where('user_id', $user->id)->exists())->toBeFalse()
+        ->and($user->refresh()->must_change_password)->toBeFalse();
 });
 
 test('password cannot be reset with invalid token', function () {

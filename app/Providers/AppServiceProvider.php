@@ -37,14 +37,12 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
-        Password::defaults(fn (): ?Password => app()->isProduction()
-            ? Password::min(12)
-                ->mixedCase()
-                ->letters()
-                ->numbers()
-                ->symbols()
-                ->uncompromised()
-            : null,
+        // AICWDF-COMPAT-8 (SECURITY_MODEL section 3) everywhere; the leaked-password check calls an outside service and stays off.
+        Password::defaults(fn (): Password => Password::min((int) config('auth.password_min_length'))
+            ->mixedCase()
+            ->letters()
+            ->numbers()
+            ->symbols(),
         );
     }
 }

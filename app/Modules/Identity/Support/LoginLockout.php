@@ -3,6 +3,7 @@
 namespace App\Modules\Identity\Support;
 
 use App\Models\User;
+use App\Modules\Identity\Events\AccountLocked;
 use Illuminate\Support\Facades\RateLimiter;
 
 /**
@@ -32,6 +33,8 @@ class LoginLockout
         if ($failures >= (int) config('auth.lockout.attempts')) {
             RateLimiter::hit($this->lockKey($user), $this->minutes('lock_minutes') * 60);
             RateLimiter::clear($this->failureKey($user));
+
+            AccountLocked::dispatch($user, $this->minutes('lock_minutes'));
         }
     }
 

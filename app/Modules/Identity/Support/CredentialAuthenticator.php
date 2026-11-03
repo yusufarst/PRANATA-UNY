@@ -3,6 +3,7 @@
 namespace App\Modules\Identity\Support;
 
 use App\Models\User;
+use App\Modules\Identity\Events\SignInFailed;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,21 +44,21 @@ class CredentialAuthenticator
             // Hash anyway, so an unknown identity costs as much as a known one.
             Hash::make($password);
 
-            return null;
+            return $this->refuse(null, SignInFailed::UNKNOWN_IDENTITY);
         }
 
         if ($this->lockout->isLocked($user)) {
-            return null;
+            return $this->refuse($user, SignInFailed::ACCOUNT_LOCKED);
         }
 
         if (! Hash::check($password, $user->password)) {
             $this->lockout->recordFailure($user);
 
-            return null;
+            return $this->refuse($user, SignInFailed::WRONG_PASSWORD);
         }
 
         if ($user->status !== User::ACTIVE) {
-            return null;
+            return $this->refuse($user, SignInFailed::NOT_ACTIVE);
         }
 
         $this->lockout->clear($user);
@@ -69,6 +70,16 @@ class CredentialAuthenticator
         }
 
         return $user;
+    }
+
+    /**
+     * Report the refusal; the caller still gets only null.
+     */
+    private function refuse(?User $user, string $reason): null
+    {
+        SignInFailed::dispatch($user, $reason);
+
+        return null;
     }
 
     /**

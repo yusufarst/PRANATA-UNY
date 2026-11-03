@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\PasswordUpdateRequest;
 use App\Http\Requests\Settings\TwoFactorAuthenticationRequest;
+use App\Modules\Identity\Actions\ChangePassword;
+use App\Modules\Identity\Events\PasswordChanged;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
@@ -36,13 +38,14 @@ class SecurityController extends Controller
     /**
      * Update the user's password.
      */
-    public function update(PasswordUpdateRequest $request): RedirectResponse
+    public function update(PasswordUpdateRequest $request, ChangePassword $changePassword): RedirectResponse
     {
-        $request->user()->update([
-            'password' => $request->password,
-        ]);
+        $changePassword->handle($request->user(), $request->string('password')->value(), PasswordChanged::SETTINGS, $request->session()->getId());
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Password updated.')]);
+        // A new id for the session that stays; the old row goes with it.
+        $request->session()->regenerate(true);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('auth.password_changed')]);
 
         return back();
     }

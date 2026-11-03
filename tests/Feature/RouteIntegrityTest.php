@@ -28,6 +28,8 @@ const PUBLIC_ROUTES = [
  */
 const OWN_ACCOUNT_ROUTES = [
     'dashboard',
+    'identity.password.edit',
+    'identity.password.update',
     'logout',
     'password.confirm',
     'password.confirm.store',

@@ -3,9 +3,11 @@
 namespace App\Modules\Audit\Providers;
 
 use App\Modules\Audit\Console\EnsureAuditPartitionsCommand;
+use App\Modules\Audit\Listeners\RecordAuthenticationEvents;
 use App\Modules\Audit\Support\AuditLogger;
 use App\Modules\ModuleServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\Event;
 
 class AuditServiceProvider extends ModuleServiceProvider
 {
@@ -23,6 +25,8 @@ class AuditServiceProvider extends ModuleServiceProvider
     public function boot(): void
     {
         parent::boot();
+
+        Event::subscribe(RecordAuthenticationEvents::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([EnsureAuditPartitionsCommand::class]);
