@@ -39,7 +39,10 @@ type Props = {
     changeRequest: RequestSummary & {
         payload: Record<string, string | number | null>;
         scope: Partial<
-            Record<'parent' | 'user' | 'position' | 'appointment', string | null>
+            Record<
+                'parent' | 'user' | 'position' | 'appointment',
+                string | null
+            >
         >;
         reason: string;
         source_ref: string | null;
@@ -137,8 +140,14 @@ export default function RequestShow({
                 : (request.scope.parent ?? String(value));
         }
 
-        if (field === 'user' || field === 'position' || field === 'appointment') {
-            return request.scope[field] ?? (value === null ? none : String(value));
+        if (
+            field === 'user' ||
+            field === 'position' ||
+            field === 'appointment'
+        ) {
+            return (
+                request.scope[field] ?? (value === null ? none : String(value))
+            );
         }
 
         if (field === 'effective_to') {
@@ -150,7 +159,12 @@ export default function RequestShow({
 
     const details: [string, string][] = [
         ...(unit
-            ? [[t('admin:organization.fields.unit'), unit.name] as [string, string]]
+            ? [
+                  [t('admin:organization.fields.unit'), unit.name] as [
+                      string,
+                      string,
+                  ],
+              ]
             : []),
         ...payloadFields.flatMap((field) => {
             const value = shown(field);
@@ -219,7 +233,10 @@ export default function RequestShow({
             test="escalate-request-button"
         />
     ) : can.decide ? (
-        <Button onClick={() => setDeciding(true)} data-test="decide-request-button">
+        <Button
+            onClick={() => setDeciding(true)}
+            data-test="decide-request-button"
+        >
             {t('admin:organization.actions.decide')}
         </Button>
     ) : can.apply ? (
@@ -236,7 +253,9 @@ export default function RequestShow({
         <>
             {can.edit && (
                 <Button variant="outline" asChild>
-                    <Link href={ChangeRequestController.edit(request.public_id)}>
+                    <Link
+                        href={ChangeRequestController.edit(request.public_id)}
+                    >
                         <Pencil aria-hidden="true" />
                         {t('admin:organization.actions.edit')}
                     </Link>
@@ -285,7 +304,9 @@ export default function RequestShow({
 
                 <PageHeader
                     title={title}
-                    description={t(`admin:organization.status_hints.${request.status}`)}
+                    description={t(
+                        `admin:organization.status_hints.${request.status}`,
+                    )}
                     status={
                         <span className="flex flex-wrap gap-2">
                             <RequestStatusBadge status={request.status} />
@@ -299,7 +320,9 @@ export default function RequestShow({
                 {failure && (
                     <Alert className="border-danger" data-test="request-error">
                         <ShieldAlert aria-hidden="true" />
-                        <AlertTitle>{t('admin:organization.failed')}</AlertTitle>
+                        <AlertTitle>
+                            {t('admin:organization.failed')}
+                        </AlertTitle>
                         <AlertDescription>{failure}</AlertDescription>
                     </Alert>
                 )}
@@ -312,7 +335,9 @@ export default function RequestShow({
                                 {t('admin:organization.policy.blocked_title')}
                             </AlertTitle>
                             <AlertDescription>
-                                {t('admin:organization.policy.blocked_description')}
+                                {t(
+                                    'admin:organization.policy.blocked_description',
+                                )}
                             </AlertDescription>
                         </Alert>
                     )}
@@ -323,7 +348,9 @@ export default function RequestShow({
                         <Alert data-test="policy-simulation">
                             <FlaskConical aria-hidden="true" />
                             <AlertTitle>
-                                {t('admin:organization.policy.simulation_title')}
+                                {t(
+                                    'admin:organization.policy.simulation_title',
+                                )}
                             </AlertTitle>
                             <AlertDescription>
                                 {t(
@@ -566,7 +593,9 @@ export default function RequestShow({
 
             <Dialog open={deciding} onOpenChange={setDeciding}>
                 <DialogContent>
-                    <DialogTitle>{t('admin:organization.decision.title')}</DialogTitle>
+                    <DialogTitle>
+                        {t('admin:organization.decision.title')}
+                    </DialogTitle>
                     <DialogDescription>
                         {t(
                             decision.simulation
@@ -601,7 +630,9 @@ export default function RequestShow({
                                 />
                                 <fieldset className="grid gap-2">
                                     <legend className="mb-2 text-sm font-medium">
-                                        {t('admin:organization.decision.choice')}
+                                        {t(
+                                            'admin:organization.decision.choice',
+                                        )}
                                     </legend>
                                     {(['APPROVE', 'REJECT'] as const).map(
                                         (choice) => (
@@ -711,7 +742,9 @@ export default function RequestShow({
                                         disabled={processing}
                                         data-test="confirm-decision-button"
                                     >
-                                        {t('admin:organization.decision.confirm')}
+                                        {t(
+                                            'admin:organization.decision.confirm',
+                                        )}
                                     </Button>
                                 </DialogFooter>
                             </>
@@ -744,8 +777,16 @@ function VersionCommand({
         <Form {...form} {...command.visit} options={{ preserveScroll: true }}>
             {({ processing }) => (
                 <>
-                    <input type="hidden" name="lock_version" value={lockVersion} />
-                    <Button type="submit" disabled={processing} data-test={test}>
+                    <input
+                        type="hidden"
+                        name="lock_version"
+                        value={lockVersion}
+                    />
+                    <Button
+                        type="submit"
+                        disabled={processing}
+                        data-test={test}
+                    >
                         {label}
                     </Button>
                 </>

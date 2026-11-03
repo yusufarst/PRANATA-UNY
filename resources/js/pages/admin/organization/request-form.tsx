@@ -101,7 +101,9 @@ export default function RequestForm({
     const chooseKind = (next: string) => {
         router.get(
             ChangeRequestController.create.url({
-                query: unit ? { kind: next, unit: unit.public_id } : { kind: next },
+                query: unit
+                    ? { kind: next, unit: unit.public_id }
+                    : { kind: next },
             }),
             {},
             { replace: true },
@@ -141,13 +143,17 @@ export default function RequestForm({
                                     data-test="form-error-summary"
                                 >
                                     <AlertTitle>
-                                        {t('admin:organization.form.error_summary')}
+                                        {t(
+                                            'admin:organization.form.error_summary',
+                                        )}
                                     </AlertTitle>
                                     <AlertDescription>
                                         <ul className="list-disc pl-4">
                                             {Object.entries(errors).map(
                                                 ([field, message]) => (
-                                                    <li key={field}>{message}</li>
+                                                    <li key={field}>
+                                                        {message}
+                                                    </li>
                                                 ),
                                             )}
                                         </ul>
@@ -157,7 +163,11 @@ export default function RequestForm({
 
                             {creating ? (
                                 <>
-                                    <input type="hidden" name="kind" value={kind} />
+                                    <input
+                                        type="hidden"
+                                        name="kind"
+                                        value={kind}
+                                    />
                                     {subject && (
                                         <input
                                             type="hidden"
@@ -167,7 +177,9 @@ export default function RequestForm({
                                     )}
                                     <Field
                                         id="kind"
-                                        label={t('admin:organization.fields.kind')}
+                                        label={t(
+                                            'admin:organization.fields.kind',
+                                        )}
                                         hint={t(
                                             `admin:organization.kind_hints.${kind}`,
                                         )}
@@ -200,11 +212,14 @@ export default function RequestForm({
                                         value={changeRequest.lock_version}
                                     />
                                     <p className="text-sm text-muted-foreground">
-                                        {t('admin:organization.form.kind_fixed', {
-                                            kind: t(
-                                                `admin:organization.kinds.${kind}`,
-                                            ),
-                                        })}
+                                        {t(
+                                            'admin:organization.form.kind_fixed',
+                                            {
+                                                kind: t(
+                                                    `admin:organization.kinds.${kind}`,
+                                                ),
+                                            },
+                                        )}
                                     </p>
                                 </>
                             )}
@@ -241,7 +256,9 @@ export default function RequestForm({
 
                             <Field
                                 id="source_ref"
-                                label={t('admin:organization.fields.source_ref')}
+                                label={t(
+                                    'admin:organization.fields.source_ref',
+                                )}
                                 hint={t(
                                     'admin:organization.fields.source_ref_hint',
                                 )}
@@ -252,7 +269,9 @@ export default function RequestForm({
                                     name="source_ref"
                                     maxLength={150}
                                     autoComplete="off"
-                                    defaultValue={changeRequest?.source_ref ?? ''}
+                                    defaultValue={
+                                        changeRequest?.source_ref ?? ''
+                                    }
                                     aria-describedby="source_ref-hint"
                                     aria-invalid={!!errors.source_ref}
                                 />
@@ -438,7 +457,9 @@ function ScopeFields({
                 aria-invalid={!!errors.parent}
                 className={selectClassName}
             >
-                <option value="">{t('admin:organization.fields.no_parent')}</option>
+                <option value="">
+                    {t('admin:organization.fields.no_parent')}
+                </option>
                 {options.units.map((option) => (
                     <option key={option.value} value={option.value}>
                         {`${'— '.repeat(Math.min(option.depth, 8))}${option.label}`}

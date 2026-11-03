@@ -18,8 +18,7 @@ export const staffKinds = [
 ] as const;
 
 export type ChangeKind =
-    | (typeof unitKinds)[number]
-    | (typeof staffKinds)[number];
+    (typeof unitKinds)[number] | (typeof staffKinds)[number];
 
 export type RequestStatus =
     | 'DRAFT'

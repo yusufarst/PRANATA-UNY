@@ -218,7 +218,10 @@ export default function OrganizationIndex({
                                     {t('admin:organization.tree.no_match')}
                                 </p>
                             ) : (
-                                <ul className="grid gap-1" data-test="unit-tree">
+                                <ul
+                                    className="grid gap-1"
+                                    data-test="unit-tree"
+                                >
                                     {visible.map((unit) => (
                                         <li key={unit.public_id}>
                                             <Link
@@ -319,7 +322,10 @@ function UnitDetail({
         [t('admin:organization.fields.code'), unit.code],
         [t('admin:organization.fields.short_name'), unit.short_name ?? none],
         [t('admin:organization.fields.unit_type'), unit.unit_type],
-        [t('admin:organization.fields.parent_public_id'), unit.parent_name ?? none],
+        [
+            t('admin:organization.fields.parent_public_id'),
+            unit.parent_name ?? none,
+        ],
         [
             t('admin:organization.fields.effective_from'),
             date(unit.effective_from) ?? none,
@@ -573,9 +579,12 @@ function UnitDetail({
                                     })}
                                 </span>
                                 <span className="text-sm text-muted-foreground">
-                                    {t('admin:organization.appointments.decree', {
-                                        ref: appointment.decree_ref ?? none,
-                                    })}
+                                    {t(
+                                        'admin:organization.appointments.decree',
+                                        {
+                                            ref: appointment.decree_ref ?? none,
+                                        },
+                                    )}
                                 </span>
                             </li>
                         ))}
