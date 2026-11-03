@@ -9,10 +9,12 @@ use App\Modules\Identity\Events\AccountUpdated;
 use App\Modules\Identity\Events\PasswordResetIssued;
 use App\Modules\Identity\Events\PasswordResetRequested;
 use App\Modules\Identity\Events\PasswordResetRevoked;
+use App\Modules\Identity\Events\SessionsRevoked;
 use Illuminate\Events\Dispatcher;
 
 /**
- * The audit trail of what administrators do to accounts (TASK-011: every action is audited). The administrator is the actor.
+ * The audit trail of what administrators do to accounts (TASK-011: every action is audited). The administrator is the actor,
+ * or the account itself when it ends its own sessions.
  *
  * Synchronous, so a failed write fails the Action that caused the event. No activation code or temporary password is carried.
  */
@@ -34,6 +36,7 @@ final class RecordAccountAdministration
             PasswordResetRequested::class => 'passwordResetRequested',
             PasswordResetIssued::class => 'passwordResetIssued',
             PasswordResetRevoked::class => 'passwordResetRevoked',
+            SessionsRevoked::class => 'sessionsRevoked',
         ];
     }
 
@@ -81,6 +84,17 @@ final class RecordAccountAdministration
     public function passwordResetRevoked(PasswordResetRevoked $event): void
     {
         $this->audit->record('identity.reset_revoked', self::MODULE, $event->reset->user, metadata: self::reset($event));
+    }
+
+    /**
+     * The actor is the signed-in user: the account itself on its own sessions page, or an administrator (TASK-011 TAC-04).
+     */
+    public function sessionsRevoked(SessionsRevoked $event): void
+    {
+        $this->audit->record('identity.sessions_revoked', self::MODULE, $event->user, metadata: [
+            'scope' => $event->scope,
+            'ended_sessions' => $event->endedSessions,
+        ]);
     }
 
     /**

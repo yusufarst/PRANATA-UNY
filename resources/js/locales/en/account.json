@@ -4,7 +4,21 @@
         "intro": "Manage your profile and account settings",
         "nav_label": "Settings",
         "profile": "Profile",
-        "security": "Security"
+        "security": "Security",
+        "sessions": "Active sessions"
+    },
+    "sessions": {
+        "page_title": "Active sessions",
+        "heading": "Active sessions",
+        "intro": "Devices that are signed in to your account. End any session you do not recognise.",
+        "empty": "There are no active sessions.",
+        "unknown_device": "Unknown device",
+        "this_device": "This device",
+        "detail": "{{ip}} · last active {{time}}",
+        "unknown_ip": "Unknown IP address",
+        "revoke": "End session",
+        "revoke_others": "End all other sessions",
+        "revoke_others_note": "Every other device must sign in again. The session on this device keeps running."
     },
     "profile": {
         "page_title": "Profile settings",

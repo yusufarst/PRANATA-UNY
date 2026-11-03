@@ -1,5 +1,5 @@
 import { Form, Head, Link } from '@inertiajs/react';
-import { ArrowLeft, KeyRound, Pencil, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, KeyRound, LogOut, Pencil, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -14,6 +14,8 @@ import {
 } from '@/components/admin/users';
 import { ConflictDialog } from '@/components/app/ConflictDialog';
 import { PageHeader } from '@/components/app/page-header';
+import type { ActiveSession } from '@/components/app/session-list';
+import { SessionList } from '@/components/app/session-list';
 import InputError from '@/components/input-error';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -44,12 +46,14 @@ type Props = {
         created_at: string | null;
         expires_at: string;
     } | null;
+    sessions: ActiveSession[];
     can: {
         update: boolean;
         deactivate: boolean;
         reset: boolean;
         approveReset: boolean;
         revokeReset: boolean;
+        revokeSessions: boolean;
     };
     /** Present only in the answer that issued it; it is never shown again. */
     issuedSecret?: {
@@ -62,6 +66,7 @@ type Props = {
 export default function UserShow({
     account,
     pendingReset,
+    sessions,
     can,
     issuedSecret,
 }: Props) {
@@ -69,6 +74,7 @@ export default function UserShow({
     const dateTime = useDateTime();
     const [deactivating, setDeactivating] = useState(false);
     const [resetting, setResetting] = useState(false);
+    const [endingSessions, setEndingSessions] = useState(false);
     const command = useCommand();
     const none = t('admin:users.fields.none');
 
@@ -350,7 +356,96 @@ export default function UserShow({
                         ))}
                     </dl>
                 </section>
+
+                <section
+                    aria-labelledby="account-sessions"
+                    className="rounded-lg border border-border bg-card p-4 shadow-card sm:p-6"
+                    data-test="account-sessions"
+                >
+                    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="grid gap-1">
+                            <h2
+                                id="account-sessions"
+                                className="text-lg font-semibold text-foreground"
+                            >
+                                {t('admin:users.sessions.section')}
+                            </h2>
+                            <p className="text-sm text-muted-foreground">
+                                {t('admin:users.sessions.intro')}
+                            </p>
+                        </div>
+                        {can.revokeSessions && (
+                            <Button
+                                variant="outline"
+                                onClick={() => setEndingSessions(true)}
+                                data-test="revoke-sessions-button"
+                            >
+                                <LogOut aria-hidden="true" />
+                                {t('admin:users.sessions.revoke')}
+                            </Button>
+                        )}
+                    </div>
+                    {sessions.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                            {t('admin:users.sessions.empty')}
+                        </p>
+                    ) : (
+                        <SessionList sessions={sessions} />
+                    )}
+                </section>
             </div>
+
+            <Dialog open={endingSessions} onOpenChange={setEndingSessions}>
+                <DialogContent>
+                    <DialogTitle>
+                        {t('admin:users.sessions.confirm_title')}
+                    </DialogTitle>
+                    <DialogDescription>
+                        {t('admin:users.sessions.confirm_description', {
+                            count: sessions.length,
+                        })}
+                    </DialogDescription>
+                    <Form
+                        {...UserAdministrationController.revokeSessions.form(
+                            account.public_id,
+                        )}
+                        {...command.visit}
+                        onSuccess={() => {
+                            command.visit.onSuccess();
+                            setEndingSessions(false);
+                        }}
+                        options={{ preserveScroll: true }}
+                        className="grid gap-4"
+                    >
+                        {({ processing, errors }) => (
+                            <>
+                                <InputError
+                                    message={
+                                        errors._idempotency ?? errors._domain
+                                    }
+                                />
+                                <DialogFooter className="gap-2">
+                                    <Button
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={() => setEndingSessions(false)}
+                                    >
+                                        {t('common:actions.cancel')}
+                                    </Button>
+                                    <Button
+                                        type="submit"
+                                        variant="destructive"
+                                        disabled={processing}
+                                        data-test="confirm-revoke-sessions-button"
+                                    >
+                                        {t('admin:users.sessions.confirm')}
+                                    </Button>
+                                </DialogFooter>
+                            </>
+                        )}
+                    </Form>
+                </DialogContent>
+            </Dialog>
 
             <Dialog open={deactivating} onOpenChange={setDeactivating}>
                 <DialogContent>

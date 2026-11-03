@@ -11,6 +11,11 @@ return [
     'reset_needs_second_admin' => 'Persetujuan harus diberikan oleh admin lain, bukan oleh peminta reset atau pemilik akun.',
     'reset_awaits_approval' => 'Permintaan reset tercatat. Admin kedua perlu menyetujuinya sebelum password sementara dibuat.',
     'reset_revoked' => 'Permintaan reset sudah dibatalkan. Password akun tidak berubah.',
+    'session_not_found' => 'Sesi ini sudah berakhir atau merupakan sesi yang sedang Anda pakai. Muat ulang halaman untuk melihat daftar terbaru.',
+    'session_revoked' => 'Sesi sudah diakhiri. Perangkat itu perlu masuk lagi.',
+    'other_sessions_revoked' => 'Semua sesi lain sudah diakhiri. Sesi di perangkat ini tetap berjalan.',
+    'sessions_revoked' => '{0} Akun ini tidak punya sesi aktif lagi.|[1,*] :count sesi sudah diakhiri. Pengguna perlu masuk lagi.',
+    'cannot_revoke_own_sessions_here' => 'Akhiri sesi akun Anda sendiri dari halaman Sesi aktif di Pengaturan.',
     'username_taken' => 'Username ini sudah dipakai akun lain.',
     'email_taken' => 'Email ini sudah dipakai akun lain.',
 ];

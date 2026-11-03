@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Identity\Http\Controllers\ForcedPasswordChangeController;
+use App\Modules\Identity\Http\Controllers\SessionController;
 use App\Modules\Identity\Http\Controllers\UserAdministrationController;
 use App\Modules\Identity\Providers\IdentityServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,16 @@ Route::middleware('auth')->group(function () {
     Route::put('password/change', [ForcedPasswordChangeController::class, 'update'])
         ->middleware('throttle:6,1')
         ->name('identity.password.update');
+
+    // The active sessions of the own account, in PG-007 (TASK-011 TAC-04).
+    Route::get('settings/sessions', [SessionController::class, 'index'])->name('identity.sessions.index');
+    Route::post('settings/sessions/others/revoke', [SessionController::class, 'revokeOthers'])
+        ->middleware('idempotent')
+        ->name('identity.sessions.revoke-others');
+    Route::post('settings/sessions/{session}/revoke', [SessionController::class, 'revoke'])
+        ->middleware('idempotent')
+        ->where('session', '[0-9a-f]{64}')
+        ->name('identity.sessions.revoke');
 });
 
 // PG-502 Pengguna (INFORMATION_ARCHITECTURE section 3.6).
@@ -31,4 +42,5 @@ Route::middleware(['auth', 'can:'.IdentityServiceProvider::MANAGE_USERS])
         Route::post('{user:public_id}/resets', 'requestReset')->middleware('idempotent')->name('resets.store');
         Route::post('{user:public_id}/resets/{reset}/approve', 'approveReset')->middleware('idempotent')->name('resets.approve');
         Route::post('{user:public_id}/resets/{reset}/revoke', 'revokeReset')->middleware('idempotent')->name('resets.revoke');
+        Route::post('{user:public_id}/sessions/revoke', 'revokeSessions')->middleware('idempotent')->name('sessions.revoke');
     });

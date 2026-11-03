@@ -116,6 +116,15 @@
             "reason": "Alasan",
             "reason_placeholder": "Misalnya: pegawai pindah tugas sejak 1 November",
             "confirm": "Ya, nonaktifkan"
+        },
+        "sessions": {
+            "section": "Sesi aktif",
+            "intro": "Perangkat yang sedang masuk dengan akun ini.",
+            "empty": "Akun ini tidak sedang masuk di perangkat mana pun.",
+            "revoke": "Akhiri semua sesi",
+            "confirm_title": "Akhiri semua sesi akun ini?",
+            "confirm_description": "Sesi aktif: {{count}}. Semuanya berakhir sekarang dan pengguna perlu masuk lagi. Password tidak berubah.",
+            "confirm": "Ya, akhiri sesi"
         }
     }
 }

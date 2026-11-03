@@ -1,7 +1,11 @@
 <?php
 
 use App\Models\User;
+use App\Modules\Identity\Actions\RevokeSessions;
+use App\Modules\Identity\Events\SessionsRevoked;
 use App\Modules\Identity\Models\PasswordReset;
+use App\Modules\Identity\Support\ActiveSessions;
+use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -340,6 +344,7 @@ test('a deactivated account cannot be edited', function () {
             'reset' => false,
             'approveReset' => false,
             'revokeReset' => false,
+            'revokeSessions' => false,
         ]));
 });
 
@@ -642,4 +647,149 @@ test('the database refuses a reset record an account requested for itself', func
         'status' => PasswordReset::ISSUED,
         'expires_at' => now()->addDay(),
     ]))->toThrow(QueryException::class);
+});
+
+/**
+ * Two database sessions of the account, the phone used last.
+ */
+function twoSessions(User $user): void
+{
+    DB::table('sessions')->insert([
+        ['id' => 'laptop', 'user_id' => $user->id, 'ip_address' => '10.0.0.1', 'user_agent' => 'Mozilla/5.0 (Windows NT 10.0) Chrome/130.0', 'payload' => '', 'last_activity' => time() - 60],
+        ['id' => 'phone', 'user_id' => $user->id, 'ip_address' => '10.0.0.2', 'user_agent' => 'Mozilla/5.0 (Linux; Android 14) Mobile', 'payload' => '', 'last_activity' => time()],
+    ]);
+}
+
+// TASK-011 TAC-04: the account sees and ends its own sessions.
+test('the sessions page lists the own sessions by a key that is not the session id', function () {
+    $user = User::factory()->create();
+    twoSessions($user);
+    DB::table('sessions')->insert(['id' => 'other-account', 'user_id' => User::factory()->create()->id, 'payload' => '', 'last_activity' => time()]);
+
+    $this->actingAs($user)
+        ->get(route('identity.sessions.index'))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page->component('settings/sessions')
+            ->has('sessions', 2)
+            ->where('sessions.0.key', ActiveSessions::key('phone'))
+            ->where('sessions.0.ip_address', '10.0.0.2')
+            ->where('sessions.0.current', false)
+            ->where('sessions.1.key', ActiveSessions::key('laptop'))
+            ->missing('sessions.0.id'));
+});
+
+test('the current session is marked and is never ended by the own commands', function () {
+    $user = User::factory()->create();
+    twoSessions($user);
+    $this->actingAs($user);
+
+    expect(collect(ActiveSessions::of($user, 'laptop'))->firstWhere('current', true)['key'])->toBe(ActiveSessions::key('laptop'));
+
+    expect(fn () => app(RevokeSessions::class)->handle($user, SessionsRevoked::ONE, ActiveSessions::key('laptop'), 'laptop'))
+        ->toThrow(DomainRuleViolation::class);
+
+    expect(app(RevokeSessions::class)->handle($user, SessionsRevoked::OTHERS, keepSessionId: 'laptop'))->toBe(1)
+        ->and(DB::table('sessions')->where('user_id', $user->id)->pluck('id')->all())->toBe(['laptop']);
+});
+
+test('the account ends one of its sessions, which changes the remember token and is audited', function () {
+    $user = User::factory()->create();
+    $oldToken = $user->remember_token;
+    twoSessions($user);
+
+    $this->actingAs($user)
+        ->withHeaders(commandKey())
+        ->post(route('identity.sessions.revoke', ActiveSessions::key('laptop')))
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('identity.sessions.index'));
+
+    $audit = DB::table('audit_events')->where('action', 'identity.sessions_revoked')->sole();
+
+    expect(DB::table('sessions')->where('user_id', $user->id)->pluck('id')->all())->toBe(['phone'])
+        ->and($user->refresh()->remember_token)->not->toBe($oldToken)
+        ->and($audit->actor_user_id)->toEqual($user->id)
+        ->and($audit->metadata)->toContain('"scope": "one"')
+        ->and($audit->metadata)->toContain('"ended_sessions": 1')
+        ->and($audit->metadata)->not->toContain('laptop');
+});
+
+test('the account ends every other session', function () {
+    $user = User::factory()->create();
+    twoSessions($user);
+
+    $this->actingAs($user)
+        ->withHeaders(commandKey())
+        ->post(route('identity.sessions.revoke-others'))
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('identity.sessions.index'));
+
+    expect(DB::table('sessions')->where('user_id', $user->id)->exists())->toBeFalse()
+        ->and(DB::table('audit_events')->where('action', 'identity.sessions_revoked')->value('metadata'))->toContain('"scope": "others"');
+});
+
+test('an account cannot end the session of another account by its key', function () {
+    $user = User::factory()->create();
+    $other = User::factory()->create();
+    twoSessions($other);
+
+    $this->actingAs($user)
+        ->withHeaders(commandKey())
+        ->post(route('identity.sessions.revoke', ActiveSessions::key('laptop')))
+        ->assertSessionHasErrors('_domain');
+
+    expect(DB::table('sessions')->where('user_id', $other->id)->count())->toBe(2)
+        ->and(DB::table('audit_events')->where('action', 'identity.sessions_revoked')->exists())->toBeFalse();
+});
+
+// TASK-011 TAC-04: an administrator ends every session of another account.
+test('an administrator sees and ends every session of an account', function () {
+    $admin = administrator();
+    $user = User::factory()->create();
+    $oldToken = $user->remember_token;
+    twoSessions($user);
+
+    $this->actingAs($admin)
+        ->get(route('identity.admin.users.show', $user->public_id))
+        ->assertInertia(fn (Assert $page) => $page->has('sessions', 2)->where('can.revokeSessions', true));
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.sessions.revoke', $user->public_id))
+        ->assertSessionHasNoErrors()
+        ->assertRedirect(route('identity.admin.users.show', $user->public_id));
+
+    $audit = DB::table('audit_events')->where('action', 'identity.sessions_revoked')->sole();
+
+    expect(DB::table('sessions')->where('user_id', $user->id)->exists())->toBeFalse()
+        ->and($user->refresh()->remember_token)->not->toBe($oldToken)
+        ->and($user->status)->toBe(User::ACTIVE)
+        ->and($audit->actor_user_id)->toEqual($admin->id)
+        ->and($audit->metadata)->toContain('"scope": "all"')
+        ->and($audit->metadata)->toContain('"ended_sessions": 2');
+});
+
+test('an administrator ends their own sessions only on their own sessions page', function () {
+    $admin = administrator();
+    twoSessions($admin);
+
+    $this->actingAs($admin)
+        ->get(route('identity.admin.users.show', $admin->public_id))
+        ->assertInertia(fn (Assert $page) => $page->where('can.revokeSessions', false));
+
+    $this->withHeaders(commandKey())
+        ->post(route('identity.admin.users.sessions.revoke', $admin->public_id))
+        ->assertSessionHasErrors('_domain');
+
+    expect(DB::table('sessions')->where('user_id', $admin->id)->count())->toBe(2);
+});
+
+test('an account without admin.users.manage cannot end the sessions of another account', function () {
+    $other = User::factory()->create();
+    twoSessions($other);
+
+    $this->actingAs(User::factory()->create())
+        ->withHeaders(commandKey())
+        ->post(route('identity.admin.users.sessions.revoke', $other->public_id))
+        ->assertForbidden();
+
+    expect(DB::table('sessions')->where('user_id', $other->id)->count())->toBe(2);
 });

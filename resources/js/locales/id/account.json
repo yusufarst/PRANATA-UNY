@@ -4,7 +4,21 @@
         "intro": "Kelola profil dan pengaturan akun Anda",
         "nav_label": "Pengaturan",
         "profile": "Profil",
-        "security": "Keamanan"
+        "security": "Keamanan",
+        "sessions": "Sesi aktif"
+    },
+    "sessions": {
+        "page_title": "Sesi aktif",
+        "heading": "Sesi aktif",
+        "intro": "Perangkat yang sedang masuk dengan akun Anda. Akhiri sesi yang tidak Anda kenali.",
+        "empty": "Tidak ada sesi aktif.",
+        "unknown_device": "Perangkat tidak dikenal",
+        "this_device": "Perangkat ini",
+        "detail": "{{ip}} · terakhir aktif {{time}}",
+        "unknown_ip": "Alamat IP tidak dikenal",
+        "revoke": "Akhiri sesi",
+        "revoke_others": "Akhiri semua sesi lain",
+        "revoke_others_note": "Semua perangkat lain perlu masuk lagi. Sesi di perangkat ini tetap berjalan."
     },
     "profile": {
         "page_title": "Pengaturan profil",

@@ -116,6 +116,15 @@
             "reason": "Reason",
             "reason_placeholder": "For example: transferred to another unit since 1 November",
             "confirm": "Yes, deactivate"
+        },
+        "sessions": {
+            "section": "Active sessions",
+            "intro": "Devices that are signed in to this account.",
+            "empty": "This account is not signed in on any device.",
+            "revoke": "End all sessions",
+            "confirm_title": "End all sessions of this account?",
+            "confirm_description": "Active sessions: {{count}}. They all end now and the user must sign in again. The password does not change.",
+            "confirm": "Yes, end sessions"
         }
     }
 }

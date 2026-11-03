@@ -8,13 +8,17 @@ use App\Modules\Identity\Actions\CreateAccount;
 use App\Modules\Identity\Actions\DeactivateAccount;
 use App\Modules\Identity\Actions\RequestAssistedReset;
 use App\Modules\Identity\Actions\RevokeAssistedReset;
+use App\Modules\Identity\Actions\RevokeSessions;
 use App\Modules\Identity\Actions\UpdateAccount;
+use App\Modules\Identity\Events\SessionsRevoked;
 use App\Modules\Identity\Http\Requests\AccountRequest;
 use App\Modules\Identity\Http\Requests\AssistedResetRequest;
 use App\Modules\Identity\Http\Requests\DeactivateAccountRequest;
 use App\Modules\Identity\Models\PasswordReset;
 use App\Modules\Identity\Providers\IdentityServiceProvider;
+use App\Modules\Identity\Support\ActiveSessions;
 use App\Modules\Identity\Support\PrivilegedAccounts;
+use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use App\Modules\Platform\Exceptions\StaleVersionException;
 use Carbon\CarbonInterface;
 use Illuminate\Http\RedirectResponse;
@@ -193,6 +197,24 @@ class UserAdministrationController
         return to_route('identity.admin.users.show', $user->public_id);
     }
 
+    /**
+     * Ends every session of another account (TASK-011 TAC-04); an administrator ends their own on their sessions page.
+     */
+    public function revokeSessions(Request $request, User $user, RevokeSessions $revokeSessions): RedirectResponse
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+
+        if ($user->is($request->user())) {
+            throw DomainRuleViolation::because('identity.cannot_revoke_own_sessions_here');
+        }
+
+        $ended = $revokeSessions->handle($user, SessionsRevoked::ALL);
+
+        Inertia::flash('toast', ['type' => 'success', 'message' => trans_choice('identity.sessions_revoked', $ended, ['count' => $ended])]);
+
+        return to_route('identity.admin.users.show', $user->public_id);
+    }
+
     private function showingTemporaryPassword(Request $request, User $user, string $password, CarbonInterface $expiresAt): Response
     {
         return Inertia::render('admin/users/show', [
@@ -221,6 +243,8 @@ class UserAdministrationController
             ->latest('id')
             ->first();
 
+        $sessions = ActiveSessions::of($user, $own ? $request->session()->getId() : null);
+
         return [
             'account' => [
                 ...self::account($user),
@@ -238,6 +262,7 @@ class UserAdministrationController
                 'created_at' => $pending->created_at?->toIso8601String(),
                 'expires_at' => $pending->expires_at->toIso8601String(),
             ],
+            'sessions' => $sessions,
             'can' => [
                 'update' => ! $deactivated,
                 'deactivate' => ! $deactivated && ! $own,
@@ -246,6 +271,8 @@ class UserAdministrationController
                 // The second administrator is neither the requester nor the account (TASK-011 TAC-03).
                 'approveReset' => $pending !== null && $pending->requested_by !== $request->user()?->getKey() && ! $own,
                 'revokeReset' => $pending !== null && ! $own,
+                // The own sessions are ended on the own sessions page, where the current one stays (TASK-011 TAC-04).
+                'revokeSessions' => ! $deactivated && ! $own && $sessions !== [],
             ],
         ];
     }
