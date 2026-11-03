@@ -93,6 +93,9 @@ test('an account sets up TOTP and signs in with a code or a one-time recovery co
         expect(secret).toMatch(/^[A-Z2-7]{16,}$/);
         // The key and the QR code load in parallel; a QR code swapped in while axe runs shifts what it measures.
         await expect(dialog.getByRole('status')).toHaveCount(0);
+        // The pointer still rests where "Aktifkan 2FA" was, which may be under the primary button of the dialog; WebKit
+        // gives the hovered, blended background to axe. The overlay in the corner has no hover state.
+        await owner.page.mouse.move(0, 0);
         expect(await axeViolations(owner.page)).toEqual([]);
 
         await dialog

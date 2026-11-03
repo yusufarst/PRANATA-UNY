@@ -402,9 +402,12 @@ test('a TOTP reset request is approved only under its own account and while it i
         ->post(route('identity.admin.users.two-factor-resets.approve', [$other->public_id, $reset->id]))
         ->assertNotFound();
 
+    // The earlier session has idled out by then, so the approver signs in afresh.
     $this->travel((int) config('auth.one_time_secret_hours') + 1)->hours();
+    $this->flushSession();
 
-    $this->withHeaders(totpCommandKey())
+    $this->actingAs(totpAdministrator())
+        ->withHeaders(totpCommandKey())
         ->post(route('identity.admin.users.two-factor-resets.approve', [$target->public_id, $reset->id]))
         ->assertSessionHasErrors('_domain');
 

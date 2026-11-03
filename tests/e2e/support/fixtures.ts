@@ -9,6 +9,8 @@ export type AxeViolation = {
     id: string;
     impact?: string | null;
     targets: string[];
+    // What axe measured, such as the colours of a contrast failure, so a failure in CI reads without the trace.
+    summaries: string[];
 };
 
 export function collectCriticalErrors(page: Page): string[] {
@@ -55,6 +57,7 @@ export async function axeViolations(page: Page): Promise<AxeViolation[]> {
         id,
         impact,
         targets: nodes.map(({ target }) => target.join(' ')),
+        summaries: nodes.map(({ failureSummary }) => failureSummary ?? ''),
     }));
 }
 
