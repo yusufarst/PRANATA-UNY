@@ -177,7 +177,9 @@ export default function GrantShow({
                 {grant.status === 'PENDING_APPROVAL' && (
                     <Alert data-test="pending-grant">
                         <ShieldCheck aria-hidden="true" />
-                        <AlertTitle>{t('admin:access.pending_title')}</AlertTitle>
+                        <AlertTitle>
+                            {t('admin:access.pending_title')}
+                        </AlertTitle>
                         <AlertDescription>
                             {t(
                                 approvalBlocked

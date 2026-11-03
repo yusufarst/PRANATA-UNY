@@ -481,6 +481,7 @@ test('a deactivated account cannot be edited', function () {
             'approveReset' => false,
             'revokeReset' => false,
             'revokeSessions' => false,
+            'grantAccess' => false,
         ]));
 });
 

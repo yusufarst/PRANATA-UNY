@@ -6,10 +6,12 @@ import {
     Pencil,
     ShieldCheck,
     ShieldOff,
+    ShieldPlus,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import GrantController from '@/actions/App/Modules/Access/Http/Controllers/GrantController';
 import UserAdministrationController from '@/actions/App/Modules/Identity/Http/Controllers/UserAdministrationController';
 import type { Account, IdentityCheck } from '@/components/admin/users';
 import {
@@ -83,6 +85,7 @@ type Props = {
         approveReset: boolean;
         revokeReset: boolean;
         revokeSessions: boolean;
+        grantAccess: boolean;
     };
     /** Present only in the answer that issued it; it is never shown again. */
     issuedSecret?: IssuedSecret | null;
@@ -211,11 +214,27 @@ export default function UserShow({
                     description={t('admin:users.detail.title')}
                     status={<AccountStatusBadge status={account.status} />}
                     secondaryActions={
-                        (can.reset ||
+                        (can.grantAccess ||
+                            can.reset ||
                             can.suspend ||
                             can.reinstate ||
                             can.deactivate) && (
                             <>
+                                {can.grantAccess && (
+                                    <Button variant="outline" asChild>
+                                        <Link
+                                            href={GrantController.create({
+                                                query: {
+                                                    user: account.public_id,
+                                                },
+                                            })}
+                                            data-test="grant-access-button"
+                                        >
+                                            <ShieldPlus aria-hidden="true" />
+                                            {t('admin:access.create')}
+                                        </Link>
+                                    </Button>
+                                )}
                                 {can.reinstate && (
                                     <Button
                                         variant="outline"

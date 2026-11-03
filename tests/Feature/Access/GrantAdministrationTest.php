@@ -249,6 +249,25 @@ describe('granting through PG-503', function () {
                 ->has('options.units', count(OrganizationSeeder::UNITS)));
     });
 
+    test('the detail of a user offers Beri akses only to a granter, never for the own or a deactivated account', function () {
+        $admin = grantAdmin();
+        $user = User::factory()->create();
+        $gone = User::factory()->withStatus(User::DEACTIVATED)->create();
+
+        $this->actingAs($admin);
+        $this->get(route('identity.admin.users.show', $user->public_id))
+            ->assertInertia(fn (Assert $page) => $page->where('can.grantAccess', true));
+        $this->get(route('identity.admin.users.show', $admin->public_id))
+            ->assertInertia(fn (Assert $page) => $page->where('can.grantAccess', false));
+        $this->get(route('identity.admin.users.show', $gone->public_id))
+            ->assertInertia(fn (Assert $page) => $page->where('can.grantAccess', false));
+
+        $this->actingAs(delegatedAdmin('admin.users.manage'))
+            ->get(route('identity.admin.users.show', $user->public_id))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->where('can.grantAccess', false));
+    });
+
     test('an ordinary grant applies at once and lands on the list', function () {
         $user = User::factory()->create();
         $ft = OrgUnit::query()->where('code', 'FT')->firstOrFail();

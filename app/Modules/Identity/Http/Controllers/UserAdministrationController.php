@@ -403,6 +403,8 @@ class UserAdministrationController
                 'revokeReset' => $pending !== null && ! $own,
                 // The own sessions are ended on the own sessions page, where the current one stays (TASK-011 TAC-04).
                 'revokeSessions' => ! $deactivated && ! $own && $sessions !== [],
+                // PG-503 opened for this account (TASK-014); nobody grants to themselves (SOD-05), and the form checks again.
+                'grantAccess' => ! $deactivated && ! $own && ($request->user()?->can('admin.access.grant') ?? false),
             ],
         ];
     }

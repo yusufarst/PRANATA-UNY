@@ -51,7 +51,12 @@ type Props = {
 const textareaClassName =
     'w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm';
 
-export default function GrantForm({ user, canOpenUser, today, options }: Props) {
+export default function GrantForm({
+    user,
+    canOpenUser,
+    today,
+    options,
+}: Props) {
     const { t } = useTranslation();
     const command = useCommand();
     const [target, setTarget] = useState<'profile' | 'capability'>('profile');
@@ -209,7 +214,9 @@ export default function GrantForm({ user, canOpenUser, today, options }: Props) 
                                         className="text-sm break-words text-muted-foreground"
                                     >
                                         {profile === undefined
-                                            ? t('admin:access.form.profile_hint')
+                                            ? t(
+                                                  'admin:access.form.profile_hint',
+                                              )
                                             : (profile.description ??
                                               profile.capabilities.join(', '))}
                                     </p>
@@ -335,7 +342,9 @@ export default function GrantForm({ user, canOpenUser, today, options }: Props) 
                             <div className="grid gap-4 sm:grid-cols-2">
                                 <div className="grid gap-2">
                                     <Label htmlFor="effective_from">
-                                        {t('admin:access.fields.effective_from')}
+                                        {t(
+                                            'admin:access.fields.effective_from',
+                                        )}
                                     </Label>
                                     <Input
                                         id="effective_from"
@@ -366,7 +375,9 @@ export default function GrantForm({ user, canOpenUser, today, options }: Props) 
                                         id="effective_to-hint"
                                         className="text-sm text-muted-foreground"
                                     >
-                                        {t('admin:access.form.effective_to_hint')}
+                                        {t(
+                                            'admin:access.form.effective_to_hint',
+                                        )}
                                     </p>
                                     <InputError message={errors.effective_to} />
                                 </div>
@@ -396,7 +407,9 @@ export default function GrantForm({ user, canOpenUser, today, options }: Props) 
                                 <Alert data-test="privileged-notice">
                                     <ShieldCheck aria-hidden="true" />
                                     <AlertTitle>
-                                        {t('admin:access.form.privileged_title')}
+                                        {t(
+                                            'admin:access.form.privileged_title',
+                                        )}
                                     </AlertTitle>
                                     <AlertDescription>
                                         {t(
