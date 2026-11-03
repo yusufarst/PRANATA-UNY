@@ -8,6 +8,7 @@ use App\Modules\Identity\Notifications\PasswordWasReset;
 use App\Modules\Identity\Support\ActiveSessions;
 use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -203,6 +204,36 @@ test('an activation code past its life no longer signs in', function () {
 
     $this->assertGuest();
     expect(PasswordReset::query()->where('user_id', $user->id)->value('status'))->toBe(PasswordReset::EXPIRED);
+});
+
+// A one-time secret serves only within its life, also after the sign-in (SECURITY_MODEL section 3.1).
+test('a sign-in with an activation code gets no remember cookie', function () {
+    $code = activationCodeOfNewAccount($this);
+
+    $response = $this->post(route('login.store'), ['login' => 'budi.santoso', 'password' => $code, 'remember' => 'on']);
+
+    $this->assertAuthenticated();
+    $response->assertCookieMissing(Auth::guard('web')->getRecallerName());
+});
+
+test('an activation code that closed after the sign-in does not complete the forced change', function () {
+    $code = activationCodeOfNewAccount($this);
+    $user = User::query()->where('username', 'budi.santoso')->firstOrFail();
+
+    $this->post(route('login.store'), ['login' => 'budi.santoso', 'password' => $code]);
+    $this->assertAuthenticatedAs($user);
+
+    PasswordReset::query()->where('user_id', $user->id)->update(['expires_at' => now()->subMinute()]);
+
+    $this->put(route('identity.password.update'), [
+        'current_password' => $code,
+        'password' => 'Sandi-Baru-2026',
+        'password_confirmation' => 'Sandi-Baru-2026',
+    ])->assertSessionHasErrors(['current_password' => __('auth.secret_expired')]);
+
+    expect(PasswordReset::query()->where('user_id', $user->id)->value('status'))->toBe(PasswordReset::EXPIRED)
+        ->and($user->refresh()->must_change_password)->toBeTrue()
+        ->and(Hash::check($code, $user->password))->toBeTrue();
 });
 
 // Changing the details at the version the administrator saw.
@@ -517,6 +548,20 @@ test('an assisted reset shows a temporary password once, ends every session and 
 
     $this->get(route('identity.admin.users.show', $user->public_id))
         ->assertInertia(fn (Assert $page) => $page->missing('issuedSecret'));
+});
+
+test('a reload or language switch at the address of a reset or approval comes back to the detail', function () {
+    $user = User::factory()->create();
+    $detail = route('identity.admin.users.show', $user->public_id);
+
+    $this->actingAs(administrator());
+
+    $this->get(route('identity.admin.users.resets.address', $user->public_id))->assertRedirect($detail);
+    $this->get(route('identity.admin.users.resets.approve-address', [$user->public_id, 1]))->assertRedirect($detail);
+
+    $this->actingAs(User::factory()->create())
+        ->get(route('identity.admin.users.resets.address', $user->public_id))
+        ->assertForbidden();
 });
 
 test('a reset revokes the activation code still open for the account', function () {

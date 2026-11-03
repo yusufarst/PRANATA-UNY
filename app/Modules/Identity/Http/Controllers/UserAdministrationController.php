@@ -217,6 +217,17 @@ class UserAdministrationController
         return $this->showingTemporaryPassword($request, $user, $issued['password'], $issued['expires_at']);
     }
 
+    /**
+     * The temporary password is answered at the address of the reset or the approval, so a reload or a language switch
+     * comes back there with GET: it gets the detail, without the password.
+     */
+    public function resetAddress(User $user): RedirectResponse
+    {
+        Gate::authorize(IdentityServiceProvider::MANAGE_USERS);
+
+        return to_route('identity.admin.users.show', $user->public_id);
+    }
+
     public function revokeReset(Request $request, User $user, PasswordReset $reset, RevokeAssistedReset $revokeReset): RedirectResponse
     {
         Gate::authorize(IdentityServiceProvider::MANAGE_USERS);

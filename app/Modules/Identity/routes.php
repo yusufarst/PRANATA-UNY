@@ -41,7 +41,9 @@ Route::middleware(['auth', 'can:'.IdentityServiceProvider::MANAGE_USERS])
         Route::post('{user:public_id}/suspend', 'suspend')->middleware('idempotent')->name('suspend');
         Route::post('{user:public_id}/reinstate', 'reinstate')->middleware('idempotent')->name('reinstate');
         Route::post('{user:public_id}/deactivate', 'deactivate')->middleware('idempotent')->name('deactivate');
+        Route::get('{user:public_id}/resets', 'resetAddress')->name('resets.address');
         Route::post('{user:public_id}/resets', 'requestReset')->middleware('idempotent')->name('resets.store');
+        Route::get('{user:public_id}/resets/{reset}/approve', 'resetAddress')->name('resets.approve-address');
         Route::post('{user:public_id}/resets/{reset}/approve', 'approveReset')->middleware('idempotent')->name('resets.approve');
         Route::post('{user:public_id}/resets/{reset}/revoke', 'revokeReset')->middleware('idempotent')->name('resets.revoke');
         Route::post('{user:public_id}/sessions/revoke', 'revokeSessions')->middleware('idempotent')->name('sessions.revoke');

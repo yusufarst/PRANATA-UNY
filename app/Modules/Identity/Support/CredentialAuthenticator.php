@@ -4,7 +4,6 @@ namespace App\Modules\Identity\Support;
 
 use App\Models\User;
 use App\Modules\Identity\Events\SignInFailed;
-use App\Modules\Identity\Models\PasswordReset;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,9 +36,10 @@ class CredentialAuthenticator
         /** @var User|null $user */
         $user = (new Timebox)->call(fn () => $this->authenticate($identity, $password), self::MINIMUM_MICROSECONDS);
 
-        // A SUPER_ADMIN never gets the remember cookie (SECURITY_MODEL section 4). Fortify reads "remember" from the
-        // request after this callback, both for the sign-in and for the two-factor challenge, so it is turned off here.
-        if ($user?->role_group === User::SUPER_ADMIN) {
+        // A SUPER_ADMIN never gets the remember cookie (SECURITY_MODEL section 4), nor does a sign-in with a one-time
+        // secret, which would outlive the secret. Fortify reads "remember" from the request after this callback, both for
+        // the sign-in and for the two-factor challenge, so it is turned off here.
+        if ($user?->role_group === User::SUPER_ADMIN || $user?->must_change_password) {
             $request->merge(['remember' => false]);
         }
 
@@ -74,7 +74,8 @@ class CredentialAuthenticator
             return $this->refuse($user, SignInFailed::NOT_ACTIVE);
         }
 
-        if ($this->usesClosedSecret($user)) {
+        // A one-time secret signs in only within its life (SECURITY_MODEL section 3.1).
+        if (OneTimeSecret::isClosedFor($user)) {
             return $this->refuse($user, SignInFailed::SECRET_EXPIRED);
         }
 
@@ -88,38 +89,6 @@ class CredentialAuthenticator
         }
 
         return $user;
-    }
-
-    /**
-     * Whether the password is a one-time secret from an administrator that no longer signs in (SECURITY_MODEL section 3.1):
-     * past its life, or already marked expired or revoked. Such a secret is the password only until the forced change, and
-     * its record holds the same hash; the record is found by that hash whatever its status, so a refusal stays a refusal.
-     */
-    private function usesClosedSecret(User $user): bool
-    {
-        if (! $user->must_change_password) {
-            return false;
-        }
-
-        $secret = PasswordReset::query()
-            ->where('user_id', $user->getKey())
-            ->where('temp_secret_hash', $user->password)
-            ->latest('id')
-            ->first();
-
-        if ($secret === null) {
-            return false;
-        }
-
-        if ($secret->status === PasswordReset::ISSUED && $secret->expires_at->isFuture()) {
-            return false;
-        }
-
-        if ($secret->status === PasswordReset::ISSUED) {
-            $secret->forceFill(['status' => PasswordReset::EXPIRED])->save();
-        }
-
-        return true;
     }
 
     /**
