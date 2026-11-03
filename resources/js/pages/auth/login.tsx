@@ -31,19 +31,20 @@ export default function Login({ status, canResetPassword }: Props) {
                 {({ processing, errors }) => (
                     <div className="grid gap-6">
                         <div className="grid gap-2">
-                            <Label htmlFor="email">
-                                {t('auth:fields.email')}
+                            <Label htmlFor="login">
+                                {t('auth:fields.login')}
                             </Label>
                             <Input
-                                id="email"
-                                type="email"
-                                name="email"
+                                id="login"
+                                type="text"
+                                name="login"
                                 required
                                 autoFocus
-                                autoComplete="email"
-                                placeholder={t('auth:fields.email_placeholder')}
+                                autoCapitalize="none"
+                                autoComplete="username"
+                                placeholder={t('auth:fields.login_placeholder')}
                             />
-                            <InputError message={errors.email} />
+                            <InputError message={errors.login} />
                         </div>
 
                         <div className="grid gap-2">

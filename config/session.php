@@ -32,9 +32,26 @@ return [
     |
     */
 
-    'lifetime' => (int) env('SESSION_LIFETIME', 120),
+    'lifetime' => (int) env('SESSION_LIFETIME', 60),
 
     'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Signed-in Session Timeouts
+    |--------------------------------------------------------------------------
+    |
+    | SECURITY_MODEL section 4 (SEC-D2): a signed-in session ends after this
+    | many idle minutes, or 30 for a SUPER_ADMIN, and after 12 hours in any
+    | case. The lifetime above should not be shorter than the idle timeout.
+    |
+    */
+
+    'idle_minutes' => (int) env('SESSION_IDLE_MINUTES', 60),
+
+    'super_admin_idle_minutes' => (int) env('SESSION_SUPER_ADMIN_IDLE_MINUTES', 30),
+
+    'absolute_minutes' => (int) env('SESSION_ABSOLUTE_MINUTES', 12 * 60),
 
     /*
     |--------------------------------------------------------------------------
@@ -169,7 +186,8 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    // Secure by default (SEC-04); only a local http server sets SESSION_SECURE_COOKIE=false.
+    'secure' => env('SESSION_SECURE_COOKIE', true),
 
     /*
     |--------------------------------------------------------------------------

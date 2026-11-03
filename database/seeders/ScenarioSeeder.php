@@ -33,11 +33,21 @@ class ScenarioSeeder extends Seeder
             User::query()->updateOrCreate(
                 ['email' => "{$profile}.{$run}@e2e.pranata.test"],
                 [
+                    'role_group' => strtoupper(str_replace('-', '_', $profile)),
+                    'username' => self::usernameOf($profile, $run),
                     'name' => "E2E {$profile} {$run}",
                     'password' => Hash::make('password'),
                     'email_verified_at' => now(),
                 ],
             );
         }
+    }
+
+    /**
+     * The same pattern as usernameOf() in tests/e2e/support/profiles.ts.
+     */
+    public static function usernameOf(string $profile, string $run): string
+    {
+        return str_replace('-', '_', $profile).'.'.$run;
     }
 }

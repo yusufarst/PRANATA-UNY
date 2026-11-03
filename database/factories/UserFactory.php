@@ -25,8 +25,11 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'role_group' => User::INTERNAL,
+            'username' => fake()->unique()->regexify('[a-z]{6}[0-9]{4}'),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
+            'status' => User::ACTIVE,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
@@ -43,6 +46,37 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the account has the given status, such as User::DEACTIVATED.
+     */
+    public function withStatus(string $status): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => $status,
+            'deactivated_at' => $status === User::DEACTIVATED ? now() : null,
+        ]);
+    }
+
+    /**
+     * Indicate that the account belongs to the given role group, such as User::SUPER_ADMIN.
+     */
+    public function inRoleGroup(string $roleGroup): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role_group' => $roleGroup,
+        ]);
+    }
+
+    /**
+     * Indicate that the user must change the password before anything else.
+     */
+    public function mustChangePassword(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'must_change_password' => true,
         ]);
     }
 

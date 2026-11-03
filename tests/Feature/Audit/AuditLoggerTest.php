@@ -115,7 +115,14 @@ test('the event is part of the transaction of the action', function () {
 
 test('a failed audit write fails the action', function () {
     expect(fn () => DB::transaction(function () {
-        DB::table('users')->insert(['name' => 'Gagal', 'email' => 'gagal@example.test', 'password' => 'not-a-real-hash']);
+        DB::table('users')->insert([
+            'public_id' => strtolower((string) Str::ulid()),
+            'role_group' => 'INTERNAL',
+            'username' => 'gagal',
+            'name' => 'Gagal',
+            'email' => 'gagal@example.test',
+            'password' => 'not-a-real-hash',
+        ]);
         app(AuditLogger::class)->record('identity.user_created', 'identity', workspace: str_repeat('x', 41));
     }))->toThrow(QueryException::class);
 

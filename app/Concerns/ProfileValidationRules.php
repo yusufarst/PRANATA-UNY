@@ -29,7 +29,8 @@ trait ProfileValidationRules
      */
     protected function nameRules(): array
     {
-        return ['required', 'string', 'max:255'];
+        // users.name is varchar(150) (DATA_MODEL section 5).
+        return ['required', 'string', 'max:150'];
     }
 
     /**

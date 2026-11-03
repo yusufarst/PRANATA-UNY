@@ -1,14 +1,15 @@
 import { resolve } from 'node:path';
 import type { Page } from '@playwright/test';
 import { axeViolations, expect, test } from '../support/fixtures';
-import { emailOf, PASSWORD } from '../support/profiles';
+import { PASSWORD, usernameOf } from '../support/profiles';
 import type { Profile } from '../support/profiles';
 
 const MENU_TOGGLE = 'Buka atau tutup menu';
 
+// By username; global-setup signs in by email (TASK-010 TAC-01).
 async function signIn(page: Page, profile: Profile): Promise<void> {
     await page.goto('/login');
-    await page.getByLabel('Alamat email').fill(emailOf(profile));
+    await page.getByLabel('Username atau email').fill(usernameOf(profile));
     await page.locator('#password').fill(PASSWORD);
     await page.getByRole('button', { name: 'Masuk' }).click();
 
@@ -28,7 +29,7 @@ const LANGUAGES = [
     {
         code: 'id',
         option: 'Bahasa Indonesia',
-        email: 'Alamat email',
+        login: 'Username atau email',
         submit: 'Masuk',
         home: 'Beranda',
         empty: 'Belum ada pekerjaan',
@@ -36,7 +37,7 @@ const LANGUAGES = [
     {
         code: 'en',
         option: 'Bahasa Inggris',
-        email: 'Email address',
+        login: 'Username or email',
         submit: 'Log in',
         home: 'Home',
         empty: 'No work yet',
@@ -51,7 +52,7 @@ for (const language of LANGUAGES) {
             await page.goto('/login');
             await page.getByLabel(language.option).click();
 
-            await expect(page.getByLabel(language.email)).toBeVisible();
+            await expect(page.getByLabel(language.login)).toBeVisible();
             await expect(
                 page.getByRole('button', { name: language.submit }),
             ).toBeVisible();
@@ -208,7 +209,7 @@ test('a refused sign-in leads back to where it came from', async ({
 
     await page.goto('/login');
     await expect(async () => {
-        await page.getByLabel('Alamat email').fill(address);
+        await page.getByLabel('Username atau email').fill(address);
         await page.locator('#password').fill('not-the-password');
         await submit.click();
         await expect(refused).toBeVisible({ timeout: 2_000 });

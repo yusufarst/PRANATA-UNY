@@ -41,8 +41,29 @@ return [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+            // In minutes: at most 14 days (SECURITY_MODEL section 4). SUPER_ADMIN never gets the cookie.
+            'remember' => (int) env('AUTH_REMEMBER_MINUTES', 14 * 24 * 60),
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sign-in Lockout and Password Profile
+    |--------------------------------------------------------------------------
+    |
+    | SECURITY_MODEL section 3: after this many failed sign-ins within the
+    | window an account is locked for the given minutes. The password
+    | profile is AICWDF-COMPAT-8 unless the Owner chooses a longer one.
+    |
+    */
+
+    'lockout' => [
+        'attempts' => (int) env('AUTH_LOCKOUT_ATTEMPTS', 10),
+        'window_minutes' => (int) env('AUTH_LOCKOUT_WINDOW_MINUTES', 15),
+        'lock_minutes' => (int) env('AUTH_LOCKOUT_MINUTES', 15),
+    ],
+
+    'password_min_length' => (int) env('AUTH_PASSWORD_MIN_LENGTH', 8),
 
     /*
     |--------------------------------------------------------------------------

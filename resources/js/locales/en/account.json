@@ -17,15 +17,6 @@
         "resend": "Click here to resend the verification email.",
         "sent": "A new verification link has been sent to your email address."
     },
-    "delete": {
-        "heading": "Delete account",
-        "intro": "Delete your account and all of its data",
-        "warning": "Warning",
-        "caution": "Proceed with caution, this cannot be undone.",
-        "submit": "Delete account",
-        "confirm_title": "Are you sure you want to delete your account?",
-        "confirm_description": "Once the account is deleted, all of its data is permanently deleted too. Enter your password to confirm."
-    },
     "security": {
         "page_title": "Security settings",
         "heading": "Change password",

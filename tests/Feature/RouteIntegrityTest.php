@@ -32,7 +32,6 @@ const OWN_ACCOUNT_ROUTES = [
     'password.confirm',
     'password.confirm.store',
     'password.confirmation',
-    'profile.destroy',
     'profile.edit',
     'profile.update',
     'security.edit',
@@ -112,4 +111,14 @@ test('the route lists name only routes that exist', function () {
     $names = namedRoutes()->keys()->all();
 
     expect(array_diff([...PUBLIC_ROUTES, ...OWN_ACCOUNT_ROUTES], $names))->toBe([]);
+});
+
+// OD-38: no route deletes the own account; DatabaseRolesTest proves pranata_app cannot delete users either.
+test('no route deletes the own account', function () {
+    expect(namedRoutes()->has('profile.destroy'))->toBeFalse();
+
+    $deletesProfile = collect(Route::getRoutes()->getRoutes())
+        ->filter(fn (AppRoute $route) => $route->uri() === 'settings/profile' && in_array('DELETE', $route->methods(), true));
+
+    expect($deletesProfile->all())->toBe([]);
 });

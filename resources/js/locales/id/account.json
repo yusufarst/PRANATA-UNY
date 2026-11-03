@@ -17,15 +17,6 @@
         "resend": "Klik di sini untuk mengirim ulang email verifikasi.",
         "sent": "Tautan verifikasi baru sudah dikirim ke alamat email Anda."
     },
-    "delete": {
-        "heading": "Hapus akun",
-        "intro": "Hapus akun Anda beserta seluruh datanya",
-        "warning": "Peringatan",
-        "caution": "Lanjutkan dengan hati-hati, tindakan ini tidak dapat dibatalkan.",
-        "submit": "Hapus akun",
-        "confirm_title": "Yakin ingin menghapus akun Anda?",
-        "confirm_description": "Setelah akun dihapus, seluruh data di dalamnya ikut terhapus permanen. Masukkan password Anda untuk mengonfirmasi."
-    },
     "security": {
         "page_title": "Pengaturan keamanan",
         "heading": "Ganti password",

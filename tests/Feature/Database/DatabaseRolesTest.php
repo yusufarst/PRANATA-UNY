@@ -2,6 +2,7 @@
 
 use App\Modules\Platform\Support\DatabaseRoles;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Tests\Support\DatabaseSession;
 
 /**
@@ -47,6 +48,9 @@ test('pranata_app holds no DDL right on the schema', function () {
 test('the application works with the privileges of pranata_app', function () {
     $state = DatabaseSession::sqlStateAs(DatabaseRoles::APP, function () {
         $id = DB::table('users')->insertGetId([
+            'public_id' => strtolower((string) Str::ulid()),
+            'role_group' => 'INTERNAL',
+            'username' => 'peran.aplikasi',
             'name' => 'Peran Aplikasi',
             'email' => 'peran.aplikasi@example.test',
             'password' => 'not-a-real-hash',

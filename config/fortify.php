@@ -45,7 +45,8 @@ return [
     |
     */
 
-    'username' => 'email',
+    // One field takes a username or an email address (SECURITY_MODEL section 3); IdentityServiceProvider finds the account.
+    'username' => 'login',
 
     'email' => 'email',
 

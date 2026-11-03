@@ -55,7 +55,7 @@ export default async function globalSetup(config: FullConfig): Promise<void> {
                 const page = await context.newPage();
 
                 await page.goto('/login');
-                await page.locator('#email').fill(emailOf(profile));
+                await page.locator('#login').fill(emailOf(profile));
                 await page.locator('#password').fill(PASSWORD);
                 await page.locator('[data-test="login-button"]').click();
                 await page.waitForURL('**/home');

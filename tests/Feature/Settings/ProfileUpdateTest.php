@@ -19,6 +19,16 @@ test('profile page is displayed', function () {
     $response->assertOk();
 });
 
+test('a name longer than the column is refused, not stored', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->patch(route('profile.update'), ['name' => str_repeat('a', 151), 'email' => $user->email])
+        ->assertSessionHasErrors('name');
+
+    expect($user->refresh()->name)->not->toBe(str_repeat('a', 151));
+});
+
 test('profile information can be updated', function () {
     $user = User::factory()->create();
 
@@ -56,7 +66,7 @@ test('a mixed-case email is stored in lowercase and still allows login', functio
     $this->assertGuest();
 
     $this->post(route('login.store'), [
-        'email' => 'Test.User@Example.com',
+        'login' => 'Test.User@Example.com',
         'password' => 'password',
     ]);
 
@@ -92,36 +102,14 @@ test('email verification status is unchanged when the email address is unchanged
     expect($user->refresh()->email_verified_at)->not->toBeNull();
 });
 
-test('user can delete their account', function () {
+// OD-38: an account ends only as DEACTIVATED, by an administrator; RouteIntegrityTest proves profile.destroy is gone.
+test('a user cannot delete the own account', function () {
     $user = User::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
-        ->delete(route('profile.destroy'), [
-            'password' => 'password',
-        ]);
-
-    $response
-        ->assertSessionHasNoErrors()
-        ->assertRedirect(route('home'));
-
-    $this->assertGuest();
-    expect($user->fresh())->toBeNull();
-});
-
-test('correct password must be provided to delete account', function () {
-    $user = User::factory()->create();
-
-    $response = $this
-        ->actingAs($user)
-        ->from(route('profile.edit'))
-        ->delete(route('profile.destroy'), [
-            'password' => 'wrong-password',
-        ]);
-
-    $response
-        ->assertSessionHasErrors('password')
-        ->assertRedirect(route('profile.edit'));
+    $this->actingAs($user)
+        ->delete('/settings/profile', ['password' => 'password'])
+        ->assertMethodNotAllowed();
 
     expect($user->fresh())->not->toBeNull();
+    $this->assertAuthenticatedAs($user);
 });

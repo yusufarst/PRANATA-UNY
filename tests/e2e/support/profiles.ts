@@ -14,6 +14,10 @@ export function emailOf(profile: Profile): string {
     return `${profile}.${runId()}@e2e.pranata.test`;
 }
 
+export function usernameOf(profile: Profile): string {
+    return `${profile.replaceAll('-', '_')}.${runId()}`;
+}
+
 export function storageStateOf(profile: Profile): string {
     return resolve(import.meta.dirname, '..', '.auth', `${profile}.json`);
 }
