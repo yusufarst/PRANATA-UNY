@@ -442,6 +442,8 @@ test('a deactivated account cannot be edited', function () {
     $this->get(route('identity.admin.users.show', $gone->public_id))
         ->assertInertia(fn (Assert $page) => $page->where('can', [
             'update' => false,
+            'suspend' => false,
+            'reinstate' => false,
             'deactivate' => false,
             'reset' => false,
             'approveReset' => false,
