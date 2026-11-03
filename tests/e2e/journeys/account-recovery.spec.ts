@@ -109,14 +109,18 @@ test('an administrator recovers a forgotten password with a one-time temporary p
         expect(temporary).toMatch(/^[A-Z0-9]{4}(-[A-Z0-9]{4}){3}$/);
         expect(await axeViolations(page)).toEqual([]);
 
-        // Shown once: going Back to the answer that issued it does not bring it back from the browser history.
+        // Shown once: going Back to the answer that issued it does not bring it back from the browser history. That
+        // answer was rendered at the reset address, so Back lands there, not on the detail.
+        const issuedAt = `${detail}/resets`;
+
+        await expect(page).toHaveURL(issuedAt);
         await page
             .getByRole('link', { name: 'Daftar pengguna', exact: true })
             .first()
             .click();
         await expect(page).toHaveURL(/\/admin\/users(\?.*)?$/);
         await page.goBack();
-        await expect(page).toHaveURL(detail);
+        await expect(page).toHaveURL(issuedAt);
         await expect(
             page.locator('[data-test="account-sessions"]'),
         ).toBeVisible();
