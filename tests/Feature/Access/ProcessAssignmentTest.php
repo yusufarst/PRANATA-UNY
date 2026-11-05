@@ -202,7 +202,7 @@ describe('assigning', function () {
             ->and($assignment->sod_check['passed'])->toBeTrue()
             ->and(collect($assignment->sod_check['rules'])->pluck('id')->all())->toBe(['SOD-08'])
             ->and($audit->subject_type)->toBe('process_assignments')
-            ->and($audit->actor_id)->toBe($admin->id);
+            ->and($audit->actor_user_id)->toBe($admin->id);
     });
 
     test('nobody assigns themselves, a vendor or a deactivated account, nor a role the object does not carry or twice', function () {
@@ -238,8 +238,12 @@ describe('assigning', function () {
         expect(DatabaseSession::sqlStateAs(null, fn () => DB::table('process_assignments')->insert([...$row, 'assigned_by' => $user->id])))->toBe('23514')
             ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('process_assignments')->insert([...$row, 'status' => 'ENDED'])))->toBe('23514')
             ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('process_assignments')->insert([...$row, 'sod_check' => '[]'])))->toBe('23514')
-            ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('process_assignments')->insert($row)))->toBeNull()
-            ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('process_assignments')->insert([...$row, 'public_id' => strtolower((string) Str::ulid())])))->toBe('23505');
+            ->and(DatabaseSession::sqlStateAs(null, fn () => DB::table('process_assignments')->insert($row)))->toBeNull();
+
+        // sqlStateAs always rolls back, so the first active row is kept outside it before the second one is refused.
+        DB::table('process_assignments')->insert($row);
+
+        expect(DatabaseSession::sqlStateAs(null, fn () => DB::table('process_assignments')->insert([...$row, 'public_id' => strtolower((string) Str::ulid())])))->toBe('23505');
     });
 });
 

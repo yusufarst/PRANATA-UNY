@@ -165,7 +165,8 @@ final class AccessEvaluator
     /**
      * Layer 3 by a process assignment: a capability marked "Penugasan" holds on an object whose assignment of a role that
      * gives it is in force for the user (ACCESS_CONTROL sections 4 and 5, TAC-03). Without a subject the question is whether
-     * the user holds such an assignment anywhere. When no assignment gives it, the refusal of the grant stands.
+     * the user holds such an assignment anywhere. When no assignment gives it, the refusal of the grant stands, except that a
+     * capability only an assignment gives is refused on an object for holding no assignment there.
      *
      * A decision role waits after an assisted reset until the holder changed the password, and while TOTP is required but not
      * set up (AUTHZ-24, SEC-21).
@@ -187,7 +188,9 @@ final class AccessEvaluator
         $held = array_map('strval', $query->pluck('assignment_role')->all());
 
         if ($held === []) {
-            return CapabilityCatalog::isGrantable($capability) ? $byGrant : AccessDecision::deny('access.denied.no_assignment');
+            return CapabilityCatalog::isGrantable($capability) || $subject === null
+                ? $byGrant
+                : AccessDecision::deny('access.denied.no_assignment');
         }
 
         if (array_filter($held, AssignmentRoles::isDecision(...)) !== [] && $this->decisionsWait($user)) {
