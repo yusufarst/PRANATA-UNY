@@ -189,6 +189,16 @@ describe('the role catalog', function () {
             }
         }
     });
+
+    // The evaluator lets a role that decides nothing give its capability while decisions wait, so no such role gives one.
+    test('a decision capability is given only by decision roles', function () {
+        foreach (AssignmentRoles::capabilitiesWithRoles() as $capability) {
+            if (CapabilityCatalog::isDecision($capability)) {
+                expect(array_filter(AssignmentRoles::givingCapability($capability), fn (string $role) => ! AssignmentRoles::isDecision($role)))
+                    ->toBe([], "{$capability} is given by a role that decides nothing");
+            }
+        }
+    });
 });
 
 describe('assigning', function () {
@@ -507,6 +517,19 @@ describe('the holder of a decision role is a privileged account', function () {
 
         expect(app(PrivilegedAccounts::class)->isPrivileged($holder))->toBeFalse()
             ->and(app(RequestAssistedReset::class)->handle($admin, $holder, 'STAFF_CARD', null)['password'])->not->toBeNull();
+    });
+
+    test('a temporary password one administrator issued alone keeps its holder out of a decision role until it is replaced', function () {
+        $admin = assignmentAdmin();
+        $user = User::factory()->withTwoFactor()->create();
+        $reset = app(RequestAssistedReset::class)->handle($admin, $user, 'STAFF_CARD', null)['reset'];
+
+        expect(assignmentReason(fn () => assignRole($admin, $user, 'PPK')))->toBe('access.decision_role_reset_open')
+            ->and(assignRole($admin, $user, 'PLANNER')->status)->toBe(ProcessAssignment::ACTIVE);
+
+        $reset->forceFill(['status' => PasswordReset::REVOKED])->save();
+
+        expect(assignRole($admin, $user, 'PPK')->status)->toBe(ProcessAssignment::ACTIVE);
     });
 });
 

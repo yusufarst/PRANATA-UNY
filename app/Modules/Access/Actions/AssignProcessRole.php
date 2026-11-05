@@ -9,6 +9,7 @@ use App\Modules\Access\Models\ProcessAssignment;
 use App\Modules\Access\Support\AssignmentRoles;
 use App\Modules\Access\Support\AssignmentSubjects;
 use App\Modules\Access\Support\Separation\SeparationOfDuties;
+use App\Modules\Identity\Support\AssistedResets;
 use App\Modules\Organization\Support\BusinessDate;
 use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use App\Modules\Platform\Support\Action;
@@ -35,6 +36,7 @@ final class AssignProcessRole extends Action
     public function __construct(
         private readonly AssignmentSubjects $subjects,
         private readonly SeparationOfDuties $separation,
+        private readonly AssistedResets $resets,
     ) {}
 
     public function handle(
@@ -60,6 +62,12 @@ final class AssignProcessRole extends Action
 
             if ($user->status === User::DEACTIVATED) {
                 throw DomainRuleViolation::because('access.account_deactivated');
+            }
+
+            // Nor does a temporary password one administrator issued alone carry over into a decision role: whoever knows it
+            // could still take the account (SEC-21).
+            if (AssignmentRoles::isDecision($role) && $this->resets->hasUnconfirmedTemporaryPassword($user)) {
+                throw DomainRuleViolation::because('access.decision_role_reset_open');
             }
 
             if ($user->role_group === User::VENDOR) {
@@ -100,7 +108,8 @@ final class AssignProcessRole extends Action
             }
 
             // The same role past its end is over: it is recorded as ENDED by whoever assigns again, with its audit event.
-            foreach ($same()->lapsed()->get() as $lapsed) {
+            // Locked, so one ended meanwhile by someone else is skipped instead of failing on its version.
+            foreach ($same()->lapsed()->lockForUpdate()->get() as $lapsed) {
                 $lapsed->forceFill([
                     'status' => ProcessAssignment::ENDED,
                     'closed_by' => $actor->id,

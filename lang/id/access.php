@@ -24,6 +24,7 @@ return [
     'assignment_object_unknown' => 'Objek penugasan ini tidak ditemukan.',
     'assignment_role_not_for_object' => 'Peran penugasan ini tidak dipakai untuk jenis objek tersebut. Pilih peran lain.',
     'assignment_exists' => 'Pengguna ini sudah memegang peran tersebut pada objek ini.',
+    'decision_role_reset_open' => 'Pengguna ini masih memegang kata sandi sementara yang diterbitkan oleh satu administrator. Pengguna harus menggantinya dulu, atau reset itu dicabut, sebelum dapat memegang peran keputusan.',
     'assignment_not_active' => 'Penugasan ini sudah berakhir atau dicabut. Muat ulang halaman untuk melihat keadaan terbaru.',
     'sod_violation' => 'Penugasan ditolak karena melanggar pemisahan tugas. :rules',
     'assignment_saved' => 'Penugasan sudah dicatat.',

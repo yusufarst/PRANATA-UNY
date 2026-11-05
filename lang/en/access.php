@@ -24,6 +24,7 @@ return [
     'assignment_object_unknown' => 'The object of this assignment was not found.',
     'assignment_role_not_for_object' => 'This assignment role is not used for that kind of object. Choose another role.',
     'assignment_exists' => 'This user already holds that role on this object.',
+    'decision_role_reset_open' => 'This user still has a temporary password issued by one administrator. They must change it first, or the reset must be revoked, before they can hold a decision role.',
     'assignment_not_active' => 'This assignment has already ended or been revoked. Reload the page to see the latest state.',
     'sod_violation' => 'The assignment is refused because it breaks the separation of duties. :rules',
     'assignment_saved' => 'The assignment is recorded.',
