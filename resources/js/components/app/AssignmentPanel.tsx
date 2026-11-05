@@ -124,7 +124,9 @@ export function AssignmentPanel({ panel }: { panel: AssignmentPanelProps }) {
             ? undefined
             : (errors._domain ?? errors._idempotency);
 
-    const openAssign = (suggestion?: AssignmentPanelProps['suggestions'][0]) => {
+    const openAssign = (
+        suggestion?: AssignmentPanelProps['suggestions'][0],
+    ) => {
         setUsername(suggestion?.username ?? '');
         setDecreeRef(suggestion?.decree_ref ?? '');
         setAssigning(true);
@@ -226,7 +228,9 @@ export function AssignmentPanel({ panel }: { panel: AssignmentPanelProps }) {
                                 <Button
                                     variant="outline"
                                     size="icon"
-                                    aria-label={t('admin:assignments.panel.more')}
+                                    aria-label={t(
+                                        'admin:assignments.panel.more',
+                                    )}
                                     data-test="assignment-more"
                                 >
                                     <EllipsisVertical aria-hidden="true" />
@@ -340,9 +344,12 @@ export function AssignmentPanel({ panel }: { panel: AssignmentPanelProps }) {
                                 </span>
                                 {suggestion.decree_ref && (
                                     <span className="text-sm text-muted-foreground">
-                                        {t('admin:assignments.suggestions.decree', {
-                                            ref: suggestion.decree_ref,
-                                        })}
+                                        {t(
+                                            'admin:assignments.suggestions.decree',
+                                            {
+                                                ref: suggestion.decree_ref,
+                                            },
+                                        )}
                                     </span>
                                 )}
                                 <Button
@@ -374,7 +381,9 @@ export function AssignmentPanel({ panel }: { panel: AssignmentPanelProps }) {
 
             <Dialog open={assigning} onOpenChange={setAssigning}>
                 <DialogContent className="max-h-[90vh] overflow-y-auto">
-                    <DialogTitle>{t('admin:assignments.form.title')}</DialogTitle>
+                    <DialogTitle>
+                        {t('admin:assignments.form.title')}
+                    </DialogTitle>
                     <DialogDescription>
                         {t('admin:assignments.form.intro')}
                     </DialogDescription>
@@ -458,7 +467,9 @@ export function AssignmentPanel({ panel }: { panel: AssignmentPanelProps }) {
                                         id="assignment_username_hint"
                                         className="text-sm text-muted-foreground"
                                     >
-                                        {t('admin:assignments.form.username_hint')}
+                                        {t(
+                                            'admin:assignments.form.username_hint',
+                                        )}
                                     </p>
                                     <InputError message={errors.username} />
                                 </div>

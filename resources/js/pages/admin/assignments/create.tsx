@@ -92,7 +92,9 @@ export default function AssignmentObject({
                             >
                                 {types.map((type) => (
                                     <option key={type.key} value={type.key}>
-                                        {t(`admin:assignments.kinds.${type.kind}`)}
+                                        {t(
+                                            `admin:assignments.kinds.${type.kind}`,
+                                        )}
                                     </option>
                                 ))}
                             </select>
