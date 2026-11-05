@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import type { LucideIcon } from 'lucide-react';
-import { House, KeyRound, Network, Users } from 'lucide-react';
+import { ClipboardList, House, KeyRound, Network, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import {
@@ -20,6 +20,7 @@ const icons: Record<string, LucideIcon> = {
     users: Users,
     organization: Network,
     access: KeyRound,
+    assignments: ClipboardList,
 };
 
 export function AppSidebar() {

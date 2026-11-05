@@ -488,5 +488,115 @@
             "reason_placeholder": "Misalnya: masa tugas sudah berakhir",
             "confirm": "Cabut akses"
         }
+    },
+    "assignments": {
+        "title": "Penugasan",
+        "intro": "Siapa ditugaskan dengan peran apa pada paket, kontrak, permintaan atau kasus. Kewenangan keputusan berasal dari penugasan, bukan dari kelompok peran.",
+        "open_object": "Buka objek",
+        "back_to_list": "Kembali ke daftar penugasan",
+        "failed": "Langkah ini tidak dapat dilakukan",
+        "decision": "Keputusan",
+        "upcoming": "Mulai {{date}}",
+        "period": "{{from}} s.d. {{to}}",
+        "period_open": "Mulai {{from}}, tanpa batas",
+        "empty_title": "Belum ada penugasan",
+        "empty_description": "Buka objek dengan jenis dan nomornya, lalu tugaskan orang pada objek itu.",
+        "empty_filtered_title": "Tidak ada penugasan yang cocok",
+        "empty_filtered_description": "Ubah kata pencarian, status atau peran, atau hapus penyaring.",
+        "status": {
+            "ACTIVE": "Aktif",
+            "ENDED": "Berakhir",
+            "REVOKED": "Dicabut"
+        },
+        "fields": {
+            "user": "Pengguna",
+            "object": "Objek",
+            "role": "Peran",
+            "period": "Masa berlaku",
+            "status": "Status",
+            "subject_type": "Jenis objek",
+            "subject": "Nomor objek",
+            "username": "Nama pengguna",
+            "assignment_role": "Peran penugasan",
+            "effective_from": "Mulai berlaku",
+            "effective_to": "Berakhir",
+            "decree_ref": "Rujukan SK",
+            "assigned_by": "Ditugaskan oleh",
+            "closed_by": "Ditutup oleh",
+            "close_reason": "Alasan",
+            "sod_rules": "Aturan pemisahan tugas yang diperiksa",
+            "none": "—"
+        },
+        "filters": {
+            "label": "Saring penugasan",
+            "search": "Cari pengguna",
+            "search_placeholder": "Nama atau nama pengguna",
+            "status": "Status",
+            "role": "Peran",
+            "all": "Semua",
+            "apply": "Terapkan",
+            "reset": "Hapus penyaring"
+        },
+        "pagination": {
+            "label": "Halaman daftar penugasan",
+            "summary": "Halaman {{current}} dari {{last}} · {{total}} penugasan",
+            "previous": "Sebelumnya",
+            "next": "Berikutnya"
+        },
+        "find": {
+            "title": "Buka objek",
+            "intro": "Pilih jenis objek dan tulis nomornya untuk melihat dan mengatur penugasannya.",
+            "reference_placeholder": "Misalnya: PKT-2026-0001",
+            "submit": "Buka",
+            "not_found": "Objek dengan nomor ini tidak ditemukan. Periksa jenis dan nomornya.",
+            "no_types_title": "Belum ada jenis objek",
+            "no_types_description": "Penugasan dibuat pada objek modul seperti paket pengadaan atau permintaan gudang. Jenis objek muncul di sini setelah modulnya tersedia."
+        },
+        "kinds": {
+            "package": "Paket",
+            "contract": "Kontrak",
+            "warehouse_request": "Permintaan gudang",
+            "return": "Pengembalian",
+            "asset_case": "Kasus aset",
+            "recon_case": "Kasus rekonsiliasi"
+        },
+        "panel": {
+            "title": "Penugasan pada objek ini",
+            "assign": "Tugaskan",
+            "active": "Penugasan aktif",
+            "history": "Riwayat",
+            "empty": "Belum ada orang yang ditugaskan pada objek ini.",
+            "empty_action": "Tugaskan orang pertama dengan tombol Tugaskan.",
+            "history_empty": "Belum ada penugasan yang berakhir atau dicabut.",
+            "no_permission": "Anda dapat melihat penugasan pada objek ini, tetapi tidak berwenang mengubahnya.",
+            "more": "Lainnya",
+            "end": "Akhiri",
+            "revoke": "Cabut"
+        },
+        "form": {
+            "title": "Tugaskan orang",
+            "intro": "Peran keputusan tidak dapat dipegang Super Admin. Penugasan yang melanggar pemisahan tugas ditolak dengan alasannya.",
+            "choose": "Pilih…",
+            "username_hint": "Nama pengguna untuk masuk, misalnya budi.santoso. Anda tidak dapat menugaskan diri sendiri.",
+            "effective_to_hint": "Kosongkan bila masa tugas belum ditentukan.",
+            "decree_ref_hint": "Opsional, misalnya nomor SK penunjukan.",
+            "submit": "Tugaskan"
+        },
+        "suggestions": {
+            "title": "Saran dari penunjukan jabatan",
+            "intro": "Pejabat yang ditunjuk pada unit objek ini atau unit di atasnya. Saran hanya mengisi formulir; orang baru ditugaskan setelah Anda menyimpan.",
+            "use": "Pakai saran",
+            "decree": "SK {{ref}}"
+        },
+        "close": {
+            "end_title": "Akhiri penugasan ini?",
+            "end_description": "Pakai bila tugasnya sudah selesai. Pemegangnya tidak lagi memakai penugasan ini mulai permintaan berikutnya. Riwayatnya tetap tersimpan.",
+            "end_placeholder": "Misalnya: kontrak sudah selesai diserahterimakan",
+            "end_confirm": "Akhiri penugasan",
+            "revoke_title": "Cabut penugasan ini?",
+            "revoke_description": "Pakai bila penugasan ini keliru. Pemegangnya tidak lagi memakainya mulai permintaan berikutnya. Riwayatnya tetap tersimpan.",
+            "revoke_placeholder": "Misalnya: salah memilih orang",
+            "revoke_confirm": "Cabut penugasan"
+        }
     }
 }

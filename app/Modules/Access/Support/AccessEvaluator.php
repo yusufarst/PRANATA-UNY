@@ -3,14 +3,18 @@
 namespace App\Modules\Access\Support;
 
 use App\Models\User;
+use App\Modules\Access\Models\ProcessAssignment;
+use App\Modules\Access\Support\Separation\SeparationOfDuties;
+use App\Modules\Identity\Support\TwoFactorPolicy;
 use App\Modules\Organization\Queries\UnitScope;
 use App\Modules\Organization\Support\BusinessDate;
 use Illuminate\Support\Facades\DB;
 
 /**
- * can(actor, capability, subject?) of ACCESS_CONTROL section 1, layers 1 to 3: an active account, a role group that may hold
- * the capability, and an ACTIVE grant in force today whose scope covers the subject. Process assignments (TASK-015), the
- * separation of duties and the workflow and policy guards are later layers of the modules that own them.
+ * can(actor, capability, subject?) of ACCESS_CONTROL section 1, layers 1 to 4: an active account, a role group that may hold
+ * the capability, an ACTIVE grant in force today whose scope covers the subject or a process assignment in force on it
+ * (TASK-015), and the separation of duties on the subject. The workflow and policy guards are later layers of the modules
+ * that own them.
  *
  * Every check reads the grants again: nothing is cached across requests, so a revoked or expired grant stops at the next
  * request (AUTHZ-22, TAC-04). Without a subject the question is whether the actor holds the capability anywhere, as a menu
@@ -18,6 +22,11 @@ use Illuminate\Support\Facades\DB;
  */
 final class AccessEvaluator
 {
+    public function __construct(
+        private readonly SeparationOfDuties $separation,
+        private readonly TwoFactorPolicy $twoFactor,
+    ) {}
+
     public function decide(User $user, string $capability, ?AccessSubject $subject = null): AccessDecision
     {
         if (! $user->mayHoldSession()) {
@@ -33,30 +42,22 @@ final class AccessEvaluator
         }
 
         if ($user->role_group === User::SUPER_ADMIN && CapabilityCatalog::heldBySuperAdmin($capability)) {
-            return AccessDecision::allow();
+            $decision = AccessDecision::allow();
+        } else {
+            $byGrant = $this->decideByGrant($user, $capability, $subject);
+            $decision = $byGrant->allowed ? $byGrant : $this->decideByAssignment($user, $capability, $subject, $byGrant);
         }
 
-        if (! CapabilityCatalog::isGrantable($capability)) {
-            return AccessDecision::deny('access.denied.assignment_required');
+        if (! $decision->allowed || $subject === null) {
+            return $decision;
         }
 
-        $scopes = $this->scopes($user, $capability);
-
-        if ($scopes === []) {
-            return AccessDecision::deny('access.denied.no_grant');
+        // Layer 4: the separation of duties holds at the moment of the action too, not only when someone was assigned.
+        if (! $this->separation->forAction($user, $capability, $subject)->passed()) {
+            return AccessDecision::deny('access.denied.separation_of_duties');
         }
 
-        if ($subject === null) {
-            return AccessDecision::allow();
-        }
-
-        foreach ($scopes as $scope) {
-            if (self::covers($scope, $subject)) {
-                return AccessDecision::allow();
-            }
-        }
-
-        return AccessDecision::deny('access.denied.out_of_scope');
+        return $decision;
     }
 
     public function allows(User $user, string $capability, ?AccessSubject $subject = null): bool
@@ -131,6 +132,74 @@ final class AccessEvaluator
         }
 
         return $scopes;
+    }
+
+    /**
+     * Layer 3 by a grant: an ACTIVE grant in force today whose scope covers the subject.
+     */
+    private function decideByGrant(User $user, string $capability, ?AccessSubject $subject): AccessDecision
+    {
+        if (! CapabilityCatalog::isGrantable($capability)) {
+            return AccessDecision::deny('access.denied.assignment_required');
+        }
+
+        $scopes = $this->scopes($user, $capability);
+
+        if ($scopes === []) {
+            return AccessDecision::deny('access.denied.no_grant');
+        }
+
+        if ($subject === null) {
+            return AccessDecision::allow();
+        }
+
+        foreach ($scopes as $scope) {
+            if (self::covers($scope, $subject)) {
+                return AccessDecision::allow();
+            }
+        }
+
+        return AccessDecision::deny('access.denied.out_of_scope');
+    }
+
+    /**
+     * Layer 3 by a process assignment: a capability marked "Penugasan" holds on an object whose assignment of a role that
+     * gives it is in force for the user (ACCESS_CONTROL sections 4 and 5, TAC-03). Without a subject the question is whether
+     * the user holds such an assignment anywhere. When no assignment gives it, the refusal of the grant stands.
+     *
+     * A decision role waits after an assisted reset until the holder changed the password, and while TOTP is required but not
+     * set up (AUTHZ-24, SEC-21).
+     */
+    private function decideByAssignment(User $user, string $capability, ?AccessSubject $subject, AccessDecision $byGrant): AccessDecision
+    {
+        $roles = AssignmentRoles::givingCapability($capability);
+
+        if ($roles === [] || ($subject !== null && ! $subject->hasObject())) {
+            return $byGrant;
+        }
+
+        $query = ProcessAssignment::query()->inForce()->where('user_id', $user->id)->whereIn('assignment_role', $roles);
+
+        if ($subject !== null) {
+            $query->onObject((string) $subject->objectType, (int) $subject->objectId);
+        }
+
+        $held = array_map('strval', $query->pluck('assignment_role')->all());
+
+        if ($held === []) {
+            return CapabilityCatalog::isGrantable($capability) ? $byGrant : AccessDecision::deny('access.denied.no_assignment');
+        }
+
+        if (array_filter($held, AssignmentRoles::isDecision(...)) !== [] && $this->decisionsWait($user)) {
+            return AccessDecision::deny('access.denied.credentials_pending');
+        }
+
+        return AccessDecision::allow();
+    }
+
+    private function decisionsWait(User $user): bool
+    {
+        return $user->must_change_password || $this->twoFactor->isMissingFor($user);
     }
 
     private static function covers(GrantScope $scope, AccessSubject $subject): bool

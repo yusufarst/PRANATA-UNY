@@ -180,12 +180,13 @@ describe('the menu and the workspaces (TAC-01)', function () {
                 ->where('auth.can.approveAccess', false));
     });
 
-    test('a Super Admin sees the administration workspace with its three entries', function () {
+    test('a Super Admin sees the administration workspace with its four entries', function () {
         $this->actingAs(grantAdmin())
             ->get(route('dashboard'))
             ->assertInertia(fn (Assert $page) => $page
-                ->where('menu', keysAre(['home', 'users', 'organization', 'access']))
+                ->where('menu', keysAre(['home', 'users', 'organization', 'access', 'assignments']))
                 ->where('menu.3', ['key' => 'access', 'workspace' => 'administration', 'href' => '/admin/access'])
+                ->where('menu.4', ['key' => 'assignments', 'workspace' => 'administration', 'href' => '/admin/assignments'])
                 ->where('workspaces', [
                     ['key' => 'home', 'href' => '/home'],
                     ['key' => 'administration', 'href' => '/admin/users'],
@@ -217,7 +218,7 @@ describe('the menu and the workspaces (TAC-01)', function () {
 
         $this->actingAs($user)->get(route('dashboard'))
             ->assertInertia(fn (Assert $page) => $page
-                ->where('menu', keysAre(['home', 'access']))
+                ->where('menu', keysAre(['home', 'access', 'assignments']))
                 ->where('workspaces', keysAre(['home', 'administration'])));
         $this->get(route('access.admin.grants.index'))->assertOk();
 

@@ -488,5 +488,115 @@
             "reason_placeholder": "For example: the assignment has ended",
             "confirm": "Revoke access"
         }
+    },
+    "assignments": {
+        "title": "Assignments",
+        "intro": "Who is assigned in which role on a package, contract, request or case. The authority to decide comes from an assignment, not from a role group.",
+        "open_object": "Open an object",
+        "back_to_list": "Back to the assignments",
+        "failed": "This step cannot be done",
+        "decision": "Decision",
+        "upcoming": "From {{date}}",
+        "period": "{{from}} to {{to}}",
+        "period_open": "From {{from}}, open-ended",
+        "empty_title": "No assignments yet",
+        "empty_description": "Open an object by its kind and number, then assign people on it.",
+        "empty_filtered_title": "No matching assignments",
+        "empty_filtered_description": "Change the search, status or role, or clear the filters.",
+        "status": {
+            "ACTIVE": "Active",
+            "ENDED": "Ended",
+            "REVOKED": "Revoked"
+        },
+        "fields": {
+            "user": "User",
+            "object": "Object",
+            "role": "Role",
+            "period": "Period",
+            "status": "Status",
+            "subject_type": "Kind of object",
+            "subject": "Object number",
+            "username": "Username",
+            "assignment_role": "Assignment role",
+            "effective_from": "Starts",
+            "effective_to": "Ends",
+            "decree_ref": "Decree reference",
+            "assigned_by": "Assigned by",
+            "closed_by": "Closed by",
+            "close_reason": "Reason",
+            "sod_rules": "Separation-of-duties rules checked",
+            "none": "—"
+        },
+        "filters": {
+            "label": "Filter assignments",
+            "search": "Search users",
+            "search_placeholder": "Name or username",
+            "status": "Status",
+            "role": "Role",
+            "all": "All",
+            "apply": "Apply",
+            "reset": "Clear filters"
+        },
+        "pagination": {
+            "label": "Pages of the assignment list",
+            "summary": "Page {{current}} of {{last}} · {{total}} assignments",
+            "previous": "Previous",
+            "next": "Next"
+        },
+        "find": {
+            "title": "Open an object",
+            "intro": "Choose the kind of object and type its number to see and manage its assignments.",
+            "reference_placeholder": "For example: PKT-2026-0001",
+            "submit": "Open",
+            "not_found": "No object has this number. Check its kind and number.",
+            "no_types_title": "No kinds of object yet",
+            "no_types_description": "Assignments are made on module objects such as procurement packages or warehouse requests. Their kinds appear here once those modules are available."
+        },
+        "kinds": {
+            "package": "Package",
+            "contract": "Contract",
+            "warehouse_request": "Warehouse request",
+            "return": "Return",
+            "asset_case": "Asset case",
+            "recon_case": "Reconciliation case"
+        },
+        "panel": {
+            "title": "Assignments on this object",
+            "assign": "Assign",
+            "active": "Active assignments",
+            "history": "History",
+            "empty": "Nobody is assigned on this object yet.",
+            "empty_action": "Assign the first person with the Assign button.",
+            "history_empty": "No assignment has ended or been revoked yet.",
+            "no_permission": "You can see the assignments on this object, but you may not change them.",
+            "more": "More",
+            "end": "End",
+            "revoke": "Revoke"
+        },
+        "form": {
+            "title": "Assign a person",
+            "intro": "A Super Admin cannot hold a decision role. An assignment that breaks the separation of duties is refused with its reason.",
+            "choose": "Choose…",
+            "username_hint": "The username used to sign in, for example budi.santoso. You cannot assign yourself.",
+            "effective_to_hint": "Leave empty when the end of the task is not known yet.",
+            "decree_ref_hint": "Optional, for example the number of the appointment decree.",
+            "submit": "Assign"
+        },
+        "suggestions": {
+            "title": "Suggestions from appointments",
+            "intro": "Officials appointed in the unit of this object or a unit above it. A suggestion only fills in the form; nobody is assigned until you save.",
+            "use": "Use suggestion",
+            "decree": "Decree {{ref}}"
+        },
+        "close": {
+            "end_title": "End this assignment?",
+            "end_description": "Use this when the task is over. Its holder no longer uses this assignment from the next request on. Its history stays recorded.",
+            "end_placeholder": "For example: the contract has been handed over",
+            "end_confirm": "End assignment",
+            "revoke_title": "Revoke this assignment?",
+            "revoke_description": "Use this when the assignment was a mistake. Its holder no longer uses it from the next request on. Its history stays recorded.",
+            "revoke_placeholder": "For example: the wrong person was chosen",
+            "revoke_confirm": "Revoke assignment"
+        }
     }
 }

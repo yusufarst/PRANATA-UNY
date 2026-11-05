@@ -31,6 +31,7 @@ final class Navigation
         'users' => ['administration', 'identity.admin.users.index', ['admin.users.manage']],
         'organization' => ['administration', 'organization.admin.index', ['admin.org.manage']],
         'access' => ['administration', 'access.admin.grants.index', ['admin.access.grant', 'admin.access.approve']],
+        'assignments' => ['administration', 'access.admin.assignments.index', ['admin.access.grant']],
     ];
 
     public function __construct(private readonly AccessEvaluator $evaluator) {}
