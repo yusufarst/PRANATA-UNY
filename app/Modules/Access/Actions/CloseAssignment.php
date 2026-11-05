@@ -5,6 +5,7 @@ namespace App\Modules\Access\Actions;
 use App\Models\User;
 use App\Modules\Access\Events\AssignmentClosed;
 use App\Modules\Access\Models\ProcessAssignment;
+use App\Modules\Access\Support\AssignmentSubjects;
 use App\Modules\Platform\Exceptions\DomainRuleViolation;
 use App\Modules\Platform\Exceptions\StaleVersionException;
 use App\Modules\Platform\Support\Action;
@@ -12,7 +13,7 @@ use InvalidArgumentException;
 
 /**
  * End an active assignment because its task is over (ENDED), or revoke it because it was wrong (REVOKED), with a reason. The
- * caller may assign on the object ({@see \App\Modules\Access\Support\AssignmentSubjects::mayAssign()}). The row stays as
+ * caller may assign on the object ({@see AssignmentSubjects::mayAssign()}). The row stays as
  * history, and the next request of its holder is checked without it (TAC-03).
  */
 final class CloseAssignment extends Action

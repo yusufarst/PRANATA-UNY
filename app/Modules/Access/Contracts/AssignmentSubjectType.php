@@ -3,6 +3,7 @@
 namespace App\Modules\Access\Contracts;
 
 use App\Modules\Access\Support\AccessSubject;
+use App\Modules\Access\Support\AssignmentRoles;
 
 /**
  * One kind of object that carries process assignments, as its owning module registers it (ACCESS_CONTROL section 5), such as
@@ -17,7 +18,7 @@ interface AssignmentSubjectType
     public function key(): string;
 
     /**
-     * The kind of object of the role catalog ({@see \App\Modules\Access\Support\AssignmentRoles}), such as package.
+     * The kind of object of the role catalog ({@see AssignmentRoles}), such as package.
      */
     public function kind(): string;
 
