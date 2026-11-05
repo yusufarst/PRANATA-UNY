@@ -7,6 +7,7 @@ use App\Modules\Access\Contracts\SodRuleSource;
 use App\Modules\Access\Models\ProcessAssignment;
 use App\Modules\Access\Support\AccessSubject;
 use App\Modules\Access\Support\AssignmentRoles;
+use LogicException;
 
 /**
  * The separation-of-duties rules of ACCESS_CONTROL section 6, checked when someone is assigned and again when someone acts
@@ -70,6 +71,7 @@ final class SeparationOfDuties
                 SodRule::EXCLUDED_ROLE_GROUPS => in_array($role, $rule->roles, true)
                     ? ! in_array($user->role_group, $rule->roleGroups, true)
                     : null,
+                default => throw new LogicException("Unknown kind of separation rule: {$rule->kind}."),
             };
 
             if ($passed !== null) {
@@ -101,6 +103,7 @@ final class SeparationOfDuties
                 SodRule::EXCLUDED_ROLE_GROUPS => array_intersect($held, $rule->roles) !== []
                     ? ! in_array($actor->role_group, $rule->roleGroups, true)
                     : null,
+                default => throw new LogicException("Unknown kind of separation rule: {$rule->kind}."),
             };
 
             if ($passed !== null) {

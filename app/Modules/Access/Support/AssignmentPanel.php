@@ -47,7 +47,7 @@ final class AssignmentPanel
                 'value' => $role,
                 'decision' => AssignmentRoles::isDecision($role),
             ], AssignmentRoles::forKind($kind)),
-            'assignments' => self::rows($assignments->all(), $mayAssign),
+            'assignments' => self::rows(array_values($assignments->all()), $mayAssign),
             'suggestions' => $mayAssign && $subject->unitId !== null ? self::suggestions($subject->unitId) : [],
             'can' => ['assign' => $mayAssign],
             'today' => BusinessDate::today()->toDateString(),

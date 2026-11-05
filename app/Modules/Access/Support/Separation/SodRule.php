@@ -93,7 +93,7 @@ final readonly class SodRule
     public function explanation(): string
     {
         if ($this->description !== []) {
-            return $this->description[app()->getLocale()] ?? $this->description['id'] ?? reset($this->description);
+            return $this->description[app()->getLocale()] ?? $this->description['id'] ?? array_values($this->description)[0];
         }
 
         $text = __("access.sod_rules.{$this->id}");
