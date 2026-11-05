@@ -110,7 +110,7 @@ final class AssignProcessRole extends Action
             ]);
 
             // Inside the transaction, so the assignment and its audit record commit or roll back together (fail closed).
-            AssignmentGiven::dispatch($assignment);
+            AssignmentGiven::dispatch($assignment, $actor);
 
             return $assignment;
         });

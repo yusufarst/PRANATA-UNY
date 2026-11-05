@@ -38,14 +38,14 @@ final class RecordAccessAdministration
 
     public function assignmentGiven(AssignmentGiven $event): void
     {
-        $this->audit->record('access.assignment_given', self::MODULE, $event->assignment, metadata: self::assignment($event));
+        $this->audit->record('access.assignment_given', self::MODULE, $event->assignment, metadata: self::assignment($event), actor: $event->actor);
     }
 
     public function assignmentClosed(AssignmentClosed $event): void
     {
         $action = $event->assignment->status === 'REVOKED' ? 'access.assignment_revoked' : 'access.assignment_ended';
 
-        $this->audit->record($action, self::MODULE, $event->assignment, reason: $event->assignment->close_reason, metadata: self::assignment($event));
+        $this->audit->record($action, self::MODULE, $event->assignment, reason: $event->assignment->close_reason, metadata: self::assignment($event), actor: $event->actor);
     }
 
     public function grantGiven(GrantGiven $event): void

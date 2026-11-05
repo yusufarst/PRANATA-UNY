@@ -42,7 +42,7 @@ final class CloseAssignment extends Action
             ])->saveAtVersion($seenVersion);
 
             // Inside the transaction, so the change and its audit record commit or roll back together (fail closed).
-            AssignmentClosed::dispatch($assignment);
+            AssignmentClosed::dispatch($assignment, $actor);
         });
     }
 }
