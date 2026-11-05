@@ -25,7 +25,6 @@ return [
     'assignment_role_not_for_object' => 'This assignment role is not used for that kind of object. Choose another role.',
     'assignment_exists' => 'This user already holds that role on this object.',
     'assignment_not_active' => 'This assignment has already ended or been revoked. Reload the page to see the latest state.',
-    'assignment_not_allowed' => 'You may not assign people on this object.',
     'sod_violation' => 'The assignment is refused because it breaks the separation of duties. :rules',
     'assignment_saved' => 'The assignment is recorded.',
     'assignment_ended' => 'The assignment has ended. Its holder no longer uses it from the next request on.',

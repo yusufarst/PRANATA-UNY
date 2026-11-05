@@ -25,7 +25,6 @@ return [
     'assignment_role_not_for_object' => 'Peran penugasan ini tidak dipakai untuk jenis objek tersebut. Pilih peran lain.',
     'assignment_exists' => 'Pengguna ini sudah memegang peran tersebut pada objek ini.',
     'assignment_not_active' => 'Penugasan ini sudah berakhir atau dicabut. Muat ulang halaman untuk melihat keadaan terbaru.',
-    'assignment_not_allowed' => 'Anda tidak berwenang menugaskan orang pada objek ini.',
     'sod_violation' => 'Penugasan ditolak karena melanggar pemisahan tugas. :rules',
     'assignment_saved' => 'Penugasan sudah dicatat.',
     'assignment_ended' => 'Penugasan sudah diakhiri. Pemegangnya tidak lagi memakainya mulai permintaan berikutnya.',

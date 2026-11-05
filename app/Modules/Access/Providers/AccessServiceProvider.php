@@ -3,10 +3,8 @@
 namespace App\Modules\Access\Providers;
 
 use App\Models\User;
-use App\Modules\Access\Models\ProcessAssignment;
 use App\Modules\Access\Support\AccessEvaluator;
 use App\Modules\Access\Support\AccessSubject;
-use App\Modules\Access\Support\AssignmentRoles;
 use App\Modules\Access\Support\AssignmentSubjects;
 use App\Modules\Access\Support\CapabilityCatalog;
 use App\Modules\Access\Support\Separation\SeparationOfDuties;
@@ -71,11 +69,6 @@ class AccessServiceProvider extends ModuleServiceProvider
 
         // So is the holder of a decision role that has not ended (SEC-21, AUTHZ-24): their assisted reset needs a second
         // administrator, also while an assignment waits for its first day.
-        $this->app->make(PrivilegedAccounts::class)->extend(fn (User $user): bool => ProcessAssignment::query()
-            ->where('user_id', $user->id)
-            ->where('status', ProcessAssignment::ACTIVE)
-            ->whereIn('assignment_role', AssignmentRoles::decisionRoles())
-            ->where(fn ($query) => $query->whereNull('effective_to')->orWhere('effective_to', '>', now()))
-            ->exists());
+        $this->app->make(PrivilegedAccounts::class)->extend(fn (User $user): bool => AccessEvaluator::holdsDecisionRole($user));
     }
 }

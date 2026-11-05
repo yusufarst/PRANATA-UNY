@@ -47,6 +47,7 @@ export type AssignmentRow = {
     user: { public_id: string; username: string; name: string };
     status: AssignmentStatus;
     upcoming: boolean;
+    lapsed: boolean;
     effective_from: string;
     effective_to: string | null;
     decree_ref: string | null;
@@ -79,10 +80,24 @@ type Closing = { row: AssignmentRow; status: 'ENDED' | 'REVOKED' };
 const textareaClassName =
     'w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive md:text-sm';
 
-/** The status of an assignment, with "from <date>" while an active one waits for its first day. */
+/**
+ * The status of an assignment, with "from <date>" while an active one waits for its first day and "lapsed <date>" once an
+ * active one is past its end.
+ */
 export function AssignmentBadge({ row }: { row: AssignmentRow }) {
     const { t } = useTranslation();
     const dateTime = useDateTime();
+
+    if (row.lapsed && row.effective_to !== null) {
+        return (
+            <StatusBadge
+                category="draft"
+                label={t('admin:assignments.lapsed', {
+                    date: dateTime(row.effective_to),
+                })}
+            />
+        );
+    }
 
     return row.upcoming ? (
         <StatusBadge
@@ -116,8 +131,10 @@ export function AssignmentPanel({ panel }: { panel: AssignmentPanelProps }) {
     const [decreeRef, setDecreeRef] = useState('');
     const [closing, setClosing] = useState<Closing | null>(null);
     const none = t('admin:assignments.fields.none');
-    const active = panel.assignments.filter((row) => row.status === 'ACTIVE');
-    const history = panel.assignments.filter((row) => row.status !== 'ACTIVE');
+    const isCurrent = (row: AssignmentRow) =>
+        row.status === 'ACTIVE' && !row.lapsed;
+    const active = panel.assignments.filter(isCurrent);
+    const history = panel.assignments.filter((row) => !isCurrent(row));
     // A refused command answers with its reason under _domain; the dialogs show their own while open.
     const failure =
         assigning || closing !== null

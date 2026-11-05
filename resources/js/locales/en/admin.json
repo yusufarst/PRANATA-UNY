@@ -497,6 +497,7 @@
         "failed": "This step cannot be done",
         "decision": "Decision",
         "upcoming": "From {{date}}",
+        "lapsed": "Lapsed {{date}}",
         "period": "{{from}} to {{to}}",
         "period_open": "From {{from}}, open-ended",
         "empty_title": "No assignments yet",

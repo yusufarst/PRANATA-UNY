@@ -34,18 +34,24 @@ use Tests\TestCase;
  * ending and revoking through PG-504 and the panel, the rules SOD-04 to SOD-09 and rules from a policy, the evaluator layers 3
  * and 4 by assignment, the suggestions from appointments and the decision holder as a privileged account (TAC-01 to TAC-06).
  *
- * The modules that own packages and warehouse requests come later, so a probe type stands in for them here: package 1 lies in
- * FT.TI and warehouse request 2, requested by the user named in $requester, in FT.
+ * The modules that own packages, contracts and warehouse requests come later, so a probe type stands in for them here: packages
+ * 1 and 3 and contract 4 of package 1 lie in FT.TI, and warehouse request 2, requested by the user named in $requester, in FT.
  */
 
 beforeEach(function () {
     $this->seed([OrganizationSeeder::class, AccessProfileSeeder::class]);
     $this->requester = User::factory()->withTwoFactor()->create(['name' => 'Pemohon Barang']);
+    $this->packagePpk = User::factory()->withTwoFactor()->create(['name' => 'PPK Paket']);
 
     $units = OrgUnit::query()->whereIn('code', ['FT.TI', 'FT'])->pluck('id', 'code');
     $objects = [
-        'probe.package' => [AssignmentRoles::PACKAGE, [1 => ['PKT-1', 'Pengadaan laptop', (int) $units['FT.TI'], []]]],
+        'probe.package' => [AssignmentRoles::PACKAGE, [
+            1 => ['PKT-1', 'Pengadaan laptop', (int) $units['FT.TI'], []],
+            3 => ['PKT-3', 'Pengadaan proyektor', (int) $units['FT.TI'], []],
+        ]],
         'probe.request' => [AssignmentRoles::WAREHOUSE_REQUEST, [2 => ['PB-2', 'Permintaan kertas', (int) $units['FT'], ['requester' => $this->requester->id]]]],
+        // A contract of package 1, which names the PPK of its package as a participant for a rule across objects.
+        'probe.contract' => [AssignmentRoles::CONTRACT, [4 => ['KTR-4', 'Kontrak laptop', (int) $units['FT.TI'], ['package_ppk' => $this->packagePpk->id]]]],
     ];
 
     foreach ($objects as $key => [$kind, $rows]) {
@@ -220,6 +226,25 @@ describe('assigning', function () {
             ->and(ProcessAssignment::query()->count())->toBe(1);
     });
 
+    test('the same role given again after its assignment lapsed closes the lapsed one as ENDED, with its audit event', function () {
+        $admin = assignmentAdmin();
+        $user = User::factory()->withTwoFactor()->create();
+        $lapsed = assignRole($admin, $user, 'PLANNER', to: BusinessDate::today()->addDay());
+
+        $this->travelTo(BusinessDate::today()->addDays(2)->setTime(9, 0));
+
+        expect($lapsed->refresh()->isLapsed())->toBeTrue();
+
+        $again = assignRole($admin, $user, 'PLANNER');
+
+        expect($lapsed->refresh()->status)->toBe(ProcessAssignment::ENDED)
+            ->and($lapsed->closed_by)->toBe($admin->id)
+            ->and($lapsed->close_reason)->toBe(AssignProcessRole::LAPSED)
+            ->and($again->status)->toBe(ProcessAssignment::ACTIVE)
+            ->and(DB::table('audit_events')->where('action', 'access.assignment_ended')->count())->toBe(1)
+            ->and(assignmentReason(fn () => assignRole($admin, $user, 'PLANNER')))->toBe('access.assignment_exists');
+    });
+
     test('the table refuses a self-assignment, a second active row and a closed row without who closed it', function () {
         $admin = assignmentAdmin();
         $user = User::factory()->create();
@@ -340,6 +365,33 @@ describe('the separation of duties', function () {
         expect($approver->can('inventory.request.decide', $subject))->toBeTrue()
             ->and($approver->can('inventory.request.decide', $subject->withParticipants(['requester' => [$approver->id]])))->toBeFalse();
     });
+
+    // SOD-02 across objects: the PPK of the package against the PjPHP of its contract, through the participants.
+    test('a rule on a role binds the actor only through that role, not through another role giving the same action', function () {
+        $admin = assignmentAdmin();
+        app(SeparationOfDuties::class)->addSource(new class implements SodRuleSource
+        {
+            public function rules(): iterable
+            {
+                yield SodRule::fromArray([
+                    'id' => 'SOD-02',
+                    'kind' => SodRule::DISTINCT_PARTICIPANTS,
+                    'roles' => ['PJPHP'],
+                    'participants' => ['package_ppk'],
+                    'description' => ['id' => 'PPK paket tidak boleh menjadi PjPHP kontraknya.'],
+                ], 'procurement.authority@v-test', false);
+            }
+        });
+
+        expect(assignmentReason(fn () => assignRole($admin, $this->packagePpk, 'PJPHP', 'probe.contract', 4)))->toBe('access.sod_violation');
+
+        assignRole($admin, $this->packagePpk, 'TECHNICAL_TEAM', 'probe.contract', 4);
+        $pjphp = User::factory()->withTwoFactor()->create();
+        assignRole($admin, $pjphp, 'PJPHP', 'probe.contract', 4);
+
+        expect($this->packagePpk->can('procurement.execution.record', assignmentSubject('probe.contract', 4)))->toBeTrue()
+            ->and($pjphp->can('procurement.execution.record', assignmentSubject('probe.contract', 4)))->toBeTrue();
+    });
 });
 
 describe('the evaluator and assignments (TAC-03)', function () {
@@ -396,6 +448,40 @@ describe('the evaluator and assignments (TAC-03)', function () {
         $holder->forceFill(['must_change_password' => false])->save();
 
         expect($holder->can('procurement.hps.set', assignmentSubject()))->toBeTrue();
+    });
+
+    test('a decision a grant allows waits for the credentials of a decision holder too', function () {
+        $admin = assignmentAdmin();
+        $holder = User::factory()->withTwoFactor()->create(['must_change_password' => true]);
+        assignRole($admin, $holder, 'HPS_SETTER');
+        DB::table('access_grants')->insert([
+            'public_id' => strtolower((string) Str::ulid()),
+            'user_id' => $holder->id,
+            'capability' => 'recon.case.accept',
+            'scope_type' => 'ORG_UNIT_SUBTREE',
+            'scope_id' => OrgUnit::query()->where('code', 'FT')->value('id'),
+            'effective_from' => BusinessDate::today()->toDateString(),
+            'reason' => 'Penerima rekonsiliasi fakultas',
+            'requires_approval' => false,
+            'granted_by' => $admin->id,
+            'status' => 'ACTIVE',
+        ]);
+
+        expect(app(AccessEvaluator::class)->decide($holder, 'recon.case.accept')->reasonKey)->toBe('access.denied.credentials_pending');
+
+        $holder->forceFill(['must_change_password' => false])->save();
+
+        expect($holder->can('recon.case.accept'))->toBeTrue();
+    });
+
+    test('a role that decides nothing keeps giving its capability while a decision role on the object waits', function () {
+        $admin = assignmentAdmin();
+        $holder = User::factory()->create();
+        assignRole($admin, $holder, 'PLANNER');
+        assignRole($admin, $holder, 'POKJA_CHAIR');
+
+        expect($holder->can('procurement.selection.manage', assignmentSubject()))->toBeTrue()
+            ->and(app(AccessEvaluator::class)->decide($holder, 'procurement.evaluation_scheme.manage', assignmentSubject())->reasonKey)->toBe('access.denied.credentials_pending');
     });
 });
 
@@ -478,7 +564,7 @@ describe('PG-504 and the assignment panel', function () {
                 ->has('assignments.data', 2)
                 ->where('assignments.data.0.subject', ['type' => 'probe.package', 'reference' => 'PKT-1', 'label' => 'Pengadaan laptop'])
                 ->where('assignments.data.0.can_close', false)
-                ->where('types', [['key' => 'probe.package', 'kind' => 'package'], ['key' => 'probe.request', 'kind' => 'warehouse_request']]));
+                ->where('types', [['key' => 'probe.package', 'kind' => 'package'], ['key' => 'probe.request', 'kind' => 'warehouse_request'], ['key' => 'probe.contract', 'kind' => 'contract']]));
 
         $this->get(route('access.admin.assignments.index', ['q' => 'SITI', 'role' => 'PLANNER', 'status' => 'ACTIVE']))
             ->assertInertia(fn (Assert $page) => $page->has('assignments.data', 1)->where('assignments.data.0.user.username', 'siti')
@@ -487,6 +573,27 @@ describe('PG-504 and the assignment panel', function () {
         $this->get(route('access.admin.assignments.index', ['q' => ['x'], 'role' => 'BOGUS', 'status' => 'BOGUS']))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page->has('assignments.data', 2)->where('filters', ['q' => '', 'status' => '', 'role' => '']));
+
+        $this->get(route('access.admin.assignments.index', ['role' => ['PLANNER']]))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->has('assignments.data', 2)->where('filters.role', ''));
+    });
+
+    test('an active assignment past its end is listed and shown with the ended ones', function () {
+        $admin = assignmentAdmin();
+        assignRole($admin, User::factory()->create(['username' => 'lewat']), 'PLANNER', to: BusinessDate::today()->addDay());
+        assignRole($admin, User::factory()->create(['username' => 'berlaku']), 'PLANNER', id: 3);
+
+        $this->travelTo(BusinessDate::today()->addDays(2)->setTime(9, 0));
+        $this->actingAs($admin);
+
+        $this->get(route('access.admin.assignments.index', ['status' => 'ACTIVE']))
+            ->assertInertia(fn (Assert $page) => $page->has('assignments.data', 1)->where('assignments.data.0.user.username', 'berlaku'));
+        $this->get(route('access.admin.assignments.index', ['status' => 'ENDED']))
+            ->assertInertia(fn (Assert $page) => $page->has('assignments.data', 1)->where('assignments.data.0.user.username', 'lewat'));
+        $this->get(route('access.admin.assignments.create', ['type' => 'probe.package', 'reference' => 'PKT-1']))
+            ->assertInertia(fn (Assert $page) => $page->where('panel.assignments.0.status', ProcessAssignment::ACTIVE)
+                ->where('panel.assignments.0.lapsed', true));
     });
 
     // TAC-04: an appointment only suggests.
@@ -573,6 +680,8 @@ describe('PG-504 and the assignment panel', function () {
 
         $this->actingAs($manager);
         $this->get(route('access.admin.assignments.index'))->assertForbidden();
+        // Whether a reference exists is not told to someone who may not open every object.
+        postAssignment($this, ['assignment_role' => 'PLANNER', 'username' => 'perencana', 'subject' => 'PKT-404'])->assertForbidden();
         postAssignment($this, ['assignment_role' => 'PLANNER', 'username' => 'perencana'])->assertSessionHasNoErrors();
 
         expect(ProcessAssignment::query()->sole()->assigned_by)->toBe($manager->id);

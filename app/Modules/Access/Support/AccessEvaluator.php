@@ -48,6 +48,11 @@ final class AccessEvaluator
             $decision = $byGrant->allowed ? $byGrant : $this->decideByAssignment($user, $capability, $subject, $byGrant);
         }
 
+        // The holder of a decision role waits for their credentials on every decision, also one a grant allows (AUTHZ-24).
+        if ($decision->allowed && CapabilityCatalog::isDecision($capability) && $this->decisionsWait($user) && self::holdsDecisionRole($user)) {
+            return AccessDecision::deny('access.denied.credentials_pending');
+        }
+
         if (! $decision->allowed || $subject === null) {
             return $decision;
         }
@@ -169,7 +174,7 @@ final class AccessEvaluator
      * capability only an assignment gives is refused on an object for holding no assignment there.
      *
      * A decision role waits after an assisted reset until the holder changed the password, and while TOTP is required but not
-     * set up (AUTHZ-24, SEC-21).
+     * set up (AUTHZ-24, SEC-21), unless a role held there that decides nothing gives the capability by itself.
      */
     private function decideByAssignment(User $user, string $capability, ?AccessSubject $subject, AccessDecision $byGrant): AccessDecision
     {
@@ -193,11 +198,26 @@ final class AccessEvaluator
                 : AccessDecision::deny('access.denied.no_assignment');
         }
 
-        if (array_filter($held, AssignmentRoles::isDecision(...)) !== [] && $this->decisionsWait($user)) {
+        $deciding = array_filter($held, AssignmentRoles::isDecision(...));
+
+        if (count($deciding) === count($held) && $this->decisionsWait($user)) {
             return AccessDecision::deny('access.denied.credentials_pending');
         }
 
         return AccessDecision::allow();
+    }
+
+    /**
+     * Whether the user holds a decision role that has not ended, in force or waiting for its first day: a privileged account
+     * for TOTP and an assisted reset (SEC-21, AUTHZ-24).
+     */
+    public static function holdsDecisionRole(User $user): bool
+    {
+        return ProcessAssignment::query()
+            ->current()
+            ->where('user_id', $user->id)
+            ->whereIn('assignment_role', AssignmentRoles::decisionRoles())
+            ->exists();
     }
 
     private function decisionsWait(User $user): bool

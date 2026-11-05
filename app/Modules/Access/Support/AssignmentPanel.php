@@ -35,7 +35,7 @@ final class AssignmentPanel
         $assignments = ProcessAssignment::query()
             ->onObject($type, $id)
             ->with('user:id,public_id,username,name')
-            ->orderByRaw("case status when 'ACTIVE' then 0 else 1 end")
+            ->orderByRaw("case when status = 'ACTIVE' and (effective_to is null or effective_to > ?) then 0 else 1 end", [now()])
             ->orderBy('assignment_role')
             ->orderByDesc('effective_from')
             ->orderByDesc('id')
@@ -81,6 +81,8 @@ final class AssignmentPanel
             'status' => $assignment->status,
             // ACTIVE but not yet begun: shown as waiting for its first day.
             'upcoming' => $assignment->status === ProcessAssignment::ACTIVE && $assignment->effective_from->isFuture(),
+            // ACTIVE but past its end: shown as history; closing it records the end.
+            'lapsed' => $assignment->isLapsed(),
             'effective_from' => $assignment->effective_from->toIso8601String(),
             'effective_to' => $assignment->effective_to?->toIso8601String(),
             'decree_ref' => $assignment->decree_ref,

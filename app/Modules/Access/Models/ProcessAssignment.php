@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * One user in one assignment role on one object of a module (DATA_MODEL section 9, ACCESS_CONTROL section 5). An ACTIVE
- * assignment is in force from effective_from until effective_to; an ENDED or REVOKED one stays as history.
+ * assignment is in force from effective_from until effective_to, and lapses after it; an ENDED or REVOKED one stays as history.
  *
  * @property int $id
  * @property string $public_id
@@ -79,6 +79,33 @@ class ProcessAssignment extends Model
     }
 
     /**
+     * The assignments not over yet: ACTIVE and not past their end, in force now or waiting for their first day. An ACTIVE
+     * row past its end has lapsed and counts as history.
+     *
+     * @param  Builder<ProcessAssignment>  $query
+     * @return Builder<ProcessAssignment>
+     */
+    public function scopeCurrent(Builder $query): Builder
+    {
+        $now = now();
+
+        return $query
+            ->where('status', self::ACTIVE)
+            ->where(fn ($query) => $query->whereNull('effective_to')->orWhere('effective_to', '>', $now));
+    }
+
+    /**
+     * The ACTIVE assignments past their end.
+     *
+     * @param  Builder<ProcessAssignment>  $query
+     * @return Builder<ProcessAssignment>
+     */
+    public function scopeLapsed(Builder $query): Builder
+    {
+        return $query->where('status', self::ACTIVE)->where('effective_to', '<=', now());
+    }
+
+    /**
      * @param  Builder<ProcessAssignment>  $query
      * @return Builder<ProcessAssignment>
      */
@@ -94,6 +121,11 @@ class ProcessAssignment extends Model
         return $this->status === self::ACTIVE
             && $this->effective_from->lte($now)
             && ($this->effective_to === null || $this->effective_to->gt($now));
+    }
+
+    public function isLapsed(): bool
+    {
+        return $this->status === self::ACTIVE && $this->effective_to !== null && $this->effective_to->lte(now());
     }
 
     /**

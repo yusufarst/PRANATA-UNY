@@ -3,6 +3,7 @@
 namespace App\Modules\Access\Actions;
 
 use App\Models\User;
+use App\Modules\Access\Events\AssignmentClosed;
 use App\Modules\Access\Events\AssignmentGiven;
 use App\Modules\Access\Models\ProcessAssignment;
 use App\Modules\Access\Support\AssignmentRoles;
@@ -26,6 +27,11 @@ use Illuminate\Support\Facades\DB;
  */
 final class AssignProcessRole extends Action
 {
+    /**
+     * The reason kept on an assignment that lapsed and was closed when the same role was given again.
+     */
+    public const LAPSED = 'Masa penugasan sudah berakhir';
+
     public function __construct(
         private readonly AssignmentSubjects $subjects,
         private readonly SeparationOfDuties $separation,
@@ -48,7 +54,11 @@ final class AssignProcessRole extends Action
                 throw DomainRuleViolation::because('access.cannot_assign_self');
             }
 
-            if ($user->refresh()->status === User::DEACTIVATED) {
+            // The user row is locked as an assisted reset locks it, so a reset never passes as unprivileged while this user
+            // becomes the holder of a decision role (SEC-21).
+            $user = User::query()->whereKey($user->id)->lockForUpdate()->firstOrFail();
+
+            if ($user->status === User::DEACTIVATED) {
                 throw DomainRuleViolation::because('access.account_deactivated');
             }
 
@@ -77,14 +87,9 @@ final class AssignProcessRole extends Action
                 throw DomainRuleViolation::because('access.effective_to_before_start');
             }
 
-            $exists = ProcessAssignment::query()
-                ->onObject($type, $objectId)
-                ->where('assignment_role', $role)
-                ->where('user_id', $user->id)
-                ->where('status', ProcessAssignment::ACTIVE)
-                ->exists();
+            $same = fn () => ProcessAssignment::query()->onObject($type, $objectId)->where('assignment_role', $role)->where('user_id', $user->id);
 
-            if ($exists) {
+            if ($same()->current()->exists()) {
                 throw DomainRuleViolation::because('access.assignment_exists');
             }
 
@@ -92,6 +97,18 @@ final class AssignProcessRole extends Action
 
             if (! $sod->passed()) {
                 throw DomainRuleViolation::because('access.sod_violation', ['rules' => $sod->explanation()]);
+            }
+
+            // The same role past its end is over: it is recorded as ENDED by whoever assigns again, with its audit event.
+            foreach ($same()->lapsed()->get() as $lapsed) {
+                $lapsed->forceFill([
+                    'status' => ProcessAssignment::ENDED,
+                    'closed_by' => $actor->id,
+                    'closed_at' => now(),
+                    'close_reason' => self::LAPSED,
+                ])->saveAtVersion($lapsed->lock_version);
+
+                AssignmentClosed::dispatch($lapsed, $actor);
             }
 
             $assignment = ProcessAssignment::query()->create([

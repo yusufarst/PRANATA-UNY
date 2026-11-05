@@ -497,6 +497,7 @@
         "failed": "Langkah ini tidak dapat dilakukan",
         "decision": "Keputusan",
         "upcoming": "Mulai {{date}}",
+        "lapsed": "Masa habis {{date}}",
         "period": "{{from}} s.d. {{to}}",
         "period_open": "Mulai {{from}}, tanpa batas",
         "empty_title": "Belum ada penugasan",

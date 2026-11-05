@@ -16,7 +16,9 @@ use LogicException;
  * three kinds of {@see SodRule} decide them without code for each rule (TAC-05). A broken rule is never waived by a warning.
  *
  * An action is named by its capability, or by the key a module gives an action that needs none, such as the confirmation of
- * a handover by its receiver; the module passes the people who already took part in the object as its participants.
+ * a handover by its receiver; the module passes the people who already took part in the object as its participants. A rule
+ * across objects, such as the PPK of a package against the PjPHP of its contract (SOD-02), compares with participants too: the
+ * module names the holders on the related object, such as package_ppk on a contract.
  */
 final class SeparationOfDuties
 {
@@ -88,7 +90,8 @@ final class SeparationOfDuties
     public function forAction(User $actor, string $action, AccessSubject $subject): SodResult
     {
         $held = $this->heldRoles($actor, $subject, inForceOnly: true);
-        $giving = AssignmentRoles::givingCapability($action);
+        // The roles through which the actor takes this action, not every role that could give it.
+        $giving = array_values(array_intersect($held, AssignmentRoles::givingCapability($action)));
         $checks = [];
 
         foreach ($this->rules() as $rule) {
@@ -149,8 +152,8 @@ final class SeparationOfDuties
     }
 
     /**
-     * The roles the user holds on the object: in force now, or ACTIVE at all, so that an assignment which starts later still
-     * counts when someone else is assigned.
+     * The roles the user holds on the object: in force now, or not ended at all, so that an assignment which starts later
+     * still counts when someone else is assigned. A lapsed assignment counts for neither.
      *
      * @return list<string>
      */
@@ -167,7 +170,7 @@ final class SeparationOfDuties
         if ($inForceOnly) {
             $query->inForce();
         } else {
-            $query->where('status', ProcessAssignment::ACTIVE);
+            $query->current();
         }
 
         return array_values(array_unique(array_map('strval', $query->pluck('assignment_role')->all())));

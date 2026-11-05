@@ -39,10 +39,11 @@ class AssignmentController
         Gate::authorize(AccessServiceProvider::ADMINISTER_ASSIGNMENTS);
 
         $q = $request->query('q');
+        $role = $request->query('role');
         $filters = [
             'q' => is_string($q) ? trim($q) : '',
             'status' => in_array($request->query('status'), self::STATUSES, true) ? (string) $request->query('status') : '',
-            'role' => AssignmentRoles::exists((string) $request->query('role')) ? (string) $request->query('role') : '',
+            'role' => is_string($role) && AssignmentRoles::exists($role) ? $role : '',
         ];
 
         $assignments = ProcessAssignment::query()
@@ -54,7 +55,12 @@ class AssignmentController
                     ->whereRaw('lower(username) like ?', [$term])
                     ->orWhereRaw('lower(name) like ?', [$term])));
             })
-            ->when($filters['status'] !== '', fn ($query) => $query->where('status', $filters['status']))
+            // An ACTIVE assignment past its end has lapsed: it is listed with the ended ones.
+            ->when($filters['status'] === ProcessAssignment::ACTIVE, fn ($query) => $query->current())
+            ->when($filters['status'] === ProcessAssignment::ENDED, fn ($query) => $query->where(fn ($query) => $query
+                ->where('status', ProcessAssignment::ENDED)
+                ->orWhere(fn ($query) => $query->lapsed())))
+            ->when($filters['status'] === ProcessAssignment::REVOKED, fn ($query) => $query->where('status', ProcessAssignment::REVOKED))
             ->when($filters['role'] !== '', fn ($query) => $query->where('assignment_role', $filters['role']))
             ->orderByDesc('created_at')
             ->orderByDesc('id')
@@ -101,7 +107,8 @@ class AssignmentController
         $type = $request->string('subject_type')->value();
         $id = $this->subjects->find($type)?->idOf($request->string('subject')->value());
 
-        abort_if($id === null, 404);
+        // Only someone who may open every kind of object learns that a reference does not exist (ACCESS_CONTROL section 8).
+        abort_if($id === null, Gate::allows(AccessServiceProvider::ADMINISTER_ASSIGNMENTS) ? 404 : 403);
         Gate::authorize(AccessServiceProvider::ASSIGN, [$type, $id]);
 
         $user = User::query()->where('username', $request->string('username')->trim()->value())->first();
