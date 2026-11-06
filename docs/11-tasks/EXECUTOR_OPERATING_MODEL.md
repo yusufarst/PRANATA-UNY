@@ -203,7 +203,12 @@ Koreksi yang diizinkan Owner atas Task yang sudah DONE (uji regresi yang dipulih
    - **DELTA** (hanya entri yang mengizinkan tambahan): diff `SHA HEAD sumber..HEAD PR` pada jalur entri diverifikasi independen, dan disposisi review baru mencatat `source_sha`, `equivalence: DELTA` serta SHA-256 diff itu; skrip menghitung ulang SHA-256 dan menolak bila berbeda.
    Disposisi untuk SHA lain, sumber lain atau kesetaraan yang tidak terbukti = tolak. CI selalu baru pada SHA baru.
 6. **Bukti.** Task tetap DONE dan hitungan TASK_PLAN tidak berubah. Koreksi di COMPLETION EVIDENCE ditandai tanggal dan `REM-nnn`, sehingga penerimaan asal dan remediasi sesudahnya dapat dibedakan; teks asal tetap dalam riwayat Git yang terbit. Temuan yang masih terbuka tetap dicatat terbuka dan tidak diturunkan tingkatnya.
-7. **Urutan.** Entri dipakai berurutan dari 0. Skrip menerima entri N hanya bila setiap entri 0..N-1 sudah terbit: ada PR ke `main` dari keluarga cabang entri itu yang berstatus merged dan SHA HEAD-nya leluhur `main`; dan entri N sendiri belum terbit. Setiap entri sekali pakai.
+7. **Urutan dan bukti publikasi.** Entri dipakai berurutan dari 0 dan masing-masing sekali. **Commit aktivasi** adalah commit paling awal di riwayat `main` yang memuat blok `REM-nnn` dengan `STATE: ACTIVE`; skrip menentukannya sendiri dari riwayat `docs/00-governance/APPROVAL_RECORDS.md`. Bukti bahwa entri k sudah terbit hanya dihitung bila **semua** benar:
+   - PR ke `main` berstatus merged dengan cabang dari keluarga entri k, dan badan PR memuat baris `Remediation: REM-nnn entry k`;
+   - SHA HEAD PR itu turunan commit aktivasi (`git merge-base --is-ancestor <aktivasi> <head>`) dan leluhur `main`;
+   - berkas yang berubah antara `main` sebelum merge itu dan SHA HEAD-nya hanya jalur entri k.
+
+   PR yang di-merge sebelum aktivasi tidak pernah dihitung, walaupun cabangnya cocok (misalnya #49 `docs/reconcile-task-015` dan #51 `docs/reconcile-task-016`). Skrip menerima entri N hanya bila entri 0..N-1 masing-masing punya tepat satu bukti dan entri N belum punya bukti; PR kandidat sendiri wajib memuat baris `Remediation: REM-nnn entry N` dan SHA HEAD-nya turunan commit aktivasi. Selain itu tolak.
 8. **Penghentian.** Owner atau Claude Planning dapat menutup `REM-nnn` kapan saja; sejak `main` memuat status CLOSED, skrip menolak setiap entri. Perbaikan atas perubahan jalur ini sendiri memerlukan rekaman `REM-nnn` baru dari Owner melalui Claude Planning, tidak dengan force push atau revert langsung ke `main`.
 
 ## 9. Runner, watcher, checkpoint dan pemulihan
