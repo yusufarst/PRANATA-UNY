@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: IN_PROGRESS
-EXECUTION STAGE: IN_PROGRESS
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: YES
@@ -227,19 +227,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- [x] Authorization
+- [x] Route integrity
+- [x] Interaction behavior
+- [x] Browser E2E if required
+- [x] Responsive/adaptive if required
+- [x] Visual breathing room/density if UI
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -254,18 +254,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [42215952321](https://github.com/yusufarst/PRANATA-UNY/actions/runs/42215952321) pada HEAD `3e890d1`: `changes`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)`, `docs-check` dan `ci-gate` sukses; log Pest per uji tidak dibaca, keberhasilan job adalah buktinya. `tests/Feature/Files/PrivateFilesTest.php`: TAC-01 byte tidak terjangkau lewat alamat lain selain `/files/{public_id}`; TAC-02 unduhan dan halaman bukti ditolak tanpa izin subjek modul pemilik, unduhan CONFIDENTIAL tercatat; TAC-03 jenis di luar allowlist, ekstensi kedua, berkas kosong, melebihi batas dan byte yang tidak cocok dengan ekstensi ditolak dalam dua bahasa (SEC-10, SEC-13); TAC-04 berkas yang byte-nya berubah atau hilang di disk tidak dikirim: 500 terlokalisasi dengan request id, peristiwa audit `file.integrity_failed` dengan subjek dan tanpa isi; TAC-07 byte yang sama diunggah lagi menjadi berkas baru di path baru, penyimpanan tidak pernah menimpa path, sidik jari dan ukuran dihitung server, pembacaan sisi server atas berkas rusak gagal tertutup, job harian `files:verify` melaporkan berkas bersegel uji yang berubah sebagai insiden tanpa memperbaikinya; aplikasi bekerja dengan hak `pranata_app` untuk unggah, hasil pemindaian dan pelepasan; pelepasan sekali, kolom bukti pindah ke berkas tersisa terbaru, diaudit; tautan pemilik bersegel tanpa pelepasan dan unggahan ke pemilik bersegel ditolak sebelum byte ditulis; berkas yang dilepas tanpa unduh/pratinjau bagi pengguna yang tidak lagi boleh membacanya; bukti SK penunjukan (`org_appointments`) dan penugasan (`process_assignments`) lewat `evidence_file_id`. `tests/Feature/Files/FileGuardsTest.php` (TAC-05, TAC-06, DI-33): hak kolom `pranata_app` pada `file_objects`, `file_links` dan `file_sealed_owner_types`; identitas isi tetap, klasifikasi hanya naik, status pemindaian tidak kembali ke NOT_SCANNED; tautan dibuat aktif ke tabel yang ada dengan jam basis data; berkas, pemilik dan tujuan tetap; pelepasan sekali; tautan bersegel hanya dalam transaksi yang mencatat pemiliknya, tidak dapat diubah, dilepas atau dihapus, tidak terlihat koneksi kedua sebelum commit. Migrasi lulus `migrate:fresh` dan rollback di `ci-fast`.
+- Build result: `npm run build` lulus di `ci-fast`; Pint, Larastan, ESLint, Prettier, TypeScript, Vitest (`files.test.tsx`), `translations:check`, uji arsitektur modul, pemindaian rahasia dan `composer audit` lulus.
+- Route evidence: RT-031 di `app/Modules/Files/routes.php`: `files.download` (`/files/{public_id}`), `files.evidence.show`, `files.evidence.store` dan `files.evidence.release` di bawah `auth` dan `two-factor`, perintah dengan middleware `idempotent`, batas `files-upload` 30/menit dan `files-download` 120/menit per pengguna; izin subjek diperiksa di controller; `RouteIntegrityTest` lulus.
+- Interaction evidence: PG-012 bukti dalam konteks induknya: satu aksi utama Unggah bukti (`FileDropzone` dengan progres dan galat jelas), `EvidenceList` dengan unduh, pratinjau inline hanya PDF/PNG/JPG dan lepas lewat dialog konfirmasi hanya untuk tautan tidak bersegel; jalan kembali ke PG-505/PG-504, atau ke dasbor bagi pembaca yang tidak mengelola; lampiran SK dari panel penunjukan dan `AssignmentPanel`.
+- Browser evidence: `tests/e2e/journeys/evidence.spec.ts` (unggah SK penunjukan, unduh terverifikasi, kembali ke unit, axe tanpa pelanggaran, halaman bukti ditolak tanpa izin) lulus di proyek browser Chromium dan WebKit, desktop 1440×900 dan mobile 390×844, dalam job `ci-e2e` yang sukses.
+- Localization evidence: teks baru di `lang/{id,en}/files.php` dan `resources/js/locales/{id,en}/files.json`; `translations:check` lulus.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Review independen HIGH atas `06d83a7...f5e0b76` (dibaca ulang pada `34fba60`): P0 0, P1 0, P2 2 (uji hak `pranata_app` tidak dapat mendeteksi 42501; tautan kembali mati bagi pembaca), P3 6 (unggahan ke pemilik bersegel hanya disembunyikan di UI, berkas sementara salinan terverifikasi bocor, token angka dianggap ekstensi kedua, tanpa batas laju, `file.integrity_failed` tanpa subjek, kata dan prop tak terbaca); semuanya diperbaiki di `896dbe3` dengan uji. Codex pada `bc2273c`: satu P2 (berkas yang dilepas tetap menawarkan unduh dan pratinjau yang dijawab 403), diperbaiki di `3e890d1` dengan uji. Tidak ada yang ditunda. Balasan komentar Codex PR #50 tidak terkirim (ditolak hook penjaga) dan thread-nya tetap belum di-resolve.
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 69 berkas di [PR #50](https://github.com/yusufarst/PRANATA-UNY/pull/50), terutama `app/Modules/Files/` (migrasi `file_objects`, `file_links`, `file_sealed_owner_types` dengan trigger dan `evidence_file_id`, model, `PrivateFileStorage`, `FileIntegrity`, `FileAccess`, `FileGuards`, `FileOwnerTypes`, `UploadProfile`, `PrivateFileRule`, Action `AttachEvidence`/`ReleaseEvidence` dengan event, `files:verify`, controller, rute), kontrak bukti di `app/Modules/Access` dan `app/Modules/Organization`, `app/Modules/Audit/Listeners/RecordFileActivity.php`, `config/files.php`, `config/filesystems.php`, `resources/js/components/app/{FileDropzone,EvidenceList}.tsx`, `resources/js/pages/files/evidence.tsx`, locale, serta uji di `tests/Feature/Files`, `tests/Arch` dan `tests/e2e`. Tanpa perubahan `.github/workflows` atau `.gitleaks.toml`.
+- PR / CI run: [PR #50](https://github.com/yusufarst/PRANATA-UNY/pull/50) MERGED; run di atas. Run yang tidak hijau: 42197682259 pada `0d578f3` (dibatalkan oleh push berikutnya), 42197762330 pada `f5e0b76` (Larastan, axe, nama yang diubah `shell.spec`; diperbaiki di `34fba60`), 42199739187 pada `34fba60` (`ci-fast`, ESLint `react/jsx-no-target-blank`; diperbaiki di `896dbe3`), 42200529932 pada `896dbe3` (`ci-fast`, Prettier; diperbaiki di `43c8a3a`), 42201433837 pada `43c8a3a` (`ci-fast`, uji; diperbaiki di `eed45db` dan `bc2273c`), 42202266438 pada `eed45db` dan 42203815107 pada `bc2273c` (dibatalkan). Run hijau antara: 42208016862 (`bc2273c`).
+- Commit SHA: `3e890d171c3b7ff8280e64e0c36f2bdf5525c791`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode AUTONOMOUS (opsi A).
+- Notes: TAC-01–TAC-07 terbukti di CI. Status pemindaian tetap `NOT_SCANNED` (ClamAV opsional, D-15). TR-274 tetap BLOCKED_BY_GAP (GAP-023). Pemilik bersegel nyata (paket dokumen) didaftarkan Task pemiliknya lewat `file_sealed_owner_types`; TASK-016 mengujinya dengan jenis pemilik uji.
 
 ## SAFE NEXT TASK
 

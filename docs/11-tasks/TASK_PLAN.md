@@ -12,21 +12,21 @@ PROJECT TASK STATUS
 Baseline Total Tasks: 78 (FRZ-001)
 Current Total Tasks: 78
 
-DONE: 15
-READY: 0
-IN_PROGRESS: 1
+DONE: 16
+READY: 1
+IN_PROGRESS: 0
 BLOCKED: 0
 VERIFYING: 0
-TODO: 62
+TODO: 61
 SUPERSEDED: 0
 
-Progress: 15 / 78
-Percentage: 19%
+Progress: 16 / 78
+Percentage: 21%
 ```
 
 ```text
-CURRENT TASK: TASK-016 (IN_PROGRESS, AUTH-013)
-NEXT READY TASK: —
+CURRENT TASK: —
+NEXT READY TASK: TASK-017 (AUTH-013)
 LAST TASK PLAN CHANGE: PCR-003 — PUBLISHED 2026-11-03 (review `78bd8c1` APPROVED WITH CONDITIONS; PCR003-SR-C1 diterapkan; terverifikasi di `origin/main`): penonaktifan akun menggantikan penghapusan akun starter kit (OD-38); kontrak TASK-010, TASK-011; jumlah Task tetap 78 dan dependensi tidak berubah. Sebelumnya: PCR-002 — PUBLISHED 2026-11-01 (review delta `6d7c8c3` APPROVED WITH CONDITIONS; syarat PCR002-SR-C1 masuk TASK-005; terverifikasi di `origin/main`): topologi pengembangan tanpa Docker lokal (OD-37); kontrak TASK-002, TASK-003, TASK-004, TASK-005, TASK-071; jumlah Task tetap 78 dan dependensi tidak berubah. Sebelumnya: PCR-001 — PUBLISHED 2026-11-01 (kontrak TASK-025, TASK-066, TASK-069, TASK-071)
 ADDITIONAL RECURRING PRODUCTION COST: 0 di luar infrastruktur yang dibiayai klien
 PAID SERVICE EXCEPTIONS: NONE
@@ -65,7 +65,7 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 - [x] [TASK-013](TASK-013.md) — Organisasi berversi, jabatan dan penunjukan
 - [x] [TASK-014](TASK-014.md) — Model akses: kapabilitas, profil, grant bercakupan dan scope kueri
 - [x] [TASK-015](TASK-015.md) — Penugasan proses dan mesin pemisahan tugas
-- [ ] [TASK-016](TASK-016.md) — Berkas privat: unggah, unduh terotorisasi dan audit
+- [x] [TASK-016](TASK-016.md) — Berkas privat: unggah, unduh terotorisasi dan audit
 - [ ] [TASK-017](TASK-017.md) — Data referensi
 - [ ] [TASK-018](TASK-018.md) — Policy Registry
 - [ ] [TASK-019](TASK-019.md) — Mesin transisi workflow, item pekerjaan, inbox dan notifikasi
@@ -148,8 +148,8 @@ Increment dan UAT didefinisikan di [RELEASE_PLAN](../10-release/RELEASE_PLAN.md#
 | [TASK-013](TASK-013.md) | Organisasi berversi, jabatan dan penunjukan | DONE | HIGH | M1 | TASK-009, TASK-011 | NO | PROPOSED | YES |
 | [TASK-014](TASK-014.md) | Model akses: kapabilitas, profil, grant bercakupan dan scope kueri | DONE | HIGH | M1 | TASK-013 | NO | PROPOSED | YES |
 | [TASK-015](TASK-015.md) | Penugasan proses dan mesin pemisahan tugas | DONE | HIGH | M1 | TASK-014 | NO | PROPOSED | YES |
-| [TASK-016](TASK-016.md) | Berkas privat: unggah, unduh terotorisasi dan audit | IN_PROGRESS | HIGH | M1 | TASK-014 | YES | PROPOSED | YES |
-| [TASK-017](TASK-017.md) | Data referensi | TODO | STANDARD | M2 | TASK-015 | YES | PROPOSED | YES |
+| [TASK-016](TASK-016.md) | Berkas privat: unggah, unduh terotorisasi dan audit | DONE | HIGH | M1 | TASK-014 | YES | PROPOSED | YES |
+| [TASK-017](TASK-017.md) | Data referensi | READY | STANDARD | M2 | TASK-015 | YES | PROPOSED | YES |
 | [TASK-018](TASK-018.md) | Policy Registry | TODO | HIGH | M2 | TASK-014, TASK-016 | NO | PROPOSED | YES |
 | [TASK-019](TASK-019.md) | Mesin transisi workflow, item pekerjaan, inbox dan notifikasi | TODO | STANDARD | M2 | TASK-015, TASK-018 | NO | PROPOSED | YES |
 | [TASK-020](TASK-020.md) | Layanan penomoran | TODO | HIGH | M2 | TASK-018 | YES | PROPOSED | YES |
