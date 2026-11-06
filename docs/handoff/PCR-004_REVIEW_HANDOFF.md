@@ -4,12 +4,20 @@ Status: PCR-004 — lihat [APPROVAL_RECORDS PCR-004](../00-governance/APPROVAL_R
 
 Review **terfokus dan proporsional** (FRZ-001, GOV-11): hanya delta PCR-004. PR #52–#55 sudah direview atau diperiksa fakta oleh eksekutor dan tidak direview ulang di sini; C1–C5 dan S1–S4 di luar ruang lingkup.
 
+## 0. Koreksi atas review `f51b7a6` (REVISE)
+
+| Temuan | Koreksi | Tempat memeriksa |
+|---|---|---|
+| PCR004-SR-P1-01 Entri tidak terikat pada sumber yang direview | Entri 1–4 memuat `SOURCE` (base..HEAD PR asal, SHA penuh) dan `EQUIVALENCE`; nomor PR = provenans, PR penerus bernomor dan ber-SHA baru; skrip membuktikan kesetaraan per blob (IDENTICAL) atau dengan SHA-256 diff yang diverifikasi independen (DELTA); disposisi review baru untuk SHA HEAD baru dengan `source_sha`; selain itu tolak | EXECUTOR_OPERATING_MODEL §8.5 butir 5; APPROVAL_RECORDS REM-001; M1-AC-08 |
+| PCR004-SR-P2-01 Checkpoint tidak diselaraskan | Sebelum setiap DryRun/merge (termasuk DryRun skrip lama entri 0) checkpoint ditulis lewat pembantu state: `task_id` Task entri, SUPERVISED, `remediation` = `REM-nnn/<entri>`; pemeriksaan kecocokan tetap; `hold.json` tidak disentuh; checkpoint dikembalikan sesudah entri terakhir | §8.5 butir 3; M1-AC-07, M1-AC-09 |
+| PCR004-SR-P2-02 Urutan entri tidak ditegakkan | Entri N hanya bila entri 0..N-1 punya PR merged dari keluarganya dengan HEAD leluhur `main`, dan entri N belum terbit; sekali pakai; perbaikan jalur memerlukan REM baru | §8.5 butir 7–8; REM-001 `ORDER`; M1-AC-10 dan uji negatif |
+
 ## 1. Identitas
 
 | Unsur | Nilai |
 |---|---|
 | Base (`origin/main`, terverifikasi) | `351ba2f17c1764283e66215f6069ed64872fb97a` (16/78 DONE; TASK-017 READY, belum dimulai; hold Owner aktif) |
-| Head | SHA HEAD cabang `docs/pcr-004-post-done-remediation` yang dilaporkan bersama permintaan ini; satu commit di atas base |
+| Head | SHA HEAD cabang `docs/pcr-004-post-done-remediation` yang dilaporkan bersama permintaan ini: `f51b7a6` ditambah satu commit koreksi; review delta memeriksa `git diff f51b7a6..<SHA HEAD>` |
 | Masukan | Direktif Owner M1 (2026-11-07); usulan audit eksekutor di PR #55 (butir M1); `scripts/executor/lib/merge-gate.ps1` dan `merge-verified.ps1` di `main`; PR #52–#55 |
 | Masalah | `Get-PranataMergeFailures` menolak setiap PR yang Task-nya berstatus DONE di `main` (`task: contract status on main is 'DONE'`), sehingga koreksi yang diizinkan Owner tidak dapat terbit tanpa salah atribusi ke TASK-017 |
 
@@ -41,16 +49,19 @@ Tidak berubah: skrip eksekutor (diubah eksekutor lewat entri 0 setelah persetuju
 | M1-AC-04 | Jalur remediasi ditolak pada mode AUTONOMOUS dan bersama `-Bootstrap` |
 | M1-AC-05 | Semua pemeriksaan lain §8.1 tetap gagal sendiri-sendiri pada jalur remediasi (uji negatif per pemeriksaan) |
 | M1-AC-06 | Keluaran skrip mencatat `REM-001 entry N` dan alasan penolakan yang persis |
-| M1-AC-07 | Sebelum merge entri 0, `merge-verified.ps1 -DryRun` versi `main` atas PR entri 0 menolak **hanya** dengan alasan status DONE; alasan lain = berhenti |
+| M1-AC-07 | Sebelum merge entri 0, `merge-verified.ps1 -DryRun` versi `main` atas PR entri 0, dengan checkpoint `task_id` TASK-001, menolak **hanya** dengan alasan status DONE; alasan lain = berhenti |
+| M1-AC-08 | Kesetaraan sumber (§8.5 butir 5): blob `main` = blob base `SOURCE` untuk setiap jalur entri; IDENTICAL = blob HEAD PR sama dengan HEAD `SOURCE`; DELTA = SHA-256 diff `HEAD SOURCE..HEAD PR` pada jalur entri sama dengan nilai di disposisi review untuk SHA HEAD PR; disposisi wajib memuat `source_sha` = HEAD `SOURCE` dan `equivalence`; selain itu tolak |
+| M1-AC-09 | Checkpoint (§8.5 butir 3): pemeriksaan kecocokan `task_id` 8.1 tetap; checkpoint `remediation` wajib sama dengan `REM-nnn/<entri>` yang dicocokkan; skrip tidak menulis checkpoint maupun `hold.json` |
+| M1-AC-10 | Urutan (§8.5 butir 7): entri N diterima hanya bila entri 0..N-1 masing-masing punya PR merged dari keluarga cabangnya dengan SHA HEAD leluhur `main`, dan entri N sendiri belum terbit |
 
-**Uji regresi keamanan wajib (offline, `scripts/executor/tests/scripts.tests.ps1`):** positif satu entri cocok; negatif tanpa REM, REM PROPOSED, REM CLOSED, dua REM ACTIVE yang cocok, blok rusak, Task tidak terdaftar, cabang lain, penerus dengan akhiran bukan `-rN`, berkas di luar jalur, TASK_PLAN berubah, berkas Task berubah di luar COMPLETION EVIDENCE, `STATUS` berubah, mode AUTONOMOUS, `-Bootstrap`, BLOCKED dengan entri; serta setiap pemeriksaan §8.1 lain gagal sendiri pada jalur remediasi. Uji guard (`guard.tests.ps1`) tetap lulus tanpa perubahan.
+**Uji regresi keamanan wajib (offline, `scripts/executor/tests/scripts.tests.ps1`):** positif satu entri cocok; negatif tanpa REM, REM PROPOSED, REM CLOSED, dua REM ACTIVE yang cocok, blok rusak, Task tidak terdaftar, cabang lain, penerus dengan akhiran bukan `-rN`, berkas di luar jalur, TASK_PLAN berubah, berkas Task berubah di luar COMPLETION EVIDENCE, `STATUS` berubah, mode AUTONOMOUS, `-Bootstrap`, BLOCKED dengan entri; serta setiap pemeriksaan §8.1 lain gagal sendiri pada jalur remediasi. Ditambah (koreksi review): blob `main` berbeda dari base `SOURCE`; IDENTICAL dengan blob HEAD berbeda; DELTA dengan SHA-256 diff berbeda atau tanpa verifikasi delta; disposisi untuk SHA atau `source_sha` lain; checkpoint `task_id` lain; `remediation` kosong atau entri lain; entri 1 sebelum entri 0 terbit; entri 3 sebelum entri 2; entri yang sudah terbit dipakai lagi; PR pendahulu merged tetapi HEAD-nya bukan leluhur `main`. Uji guard (`guard.tests.ps1`) tetap lulus tanpa perubahan.
 
 ## 5. Urutan publikasi
 
 1. **Planning:** review terfokus → persetujuan Owner → PCR-004 terbit lewat PR dengan `ci-gate` dan fast-forward terverifikasi → commit transisi (REM-001 ACTIVE), terbit dengan cara yang sama.
 2. **Eksekutor, entri 0:** cabang `fix/task-001-post-done-remediation-gate` dari `main` terbaru; implementasi M1-AC-01–07 dan uji; CI; review independen (TASK-001 HIGH) dan Codex atau pengganti; DryRun versi `main` (M1-AC-07); merge dengan skrip dari HEAD PR yang direview; verifikasi `main`.
-3. **Entri 1 (#53) lalu entri 2 (#52):** cabang penerus `-r2` dari `main` terbaru dengan cherry-pick; bukti patch identik (`git diff 351ba2f <head-lama>` = `git diff <base-baru> <head-baru>`); CI baru; disposisi review asal dicatat sebagai review pengganti untuk SHA baru; merge; PR asal ditutup dengan rujukan.
-4. **Entri 3 (#54) lalu entri 4 (#55):** penerus `docs/reconcile-task-015-r3` dan `docs/reconcile-task-016-r3`. Tambahan hanya: penanda REM-001 dan SHA merge entri 1–3 pada butir remediasi, serta keadaan akhir di CURRENT_HANDOFF (remediasi terbit, hold tetap, TASK-017 belum dimulai, C1–C5 dan S1–S4 serta PI-001–PI-003 masih terbuka). Verifikasi delta independen hanya atas baris tambahan; CI baru; merge.
+3. **Entri 1 (#53) lalu entri 2 (#52):** checkpoint diselaraskan (§8.5 butir 3); cabang penerus `-r2` dari `main` terbaru dengan cherry-pick; kesetaraan IDENTICAL terhadap `SOURCE` dibuktikan skrip; CI baru; disposisi review baru untuk SHA HEAD baru dengan `source_sha` dan rujukan ke review sumber; merge; PR asal ditutup dengan rujukan.
+4. **Entri 3 (#54) lalu entri 4 (#55):** penerus `docs/reconcile-task-015-r3` dan `docs/reconcile-task-016-r3`. Tambahan hanya: penanda REM-001 dan SHA merge entri 1–3 pada butir remediasi, serta keadaan akhir di CURRENT_HANDOFF (remediasi terbit, hold tetap, TASK-017 belum dimulai, C1–C5 dan S1–S4 serta PI-001–PI-003 masih terbuka). Kesetaraan DELTA: verifikasi independen hanya atas diff `HEAD SOURCE..HEAD PR`, SHA-256-nya dicatat di disposisi review; checkpoint diselaraskan; CI baru; merge.
 5. **Planning:** REM-001 CLOSED dan catatan publikasi PCR-004 diperbarui. Status Task dan 16/78 tidak berubah.
 
 ## 6. Henti dan pemulihan
