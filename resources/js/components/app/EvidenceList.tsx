@@ -44,7 +44,8 @@ export type EvidenceFile = {
     active: boolean;
     unlinked_by: string | null;
     unlinked_at: string | null;
-    download_url: string;
+    /** null when the actor may no longer download the file, e.g. a released file nothing references any more. */
+    download_url: string | null;
     preview_url: string | null;
     can_release: boolean;
 };
@@ -65,7 +66,7 @@ export type EvidenceListProps = {
 
 /**
  * The files linked to one object (PG-012): each with its download, a preview for PDF and images, its classification and scan
- * status, who uploaded it and its fingerprint. "Lepas tautan" sits in the secondary menu and only for a link the owning
+ * status, who uploaded it and its fingerprint; a released file the user may no longer read keeps its history without them. "Lepas tautan" sits in the secondary menu and only for a link the owning
  * module lets this user release; a sealed link never shows it. The server checks every command again.
  */
 export function EvidenceList({
@@ -132,15 +133,17 @@ export function EvidenceList({
                                         `files:file.scan.${file.scan_status}`,
                                     )}
                                 />
-                                <Button variant="outline" size="sm" asChild>
-                                    <a
-                                        href={file.download_url}
-                                        data-test="download-link"
-                                    >
-                                        <Download aria-hidden="true" />
-                                        {t('files:file.download')}
-                                    </a>
-                                </Button>
+                                {file.download_url && (
+                                    <Button variant="outline" size="sm" asChild>
+                                        <a
+                                            href={file.download_url}
+                                            data-test="download-link"
+                                        >
+                                            <Download aria-hidden="true" />
+                                            {t('files:file.download')}
+                                        </a>
+                                    </Button>
+                                )}
                                 {file.preview_url && (
                                     <Button variant="ghost" size="sm" asChild>
                                         <a

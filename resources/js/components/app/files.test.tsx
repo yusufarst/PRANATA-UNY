@@ -154,6 +154,30 @@ describe('EvidenceList', () => {
         expect(html).not.toContain('?inline=1');
     });
 
+    it('offers no download or preview for a released file the user may no longer read', () => {
+        const html = renderToStaticMarkup(
+            <EvidenceList
+                files={[
+                    {
+                        ...file,
+                        active: false,
+                        can_release: false,
+                        unlinked_by: 'Admin Organisasi',
+                        unlinked_at: '2026-11-06T10:00:00+07:00',
+                        download_url: null,
+                        preview_url: null,
+                    },
+                ]}
+                releaseForm={releaseForm}
+                emptyText="-"
+            />,
+        );
+
+        expect(html).toContain('SK Penunjukan.pdf');
+        expect(html).not.toContain('data-test="download-link"');
+        expect(html).not.toContain('data-test="preview-link"');
+    });
+
     it('shows the empty text without a list', () => {
         const html = renderToStaticMarkup(
             <EvidenceList

@@ -553,8 +553,13 @@ describe('releasing a link (TAC-06)', function () {
             ->assertInertia(fn (Assert $page) => $page->has('panel.files', 2)
                 ->where('panel.files.0.active', true)
                 ->where('panel.files.1.active', false)
+                ->where('panel.files.0.download_url', route('files.download', $older->file->public_id, absolute: false))
                 ->where('panel.files.1.can_release', false)
-                ->where('panel.files.1.unlinked_by', 'Admin Organisasi'));
+                ->where('panel.files.1.unlinked_by', 'Admin Organisasi')
+                // Nothing references the released file any more, so it keeps its history but offers no dead download.
+                ->where('panel.files.1.download_url', null)
+                ->where('panel.files.1.preview_url', null));
+        $this->get(route('files.download', $newest->file->public_id))->assertForbidden();
 
         releaseEvidence($this, $older)->assertSessionHasNoErrors();
 

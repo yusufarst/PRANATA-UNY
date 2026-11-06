@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
  */
 final class EvidencePanel
 {
-    public function __construct(private readonly FileOwnerTypes $owners) {}
+    public function __construct(private readonly FileOwnerTypes $owners, private readonly FileAccess $access) {}
 
     /**
      * @return array<string, mixed>|null null when the type is not registered or the row does not exist
@@ -39,6 +39,12 @@ final class EvidencePanel
         $people = User::query()
             ->whereIn('id', $links->flatMap(fn (FileLink $link): array => array_filter([$link->file->uploaded_by, $link->unlinked_by]))->unique()->values()->all())
             ->pluck('name', 'id');
+        // A released file stays in the history, but only a file the actor may still download gets its actions (AUTHZ-44).
+        $downloadable = [];
+
+        foreach ($links as $link) {
+            $downloadable[$link->file->id] ??= $this->access->allowsDownload($actor, $link->file);
+        }
 
         return [
             'owner' => ['type' => $ownerType, 'id' => $ownerId, ...$described->toArray()],
@@ -58,8 +64,8 @@ final class EvidencePanel
                 'active' => $link->isActive(),
                 'unlinked_by' => $link->unlinked_by === null ? null : ($people[$link->unlinked_by] ?? null),
                 'unlinked_at' => $link->unlinked_at?->toIso8601String(),
-                'download_url' => route('files.download', $link->file->public_id, absolute: false),
-                'preview_url' => $link->file->isPreviewable() ? route('files.download', ['file' => $link->file->public_id, 'inline' => 1], absolute: false) : null,
+                'download_url' => $downloadable[$link->file->id] ? route('files.download', $link->file->public_id, absolute: false) : null,
+                'preview_url' => $downloadable[$link->file->id] && $link->file->isPreviewable() ? route('files.download', ['file' => $link->file->public_id, 'inline' => 1], absolute: false) : null,
                 // A link of a sealed owner has no release action at all (DATA_MODEL section 12).
                 'can_release' => $mayManage && $link->isActive() && ! $sealed,
             ])->all(),
