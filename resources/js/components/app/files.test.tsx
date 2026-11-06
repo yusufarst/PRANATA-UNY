@@ -63,7 +63,9 @@ describe('checkFile (SEC-10, SEC-13 before the upload starts)', () => {
         expect(checkFile({ name: 'sk.php.pdf', size: 10 }, profile)?.key).toBe(
             'double_extension',
         );
-        expect(checkFile({ name: 'SK No.12.pdf', size: 10 }, profile)).toBeNull();
+        expect(
+            checkFile({ name: 'SK No.12.pdf', size: 10 }, profile),
+        ).toBeNull();
         expect(
             checkFile({ name: 'Laporan v1.2.pdf', size: 10 }, profile),
         ).toBeNull();
