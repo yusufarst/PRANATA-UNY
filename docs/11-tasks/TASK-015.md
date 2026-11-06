@@ -3,8 +3,8 @@
 Status dokumen: P11 — APPROVED (APPR-006); baseline beku FRZ-001 | Updated: 2026-11-01 (Asia/Jakarta) | Custodian: Planning Agent | Baseline: [TASK_PLAN](TASK_PLAN.md)
 
 ```text
-STATUS: IN_PROGRESS
-EXECUTION STAGE: IN_PROGRESS
+STATUS: DONE
+EXECUTION STAGE: DONE
 RISK CLASS: HIGH
 MILESTONE: M1 — Identitas, akses dan audit
 PARALLEL SAFE: NO
@@ -218,19 +218,19 @@ Kriteria lokal Task memakai `TAC-nn`; kriteria produk `AC-nn`/NFR ada di TRACEAB
 
 Item yang tidak relevan ditandai `N/A` dengan alasan singkat, tidak dicentang.
 
-- [ ] Lint
-- [ ] Typecheck
-- [ ] Relevant automated tests
-- [ ] Authorization
-- [ ] Route integrity
-- [ ] Interaction behavior
-- [ ] Browser E2E if required
-- [ ] Responsive/adaptive if required
-- [ ] Visual breathing room/density if UI
-- [ ] Production build
-- [ ] Security checks if required
-- [ ] Database safety review
-- [ ] Final diff review
+- [x] Lint
+- [x] Typecheck
+- [x] Relevant automated tests
+- [x] Authorization
+- [x] Route integrity
+- [x] Interaction behavior
+- [x] Browser E2E if required
+- [x] Responsive/adaptive if required
+- [x] Visual breathing room/density if UI
+- [x] Production build
+- [x] Security checks if required
+- [x] Database safety review
+- [x] Final diff review
 
 ## REVIEW REQUIREMENT
 
@@ -245,18 +245,18 @@ HIGH — swa-review terstruktur + review PR otomatis (Codex) + review independen
 
 ## COMPLETION EVIDENCE
 
-- Test outputs:
-- Build result:
-- Route evidence:
-- Interaction evidence:
-- Browser evidence:
-- Localization evidence:
-- Review status (Codex / independen, temuan P0–P3):
-- Cost evidence/exception if applicable:
-- Files changed:
-- PR / CI run:
-- Commit SHA:
-- Notes:
+- Test outputs: run [42100301148](https://github.com/yusufarst/PRANATA-UNY/actions/runs/42100301148) attempt 3 pada HEAD `3816b0c`: `changes`, `ci-fast`, `ci-e2e (1)`, `ci-e2e (2)`, `docs-check` dan `ci-gate` sukses; log Pest per uji tidak dibaca, keberhasilan job adalah buktinya. `tests/Feature/Access/ProcessAssignmentTest.php`: TAC-01 penugasan yang melanggar SOD-04–SOD-09 ditolak dengan alasan dan hasil tersimpan di `sod_check`, SoD dievaluasi lagi saat aksi (lapisan 4 `can()`); TAC-02/AUTHZ-23 SUPER_ADMIN tidak dapat ditugaskan pada peran keputusan (SOD-08); TAC-03 kapabilitas bertanda "Penugasan" hanya untuk pemegang penugasan aktif pada objek, berakhir atau dicabut berlaku pada permintaan berikutnya, penugasan lewat akhir ditutup; AUTHZ-24 peran keputusan menunggu selama password wajib diganti atau TOTP wajib belum dikonfirmasi, di jalur beri dan jalur aksi, tanpa mengganggu peran non-keputusan; TAC-04 saran dari `org_appointments` unit objek dan atasannya tampil sebagai saran, bukan penugasan; TAC-05 aturan SoD dari `SodRuleSource` uji diterapkan tanpa kode khusus per aturan; TAC-06/SEC-21 reset dibantu atas pemegang penugasan keputusan aktif memerlukan admin kedua, dan password sementara dari reset satu admin tidak terbawa ke peran keputusan; constraint DB (tanpa penugasan diri sendiri, satu baris aktif per objek/peran/pengguna, penutupan konsisten); beri dan tutup diaudit dengan aktor admin juga tanpa sesi masuk; rute, PG-504 dan panel. `GrantAdministrationTest.php`: entri menu Penugasan. Migrasi `process_assignments` lulus `migrate:fresh` dan rollback di `ci-fast`; hak peran DB lewat `DatabaseRoles`.
+- Build result: `npm run build` lulus di `ci-fast`; Pint, Larastan, ESLint, Prettier, TypeScript, `translations:check`, uji arsitektur modul, pemindaian rahasia dan `composer audit` (tanpa advisori setelah `2058c37`) lulus.
+- Route evidence: RT-002 `/admin/assignments` dan halaman objek di `app/Modules/Access/routes.php` di bawah `auth`, `can:`/`Gate::authorize` dan `two-factor`, perintah dengan middleware `idempotent`; `RouteIntegrityTest` lulus.
+- Interaction evidence: PG-504 Administrasi → Penugasan: daftar dengan filter, satu aksi utama Tugaskan, halaman objek dengan `AssignmentPanel` yang dapat dipakai ulang modul (saran dari penunjukan ditandai sebagai saran, galat SoD dengan alasan), akhiri/cabut dengan alasan lewat dialog konfirmasi dan `lock_version`; entri menu dari grant.
+- Browser evidence: `tests/e2e/journeys/assignments.spec.ts` (menu, daftar, filter, halaman objek, axe tanpa pelanggaran, 403 tanpa grant) lulus di proyek browser Chromium dan WebKit, desktop 1440×900 dan mobile 390×844, dalam job `ci-e2e` yang sukses.
+- Localization evidence: teks baru di `lang/{id,en}/access.php` dan `resources/js/locales/{id,en}/{admin,common}.json`; `translations:check` lulus.
+- Review status (Codex / independen, temuan P0–P3): swa-review selesai. Review independen HIGH atas seluruh diff `2c1da66...2058c37`: temuannya diperbaiki di `7bd6226` (rincian review itu tidak tersimpan). Codex pada `2058c37`: P1 jalur beri melewati penahanan kredensial keputusan, P2 peran non-keputusan kehilangan akses di samping peran keputusan yang menunggu; keduanya diperbaiki di `7bd6226` dengan uji regresi. Review independen HIGH `2058c37..7bd6226`: tanpa P0/P1; P2 password sementara dari reset satu admin terbawa ke peran keputusan (SEC-21), P3 baris lewat akhir dikunci sebelum ditutup dan uji katalog kapabilitas keputusan; diperbaiki di `3816b0c` dengan uji regresi. Codex review ulang pada `3816b0c`: tanpa temuan. Yang ditunda, tidak menghalangi: P3 kueri `holdsDecisionRole` ganda per permintaan; P3 `CommandBusyException` saat kunci baris pengguna. Thread Codex PR #48 tetap belum di-resolve (token eksekutor tidak dapat me-resolve).
+- Cost evidence/exception if applicable: tanpa biaya; runner standar repositori publik.
+- Files changed: 42 berkas di [PR #48](https://github.com/yusufarst/PRANATA-UNY/pull/48), terutama `app/Modules/Access/` (migrasi dan model `process_assignments`, `AssignmentRoles`, `AssignmentSubjects`, `AssignmentPanel`, `Separation/` dengan `SeparationOfDuties`, `SodRule`, `SodResult`, kontrak `SodRuleSource` dan `AssignmentSubjectType`, Action `AssignProcessRole`/`CloseAssignment` dengan event, `AccessEvaluator`, controller, form request, rute), `app/Modules/Audit/Listeners/RecordAccessAdministration.php`, `app/Modules/Identity/Support/AssistedResets.php`, `app/Modules/Organization/Queries/Appointments.php`, `composer.lock` (empat komponen Symfony v8.1.11), `resources/js/components/app/AssignmentPanel.tsx`, `resources/js/pages/admin/assignments/`, menu samping, locale dan `lang/{id,en}/access.php`, serta uji di `tests/Feature/Access` dan `tests/e2e`. Tanpa perubahan `.github/workflows` atau `.gitleaks.toml`.
+- PR / CI run: [PR #48](https://github.com/yusufarst/PRANATA-UNY/pull/48) MERGED; run di atas (attempt 2 gagal hanya di `ci-e2e (2)`: timeout 30 detik `access.spec.ts:52` di webkit-mobile pada runner lambat, uji yang tidak diubah PR ini; attempt 3 hijau). Run yang tidak hijau: 42084787574 pada `43b8788` (dibatalkan oleh push berikutnya), 42085197270 pada `ed0b65e` dan 42086338124 pada `59d42dd` (`ci-fast`, Pint dan Larastan, diperbaiki di `59d42dd` dan `60e6a10`), 42087508405 pada `60e6a10` (`ci-fast`, Prettier, diperbaiki di `c09548a`), 42088780553 pada `c09548a` (`ci-fast`, uji penugasan, diperbaiki di `da70fa0`), 42090544081 pada `da70fa0` (`ci-fast`, `ci-e2e (2)`, aktor audit, diperbaiki di `6d7e224`), 42091822399 pada `6d7e224` (dibatalkan; advisori Symfony 2026-11-04 di `composer audit` diperbaiki di `2058c37`). Run hijau antara: 42094476290 (`2058c37`), 42098862419 (`7bd6226`).
+- Commit SHA: `3816b0c90483d70cb40a75c10ddb6f67f64d7e2e`, `main` diverifikasi dengan `git ls-remote`; fast-forward D-08 lewat `merge-verified.ps1` dengan `ci-gate`, mode AUTONOMOUS (opsi A).
+- Notes: TAC-01–TAC-06 terbukti di CI. SOD-01–SOD-03 dan isi aturan SoD rezim tetap milik TASK-028 dan TASK-024 lewat `SodRuleSource`; lampiran bukti `evidence_file_id` ditambahkan TASK-016. Tanpa cache izin lintas permintaan.
 
 ## SAFE NEXT TASK
 
