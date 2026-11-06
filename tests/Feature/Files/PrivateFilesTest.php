@@ -581,6 +581,31 @@ describe('releasing a link (TAC-06)', function () {
         expect($link->refresh()->isActive())->toBeTrue();
     });
 
+    test('a link of one row is not found under another row the actor may manage, and stays linked', function () {
+        // A second appointment the administrator may manage as well, so only the guard on the link's own row answers.
+        $other = OrgAppointment::query()->create([
+            'user_id' => User::factory()->withTwoFactor()->create(['name' => 'Kepala PBJ'])->id,
+            'position_id' => OrgPosition::query()->where('code', 'KEPALA_PBJ')->value('id'),
+            'org_unit_id' => OrgUnit::query()->where('code', 'BUK.PBJ')->value('id'),
+            'effective_from' => BusinessDate::today()->toDateString(),
+            'decree_ref' => 'SK/REK/2026/046',
+            'status' => OrgAppointment::ACTIVE,
+        ]);
+        $link = $this->links[1];
+
+        $this->actingAs($this->admin)->get(evidenceUrl('org_appointments', $other->id))->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->where('panel.can.upload', true));
+
+        $this->withHeaders(['X-Idempotency-Key' => (string) Str::uuid()])
+            ->post(route('files.evidence.release', ['type' => 'org_appointments', 'id' => $other->id, 'link' => $link->id]))
+            ->assertNotFound();
+
+        expect($link->refresh()->isActive())->toBeTrue()
+            ->and($link->unlinked_by)->toBeNull()
+            ->and($this->appointment->refresh()->evidence_file_id)->toBe($link->file_id)
+            ->and(DB::table('audit_events')->where('action', 'file.unlinked')->exists())->toBeFalse();
+    });
+
     test('a link of a sealed owner type shows no release and is refused with a reason', function () {
         DB::statement('set local role '.DatabaseRoles::OWNER);
         DB::statement('create table seal_probe_owners (id bigint primary key, capture_manifest_sha256 char(64) not null)');
