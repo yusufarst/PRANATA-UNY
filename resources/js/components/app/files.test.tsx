@@ -101,10 +101,14 @@ describe('FileDropzone', () => {
         expect(html).toContain('Pilih berkas');
         expect(html).toContain('name="purpose" value="DECREE"');
         expect(html).toContain('accept=".pdf,.jpg,.png"');
-        // Nothing is chosen yet, so the primary action waits.
-        const button = html.match(/<button[^>]*upload-button"[^>]*>/);
+        // Nothing is chosen yet, so the primary action waits. The disabled attribute itself, in any order: every button
+        // also carries the disabled: variants in its class list, so the word alone would pass for an enabled button.
+        const button = html.match(
+            /<button[^>]*data-test="upload-button"[^>]*>/,
+        )?.[0];
 
-        expect(button?.[0]).toContain('disabled');
+        expect(button).toBeDefined();
+        expect(button).toMatch(/\sdisabled=""/);
     });
 
     it('speaks English after the language switch', async () => {
