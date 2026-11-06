@@ -305,15 +305,21 @@ describe('assigning', function () {
             'status' => 'ACTIVE',
         ];
 
-        // As the application connects: the row is added and read; removing it in any way is refused by the database.
+        // As the application connects: the row is added, read and changed; removing it in any way is refused by the database.
         expect(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::table('process_assignments')->insert($row)))->toBeNull();
 
         DB::table('process_assignments')->insert($row);
+        $seen = null;
+        $changed = null;
 
-        expect(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::table('process_assignments')->count()))->toBeNull()
+        expect(DatabaseSession::sqlStateAs(DatabaseRoles::APP, function () use (&$seen, &$changed) {
+            $seen = DB::table('process_assignments')->count();
+            $changed = DB::table('process_assignments')->update(['decree_ref' => 'SK/REK/2026/102']);
+        }))->toBeNull()
+            ->and($seen)->toBe(1)
+            ->and($changed)->toBe(1)
             ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::table('process_assignments')->delete()))->toBe('42501')
-            ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::statement('truncate process_assignments')))->toBe('42501')
-            ->and(DB::table('process_assignments')->count())->toBe(1);
+            ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::statement('truncate process_assignments')))->toBe('42501');
     });
 });
 
