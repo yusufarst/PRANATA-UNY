@@ -33,6 +33,7 @@ Ekstensi metode WF-005 tidak boleh memaksakan satu urutan; langkah yang applicab
 - Semua DEPENDS ON berstatus DONE dengan bukti
 - Kandidat P4–P11 disetujui Owner, Planning Freeze tercatat, dan otorisasi eksekusi berlaku ([EXECUTION_CONTEXT](EXECUTION_CONTEXT.md))
 - Gerbang READY AICWDF §22.8 diperiksa dan dicatat di TASK_PLAN
+- Isu perencanaan PI-001 (sisa P2-1 TASK-015: SoD lintas objek dan peringatan SOD-03) dan PI-002 (P2-2 TASK-015: E2E browser dan axe `AssignmentPanel`) diputuskan Claude Planning melalui change control ([APPROVAL_RECORDS PCR-004](../00-governance/APPROVAL_RECORDS.md#pcr-004)); sampai itu Task ini tidak ditandai READY
 - GAP terkait (GAP-003, GAP-004, GAP-014) **tidak menghalangi implementasi** menurut model gerbang usulan yang menunggu konfirmasi Owner (D-28); aksi resmi yang bergantung padanya hanya aktif di produksi bila versi kebijakan terkait disahkan dengan bukti resolusi dan berlaku resmi pada tanggal acuan aksi ([POLICY_REGISTRY §2.1](../04-architecture/POLICY_REGISTRY.md#21-hubungan-dengan-gap_register), [§3.1](../04-architecture/POLICY_REGISTRY.md#31-keberlakuan-resmi))
 
 ## IN SCOPE

@@ -346,3 +346,38 @@ AUTH-012 is **HISTORICAL / COMPLETED** as of 2026-11-01: every P4–P11 phase is
 - Integration without rewriting published history: the two accepted commits were cherry-picked unchanged in content onto `6179e9a` as branch `docs/pcr-003-account-deactivation-r2` (`828578f`, `2082888`); the original branch stays as reviewed. PR #36 passed `ci-gate` on `2082888`, and `main` was fast-forwarded `6179e9a` → `2082888` under the `main` ruleset (linear history, required `ci-gate`, no force push), verified with `git ls-remote origin refs/heads/main`; GitHub records PR #36 as merged. Then this state-transition commit, published the same way. Author and committer of every commit: the Owner; no merge commit.
 - PCR-003: **PUBLISHED**; its gate is lifted by this record. TASK-010: **READY**. The Owner's runner hold is unchanged; the executor starts TASK-010 only after the Owner releases it.
 - This record is effective when `origin/main` contains it (`git merge-base --is-ancestor 2082888 origin/main` holds and this file on `origin/main` shows this section).
+
+## PCR-004
+
+- Kind: **POST-FREEZE PLANNING CHANGE** under FRZ-001 (governance item M1 of the executor's audit proposal of 2026-11-07), prepared by Claude Planning at the Owner's direction (M1 post-DONE remediation directive, 2026-11-07).
+- Content: (1) a post-DONE remediation lane in [EXECUTOR_OPERATING_MODEL §8.5](../11-tasks/EXECUTOR_OPERATING_MODEL.md#85-jalur-remediasi-pasca-done-pcr-004), with §8.1 item 7 naming the DONE-status check it alone exempts; (2) the authorization record REM-001 below; (3) tracked planning issues PI-001–PI-003 below; (4) a READY prerequisite in TASK-028 for PI-001 and PI-002. Still 78 Tasks with unchanged dependencies and statuses (16/78 DONE); TASK-015 and TASK-016 stay DONE; TASK-017 stays READY and unstarted; no GAP resolved; no security gate weakened.
+- Out of scope, unchanged: the executor's audit items C1–C5 (runner and watcher under a usage limit and a hold, CI rerun procedure, `actions: write`, polling, review-evidence gates) and S1–S4; PAT permissions; CI rerun authority; GitHub workflows and rulesets.
+- Tracked planning issues (OPEN; severity as graded by the source review; none is resolved or waived by this change):
+
+| ID | Issue | Source and severity | Owner of the decision |
+|---|---|---|---|
+| PI-001 | TASK-015 P2-1 remainder: cross-object SoD is only documented and tested in one direction; `SodResult` has no warning outcome; no rule kind reads `org_appointments` (SOD-03 warning plus block) | Independent HIGH review of TASK-015, **P2**, partly closed in `7bd6226`, remainder open | Claude Planning: extend the TASK-015 interface as remediation, or amend TASK-028 with an explicit TAC |
+| PI-002 | TASK-015 P2-2: `AssignmentPanel` (assign, end/revoke dialogs, suggestions, SoD error, conflict dialog) never ran in a browser or under axe | Independent HIGH review of TASK-015, **P2**, open | Claude Planning: E2E-only probe subject type, or a TAC in the first Task that registers a real subject type |
+| PI-003 | Audit listens to events of Files and Access (ARCHITECTURE §5.1, §5.3) while the dependency column of §4 lists only Identity; `tests/Arch/ModuleBoundaryTest.php` stays unchanged until decided | Executor audit (TASK-014 R7, 2026-11-07 S3); not graded | Claude Planning: correct the column or decide another pattern |
+
+- State: **PENDING_SECOND_REVIEW / PENDING_OWNER_APPROVAL / NOT_PUBLISHED**. Base `351ba2f17c1764283e66215f6069ed64872fb97a`; branch `docs/pcr-004-post-done-remediation`; handoff [PCR-004_REVIEW_HANDOFF](../handoff/PCR-004_REVIEW_HANDOFF.md).
+- Gate: nothing in this record binds the executor until it is on `origin/main`. Publication: (1) an acceptable focused Second Review verdict; (2) the Owner's explicit approval of PCR-004 and activation of REM-001; (3) verified fast-forward of `main` (PR with `ci-gate`); (4) a state-transition commit, published the same way, that records the verdict and the Owner approval, sets this record to PUBLISHED and REM-001 to ACTIVE.
+
+## REM-001
+
+- Kind: **POST-DONE REMEDIATION AUTHORIZATION** ([EXECUTOR_OPERATING_MODEL §8.5](../11-tasks/EXECUTOR_OPERATING_MODEL.md#85-jalur-remediasi-pasca-done-pcr-004)).
+- Purpose: publish the Owner-authorized corrections A (evidence) and B (tests) of the TASK-015/TASK-016 procedure audit of 2026-11-07, and the merge-gate change that makes this lane enforceable. Procedure changes (audit item C) are not authorized here.
+- Mode: SUPERVISED only, Owner hold kept active, runner and watcher off, TASK-017 not started.
+- Entries are used in the order 0, 1, 2, 3, 4. Branch family: the exact name or a successor `-rN` (N ≥ 2). Paths are exact; a Task file is limited to its `## COMPLETION EVIDENCE` section with `STATUS: DONE` unchanged.
+- State: **PROPOSED** (becomes ACTIVE only by the PCR-004 state-transition commit after the Owner's approval; CLOSED by Claude Planning after entry 4 is merged).
+
+```text
+REMEDIATION: REM-001
+STATE: PROPOSED
+MODE: SUPERVISED
+ENTRY 0 | TASK-001 | fix/task-001-post-done-remediation-gate | PR: new | PATHS: scripts/executor/lib/merge-gate.ps1, scripts/executor/merge-verified.ps1, scripts/executor/tests/scripts.tests.ps1 | PURPOSE: merge-gate support for this lane (EXECUTOR_OPERATING_MODEL 8.5)
+ENTRY 1 | TASK-015 | fix/task-015-test-integrity | PR: #53 | PATHS: tests/Feature/Access/ProcessAssignmentTest.php | PURPOSE: prove the privileges of pranata_app on process_assignments
+ENTRY 2 | TASK-016 | fix/task-016-test-integrity | PR: #52 | PATHS: resources/js/components/app/files.test.tsx, tests/Feature/Files/PrivateFilesTest.php | PURPOSE: restore the disabled-upload and cross-row release checks
+ENTRY 3 | TASK-015 | docs/reconcile-task-015 | PR: #54 | PATHS: docs/11-tasks/TASK-015.md | PURPOSE: correct the completion evidence after the procedure audit
+ENTRY 4 | TASK-016 | docs/reconcile-task-016 | PR: #55 | PATHS: docs/11-tasks/TASK-016.md, docs/handoff/CURRENT_HANDOFF.md | PURPOSE: correct the completion evidence and record the hold, the audit proposal and the remediation outcome
+```
