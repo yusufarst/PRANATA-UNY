@@ -52,10 +52,10 @@ final class AssignmentEvidenceOwner implements FileOwnerType
             : trim($assignment['reference'].' '.($assignment['label'] ?? ''));
 
         return new OwnerDescription(
-            title: __('files.owners.assignment', ['role' => $assignment['assignment_role'], 'person' => $assignment['holder']]),
-            subtitle: trim($object.($assignment['decree_ref'] === null ? '' : ' · '.__('files.owners.decree', ['ref' => $assignment['decree_ref']]))),
+            title: (string) __('files.owners.assignment', ['role' => $assignment['assignment_role'], 'person' => $assignment['holder']]),
+            subtitle: trim($object.($assignment['decree_ref'] === null ? '' : ' · '.(string) __('files.owners.decree', ['ref' => $assignment['decree_ref']]))),
             parentUrl: $parent,
-            parentTitle: __('files.parents.assignment'),
+            parentTitle: (string) __('files.parents.assignment'),
         );
     }
 

@@ -19,7 +19,8 @@ final class FileIntegrityException extends RuntimeException
      * @param  array{size_bytes: int|null, sha256: string|null}  $found
      */
     private function __construct(
-        public readonly FileObject $file,
+        // Exception::$file is the source file of the throw, so the file object has its own name.
+        public readonly FileObject $fileObject,
         public readonly string $reason,
         public readonly array $found,
         string $message,

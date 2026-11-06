@@ -60,7 +60,7 @@ final class AssignmentEvidenceStore implements AssignmentEvidence
 
     public function referencingFile(int $fileId): array
     {
-        return array_map(intval(...), ProcessAssignment::query()->where('evidence_file_id', $fileId)->pluck('id')->all());
+        return array_values(array_map(intval(...), ProcessAssignment::query()->where('evidence_file_id', $fileId)->pluck('id')->all()));
     }
 
     public function recordEvidence(int $assignmentId, ?int $fileId): void

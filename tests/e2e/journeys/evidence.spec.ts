@@ -46,7 +46,8 @@ test.describe('the organization administrator', () => {
         const unitUrl = page.url();
         const appointments = page.locator('[data-test="unit-appointments"]');
 
-        await expect(appointments).toContainText('E2E internal');
+        // The decree reference names the synthetic appointment; the person's name is changed by another journey.
+        await expect(appointments).toContainText('SK/SINTETIS/2026/001');
         await appointments
             .locator('[data-test="appointment-evidence"]')
             .first()

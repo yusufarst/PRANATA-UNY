@@ -45,7 +45,7 @@ final class AppointmentEvidenceStore implements AppointmentEvidence
 
     public function referencingFile(int $fileId): array
     {
-        return array_map(intval(...), OrgAppointment::query()->where('evidence_file_id', $fileId)->pluck('id')->all());
+        return array_values(array_map(intval(...), OrgAppointment::query()->where('evidence_file_id', $fileId)->pluck('id')->all()));
     }
 
     public function recordEvidence(int $appointmentId, ?int $fileId, User $actor): void

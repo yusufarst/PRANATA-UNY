@@ -47,11 +47,11 @@ final class AppointmentEvidenceOwner implements FileOwnerType
         $parent = $appointment['unit_public_id'] === null
             ? route('organization.admin.index', absolute: false)
             : route('organization.admin.index', ['unit' => $appointment['unit_public_id']], absolute: false);
-        $parentTitle = __('files.parents.appointment', ['unit' => $appointment['unit_name'] ?? '']);
+        $parentTitle = (string) __('files.parents.appointment', ['unit' => $appointment['unit_name'] ?? '']);
 
         return new OwnerDescription(
-            title: __('files.owners.appointment', ['position' => $appointment['position'], 'person' => $appointment['person']]),
-            subtitle: $appointment['decree_ref'] === null ? null : __('files.owners.decree', ['ref' => $appointment['decree_ref']]),
+            title: (string) __('files.owners.appointment', ['position' => $appointment['position'], 'person' => $appointment['person']]),
+            subtitle: $appointment['decree_ref'] === null ? null : (string) __('files.owners.decree', ['ref' => $appointment['decree_ref']]),
             parentUrl: $parent,
             parentTitle: $parentTitle,
         );

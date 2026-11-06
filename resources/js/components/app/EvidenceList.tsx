@@ -182,30 +182,31 @@ export function EvidenceList({
                                 )}
                             </div>
                         </div>
-                        <dl className="grid gap-1 text-sm">
-                            <div className="text-muted-foreground">
+                        <div className="grid gap-1 text-sm">
+                            <p className="text-muted-foreground">
                                 {t('files:file.uploaded', {
                                     name: file.uploaded_by ?? unknown,
                                     time: dateTime(file.uploaded_at),
                                 })}
-                            </div>
+                            </p>
                             {file.unlinked_at && (
-                                <div className="text-muted-foreground">
+                                <p className="text-muted-foreground">
                                     {t('files:file.released', {
                                         name: file.unlinked_by ?? unknown,
                                         time: dateTime(file.unlinked_at),
                                     })}
-                                </div>
+                                </p>
                             )}
-                            <div className="flex flex-wrap gap-x-2">
+                            {/* A definition list holds only its term and its value (axe definition-list). */}
+                            <dl className="flex flex-wrap gap-x-2">
                                 <dt className="text-muted-foreground">
                                     {t('files:file.sha256')}
                                 </dt>
                                 <dd className="font-mono text-xs break-all">
                                     {file.sha256}
                                 </dd>
-                            </div>
-                        </dl>
+                            </dl>
+                        </div>
                     </li>
                 ))}
             </ul>

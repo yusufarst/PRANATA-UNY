@@ -63,7 +63,7 @@ class FileController
 
     private function integrityFailed(Request $request, FileIntegrityException $exception, string $during): Response
     {
-        $file = $exception->file;
+        $file = $exception->fileObject;
 
         FileIntegrityFailed::dispatch($file, $exception->reason, $exception->found, $during, $request->user());
 
