@@ -7,6 +7,7 @@ return [
     'purpose_not_allowed' => 'Tujuan unggahan ini tidak dipakai untuk objek tersebut.',
     'link_not_active' => 'Tautan bukti ini sudah dilepas. Muat ulang halaman untuk melihat keadaan terbaru.',
     'link_sealed' => 'Tautan bukti ini bersegel dan tidak dapat dilepas atau diubah.',
+    'owner_sealed' => 'Berkas objek ini bersegel; bukti tidak dapat ditambahkan lagi.',
     'integrity_failed' => 'Berkas ini tidak dapat dikirim: isinya di penyimpanan hilang atau tidak cocok dengan catatan. Kejadian ini sudah dicatat. Hubungi administrator dengan menyebutkan kode permintaan.',
     'validation' => [
         'invalid_upload' => 'Berkas tidak terunggah dengan utuh. Coba unggah lagi.',
@@ -30,5 +31,6 @@ return [
     'parents' => [
         'appointment' => 'Organisasi · :unit',
         'assignment' => 'Penugasan',
+        'home' => 'Beranda',
     ],
 ];

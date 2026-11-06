@@ -6,6 +6,7 @@ use App\Modules\Files\Data\VerifiedCopy;
 use App\Modules\Files\Exceptions\FileIntegrityException;
 use App\Modules\Files\Models\FileObject;
 use RuntimeException;
+use Throwable;
 
 /**
  * The only way the application reads stored bytes (COMMAND_AND_API_CONTRACTS section 7, SEC-22): a download, a preview, a
@@ -43,17 +44,22 @@ final class FileIntegrity
             throw new RuntimeException('The temporary file for the verified copy could not be opened.');
         }
 
+        // Whatever goes wrong, a copy that is not handed over is deleted.
         try {
-            [$size, $sha256] = PrivateFileStorage::digest($stream, $copy);
-        } finally {
-            fclose($copy);
-            fclose($stream);
-        }
+            try {
+                [$size, $sha256] = PrivateFileStorage::digest($stream, $copy);
+            } finally {
+                fclose($copy);
+                fclose($stream);
+            }
 
-        if ($size !== $file->size_bytes || $sha256 !== $file->sha256) {
+            if ($size !== $file->size_bytes || $sha256 !== $file->sha256) {
+                throw FileIntegrityException::mismatch($file, $size, $sha256);
+            }
+        } catch (Throwable $exception) {
             @unlink($path);
 
-            throw FileIntegrityException::mismatch($file, $size, $sha256);
+            throw $exception;
         }
 
         return new VerifiedCopy($path, $size, $sha256);

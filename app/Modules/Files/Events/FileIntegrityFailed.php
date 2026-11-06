@@ -18,6 +18,7 @@ final class FileIntegrityFailed
      * @param  string  $reason  MISSING or MISMATCH
      * @param  array{size_bytes: int|null, sha256: string|null}  $found  what the disk held
      * @param  string  $during  what was being done: download, preview, read or verify
+     * @param  list<array{owner_type: string, owner_id: int}>  $references  the rows that reference the file (the subjects of the incident)
      */
     public function __construct(
         public readonly FileObject $file,
@@ -25,5 +26,6 @@ final class FileIntegrityFailed
         public readonly array $found,
         public readonly string $during,
         public readonly ?User $actor,
+        public readonly array $references = [],
     ) {}
 }

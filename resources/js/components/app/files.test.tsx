@@ -59,10 +59,14 @@ describe('checkFile (SEC-10, SEC-13 before the upload starts)', () => {
         );
     });
 
-    it('refuses a second extension before the last one', () => {
+    it('refuses a second extension before the last one, not a number in the name', () => {
         expect(checkFile({ name: 'sk.php.pdf', size: 10 }, profile)?.key).toBe(
             'double_extension',
         );
+        expect(checkFile({ name: 'SK No.12.pdf', size: 10 }, profile)).toBeNull();
+        expect(
+            checkFile({ name: 'Laporan v1.2.pdf', size: 10 }, profile),
+        ).toBeNull();
         expect(checkFile({ name: 'sk.pdf.exe', size: 10 }, profile)?.key).toBe(
             'extension',
         );

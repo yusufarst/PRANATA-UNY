@@ -115,10 +115,12 @@ describe('the evidence page of an appointment (RT-031, AUTHZ-44)', function () {
                 ->where('panel.purposes.0.purpose', 'DECREE')
                 ->where('panel.purposes.0.extensions', ['pdf', 'jpg', 'jpeg', 'png']));
 
+        // The appointed person may not open PG-505, so the way back is the dashboard (no dead link).
         $this->actingAs($this->kaprodi)
             ->get(evidenceUrl('org_appointments', $this->appointment->id))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page->where('panel.can.upload', false));
+            ->assertInertia(fn (Assert $page) => $page->where('panel.can.upload', false)
+                ->where('panel.owner.parent_url', route('dashboard', absolute: false)));
     });
 
     test('is refused to anyone else, and an unknown row or kind is not found', function () {
@@ -158,6 +160,10 @@ describe('the evidence page of an appointment (RT-031, AUTHZ-44)', function () {
                 expect($route->gatherMiddleware())->toContain('idempotent');
             }
         }
+
+        // COMMAND_AND_API_CONTRACTS section 9: uploads and downloads are rate limited per user.
+        expect($routes['files.evidence.store']->gatherMiddleware())->toContain('throttle:files-upload')
+            ->and($routes['files.download']->gatherMiddleware())->toContain('throttle:files-download');
     });
 });
 
@@ -263,6 +269,11 @@ describe('uploading (TAC-01, TAC-04, TAC-07)', function () {
         expect(FileObject::query()->count())->toBe(0)
             ->and(Storage::disk((string) config('files.disk'))->allFiles())->toBe([])
             ->and($this->appointment->refresh()->evidence_file_id)->toBeNull();
+
+        // A number in the name is not a second extension.
+        uploadEvidence($this, 'org_appointments', $this->appointment->id, ['file' => pdfUpload('SK No.12.pdf')])->assertSessionHasNoErrors();
+
+        expect(FileObject::query()->sole()->original_name)->toBe('SK No.12.pdf');
     });
 
     test('the decree of a process assignment is uploaded by whoever may assign on its object, and the holder reads it', function () {
@@ -317,9 +328,12 @@ describe('uploading (TAC-01, TAC-04, TAC-07)', function () {
         $this->get(route('access.admin.assignments.create', ['type' => 'probe.package', 'reference' => 'PKT-1']))
             ->assertInertia(fn (Assert $page) => $page->where('panel.assignments.0.id', $assignment->id)->where('panel.assignments.0.has_evidence', true));
 
+        // The holder may not open PG-504, so the way back is the dashboard (no dead link).
         $this->actingAs($holder)->get(evidenceUrl('process_assignments', $assignment->id))
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page->where('panel.can.upload', false)->has('panel.files', 1));
+            ->assertInertia(fn (Assert $page) => $page->where('panel.can.upload', false)
+                ->where('panel.owner.parent_url', route('dashboard', absolute: false))
+                ->has('panel.files', 1));
         uploadEvidence($this, 'process_assignments', $assignment->id, ['file' => pngUpload()])->assertForbidden();
 
         $this->actingAs(User::factory()->withTwoFactor()->create())->get(evidenceUrl('process_assignments', $assignment->id))->assertForbidden();
@@ -393,10 +407,19 @@ describe('downloading (TAC-02, SEC-11, SEC-12)', function () {
     });
 
     test('the application works with the privileges of pranata_app for an upload, a scan result and a release', function () {
+        // Without the handler, a privilege refusal inside a command reaches this test as its SQLSTATE instead of a 500 page.
+        $this->withoutExceptionHandling();
+
         $state = DatabaseSession::sqlStateAs(DatabaseRoles::APP, function () {
             uploadEvidence($this, 'org_appointments', $this->appointment->id, ['file' => pngUpload()])->assertSessionHasNoErrors();
             DB::table('file_objects')->where('id', $this->file->id)->update(['scan_status' => FileObject::CLEAN]);
             releaseEvidence($this, FileLink::query()->where('file_id', $this->file->id)->sole())->assertSessionHasNoErrors();
+
+            // The effects, seen inside the savepoint before it is rolled back.
+            expect(FileObject::query()->count())->toBe(2)
+                ->and(FileObject::query()->where('id', $this->file->id)->value('scan_status'))->toBe(FileObject::CLEAN)
+                ->and(FileLink::query()->where('file_id', $this->file->id)->sole()->isActive())->toBeFalse()
+                ->and($this->appointment->refresh()->evidence_file_id)->toBe(FileObject::query()->where('original_name', 'sk.png')->sole()->id);
         });
 
         expect($state)->toBeNull();
@@ -432,6 +455,8 @@ describe('integrity (TAC-04, TAC-07, SEC-22)', function () {
             ->and($metadata['during'])->toBe('download')
             ->and($metadata['found']['sha256'])->toBe(hash('sha256', 'isi yang diubah'))
             ->and($metadata['expected']['sha256'])->toBe($this->file->sha256)
+            // The subjects of the incident: the appointment, once, through its link and its evidence column.
+            ->and($metadata['references'])->toBe([['owner_type' => 'org_appointments', 'owner_id' => $this->appointment->id]])
             // Nothing is repaired, replaced or released.
             ->and($this->file->refresh()->sha256)->toBe(hash('sha256', PDF_BYTES))
             ->and(FileLink::query()->sole()->isActive())->toBeTrue()
@@ -573,7 +598,7 @@ describe('releasing a link (TAC-06)', function () {
                 return FileObject::CONFIDENTIAL;
             }
 
-            public function describe(int $ownerId): ?OwnerDescription
+            public function describe(int $ownerId, User $actor): ?OwnerDescription
             {
                 return $ownerId === 1 ? new OwnerDescription('Kiriman uji', null, '/home', 'Beranda') : null;
             }
@@ -604,6 +629,13 @@ describe('releasing a link (TAC-06)', function () {
 
         releaseEvidence($this, $sealed)->assertSessionHasErrors(['_domain' => __('files.link_sealed')]);
 
-        expect($sealed->refresh()->isActive())->toBeTrue();
+        // The upload is hidden on the page and refused by the server before any byte is written (ACCESS_CONTROL section 8).
+        $before = Storage::disk((string) config('files.disk'))->allFiles();
+        uploadEvidence($this, 'seal_probe_owners', 1, ['file' => pdfUpload(), 'purpose' => 'OFFER'])
+            ->assertSessionHasErrors(['_domain' => __('files.owner_sealed')]);
+
+        expect($sealed->refresh()->isActive())->toBeTrue()
+            ->and(FileObject::query()->count())->toBe(2)
+            ->and(Storage::disk((string) config('files.disk'))->allFiles())->toBe($before);
     });
 });

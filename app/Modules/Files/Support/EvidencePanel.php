@@ -4,7 +4,6 @@ namespace App\Modules\Files\Support;
 
 use App\Models\User;
 use App\Modules\Files\Models\FileLink;
-use App\Modules\Files\Models\FileObject;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -22,7 +21,7 @@ final class EvidencePanel
     public function for(User $actor, string $ownerType, int $ownerId): ?array
     {
         $owner = $this->owners->find($ownerType);
-        $described = $owner?->describe($ownerId);
+        $described = $owner?->describe($ownerId, $actor);
 
         if ($owner === null || $described === null) {
             return null;
@@ -66,7 +65,6 @@ final class EvidencePanel
             ])->all(),
             'purposes' => array_map(fn (string $purpose): array => UploadProfile::for($purpose)->toArray(), $owner->purposes()),
             'can' => ['upload' => $mayManage && ! $sealed],
-            'scan_statuses' => [FileObject::NOT_SCANNED, FileObject::CLEAN, FileObject::INFECTED, FileObject::ERROR],
         ];
     }
 }

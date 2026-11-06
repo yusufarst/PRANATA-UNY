@@ -36,7 +36,7 @@ final class AppointmentEvidenceOwner implements FileOwnerType
         return FileObject::INTERNAL;
     }
 
-    public function describe(int $ownerId): ?OwnerDescription
+    public function describe(int $ownerId, User $actor): ?OwnerDescription
     {
         $appointment = $this->appointments->find($ownerId);
 
@@ -44,10 +44,16 @@ final class AppointmentEvidenceOwner implements FileOwnerType
             return null;
         }
 
-        $parent = $appointment['unit_public_id'] === null
-            ? route('organization.admin.index', absolute: false)
-            : route('organization.admin.index', ['unit' => $appointment['unit_public_id']], absolute: false);
-        $parentTitle = (string) __('files.parents.appointment', ['unit' => $appointment['unit_name'] ?? '']);
+        // The appointed person reads the decree but may not open PG-505, so their way back is the dashboard.
+        if (! $this->appointments->mayManage($actor)) {
+            $parent = route('dashboard', absolute: false);
+            $parentTitle = (string) __('files.parents.home');
+        } else {
+            $parent = $appointment['unit_public_id'] === null
+                ? route('organization.admin.index', absolute: false)
+                : route('organization.admin.index', ['unit' => $appointment['unit_public_id']], absolute: false);
+            $parentTitle = (string) __('files.parents.appointment', ['unit' => $appointment['unit_name'] ?? '']);
+        }
 
         return new OwnerDescription(
             title: (string) __('files.owners.appointment', ['position' => $appointment['position'], 'person' => $appointment['person']]),

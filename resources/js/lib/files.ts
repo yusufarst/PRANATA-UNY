@@ -51,7 +51,8 @@ export function checkFile(
         };
     }
 
-    if (/\.[a-z0-9]{1,5}$/i.test(name.slice(0, dot))) {
+    // A second extension before the last one; a token of digits only ("SK No.12.pdf") is part of the name.
+    if (/\.[a-z][a-z0-9]{0,4}$/i.test(name.slice(0, dot))) {
         return { key: 'double_extension' };
     }
 

@@ -36,7 +36,7 @@ final class AssignmentEvidenceOwner implements FileOwnerType
         return FileObject::INTERNAL;
     }
 
-    public function describe(int $ownerId): ?OwnerDescription
+    public function describe(int $ownerId, User $actor): ?OwnerDescription
     {
         $assignment = $this->assignments->find($ownerId);
 
@@ -44,9 +44,17 @@ final class AssignmentEvidenceOwner implements FileOwnerType
             return null;
         }
 
-        $parent = $assignment['reference'] === null
-            ? route('access.admin.assignments.index', absolute: false)
-            : route('access.admin.assignments.create', ['type' => $assignment['subject_type'], 'reference' => $assignment['reference']], absolute: false);
+        // The holder reads the decree but may not open PG-504, so their way back is the dashboard.
+        if (! $this->assignments->mayManage($actor, $ownerId)) {
+            $parent = route('dashboard', absolute: false);
+            $parentTitle = (string) __('files.parents.home');
+        } else {
+            $parent = $assignment['reference'] === null
+                ? route('access.admin.assignments.index', absolute: false)
+                : route('access.admin.assignments.create', ['type' => $assignment['subject_type'], 'reference' => $assignment['reference']], absolute: false);
+            $parentTitle = (string) __('files.parents.assignment');
+        }
+
         $object = $assignment['reference'] === null
             ? $assignment['subject_type']
             : trim($assignment['reference'].' '.($assignment['label'] ?? ''));
@@ -55,7 +63,7 @@ final class AssignmentEvidenceOwner implements FileOwnerType
             title: (string) __('files.owners.assignment', ['role' => $assignment['assignment_role'], 'person' => $assignment['holder']]),
             subtitle: trim($object.($assignment['decree_ref'] === null ? '' : ' · '.(string) __('files.owners.decree', ['ref' => $assignment['decree_ref']]))),
             parentUrl: $parent,
-            parentTitle: (string) __('files.parents.assignment'),
+            parentTitle: $parentTitle,
         );
     }
 

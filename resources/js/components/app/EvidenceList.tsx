@@ -146,7 +146,7 @@ export function EvidenceList({
                                         <a
                                             href={file.preview_url}
                                             target="_blank"
-                                            rel="noopener"
+                                            rel="noopener noreferrer"
                                             data-test="preview-link"
                                         >
                                             <Eye aria-hidden="true" />

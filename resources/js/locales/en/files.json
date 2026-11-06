@@ -16,7 +16,7 @@
     },
     "dropzone": {
         "intro": "Choose one file or drag it into this area.",
-        "limits": "Kinds: {{extensions}}. Maximum size {{max}} MB.",
+        "limits": "Allowed types: {{extensions}}. Maximum size {{max}} MB.",
         "choose": "Choose a file",
         "drop": "or drop a file here",
         "selected": "{{name}} · {{size}}",
@@ -25,7 +25,7 @@
         "label_hint": "Optional, such as the number or date of the decree.",
         "submit": "Upload",
         "uploading": "Uploading… {{percent}}%",
-        "failed": "The upload could not be done",
+        "failed": "The upload failed",
         "errors": {
             "none": "Choose a file first.",
             "extension": "This kind of file is not allowed. Accepted kinds: {{allowed}}.",

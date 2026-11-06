@@ -17,27 +17,37 @@ final class FileAccess
 
     public function allowsDownload(User $actor, FileObject $file): bool
     {
-        $references = FileLink::query()
-            ->where('file_id', $file->id)
-            ->active()
-            ->get(['owner_type', 'owner_id'])
-            ->map(fn (FileLink $link): array => [$link->owner_type, $link->owner_id])
-            ->all();
+        foreach ($this->references($file) as $reference) {
+            $owner = $this->owners->find($reference['owner_type']);
 
-        foreach ($this->owners->all() as $owner) {
-            foreach ($owner->referencing($file->id) as $ownerId) {
-                $references[] = [$owner->ownerType(), $ownerId];
-            }
-        }
-
-        foreach ($references as [$ownerType, $ownerId]) {
-            $owner = $this->owners->find($ownerType);
-
-            if ($owner !== null && $owner->allowsRead($actor, $ownerId)) {
+            if ($owner !== null && $owner->allowsRead($actor, $reference['owner_id'])) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * The rows that reference the file: through an active link, or through the evidence column of a registered owner type.
+     * Also what an integrity incident names as its subjects.
+     *
+     * @return list<array{owner_type: string, owner_id: int}>
+     */
+    public function references(FileObject $file): array
+    {
+        $references = [];
+
+        foreach (FileLink::query()->where('file_id', $file->id)->active()->get(['owner_type', 'owner_id']) as $link) {
+            $references["{$link->owner_type}:{$link->owner_id}"] = ['owner_type' => $link->owner_type, 'owner_id' => $link->owner_id];
+        }
+
+        foreach ($this->owners->all() as $owner) {
+            foreach ($owner->referencing($file->id) as $ownerId) {
+                $references["{$owner->ownerType()}:{$ownerId}"] = ['owner_type' => $owner->ownerType(), 'owner_id' => $ownerId];
+            }
+        }
+
+        return array_values($references);
     }
 }

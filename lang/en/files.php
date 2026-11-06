@@ -7,6 +7,7 @@ return [
     'purpose_not_allowed' => 'This upload purpose is not used for that object.',
     'link_not_active' => 'This evidence link is already released. Reload the page to see the latest state.',
     'link_sealed' => 'This evidence link is sealed and cannot be released or changed.',
+    'owner_sealed' => 'The files of this object are sealed; no more evidence can be added.',
     'integrity_failed' => 'This file cannot be sent: its content in storage is missing or does not match the record. The incident is recorded. Contact an administrator and quote the request code.',
     'validation' => [
         'invalid_upload' => 'The file did not upload completely. Try again.',
@@ -30,5 +31,6 @@ return [
     'parents' => [
         'appointment' => 'Organization · :unit',
         'assignment' => 'Assignments',
+        'home' => 'Home',
     ],
 ];

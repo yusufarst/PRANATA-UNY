@@ -8,6 +8,7 @@ use App\Modules\Files\Events\FileIntegrityFailed;
 use App\Modules\Files\Exceptions\FileIntegrityException;
 use App\Modules\Files\Models\FileObject;
 use App\Modules\Files\Providers\FilesServiceProvider;
+use App\Modules\Files\Support\FileAccess;
 use App\Modules\Files\Support\FileIntegrity;
 use App\Modules\Platform\Support\RequestId;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * GET /files/{public_id} (COMMAND_AND_API_CONTRACTS section 7, SEC-11, SEC-12, SEC-22): the only way bytes leave the private
@@ -29,43 +31,52 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FileController
 {
-    public function show(Request $request, FileObject $file, FileIntegrity $integrity): Response
+    public function show(Request $request, FileObject $file, FileIntegrity $integrity, FileAccess $access): Response
     {
         Gate::authorize(FilesServiceProvider::DOWNLOAD, $file);
 
         $inline = $request->boolean('inline') && $file->isPreviewable();
 
-        try {
-            $copy = $integrity->verifiedCopy($file);
-        } catch (FileIntegrityException $exception) {
-            return $this->integrityFailed($request, $exception, $inline ? 'preview' : 'download');
-        }
-
-        // Recorded before the first byte goes out; outside any transaction, so it is written at once.
-        if ($file->isConfidential()) {
-            FileDownloaded::dispatch($file, $request->user(), $inline);
-        }
-
-        $response = new BinaryFileResponse($copy->path, 200, [
-            'Content-Type' => $file->mime_type,
-            'X-Content-Type-Options' => 'nosniff',
-            'Cache-Control' => 'private, no-store',
-        ], false, null, false, false);
-        $response->deleteFileAfterSend(true);
-        $response->headers->set('Content-Disposition', HeaderUtils::makeDisposition(
+        // The headers are built before the copy exists, so nothing that can fail is left between the copy and its sending.
+        $disposition = HeaderUtils::makeDisposition(
             $inline ? HeaderUtils::DISPOSITION_INLINE : HeaderUtils::DISPOSITION_ATTACHMENT,
             $file->original_name,
             self::asciiName($file->original_name),
-        ));
+        );
+
+        try {
+            $copy = $integrity->verifiedCopy($file);
+        } catch (FileIntegrityException $exception) {
+            return $this->integrityFailed($request, $exception, $inline ? 'preview' : 'download', $access);
+        }
+
+        try {
+            // Recorded before the first byte goes out; outside any transaction, so it is written at once.
+            if ($file->isConfidential()) {
+                FileDownloaded::dispatch($file, $request->user(), $inline);
+            }
+
+            $response = new BinaryFileResponse($copy->path, 200, [
+                'Content-Type' => $file->mime_type,
+                'X-Content-Type-Options' => 'nosniff',
+                'Cache-Control' => 'private, no-store',
+                'Content-Disposition' => $disposition,
+            ], false, null, false, false);
+            $response->deleteFileAfterSend(true);
+        } catch (Throwable $exception) {
+            @unlink($copy->path);
+
+            throw $exception;
+        }
 
         return $response;
     }
 
-    private function integrityFailed(Request $request, FileIntegrityException $exception, string $during): Response
+    private function integrityFailed(Request $request, FileIntegrityException $exception, string $during, FileAccess $access): Response
     {
         $file = $exception->fileObject;
 
-        FileIntegrityFailed::dispatch($file, $exception->reason, $exception->found, $during, $request->user());
+        FileIntegrityFailed::dispatch($file, $exception->reason, $exception->found, $during, $request->user(), $access->references($file));
 
         // The operations alert (SECURITY_MODEL section 9): the log channel of the server carries it.
         Log::critical('file.integrity_failed', [

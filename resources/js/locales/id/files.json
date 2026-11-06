@@ -16,7 +16,7 @@
     },
     "dropzone": {
         "intro": "Pilih satu berkas atau seret ke area ini.",
-        "limits": "Jenis: {{extensions}}. Ukuran maksimum {{max}} MB.",
+        "limits": "Jenis yang diizinkan: {{extensions}}. Ukuran maksimum {{max}} MB.",
         "choose": "Pilih berkas",
         "drop": "atau seret berkas ke sini",
         "selected": "{{name}} · {{size}}",

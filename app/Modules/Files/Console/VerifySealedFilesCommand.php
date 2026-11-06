@@ -5,6 +5,7 @@ namespace App\Modules\Files\Console;
 use App\Modules\Files\Events\FileIntegrityFailed;
 use App\Modules\Files\Exceptions\FileIntegrityException;
 use App\Modules\Files\Models\FileObject;
+use App\Modules\Files\Support\FileAccess;
 use App\Modules\Files\Support\FileIntegrity;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class VerifySealedFilesCommand extends Command
 
     protected $description = 'Verify the stored bytes of every file linked to a sealed owner against its recorded identity';
 
-    public function handle(FileIntegrity $integrity): int
+    public function handle(FileIntegrity $integrity, FileAccess $access): int
     {
         $failures = 0;
         $checked = 0;
@@ -44,7 +45,7 @@ class VerifySealedFilesCommand extends Command
                 $failures++;
 
                 // Each incident commits on its own, so a later failure of the run never loses the ones recorded before.
-                DB::transaction(fn () => FileIntegrityFailed::dispatch($file, $exception->reason, $exception->found, 'verify', null));
+                DB::transaction(fn () => FileIntegrityFailed::dispatch($file, $exception->reason, $exception->found, 'verify', null, $access->references($file)));
                 Log::critical('file.integrity_failed', ['file' => $file->public_id, 'reason' => $exception->reason, 'during' => 'verify']);
                 $this->error("{$file->public_id}: {$exception->reason}");
             }

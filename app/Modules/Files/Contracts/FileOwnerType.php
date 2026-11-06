@@ -30,9 +30,10 @@ interface FileOwnerType
     public function classification(): string;
 
     /**
-     * The row as the evidence page shows it, with the parent it returns to; null when the row does not exist.
+     * The row as the evidence page shows it, with a parent the actor may open (the administration page of the row for
+     * whoever manages it, otherwise the dashboard); null when the row does not exist.
      */
-    public function describe(int $ownerId): ?OwnerDescription;
+    public function describe(int $ownerId, User $actor): ?OwnerDescription;
 
     /**
      * Whether the actor may open and download the files of the row.

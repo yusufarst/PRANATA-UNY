@@ -40,10 +40,11 @@ final class PrivateFileRule implements ValidationRule
             return;
         }
 
-        // laporan.pdf.exe or surat.php.pdf: a name with a second extension before the last one.
+        // surat.php.pdf: a name with a second extension before the last one. A token of digits only, as in
+        // "SK No.12.pdf" or "Laporan v1.2.pdf", is part of the name, not an extension.
         $stem = mb_substr($name, 0, mb_strlen($name) - strlen($extension) - 1);
 
-        if (preg_match('/\.[a-z0-9]{1,5}$/i', $stem) === 1) {
+        if (preg_match('/\.[a-z][a-z0-9]{0,4}$/i', $stem) === 1) {
             $fail('files.validation.double_extension')->translate();
 
             return;

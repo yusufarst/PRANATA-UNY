@@ -79,6 +79,8 @@ final class RecordFileActivity
             'expected' => ['size_bytes' => $event->file->size_bytes, 'sha256' => $event->file->sha256],
             'found' => $event->found,
             'disk' => $event->file->disk,
+            // The subjects of the incident: the rows that reference the file (COMMAND_AND_API_CONTRACTS section 7).
+            'references' => $event->references,
         ], actor: $event->actor);
     }
 }

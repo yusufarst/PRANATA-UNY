@@ -33,12 +33,18 @@ final class AttachEvidence extends Action
     {
         $owner = $this->owners->find($ownerType);
 
-        if ($owner === null || $owner->describe($ownerId) === null) {
+        if ($owner === null || $owner->describe($ownerId, $actor) === null) {
             throw DomainRuleViolation::because('files.owner_unknown');
         }
 
         if (! in_array($purpose, $owner->purposes(), true)) {
             throw DomainRuleViolation::because('files.purpose_not_allowed');
+        }
+
+        // The files of a sealed owner are only linked in the transaction that records the owner (DATA_MODEL section 12); the
+        // page hides the upload, and the server refuses it before any byte is written.
+        if (DB::table('file_sealed_owner_types')->where('owner_type', $ownerType)->exists()) {
+            throw DomainRuleViolation::because('files.owner_sealed');
         }
 
         $source = $upload->getRealPath();
