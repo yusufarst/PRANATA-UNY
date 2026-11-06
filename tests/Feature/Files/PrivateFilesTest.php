@@ -372,7 +372,8 @@ describe('downloading (TAC-02, SEC-11, SEC-12)', function () {
 
         $forced = $this->get(route('files.download', ['file' => $archive->public_id, 'inline' => 1]))->assertOk();
 
-        expect($forced->headers->get('Content-Disposition'))->toStartWith('attachment; filename="lampiran.docx"');
+        // A name without a space is a token, which the header carries unquoted.
+        expect($forced->headers->get('Content-Disposition'))->toStartWith('attachment; filename=lampiran.docx');
 
         $this->get(route('files.download', $this->file->public_id))->assertOk();
 
@@ -456,7 +457,7 @@ describe('integrity (TAC-04, TAC-07, SEC-22)', function () {
             ->and($metadata['found']['sha256'])->toBe(hash('sha256', 'isi yang diubah'))
             ->and($metadata['expected']['sha256'])->toBe($this->file->sha256)
             // The subjects of the incident: the appointment, once, through its link and its evidence column.
-            ->and($metadata['references'])->toBe([['owner_type' => 'org_appointments', 'owner_id' => $this->appointment->id]])
+            ->and($metadata['references'])->toEqual([['owner_type' => 'org_appointments', 'owner_id' => $this->appointment->id]])
             // Nothing is repaired, replaced or released.
             ->and($this->file->refresh()->sha256)->toBe(hash('sha256', PDF_BYTES))
             ->and(FileLink::query()->sole()->isActive())->toBeTrue()
@@ -560,16 +561,17 @@ describe('releasing a link (TAC-06)', function () {
         expect($this->appointment->refresh()->evidence_file_id)->toBeNull();
     });
 
-    test('is refused to anyone who may not manage the row, and a link of another row is not this page\'s', function () {
+    test('is refused to anyone who may not manage the row, and a row that does not exist fails closed', function () {
         $link = $this->links[0];
 
         $this->actingAs($this->kaprodi);
         releaseEvidence($this, $link)->assertForbidden();
 
+        // Nobody may manage a row that does not exist, so the link is never reached through another address.
         $this->actingAs($this->admin);
         $this->withHeaders(['X-Idempotency-Key' => (string) Str::uuid()])
             ->post(route('files.evidence.release', ['type' => 'org_appointments', 'id' => $this->appointment->id + 1, 'link' => $link->id]))
-            ->assertNotFound();
+            ->assertForbidden();
 
         expect($link->refresh()->isActive())->toBeTrue();
     });
