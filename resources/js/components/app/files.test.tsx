@@ -102,9 +102,9 @@ describe('FileDropzone', () => {
         expect(html).toContain('name="purpose" value="DECREE"');
         expect(html).toContain('accept=".pdf,.jpg,.png"');
         // Nothing is chosen yet, so the primary action waits.
-        expect(html).toMatch(
-            /<button[^>]*data-test="upload-button"[^>]*disabled/,
-        );
+        const button = html.match(/<button[^>]*upload-button"[^>]*>/);
+
+        expect(button?.[0]).toContain('disabled');
     });
 
     it('speaks English after the language switch', async () => {
