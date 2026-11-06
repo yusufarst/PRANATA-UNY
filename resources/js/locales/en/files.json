@@ -1,0 +1,76 @@
+{
+    "evidence": {
+        "title": "Object evidence",
+        "intro": "The evidence files linked to this object. Files are stored privately and can only be downloaded by users who are authorized on the object.",
+        "upload": "Upload evidence",
+        "back": "Back to {{parent}}",
+        "owner": "Object",
+        "no_permission": "You can see the evidence of this object, but you cannot upload or release it.",
+        "active": "Attached evidence",
+        "empty_title": "No evidence yet",
+        "empty_description": "Upload an evidence file for this object.",
+        "empty_read_only": "No evidence for this object yet.",
+        "history": "Released links",
+        "upload_title": "Upload evidence",
+        "upload_intro": "The file is stored privately with a SHA-256 fingerprint computed by the server. Stored content is never overwritten."
+    },
+    "dropzone": {
+        "intro": "Choose one file or drag it into this area.",
+        "limits": "Kinds: {{extensions}}. Maximum size {{max}} MB.",
+        "choose": "Choose a file",
+        "drop": "or drop a file here",
+        "selected": "{{name}} · {{size}}",
+        "purpose": "Purpose",
+        "label": "Label",
+        "label_hint": "Optional, such as the number or date of the decree.",
+        "submit": "Upload",
+        "uploading": "Uploading… {{percent}}%",
+        "failed": "The upload could not be done",
+        "errors": {
+            "none": "Choose a file first.",
+            "extension": "This kind of file is not allowed. Accepted kinds: {{allowed}}.",
+            "double_extension": "The file name holds more than one extension. Rename the file so that only one extension ends it.",
+            "size": "The file is larger than the limit of {{max}} MB.",
+            "empty": "An empty file cannot be uploaded."
+        }
+    },
+    "file": {
+        "download": "Download",
+        "preview": "Preview",
+        "release": "Release link",
+        "more": "More",
+        "uploaded": "Uploaded by {{name}} · {{time}}",
+        "released": "Released by {{name}} · {{time}}",
+        "unknown_person": "unknown user",
+        "sha256": "SHA-256",
+        "purpose": {
+            "DECREE": "Decree"
+        },
+        "classification": {
+            "INTERNAL": "Internal",
+            "CONFIDENTIAL": "Confidential",
+            "RESTRICTED": "Restricted"
+        },
+        "scan": {
+            "NOT_SCANNED": "Not scanned yet",
+            "CLEAN": "Clean",
+            "INFECTED": "Infected",
+            "ERROR": "Scan failed"
+        },
+        "release_title": "Release the evidence link?",
+        "release_description": "The file and its history stay; only its link to this object is released. This step cannot be undone.",
+        "release_confirm": "Release",
+        "release_failed": "The link could not be released"
+    },
+    "panel": {
+        "decree_evidence": "Decree evidence",
+        "attached": "Decree evidence attached",
+        "none": "No decree evidence yet",
+        "open": "Open decree evidence"
+    },
+    "size": {
+        "bytes": "{{value}} B",
+        "kb": "{{value}} KB",
+        "mb": "{{value}} MB"
+    }
+}

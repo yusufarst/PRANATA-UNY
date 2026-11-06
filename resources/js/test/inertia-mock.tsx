@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 import { vi } from 'vite-plus/test';
 
 // A stand-in for @inertiajs/react, so components render on the server without an Inertia page.
@@ -31,6 +31,7 @@ export const router = {
     post: vi.fn(),
     on: vi.fn(),
     flushAll: vi.fn(),
+    visit: vi.fn(),
 };
 
 export function usePage() {
@@ -56,5 +57,33 @@ export function Link({
         >
             {children}
         </a>
+    );
+}
+
+type FormRenderProps = {
+    processing: boolean;
+    progress: null;
+    errors: Record<string, string>;
+};
+
+/** A plain form at rest: nothing is processing, no progress, no errors. */
+export function Form({
+    children,
+    action,
+    method,
+    className,
+}: {
+    children: ReactNode | ((props: FormRenderProps) => ReactNode);
+    action?: string;
+    method?: string;
+    className?: string;
+    [key: string]: unknown;
+}) {
+    return (
+        <form action={action} method={method} className={className}>
+            {typeof children === 'function'
+                ? children({ processing: false, progress: null, errors: {} })
+                : children}
+        </form>
     );
 }

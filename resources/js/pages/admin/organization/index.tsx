@@ -2,6 +2,7 @@ import { Head, Link } from '@inertiajs/react';
 import { ArrowLeft, Plus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import EvidenceController from '@/actions/App/Modules/Files/Http/Controllers/EvidenceController';
 import ChangeRequestController from '@/actions/App/Modules/Organization/Http/Controllers/ChangeRequestController';
 import OrganizationController from '@/actions/App/Modules/Organization/Http/Controllers/OrganizationController';
 import type {
@@ -79,6 +80,7 @@ type Detail = {
         effective_from: string;
         effective_to: string | null;
         decree_ref: string | null;
+        has_evidence: boolean;
         status: 'ACTIVE' | 'ENDED';
     }[];
     requests: RequestSummary[];
@@ -586,6 +588,17 @@ function UnitDetail({
                                         },
                                     )}
                                 </span>
+                                {/* The decree file lives on the evidence page of the appointment (PG-012, TASK-016). */}
+                                <Link
+                                    href={EvidenceController.show({
+                                        type: 'org_appointments',
+                                        id: appointment.id,
+                                    })}
+                                    className="text-sm text-foreground underline-offset-4 hover:underline"
+                                    data-test="appointment-evidence"
+                                >
+                                    {`${t(appointment.has_evidence ? 'files:panel.attached' : 'files:panel.none')} · ${t('files:panel.open')}`}
+                                </Link>
                             </li>
                         ))}
                     </ul>

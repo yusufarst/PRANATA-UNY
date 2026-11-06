@@ -3,8 +3,10 @@
 namespace App\Modules\Access\Providers;
 
 use App\Models\User;
+use App\Modules\Access\Contracts\AssignmentEvidence;
 use App\Modules\Access\Support\AccessEvaluator;
 use App\Modules\Access\Support\AccessSubject;
+use App\Modules\Access\Support\AssignmentEvidenceStore;
 use App\Modules\Access\Support\AssignmentSubjects;
 use App\Modules\Access\Support\CapabilityCatalog;
 use App\Modules\Access\Support\Separation\SeparationOfDuties;
@@ -36,6 +38,8 @@ class AccessServiceProvider extends ModuleServiceProvider
         // A module registers its kinds of object and its separation rules once when it boots.
         $this->app->singleton(AssignmentSubjects::class);
         $this->app->singleton(SeparationOfDuties::class);
+        // The decree evidence of assignments, for the Files module (TASK-016).
+        $this->app->bind(AssignmentEvidence::class, AssignmentEvidenceStore::class);
     }
 
     public function boot(): void

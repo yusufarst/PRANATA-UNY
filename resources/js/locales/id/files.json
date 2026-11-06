@@ -1,0 +1,76 @@
+{
+    "evidence": {
+        "title": "Bukti objek",
+        "intro": "Berkas bukti yang terhubung ke objek ini. Berkas tersimpan privat dan hanya dapat diunduh oleh pengguna yang berwenang atas objeknya.",
+        "upload": "Unggah bukti",
+        "back": "Kembali ke {{parent}}",
+        "owner": "Objek",
+        "no_permission": "Anda dapat melihat bukti objek ini, tetapi tidak dapat mengunggah atau melepasnya.",
+        "active": "Bukti terlampir",
+        "empty_title": "Belum ada bukti",
+        "empty_description": "Unggah berkas bukti untuk objek ini.",
+        "empty_read_only": "Belum ada bukti untuk objek ini.",
+        "history": "Riwayat tautan yang dilepas",
+        "upload_title": "Unggah bukti",
+        "upload_intro": "Berkas disimpan privat dengan sidik jari SHA-256 yang dihitung server. Isi berkas yang sudah tersimpan tidak pernah ditimpa."
+    },
+    "dropzone": {
+        "intro": "Pilih satu berkas atau seret ke area ini.",
+        "limits": "Jenis: {{extensions}}. Ukuran maksimum {{max}} MB.",
+        "choose": "Pilih berkas",
+        "drop": "atau seret berkas ke sini",
+        "selected": "{{name}} · {{size}}",
+        "purpose": "Tujuan",
+        "label": "Keterangan",
+        "label_hint": "Opsional, misalnya nomor atau tanggal SK.",
+        "submit": "Unggah",
+        "uploading": "Mengunggah… {{percent}}%",
+        "failed": "Unggahan tidak dapat dilakukan",
+        "errors": {
+            "none": "Pilih satu berkas dulu.",
+            "extension": "Jenis berkas tidak diizinkan. Jenis yang diterima: {{allowed}}.",
+            "double_extension": "Nama berkas memuat lebih dari satu ekstensi. Ganti nama berkas sehingga hanya ada satu ekstensi di akhir.",
+            "size": "Ukuran berkas melebihi batas {{max}} MB.",
+            "empty": "Berkas kosong tidak dapat diunggah."
+        }
+    },
+    "file": {
+        "download": "Unduh",
+        "preview": "Pratinjau",
+        "release": "Lepas tautan",
+        "more": "Lainnya",
+        "uploaded": "Diunggah oleh {{name}} · {{time}}",
+        "released": "Dilepas oleh {{name}} · {{time}}",
+        "unknown_person": "pengguna tidak dikenal",
+        "sha256": "SHA-256",
+        "purpose": {
+            "DECREE": "SK"
+        },
+        "classification": {
+            "INTERNAL": "Internal",
+            "CONFIDENTIAL": "Rahasia",
+            "RESTRICTED": "Sangat rahasia"
+        },
+        "scan": {
+            "NOT_SCANNED": "Belum dipindai",
+            "CLEAN": "Bersih",
+            "INFECTED": "Terinfeksi",
+            "ERROR": "Pemindaian gagal"
+        },
+        "release_title": "Lepas tautan bukti?",
+        "release_description": "Berkas dan riwayatnya tetap tersimpan; hanya tautannya ke objek ini yang dilepas. Langkah ini tidak dapat dibatalkan.",
+        "release_confirm": "Lepas",
+        "release_failed": "Tautan tidak dapat dilepas"
+    },
+    "panel": {
+        "decree_evidence": "Bukti SK",
+        "attached": "Ada bukti SK",
+        "none": "Belum ada bukti SK",
+        "open": "Buka bukti SK"
+    },
+    "size": {
+        "bytes": "{{value}} B",
+        "kb": "{{value}} KB",
+        "mb": "{{value}} MB"
+    }
+}

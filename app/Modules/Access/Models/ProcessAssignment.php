@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $effective_from
  * @property Carbon|null $effective_to
  * @property string|null $decree_ref
+ * @property int|null $evidence_file_id
  * @property array<string, mixed> $sod_check
  * @property int $assigned_by
  * @property string $status
@@ -140,6 +141,7 @@ class ProcessAssignment extends Model
     {
         return [
             'subject_id' => 'integer',
+            'evidence_file_id' => 'integer',
             'effective_from' => 'datetime',
             'effective_to' => 'datetime',
             'sod_check' => 'array',

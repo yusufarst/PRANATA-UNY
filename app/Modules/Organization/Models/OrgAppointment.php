@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $effective_from
  * @property Carbon|null $effective_to
  * @property string|null $decree_ref
+ * @property int|null $evidence_file_id
  * @property string $status
  * @property int|null $change_request_id
  * @property int|null $created_by
@@ -64,6 +65,7 @@ class OrgAppointment extends Model
         return [
             'effective_from' => 'date',
             'effective_to' => 'date',
+            'evidence_file_id' => 'integer',
         ];
     }
 }

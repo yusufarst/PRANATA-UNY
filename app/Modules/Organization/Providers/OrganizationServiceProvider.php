@@ -3,7 +3,9 @@
 namespace App\Modules\Organization\Providers;
 
 use App\Modules\ModuleServiceProvider;
+use App\Modules\Organization\Contracts\AppointmentEvidence;
 use App\Modules\Organization\Contracts\MaintenancePolicy;
+use App\Modules\Organization\Support\AppointmentEvidenceStore;
 use App\Modules\Organization\Support\UnresolvedMaintenancePolicy;
 
 class OrganizationServiceProvider extends ModuleServiceProvider
@@ -18,5 +20,6 @@ class OrganizationServiceProvider extends ModuleServiceProvider
     public function register(): void
     {
         $this->app->bind(MaintenancePolicy::class, UnresolvedMaintenancePolicy::class);
+        $this->app->bind(AppointmentEvidence::class, AppointmentEvidenceStore::class);
     }
 }

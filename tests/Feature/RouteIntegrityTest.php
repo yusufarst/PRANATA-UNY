@@ -5,8 +5,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 
 /*
- * Routes that need no sign-in. The storage routes come from the framework and validate a signature themselves.
- * The language choice only changes the caller's own session.
+ * Routes that need no sign-in. The language choice only changes the caller's own session. The private disk serves no
+ * route at all (SEC-11, TASK-016): the framework's signed storage routes are off.
  */
 const PUBLIC_ROUTES = [
     'home',
@@ -17,8 +17,6 @@ const PUBLIC_ROUTES = [
     'password.request',
     'password.reset',
     'password.update',
-    'storage.local',
-    'storage.local.upload',
     'two-factor.login',
     'two-factor.login.store',
 ];
@@ -116,6 +114,13 @@ test('the route lists name only routes that exist', function () {
     $names = namedRoutes()->keys()->all();
 
     expect(array_diff([...PUBLIC_ROUTES, ...OWN_ACCOUNT_ROUTES], $names))->toBe([]);
+});
+
+// SEC-11: the private disk has no storage route, signed or not; bytes leave through files.download only.
+test('no framework route serves the private disk', function () {
+    expect(namedRoutes()->has('storage.local'))->toBeFalse()
+        ->and(namedRoutes()->has('storage.local.upload'))->toBeFalse()
+        ->and(namedRoutes()->has('files.download'))->toBeTrue();
 });
 
 // OD-38: no route deletes the own account; DatabaseRolesTest proves pranata_app cannot delete users either.

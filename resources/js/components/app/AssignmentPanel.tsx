@@ -1,8 +1,9 @@
-import { Form, usePage } from '@inertiajs/react';
+import { Form, Link, usePage } from '@inertiajs/react';
 import { EllipsisVertical, ShieldAlert, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AssignmentController from '@/actions/App/Modules/Access/Http/Controllers/AssignmentController';
+import EvidenceController from '@/actions/App/Modules/Files/Http/Controllers/EvidenceController';
 import { selectClassName, useDateTime } from '@/components/admin/users';
 import { ConflictDialog } from '@/components/app/ConflictDialog';
 import { StatusBadge } from '@/components/app/status-badge';
@@ -41,6 +42,7 @@ export const assignmentStatusCategory: Record<
 };
 
 export type AssignmentRow = {
+    id: number;
     public_id: string;
     assignment_role: string;
     decision: boolean;
@@ -51,6 +53,7 @@ export type AssignmentRow = {
     effective_from: string;
     effective_to: string | null;
     decree_ref: string | null;
+    has_evidence: boolean;
     sod_rules: string[];
     assigned_by: string | null;
     closed_by: string | null;
@@ -183,6 +186,24 @@ export function AssignmentPanel({ panel }: { panel: AssignmentPanelProps }) {
                     {t('admin:assignments.fields.decree_ref')}
                 </dt>
                 <dd className="break-words">{row.decree_ref ?? none}</dd>
+            </div>
+            <div className="grid gap-0.5">
+                <dt className="text-muted-foreground">
+                    {t('files:panel.decree_evidence')}
+                </dt>
+                <dd>
+                    {/* The decree file lives on the evidence page of the assignment (PG-012, TASK-016). */}
+                    <Link
+                        href={EvidenceController.show({
+                            type: 'process_assignments',
+                            id: row.id,
+                        })}
+                        className="text-foreground underline-offset-4 hover:underline"
+                        data-test="assignment-evidence"
+                    >
+                        {`${t(row.has_evidence ? 'files:panel.attached' : 'files:panel.none')} · ${t('files:panel.open')}`}
+                    </Link>
+                </dd>
             </div>
             <div className="grid gap-0.5">
                 <dt className="text-muted-foreground">

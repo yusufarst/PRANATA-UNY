@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Modules\Organization\Models\OrgAppointment;
+use App\Modules\Organization\Models\OrgPosition;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -51,6 +53,21 @@ class ScenarioSeeder extends Seeder
         }
 
         $this->call([OrganizationSeeder::class, AccessProfileSeeder::class]);
+
+        // A synthetic appointment, so the decree evidence of PG-505 can be exercised in the browser (TASK-016). It grants
+        // nothing (OD-28). Safe to repeat: the same person and position update their own row.
+        $internal = User::query()->where('email', "internal.{$run}@e2e.pranata.test")->firstOrFail();
+        $position = OrgPosition::query()->where('code', 'KAPRODI_TI')->firstOrFail();
+
+        OrgAppointment::query()->updateOrCreate(
+            ['user_id' => $internal->id, 'position_id' => $position->id],
+            [
+                'org_unit_id' => $position->org_unit_id,
+                'effective_from' => OrganizationSeeder::EFFECTIVE_FROM,
+                'decree_ref' => 'SK/SINTETIS/2026/001',
+                'status' => OrgAppointment::ACTIVE,
+            ],
+        );
     }
 
     /**

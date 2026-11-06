@@ -30,10 +30,12 @@ return [
 
     'disks' => [
 
+        // The private disk of ADR-0009: nothing on it is served by a URL, signed or not (SEC-11). Bytes leave only through
+        // the verified download route of the Files module.
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],

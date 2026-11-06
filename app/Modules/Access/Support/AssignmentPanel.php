@@ -70,6 +70,8 @@ final class AssignmentPanel
             ->pluck('name', 'id');
 
         return array_map(fn (ProcessAssignment $assignment): array => [
+            // The id names the row on its evidence page (PG-012, files/evidence/process_assignments/{id}).
+            'id' => $assignment->id,
             'public_id' => $assignment->public_id,
             'assignment_role' => $assignment->assignment_role,
             'decision' => AssignmentRoles::isDecision($assignment->assignment_role),
@@ -86,6 +88,7 @@ final class AssignmentPanel
             'effective_from' => $assignment->effective_from->toIso8601String(),
             'effective_to' => $assignment->effective_to?->toIso8601String(),
             'decree_ref' => $assignment->decree_ref,
+            'has_evidence' => $assignment->evidence_file_id !== null,
             'sod_rules' => array_values(array_map(
                 fn (array $rule): string => (string) $rule['id'],
                 (array) ($assignment->sod_check['rules'] ?? []),

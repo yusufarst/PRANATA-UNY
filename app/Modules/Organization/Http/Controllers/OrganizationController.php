@@ -121,6 +121,8 @@ class OrganizationController
                     'effective_from' => $appointment->effective_from->toDateString(),
                     'effective_to' => $appointment->effective_to?->toDateString(),
                     'decree_ref' => $appointment->decree_ref,
+                    // The decree file lives on the evidence page of the appointment (PG-012, TASK-016).
+                    'has_evidence' => $appointment->evidence_file_id !== null,
                     'status' => $appointment->status,
                 ])
                 ->all(),

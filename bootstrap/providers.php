@@ -2,6 +2,7 @@
 
 use App\Modules\Access\Providers\AccessServiceProvider;
 use App\Modules\Audit\Providers\AuditServiceProvider;
+use App\Modules\Files\Providers\FilesServiceProvider;
 use App\Modules\Identity\Providers\IdentityServiceProvider;
 use App\Modules\Organization\Providers\OrganizationServiceProvider;
 use App\Modules\Platform\Providers\PlatformServiceProvider;
@@ -16,4 +17,5 @@ return [
     IdentityServiceProvider::class,
     OrganizationServiceProvider::class,
     AccessServiceProvider::class,
+    FilesServiceProvider::class,
 ];

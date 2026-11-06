@@ -6,6 +6,7 @@ use App\Modules\Audit\Console\EnsureAuditPartitionsCommand;
 use App\Modules\Audit\Listeners\RecordAccessAdministration;
 use App\Modules\Audit\Listeners\RecordAccountAdministration;
 use App\Modules\Audit\Listeners\RecordAuthenticationEvents;
+use App\Modules\Audit\Listeners\RecordFileActivity;
 use App\Modules\Audit\Support\AuditLogger;
 use App\Modules\ModuleServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
@@ -31,6 +32,7 @@ class AuditServiceProvider extends ModuleServiceProvider
         Event::subscribe(RecordAuthenticationEvents::class);
         Event::subscribe(RecordAccountAdministration::class);
         Event::subscribe(RecordAccessAdministration::class);
+        Event::subscribe(RecordFileActivity::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([EnsureAuditPartitionsCommand::class]);

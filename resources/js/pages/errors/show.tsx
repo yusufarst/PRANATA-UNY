@@ -14,14 +14,18 @@ export default function ErrorPage({
     status,
     returnUrl = null,
     requestId,
+    description: specificDescription = null,
 }: {
     status: ErrorStatus;
     returnUrl?: string | null;
     requestId?: string;
+    /** A localized explanation of this failure from the server, such as a file whose stored bytes no longer match. */
+    description?: string | null;
 }) {
     const { t } = useTranslation();
     const title = t(`common:errors.${status}.title`);
-    const description = t(`common:errors.${status}.description`);
+    const description =
+        specificDescription ?? t(`common:errors.${status}.description`);
     // A POST fails during maintenance and with an expired page token, so the switch would be a dead control there.
     // After a failed mutation it would also redirect back to an address that may answer no GET.
     const canSwitchLanguage =
