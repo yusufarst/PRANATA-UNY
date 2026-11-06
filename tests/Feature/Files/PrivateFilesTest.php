@@ -593,7 +593,7 @@ describe('releasing a link (TAC-06)', function () {
         ]);
         $link = $this->links[1];
 
-        $this->actingAs($this->admin)->get(evidenceUrl('org_appointments', $other->id))->assertOk()
+        $this->get(evidenceUrl('org_appointments', $other->id))->assertOk()
             ->assertInertia(fn (Assert $page) => $page->where('panel.can.upload', true));
 
         $this->withHeaders(['X-Idempotency-Key' => (string) Str::uuid()])
@@ -601,6 +601,7 @@ describe('releasing a link (TAC-06)', function () {
             ->assertNotFound();
 
         expect($link->refresh()->isActive())->toBeTrue()
+            ->and($this->links[0]->refresh()->isActive())->toBeTrue()
             ->and($link->unlinked_by)->toBeNull()
             ->and($this->appointment->refresh()->evidence_file_id)->toBe($link->file_id)
             ->and(DB::table('audit_events')->where('action', 'file.unlinked')->exists())->toBeFalse();
