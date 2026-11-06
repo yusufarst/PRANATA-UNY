@@ -19,6 +19,7 @@ use App\Modules\Identity\Support\PrivilegedAccounts;
 use App\Modules\Organization\Models\OrgUnit;
 use App\Modules\Organization\Support\BusinessDate;
 use App\Modules\Platform\Exceptions\DomainRuleViolation;
+use App\Modules\Platform\Support\DatabaseRoles;
 use Carbon\CarbonImmutable;
 use Database\Seeders\AccessProfileSeeder;
 use Database\Seeders\OrganizationSeeder;
@@ -279,6 +280,40 @@ describe('assigning', function () {
         DB::table('process_assignments')->insert($row);
 
         expect(DatabaseSession::sqlStateAs(null, fn () => DB::table('process_assignments')->insert([...$row, 'public_id' => strtolower((string) Str::ulid())])))->toBe('23505');
+    });
+
+    test('pranata_app reads, adds and changes assignments but can never delete or truncate them, so the history stays', function () {
+        $admin = assignmentAdmin();
+        $user = User::factory()->create();
+        $may = fn (string $privilege): bool => (bool) DB::scalar('select has_table_privilege(?, ?, ?)', [DatabaseRoles::APP, 'process_assignments', $privilege]);
+
+        expect($may('select'))->toBeTrue()
+            ->and($may('insert'))->toBeTrue()
+            ->and($may('update'))->toBeTrue()
+            ->and($may('delete'))->toBeFalse()
+            ->and($may('truncate'))->toBeFalse();
+
+        $row = [
+            'public_id' => strtolower((string) Str::ulid()),
+            'subject_type' => 'probe.package',
+            'subject_id' => 1,
+            'assignment_role' => 'PLANNER',
+            'user_id' => $user->id,
+            'effective_from' => now(),
+            'sod_check' => '{}',
+            'assigned_by' => $admin->id,
+            'status' => 'ACTIVE',
+        ];
+
+        // As the application connects: the row is added and read; removing it in any way is refused by the database.
+        expect(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::table('process_assignments')->insert($row)))->toBeNull();
+
+        DB::table('process_assignments')->insert($row);
+
+        expect(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::table('process_assignments')->count()))->toBeNull()
+            ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::table('process_assignments')->delete()))->toBe('42501')
+            ->and(DatabaseSession::sqlStateAs(DatabaseRoles::APP, fn () => DB::statement('truncate process_assignments')))->toBe('42501')
+            ->and(DB::table('process_assignments')->count())->toBe(1);
     });
 });
 
