@@ -10,8 +10,13 @@ $script:BootstrapRequiredJobs = @{
 
 # Ordinal comparison, character for character. PowerShell -ceq and -cin compare by culture and treat some invisible
 # characters (U+FEFF, U+00AD) as absent, so a byte order mark or a disguised path would compare equal.
-function Test-PranataSame([string]$A, [string]$B) { return [string]::Equals($A, $B, [StringComparison]::Ordinal) }
-function Test-PranataAmong([string]$Value, [string[]]$Set) {
+# $null equals only $null, never the empty string.
+function Test-PranataSame($A, $B) {
+    if ($null -eq $A -or $null -eq $B) { return ($null -eq $A -and $null -eq $B) }
+    return [string]::Equals([string]$A, [string]$B, [StringComparison]::Ordinal)
+}
+function Test-PranataAmong($Value, [string[]]$Set) {
+    if ($null -eq $Value) { return $false }
     foreach ($item in @($Set)) { if ([string]::Equals($Value, [string]$item, [StringComparison]::Ordinal)) { return $true } }
     return $false
 }
@@ -170,8 +175,8 @@ function Get-PranataBootstrapRun {
 
 # Reads the PR branch name; the Task is never taken from a caller-supplied argument.
 function Get-PranataTaskFromBranch([string]$Branch) {
-    if ($Branch -match '^(feature|chore|fix)/task-(\d{3})-') { return @{ TaskId = "TASK-$($Matches[2])"; Reconcile = $false } }
-    if ($Branch -match '^docs/reconcile-task-(\d{3})(-r\d+)?$') { return @{ TaskId = "TASK-$($Matches[1])"; Reconcile = $true } }
+    if ($Branch -match '^(feature|chore|fix)/task-([0-9]{3})-') { return @{ TaskId = "TASK-$($Matches[2])"; Reconcile = $false } }
+    if ($Branch -match '^docs/reconcile-task-([0-9]{3})(-r[0-9]+)?$') { return @{ TaskId = "TASK-$($Matches[1])"; Reconcile = $true } }
     return @{ TaskId = $null; Reconcile = $false }
 }
 
@@ -182,7 +187,7 @@ function Test-PranataReconcileScope([string[]]$Changed, [string]$TaskId) {
 }
 
 function Test-PranataAuthorizationText([string]$Records, [string]$TaskId) {
-    if ($TaskId -notmatch '^TASK-(\d{3})$') { return $false }
+    if ($TaskId -notmatch '^TASK-([0-9]{3})$') { return $false }
     $number = [int]$Matches[1]
     if ($number -lt 1 -or $number -gt 78) { return $false }
     if ($Records -notmatch '(?ms)^## AUTH-013\s*$(.*?)(^## |\z)') { return $false }
@@ -525,14 +530,50 @@ function Get-PranataBlobId([string]$Root, [string]$Sha, [string]$Path) {
     return $null
 }
 
+# An absolute repository root, resolved against the PowerShell location the way git -C resolves it.
+function Resolve-PranataRoot([string]$Root) {
+    if (-not $Root) { throw 'repository root is empty' }
+    # GetFullPath also expands 8.3 short names, so the root and an executable path compare in one form.
+    return [IO.Path]::GetFullPath((Resolve-Path -LiteralPath $Root -ErrorAction Stop).ProviderPath).TrimEnd('\', '/')
+}
+
+# The trusted git executable: an application found on PATH by PowerShell, as an absolute path outside the
+# repository. Process.Start with a bare name would search the current directory first, so a planted git.exe in
+# the working tree could answer instead. Throws when no such executable exists; there is no fallback.
+function Get-PranataGitExecutable([string]$Root) {
+    $rootFull = (Resolve-PranataRoot $Root) + '\'
+    foreach ($command in @(Get-Command git -CommandType Application -ErrorAction SilentlyContinue)) {
+        $path = [string]$command.Source
+        if (-not $path -or -not [IO.Path]::IsPathRooted($path)) { continue }
+        $path = [IO.Path]::GetFullPath($path)
+        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { continue }
+        if ($path.StartsWith($rootFull, [StringComparison]::OrdinalIgnoreCase)) { throw "git resolves to $path inside the repository; refused" }
+        # Independent of how the root is spelled (junction, short name): no folder above the executable may be a
+        # Git working tree.
+        $dir = Split-Path -Parent $path
+        while ($dir) {
+            if (Test-Path -LiteralPath (Join-Path $dir '.git')) { throw "git resolves to $path inside the Git working tree $dir; refused" }
+            $parent = Split-Path -Parent $dir
+            if (-not $parent -or $parent -eq $dir) { break }
+            $dir = $parent
+        }
+        return $path
+    }
+    throw 'no trusted git executable was found on PATH'
+}
+
 # The raw standard output of a git command, or $null when it fails. Read from the process stream, never through
 # the PowerShell pipeline, which splits on CR and LF and re-encodes the text. Arguments carry no space or quote.
 function Invoke-PranataGitBytes([string]$Root, [string[]]$Arguments) {
     foreach ($argument in $Arguments) { if (-not $argument -or $argument -match '[\s"]') { return $null } }
+    try {
+        $rootFull = Resolve-PranataRoot $Root
+        $git = Get-PranataGitExecutable $rootFull
+    } catch { return $null }
     $info = New-Object System.Diagnostics.ProcessStartInfo
-    $info.FileName = 'git'
+    $info.FileName = $git
     $info.Arguments = ($Arguments -join ' ')
-    $info.WorkingDirectory = $Root
+    $info.WorkingDirectory = $rootFull
     $info.UseShellExecute = $false
     $info.CreateNoWindow = $true
     $info.RedirectStandardOutput = $true
@@ -617,7 +658,8 @@ function Invoke-PranataGhCommandJson([string[]]$Arguments) {
 
 # A listing or commit list that reaches its cap may be truncated; both are refused rather than read as complete.
 $script:RemediationListLimit = 1000
-$script:RemediationCommitLimit = 250
+# The PR commit list of the CLI comes in GraphQL pages of 100; a longer PR is refused, never trusted as complete.
+$script:RemediationCommitLimit = 100
 
 # Publication facts of 8.5 item 7 for entry $Entry. Git, not GitHub, decides ancestry and the changed files.
 # Prs: merged PRs whose body names this record, the evidence of earlier entries. FamilyPrs and PathCommits do not
@@ -667,6 +709,11 @@ function Get-PranataRemediationPublication {
                 $oids = @(@($view.commits) | Where-Object { $_ } | ForEach-Object { [string]$_.oid })
                 if ($oids.Count -eq 0 -or @($oids | Where-Object { $_ -cnotmatch '^[0-9a-f]{40}$' }).Count -gt 0) { throw "PR #$number lists no usable commits" }
                 if ($oids.Count -ge $script:RemediationCommitLimit) { throw "PR #$number reaches the commit listing limit of $($script:RemediationCommitLimit)" }
+                # The REST pull request holds the authoritative commit count; a shorter list is incomplete.
+                $pull = Invoke-PranataGhCommandJson @('api', "repos/$Repo/pulls/$number")
+                $total = [string]$pull.commits
+                if ($total -cnotmatch '^[1-9][0-9]*$') { throw "GitHub gives no commit count for PR #$number" }
+                if ([int]$total -ne $oids.Count) { throw "GitHub counts $total commits in PR #$number, the commit list holds $($oids.Count)" }
                 $before = [string](& git -C $Root rev-parse --verify --quiet "$head~$($oids.Count)" 2>$null)
                 if ($LASTEXITCODE -ne 0 -or $before -cnotmatch '^[0-9a-f]{40}$') { throw "the base of PR #$number could not be resolved in Git" }
                 $range = @(& git -C $Root rev-list "$before..$head" 2>$null)

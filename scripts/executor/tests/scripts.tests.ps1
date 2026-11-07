@@ -383,6 +383,13 @@ try {
     $f = New-RemFacts 0; $f.Publication.Prs = @(New-RemPr 0 -Change @{ Body = 'Ringkasan (edited)' }); $f.Publication.FamilyPrs = @(@{ Number = 60; Branch = $remBranches[0]; HeadSha = ('e' * 39) + '0' })
     $text = Get-RemFailures $f
     Assert ($text -match 'already used: merged PR #60' -and $text -notmatch 'already published') "remediation: an edited PR body does not reopen entry 0 ($text)"
+    # N4: entries that share a path or a branch family stay fail closed; the later one is refused once the earlier
+    # one is merged. The record semantics are unchanged.
+    $f = New-RemFacts 2; $f.Records = $authText + (New-RemBlock).Replace("PATHS: $($remPaths[2] -join ', ')", "PATHS: $($remPaths[2] -join ', '), $($remPaths[1][0])")
+    $f.ChangedFiles = $remPaths[2]; $f.Publication.PathCommits = @('b' * 40)
+    Assert-RemRefused $f 'entry 2 is already used: its paths changed on main after the activation commit' 'an entry sharing a path with a merged earlier entry'
+    $f = New-RemFacts 2; $f.Publication.FamilyPrs = @(@{ Number = 61; Branch = $remBranches[2]; HeadSha = ('c' * 40) })
+    Assert-RemRefused $f 'entry 2 is already used: merged PR #61' 'an entry whose branch family already has a merged PR'
     foreach ($key in @('PathCommits', 'FamilyPrs')) {
         $f = New-RemFacts 1; $f.Publication[$key] = $null
         Assert-RemRefused $f 'publication evidence is incomplete' "publication evidence without $key"
@@ -410,6 +417,7 @@ try {
     Assert-RemRefused $f 'changed outside ## COMPLETION EVIDENCE: ## OBJECTIVE' 'a soft hyphen outside COMPLETION EVIDENCE'
     Assert (-not (Test-PranataReconcileScope @("docs/11-tasks/TASK-015${softHyphen}.md") 'TASK-015')) 'gate: 8.3 reconciliation scope compares paths character for character'
     Assert (Test-PranataReconcileScope @('docs/11-tasks/TASK-015.md', 'docs/handoff/CURRENT_HANDOFF.md') 'TASK-015') 'gate: 8.3 reconciliation scope still accepts its three documents'
+    Assert ((Test-PranataSame $null $null) -and -not (Test-PranataSame $null '') -and -not (Test-PranataAmong $null @(''))) 'gate: $null compares equal only to $null'
 
     # The gate: only the DONE check is lifted, and every other 8.1 check still fails on its own (M1-AC-03, M1-AC-05).
     $goodRem = $good.Clone(); $goodRem.TaskStatus = 'DONE'; $goodRem.Mode = 'SUPERVISED'; $goodRem.Remediation = @{ Label = 'REM-001 entry 1'; Failures = @() }
@@ -436,7 +444,8 @@ try {
     Assert (((Get-PranataMergeFailures -Facts $remAuto) -join ';') -match '8\.1\.6') 'gate: guardrail paths on the remediation lane stay SUPERVISED only'
 
     # P2-1: Task files compared byte for byte from real Git blobs (CR, final newline, BOM, invalid UTF-8).
-    $blobRepo = Join-Path $work 'blobs'
+    # N5: the repository root contains a space.
+    $blobRepo = Join-Path $work 'blob repo'
     & git init --quiet --initial-branch=main $blobRepo
     $taskPath = 'docs/11-tasks/TASK-015.md'
     function Save-BlobVariant([byte[]]$Bytes) {
@@ -480,7 +489,58 @@ try {
     Assert-RemRefused $facts 'was not compared' 'a Task file that is not valid UTF-8'
     Assert ($null -eq (Get-PranataBlobText $blobRepo $baseBlob 'docs/missing.md')) 'blob text: a missing path gives no text'
     Assert ($null -eq (Get-PranataBlobText $blobRepo 'HEAD' $taskPath)) 'blob text: only a full SHA is read'
-    # --- Disposable repo with the real commit-msg hook, under the machine autocrlf setting.
+    # N2: a relative root is resolved against the PowerShell location, like git -C.
+    Push-Location -LiteralPath $work
+    try { Assert ((Get-PranataBlobText 'blob repo' $baseBlob $taskPath) -ceq $taskText) 'blob text: a relative root with a space resolves to the same repository' }
+    finally { Pop-Location }
+    Assert ((Resolve-PranataRoot (Join-Path $blobRepo 'docs\..')) -ceq (Resolve-PranataRoot $blobRepo)) 'root: a root is normalized to one absolute path'
+    # N1: a git.exe planted in the repository never runs. Windows would start it from the current directory when
+    # NoDefaultCurrentDirectoryInExePath is unset, and from PATH when the repository is on PATH.
+    $fakeGit = Join-Path $blobRepo 'git.exe'
+    Copy-Item -LiteralPath (Join-Path $env:SystemRoot 'System32\hostname.exe') -Destination $fakeGit
+    $savedCwd = [Environment]::CurrentDirectory
+    $savedNoCwd = $env:NoDefaultCurrentDirectoryInExePath
+    $savedPathN1 = $env:PATH
+    Push-Location -LiteralPath $blobRepo
+    try {
+        $env:NoDefaultCurrentDirectoryInExePath = $null
+        [Environment]::CurrentDirectory = $blobRepo
+        $trusted = Get-PranataGitExecutable $blobRepo
+        Assert ([IO.Path]::IsPathRooted($trusted) -and -not $trusted.StartsWith($blobRepo, [StringComparison]::OrdinalIgnoreCase)) "git path: the trusted git is absolute and outside the repository ($trusted)"
+        Assert ((Get-PranataBlobText $blobRepo $baseBlob $taskPath) -ceq $taskText) 'git path: a git.exe in the current directory does not answer blob reads'
+        $listed = @(Get-PranataChangedFiles $blobRepo @($baseBlob, $sha))
+        Assert ($listed.Count -eq 1 -and $listed[0] -ceq $taskPath) "git path: a git.exe in the current directory does not answer changed-file lists ($($listed -join ', '))"
+        $env:PATH = "$blobRepo;$savedPathN1"
+        $refused = $false
+        try { [void](Get-PranataGitExecutable $blobRepo) } catch { $refused = ($_.Exception.Message -match 'inside the repository') }
+        Assert $refused 'git path: a git.exe inside the repository found first on PATH is refused'
+        Assert ($null -eq (Get-PranataBlobText $blobRepo $baseBlob $taskPath)) 'git path: no blob is read when git resolves inside the repository'
+        $threw = $false
+        try { [void](Get-PranataChangedFiles $blobRepo @($baseBlob, $sha)) } catch { $threw = $true }
+        Assert $threw 'git path: the changed-file list fails closed when git resolves inside the repository'
+        # The same through another spelling of a working tree: any Git working tree above the executable refuses.
+        $otherTree = Join-Path $work 'other tree'
+        $env:PATH = $savedPathN1
+        & git init --quiet $otherTree
+        Assert (Test-Path -LiteralPath (Join-Path $otherTree '.git')) 'git path: the second working tree exists'
+        [void](New-Item -ItemType Directory -Path (Join-Path $otherTree 'bin') -Force)
+        Copy-Item -LiteralPath (Join-Path $env:SystemRoot 'System32\hostname.exe') -Destination (Join-Path $otherTree 'bin\git.exe')
+        $env:PATH = "$(Join-Path $otherTree 'bin');$savedPathN1"
+        $refused = $false
+        try { [void](Get-PranataGitExecutable $blobRepo) } catch { $refused = ($_.Exception.Message -match 'inside the Git working tree') }
+        Assert $refused 'git path: a git.exe inside any Git working tree is refused'
+        $env:PATH = (@($savedPathN1 -split ';' | Where-Object { $_ -and -not (Test-Path -LiteralPath (Join-Path $_ 'git.exe')) -and -not (Test-Path -LiteralPath (Join-Path $_ 'git.cmd')) }) -join ';')
+        $missing = $false
+        try { [void](Get-PranataGitExecutable $blobRepo) } catch { $missing = ($_.Exception.Message -match 'no trusted git') }
+        Assert $missing 'git path: without git on PATH there is no fallback to a bare name'
+        Assert ($null -eq (Get-PranataBlobText $blobRepo $baseBlob $taskPath)) 'git path: without a trusted git no blob is read'
+    } finally {
+        $env:PATH = $savedPathN1
+        $env:NoDefaultCurrentDirectoryInExePath = $savedNoCwd
+        [Environment]::CurrentDirectory = $savedCwd
+        Pop-Location
+        Remove-Item -LiteralPath $fakeGit -Force
+    }    # --- Disposable repo with the real commit-msg hook, under the machine autocrlf setting.
     $origin = Join-Path $work 'origin.git'
     $clone = Join-Path $work 'clone'
     & git init --bare --quiet --initial-branch=main $origin
@@ -836,6 +896,7 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-m","result":"ra
     Set-Content -LiteralPath (Join-Path $stubDir 'gh.cmd') -Value '@powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0gh-stub.ps1" %*' -Encoding ASCII
     Set-Content -LiteralPath (Join-Path $stubDir 'gh-stub.ps1') -Encoding ASCII -Value @'
 $dir = Split-Path -Parent $MyInvocation.MyCommand.Path
+if ($args[0] -eq 'api' -and $args[1] -match '/pulls/([0-9]+)$') { Get-Content -LiteralPath (Join-Path $dir ('pull-' + $Matches[1] + '.json')) -Raw; exit 0 }
 if ($args[0] -eq 'api') { Get-Content -LiteralPath (Join-Path $dir 'checks.json') -Raw; exit 0 }
 if ($args -contains '--jq') { Get-Content -LiteralPath (Join-Path $dir 'after.txt') -Raw; exit 0 }
 if ($args[1] -eq 'list') { Get-Content -LiteralPath (Join-Path $dir 'merged.json') -Raw; exit 0 }
@@ -921,6 +982,27 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         $env:PRANATA_EXECUTOR_MODE = $savedModeM
         $m = Invoke-Script $merge @('-Pr', '10', '-VerifiedSha', $shaM, '-Root', $cloneM, '-DryRun')
         Assert ($m.Code -eq 0 -and $m.Out -match 'Gate PASS') "merge: the same change passes in SUPERVISED mode ($($m.Out))"
+        # N1 end to end: a git.exe planted at the repository root, the script started from that root without
+        # NoDefaultCurrentDirectoryInExePath. 8.1.6 and 8.3 still see the real changed files.
+        $fakeGitM = Join-Path $cloneM 'git.exe'
+        Copy-Item -LiteralPath (Join-Path $env:SystemRoot 'System32\hostname.exe') -Destination $fakeGitM
+        $savedNoCwdM = $env:NoDefaultCurrentDirectoryInExePath
+        Push-Location -LiteralPath $cloneM
+        try {
+            $env:NoDefaultCurrentDirectoryInExePath = $null
+            $env:PRANATA_EXECUTOR_MODE = 'AUTONOMOUS'
+            $m = Invoke-Script $merge @('-Pr', '10', '-VerifiedSha', $shaM, '-Root', '.', '-DryRun')
+            Assert ($m.Code -ne 0 -and $m.Out -match '8\.1\.6 guardrail paths touched, merge is SUPERVISED only: \.github/workflows/w') "merge: a planted git.exe does not hide a guardrail path ($($m.Out))"
+            $env:PRANATA_EXECUTOR_MODE = $savedModeM
+            Set-GhFacts 'success' 'docs/reconcile-task-010'
+            $m = Invoke-Script $merge @('-Pr', '10', '-VerifiedSha', $shaM, '-Root', '.', '-DryRun')
+            Assert ($m.Code -ne 0 -and $m.Out -match '8\.3 a reconciliation PR may change documents only') "merge: a planted git.exe does not widen the 8.3 scope ($($m.Out))"
+        } finally {
+            $env:PRANATA_EXECUTOR_MODE = $savedModeM
+            $env:NoDefaultCurrentDirectoryInExePath = $savedNoCwdM
+            Pop-Location
+            Remove-Item -LiteralPath $fakeGitM -Force
+        }
     } finally { $env:PATH = $savedPath }
 
     # --- merge-verified.ps1 on the post-DONE remediation lane (8.5): real Git history and blobs, gh stubbed.
@@ -1007,6 +1089,20 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         Set-RGhFacts $e0m 'fix/task-001-post-done-remediation-gate-r3' 'Ringkasan\nRemediation: REM-001 entry 0'
         $m = Invoke-Script $merge @('-Pr', '10', '-VerifiedSha', $e0m, '-Root', $cloneR, '-DryRun')
         Assert ($m.Code -ne 0 -and $m.Out -match '8\.5\.2 tests/b\.txt is outside the entry paths') "remediation e2e: a rename into an entry path refused ($($m.Out))"
+        # N1 on the lane: a planted git.exe at the root, started from the root, does not shrink the 8.5.2 scope.
+        $fakeGitR = Join-Path $cloneR 'git.exe'
+        Copy-Item -LiteralPath (Join-Path $env:SystemRoot 'System32\hostname.exe') -Destination $fakeGitR
+        $savedNoCwdR = $env:NoDefaultCurrentDirectoryInExePath
+        Push-Location -LiteralPath $cloneR
+        try {
+            $env:NoDefaultCurrentDirectoryInExePath = $null
+            $m = Invoke-Script $merge @('-Pr', '10', '-VerifiedSha', $e0m, '-Root', '.', '-DryRun')
+            Assert ($m.Code -ne 0 -and $m.Out -match '8\.5\.2 tests/b\.txt is outside the entry paths') "remediation e2e: a planted git.exe does not hide a file outside the entry ($($m.Out))"
+        } finally {
+            $env:NoDefaultCurrentDirectoryInExePath = $savedNoCwdR
+            Pop-Location
+            Remove-Item -LiteralPath $fakeGitR -Force
+        }
 
         Set-RGhFacts $e0 'fix/task-001-post-done-remediation-gate' 'Ringkasan'
         $m = Invoke-Script $merge $argsR
@@ -1049,6 +1145,7 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         $published0 = '{"number":10,"headRefName":"fix/task-001-post-done-remediation-gate","headRefOid":"' + $e0 + '","body":"Ringkasan\nRemediation: REM-001 entry 0"}'
         Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ',' + $published0 + ']')
         Set-Content -LiteralPath (Join-Path $stubDir 'commits-10.json') -Encoding ASCII -Value ('{"commits":[{"oid":"' + $e0 + '"}]}')
+        Set-Content -LiteralPath (Join-Path $stubDir 'pull-10.json') -Encoding ASCII -Value '{"commits":1}'
         $m = Invoke-Script $merge ($argsR1 + '-DryRun')
         Assert ($m.Code -eq 0 -and $m.Out -match 'Gate PASS: TASK-015 \(HIGH\) via REM-001 entry 1') "remediation e2e: entry 1 IDENTICAL to its source passes after entry 0 ($($m.Out))"
         Set-RReview $e1 (',"source_sha":"' + $e0 + '","equivalence":"IDENTICAL"')
@@ -1080,7 +1177,22 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         $m = Invoke-Script $merge ($argsR1 + '-DryRun')
         Assert ($m.Code -ne 0 -and $m.Out -match 'could not be read: the commits of PR #10 on GitHub differ') "remediation e2e: PR commits that disagree with Git refused ($($m.Out))"
         Set-Content -LiteralPath (Join-Path $stubDir 'commits-10.json') -Encoding ASCII -Value ('{"commits":[{"oid":"' + $e0 + '"}]}')
-        $full = '[' + ((1..1000 | ForEach-Object { '{"number":' + $_ + ',"headRefName":"x/y","headRefOid":"' + ('0' * 40) + '","body":""}' }) -join ',') + ']'
+        # N3: the commit list must hold every commit the REST pull request counts.
+        Set-Content -LiteralPath (Join-Path $stubDir 'pull-10.json') -Encoding ASCII -Value '{"commits":3}'
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'GitHub counts 3 commits in PR #10, the commit list holds 1') "remediation e2e: a truncated commit list refused ($($m.Out))"
+        Set-Content -LiteralPath (Join-Path $stubDir 'pull-10.json') -Encoding ASCII -Value '{"number":10}'
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'GitHub gives no commit count for PR #10') "remediation e2e: a missing commit count refused ($($m.Out))"
+        Set-Content -LiteralPath (Join-Path $stubDir 'pull-10.json') -Encoding ASCII -Value '{"commits":1}'
+        # P3-5: a marker PR whose real Git diff leaves the entry paths is no evidence (the activation commit as head).
+        $outside = '{"number":14,"headRefName":"fix/task-001-post-done-remediation-gate-r5","headRefOid":"' + $activationR + '","body":"Remediation: REM-001 entry 0"}'
+        Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ',' + $outside + ']')
+        Set-Content -LiteralPath (Join-Path $stubDir 'commits-14.json') -Encoding ASCII -Value ('{"commits":[{"oid":"' + $activationR + '"}]}')
+        Set-Content -LiteralPath (Join-Path $stubDir 'pull-14.json') -Encoding ASCII -Value '{"commits":1}'
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'entry 0 is not published yet') "remediation e2e: a marker PR changing a file outside the entry is no evidence ($($m.Out))"
+        $full ='[' + ((1..1000 | ForEach-Object { '{"number":' + $_ + ',"headRefName":"x/y","headRefOid":"' + ('0' * 40) + '","body":""}' }) -join ',') + ']'
         Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value $full
         $m = Invoke-Script $merge ($argsR1 + '-DryRun')
         Assert ($m.Code -ne 0 -and $m.Out -match 'reached its limit of 1000') "remediation e2e: a listing at its cap refused ($($m.Out))"
@@ -1125,6 +1237,7 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         $published1 = '{"number":11,"headRefName":"fix/task-015-test-integrity-r2","headRefOid":"' + $e1d + '","body":"Ringkasan\nRemediation: REM-001 entry 1"}'
         Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ',' + $published0 + ',' + $published1 + ']')
         Set-Content -LiteralPath (Join-Path $stubDir 'commits-11.json') -Encoding ASCII -Value ('{"commits":[{"oid":"' + $e1 + '"},{"oid":"' + $e1d + '"}]}')
+        Set-Content -LiteralPath (Join-Path $stubDir 'pull-11.json') -Encoding ASCII -Value '{"commits":2}'
         & git -c core.autocrlf=false -C $cloneR switch --quiet -c docs/reconcile-task-015-r2 $e1d
         & git -c core.autocrlf=false -C $cloneR cherry-pick $srcDocR 2>$null | Out-Null
         $e2 = (& git -C $cloneR rev-parse HEAD)
@@ -1140,6 +1253,15 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         $m = Invoke-Script $merge @('-Pr', '12', '-VerifiedSha', $e2c, '-Root', $cloneR, '-DryRun')
         Assert ($m.Code -ne 0 -and $m.Out -match '8\.5\.2 docs/11-tasks/TASK-015\.md: changed outside ## COMPLETION EVIDENCE: ## OBJECTIVE' -and $m.Out -notmatch 'DELTA: SHA-256') "remediation e2e: a CRLF-only change outside COMPLETION EVIDENCE refused ($($m.Out))"
         Assert ((& git -C $originR rev-parse refs/heads/main) -eq $e1d) 'remediation e2e: the entry 2 refusal left main at entry 1'
+        # P3-5: main no longer at the SOURCE base blob, through real Git: a later commit on main changed the entry path.
+        & git -c core.autocrlf=false -C $cloneR switch --quiet -c main-moved $e1d
+        Save-RFile 'docs/11-tasks/TASK-015.md' $taskText.Replace('Next.', 'Next, moved.')
+        $moved = New-RCommit 'docs(task-015): moved on main'
+        & git -C $cloneR push --quiet origin "${moved}:refs/heads/main" 2>$null
+        Set-RReview $e2 (',"source_sha":"' + $srcDocR + '","equivalence":"IDENTICAL"')
+        Set-RGhFacts $e2 'docs/reconcile-task-015-r2' 'Ringkasan\nRemediation: REM-001 entry 2'
+        $m = Invoke-Script $merge @('-Pr', '12', '-VerifiedSha', $e2, '-Root', $cloneR, '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match '8\.5\.5 docs/11-tasks/TASK-015\.md on main is not the blob of SOURCE base' -and $m.Out -match 'entry 2 is already used: its paths changed') "remediation e2e: main moved away from the SOURCE base blob refused ($($m.Out))"
     } finally { $env:PATH = $savedPath }
     # GOV-09 on this machine: a CRLF working copy of an LF blob must not rewrite the blob.
     $eolRepo = Join-Path $work 'eol'

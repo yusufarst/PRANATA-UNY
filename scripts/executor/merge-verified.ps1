@@ -16,6 +16,8 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot '..\..\.claude\hooks\lib\policy.ps1')
 . (Join-Path $PSScriptRoot 'lib\merge-gate.ps1')
 if (-not $Root) { $Root = Get-PranataRepoRoot }
+# Absolute from here on, so git -C and every path comparison name the same repository.
+$Root = Resolve-PranataRoot $Root
 $paths = Get-PranataStatePaths $Root
 
 $mode = Get-PranataEffectiveMode $Root
