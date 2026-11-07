@@ -67,12 +67,25 @@ $review = Read-PranataJson (Join-Path $paths.Dir "review-$VerifiedSha.json")
 $changed = @(& git -C $Root diff --name-only "$checkedMain...$VerifiedSha")
 $touched = @($changed | Where-Object { $_ -match $script:GuardPathRegex })
 $reconcileOk = (-not $task.Reconcile) -or (Test-PranataReconcileScope $changed $task.TaskId)
+$checkpoint = Get-PranataCheckpoint $Root
+
+# Section 8.5: a DONE Task merges only through the post-DONE remediation lane, judged in merge-gate.ps1. The lane
+# lifts the DONE-status check alone; every other check below is still applied on its own. This script never
+# writes the checkpoint or hold.json.
+$remediation = $null
+if ($taskStatus -ceq 'DONE') {
+    $remediationFacts = Get-PranataRemediationFacts -Root $Root -Repo 'yusufarst/PRANATA-UNY' -Records $records -PrBody ([string]$prInfo.body) `
+        -TaskId $task.TaskId -Branch $prInfo.headRefName -Mode $mode -Bootstrap ([bool]$Bootstrap) -CheckpointTaskId $checkpoint.task_id `
+        -CheckpointRemediation $checkpoint.remediation -Changed $changed -MainSha $checkedMain -HeadSha $VerifiedSha -Review $review -WorkDir $paths.Dir
+    $remediation = Get-PranataRemediationFailures -Facts $remediationFacts
+    Write-Output "Remediation lane: $($remediation.Label)"
+}
 
 # Read last: a move of main while the facts above were collected fails the 8.1.4 check.
 $remoteMain = ((& git -C $Root ls-remote origin refs/heads/main) -split '\s+')[0]
 
 $facts = @{
-    CheckpointTaskId = (Get-PranataCheckpoint $Root).task_id
+    CheckpointTaskId = $checkpoint.task_id; Remediation = $remediation
     Bootstrap = [bool]$Bootstrap; BootstrapFailures = $bootstrapFailures; Mode = $mode; TaskId = $task.TaskId; RiskClass = $riskClass; TaskStatus = $taskStatus
     Authorized = (Test-PranataAuthorizationText $records $task.TaskId); ReconcileScopeOk = $reconcileOk
     PrState = $prInfo.state; PrBase = $prInfo.baseRefName; IsDraft = [bool]$prInfo.isDraft; PrMergeable = $prInfo.mergeable
@@ -94,7 +107,9 @@ if ($failures.Count -gt 0) {
     $failures | ForEach-Object { Write-Output " - $_" }
     exit 1
 }
-Write-Output "Gate PASS: $($task.TaskId) ($riskClass), main $remoteMain -> $VerifiedSha (PR #$Pr)"
+$lane = ''
+if ($remediation) { $lane = " via $($remediation.Label)" }
+Write-Output "Gate PASS: $($task.TaskId) ($riskClass)$lane, main $remoteMain -> $VerifiedSha (PR #$Pr)"
 if ($bootstrapRun) {
     # QUALITY_GATES 4.1 step 5: these values go into COMPLETION EVIDENCE.
     Write-Output "Bootstrap evidence: run $($bootstrapRun.RunId) attempt $($bootstrapRun.RunAttempt), merge $($bootstrapRun.Evidence.merge_sha), head $($bootstrapRun.Evidence.head_sha), base $($bootstrapRun.Evidence.base_sha)"

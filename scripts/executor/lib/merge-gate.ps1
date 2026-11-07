@@ -16,7 +16,20 @@ function Get-PranataMergeFailures {
     if ($Facts.RiskClass -notin @('LOW', 'STANDARD', 'HIGH')) { [void]$failures.Add("task: risk class '$($Facts.RiskClass)' could not be read from the contract on main") }
     # A branch name is chosen by the agent; a finished or stopped Task cannot be merged under it. TODO stays valid
     # because section 2 records READY in TASK_PLAN, so the contract on main still says TODO during the Task.
-    if ($Facts.TaskStatus -notin @('TODO', 'READY', 'IN_PROGRESS', 'VERIFYING')) { [void]$failures.Add("task: contract status on main is '$($Facts.TaskStatus)'") }
+    # Section 8.5 lifts this one check (8.1 item 7) for a DONE Task, and only when the whole remediation lane holds.
+    if ($Facts.TaskStatus -notin @('TODO', 'READY', 'IN_PROGRESS', 'VERIFYING')) {
+        $lifted = $false
+        if ($Facts.TaskStatus -ceq 'DONE' -and $Facts.Remediation) {
+            if ($null -eq $Facts.Remediation.Failures) {
+                [void]$failures.Add('remediation 8.5: the lane was not evaluated')
+            } else {
+                $laneFailures = @(@($Facts.Remediation.Failures) | Where-Object { $_ })
+                foreach ($item in $laneFailures) { [void]$failures.Add($item) }
+                $lifted = ($laneFailures.Count -eq 0)
+            }
+        }
+        if (-not $lifted) { [void]$failures.Add("task: contract status on main is '$($Facts.TaskStatus)'") }
+    }
     if ($Facts.CheckpointTaskId -and $Facts.CheckpointTaskId -ne $Facts.TaskId) { [void]$failures.Add("task: PR names $($Facts.TaskId), checkpoint names $($Facts.CheckpointTaskId)") }
     if ($Facts.Bootstrap) {
         if ($Facts.Mode -ne 'SUPERVISED') { [void]$failures.Add('bootstrap: only allowed in a SUPERVISED session') }
@@ -182,4 +195,410 @@ function Get-PranataCommitProblems {
         if (Test-PranataAttributionInCommand $raw) { [void]$problems.Add("$sha carries attribution text") }
     }
     return ,$problems
+}
+
+# --- Post-DONE remediation lane (EXECUTOR_OPERATING_MODEL 8.5, PCR-004).
+# Pure parts first (records, entry, Task file sections, judgement), then the collectors that read Git and GitHub.
+# A missing or unreadable fact always ends in a refusal, never in a pass.
+
+$script:RemediationMarker = '(?m)^Remediation: (REM-\d{3}) entry (\d{1,3})\r?$'
+$script:RemediationRecordsPath = 'docs/00-governance/APPROVAL_RECORDS.md'
+$script:AbsentBlob = '(absent)'
+# Canonical diff for the DELTA digest of 8.5 item 5, independent of local diff settings. An independent verifier
+# reproduces the digest byte for byte with: git diff <these options> <SOURCE HEAD> <PR HEAD> -- <entry paths> | sha256sum
+$script:RemediationDiffOptions = @(
+    '--no-color', '--no-ext-diff', '--no-textconv', '--no-renames', '--full-index', '--binary',
+    '--diff-algorithm=myers', '--indent-heuristic', '-U3', '--inter-hunk-context=0', '--no-relative',
+    '--src-prefix=a/', '--dst-prefix=b/'
+)
+
+function ConvertFrom-PranataRemediationEntry([string]$Line) {
+    $parts = @($Line -split ' \| ')
+    if ($parts.Count -ne 8) { return @{ Problem = "entry line has $($parts.Count) fields, expected 8: '$Line'" } }
+    $entry = @{ Problem = $null; Number = $null; Task = $null; Branch = $null; SourceBase = $null; SourceHead = $null; Equivalence = $null; Paths = @() }
+    $bad = New-Object System.Collections.ArrayList
+    if ($parts[0] -cmatch '^ENTRY (\d{1,3})$') { $entry.Number = [int]$Matches[1] } else { [void]$bad.Add('number') }
+    if ($parts[1] -cmatch '^TASK-\d{3}$') { $entry.Task = $parts[1] } else { [void]$bad.Add('Task') }
+    if ($parts[2] -cmatch '^[a-z0-9][a-z0-9._-]*(/[a-z0-9._-]+)+$' -and $parts[2] -cnotmatch '-r\d+$') { $entry.Branch = $parts[2] } else { [void]$bad.Add('branch') }
+    if ($parts[3] -cnotmatch '^PR: (new|#\d+)$') { [void]$bad.Add('PR') }
+    if ($parts[4] -cmatch '^SOURCE: ([0-9a-f]{40})\.\.([0-9a-f]{40})$') { $entry.SourceBase = $Matches[1]; $entry.SourceHead = $Matches[2] }
+    elseif ($parts[4] -cnotmatch '^SOURCE: none$') { [void]$bad.Add('SOURCE') }
+    if ($parts[5] -cmatch '^EQUIVALENCE: (none|IDENTICAL|DELTA|IDENTICAL or DELTA)$') { $entry.Equivalence = $Matches[1] } else { [void]$bad.Add('EQUIVALENCE') }
+    if ($entry.Equivalence -and (($entry.Equivalence -ceq 'none') -ne (-not $entry.SourceHead))) { [void]$bad.Add('SOURCE and EQUIVALENCE disagree') }
+    if ($parts[6] -cmatch '^PATHS: (.+)$') {
+        $entry.Paths = @($Matches[1] -split ', ')
+        foreach ($path in $entry.Paths) {
+            if ($path -cnotmatch '^[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+)*$' -or $path -match '(^|/)\.\.?(/|$)') { [void]$bad.Add("path '$path'") }
+        }
+        if (@($entry.Paths | Select-Object -Unique).Count -ne $entry.Paths.Count) { [void]$bad.Add('duplicate path') }
+    } else { [void]$bad.Add('PATHS') }
+    if ($parts[7] -cnotmatch '^PURPOSE: \S') { [void]$bad.Add('PURPOSE') }
+    if ($bad.Count -gt 0) { $entry.Problem = "entry line has a bad $($bad -join ', '): '$Line'" }
+    return $entry
+}
+
+# Every machine block 'REMEDIATION: REM-nnn' of APPROVAL_RECORDS. Any unexpected or repeated line makes the block malformed.
+function Get-PranataRemediationRecords([string]$Records) {
+    $result = New-Object System.Collections.ArrayList
+    $lines = @(([string]$Records) -split "\r?\n")
+    $i = 0
+    while ($i -lt $lines.Count) {
+        if ($lines[$i] -cnotmatch '^\s*REMEDIATION:') { $i++; continue }
+        $record = @{ Id = $null; State = $null; Mode = $null; Order = $null; Entries = @{}; Problems = (New-Object System.Collections.ArrayList) }
+        if ($lines[$i] -cmatch '^REMEDIATION: (REM-\d{3})$') { $record.Id = $Matches[1] } else { [void]$record.Problems.Add("header '$($lines[$i])'") }
+        $i++
+        while ($i -lt $lines.Count -and $lines[$i] -notmatch '^\s*(```|$)') {
+            $line = $lines[$i]
+            $i++
+            if ($line -cmatch '^STATE: (PROPOSED|ACTIVE|CLOSED)$') {
+                if ($record.State) { [void]$record.Problems.Add('STATE repeated') }
+                $record.State = $Matches[1]
+            } elseif ($line -cmatch '^MODE: SUPERVISED$') {
+                if ($record.Mode) { [void]$record.Problems.Add('MODE repeated') }
+                $record.Mode = 'SUPERVISED'
+            } elseif ($line -cmatch '^ORDER: (\d{1,3}(, \d{1,3})*)$') {
+                if ($null -ne $record.Order) { [void]$record.Problems.Add('ORDER repeated') }
+                $record.Order = @($Matches[1] -split ', ' | ForEach-Object { [int]$_ })
+            } elseif ($line -cmatch '^ENTRY ') {
+                $entry = ConvertFrom-PranataRemediationEntry $line
+                if ($entry.Problem) { [void]$record.Problems.Add($entry.Problem) }
+                elseif ($record.Entries.ContainsKey($entry.Number)) { [void]$record.Problems.Add("entry $($entry.Number) repeated") }
+                else { $record.Entries[$entry.Number] = $entry }
+            } else {
+                [void]$record.Problems.Add("unexpected line '$line'")
+            }
+        }
+        if (-not $record.State) { [void]$record.Problems.Add('STATE missing') }
+        if (-not $record.Mode) { [void]$record.Problems.Add('MODE missing or not SUPERVISED') }
+        if ($record.Entries.Count -eq 0) { [void]$record.Problems.Add('no entry') }
+        # Entries run from 0 in the recorded order, one line each (8.5 item 7).
+        $expected = @(0..([Math]::Max($record.Entries.Count, 1) - 1))
+        if ($null -eq $record.Order -or (@($record.Order) -join ',') -cne ($expected -join ',')) { [void]$record.Problems.Add("ORDER is not 0..$($record.Entries.Count - 1)") }
+        foreach ($number in $expected) { if ($record.Entries.Count -gt 0 -and -not $record.Entries.ContainsKey($number)) { [void]$record.Problems.Add("entry $number missing") } }
+        [void]$result.Add($record)
+    }
+    return ,$result
+}
+
+# The exact family, or a successor -rN with N >= 2 (8.5 item 2).
+function Test-PranataRemediationBranch([string]$Branch, [string]$Family) {
+    if (-not $Branch -or -not $Family) { return $false }
+    if ($Branch -ceq $Family) { return $true }
+    if (-not $Branch.StartsWith("$Family-r", [StringComparison]::Ordinal)) { return $false }
+    $suffix = $Branch.Substring($Family.Length + 2)
+    return ($suffix -cmatch '^[1-9]\d{0,3}$' -and [int]$suffix -ge 2)
+}
+
+# Reads the PR body line and finds the one ACTIVE entry it names; the record comes from main only.
+function Resolve-PranataRemediationEntry {
+    param([string]$Records, [string]$PrBody, [string]$TaskId, [string]$Branch)
+    $out = @{ Label = 'remediation'; Id = $null; Number = $null; Record = $null; Entry = $null; Failures = (New-Object System.Collections.ArrayList) }
+    $markers = [regex]::Matches([string]$PrBody, $script:RemediationMarker)
+    if ($markers.Count -ne 1) {
+        [void]$out.Failures.Add("8.5.7 the PR body must carry exactly one line 'Remediation: REM-nnn entry N', found $($markers.Count)")
+        return $out
+    }
+    $out.Id = $markers[0].Groups[1].Value
+    $out.Number = [int]$markers[0].Groups[2].Value
+    $out.Label = "$($out.Id) entry $($out.Number)"
+    $all = Get-PranataRemediationRecords $Records
+    foreach ($record in $all) {
+        foreach ($problem in $record.Problems) { [void]$out.Failures.Add("8.5.1 remediation record $($record.Id) is malformed: $problem") }
+    }
+    if ($out.Failures.Count -gt 0) { return $out }
+    $named = @($all | Where-Object { $_.Id -ceq $out.Id })
+    if ($named.Count -eq 0) { [void]$out.Failures.Add("8.5.1 $($out.Id) is not recorded on main"); return $out }
+    if ($named.Count -gt 1) { [void]$out.Failures.Add("8.5.1 $($out.Id) is recorded $($named.Count) times on main"); return $out }
+    $record = $named[0]
+    if ($record.State -cne 'ACTIVE') { [void]$out.Failures.Add("8.5.1 $($out.Id) is $($record.State), not ACTIVE"); return $out }
+    $covering = @($all | Where-Object {
+        $_.State -ceq 'ACTIVE' -and @($_.Entries.Values | Where-Object { $_.Task -ceq $TaskId -and (Test-PranataRemediationBranch $Branch $_.Branch) }).Count -gt 0
+    })
+    if ($covering.Count -gt 1) { [void]$out.Failures.Add("8.5.1 $($covering.Count) ACTIVE remediation records cover $TaskId on $Branch, exactly one may"); return $out }
+    if (-not $record.Entries.ContainsKey($out.Number)) { [void]$out.Failures.Add("8.5.2 $($out.Id) has no entry $($out.Number)"); return $out }
+    $entry = $record.Entries[$out.Number]
+    if ($entry.Task -cne $TaskId) { [void]$out.Failures.Add("8.5.2 the entry is for $($entry.Task), the PR branch names '$TaskId'"); return $out }
+    if (-not (Test-PranataRemediationBranch $Branch $entry.Branch)) {
+        [void]$out.Failures.Add("8.5.2 branch '$Branch' is neither $($entry.Branch) nor a successor $($entry.Branch)-rN (N >= 2)")
+        return $out
+    }
+    $out.Record = $record
+    $out.Entry = $entry
+    return $out
+}
+
+function Split-PranataSections([string]$Text) {
+    $sections = New-Object System.Collections.ArrayList
+    $heading = '(before the first section)'
+    $body = New-Object System.Collections.ArrayList
+    # Split on LF only: a CR that appears or disappears is a change too (GOV-09).
+    foreach ($line in ([string]$Text).Split([char]10)) {
+        if ($line -cmatch '^## ') {
+            [void]$sections.Add(@{ Heading = $heading; Body = ($body -join "`n") })
+            $heading = $line
+            $body = New-Object System.Collections.ArrayList
+            continue
+        }
+        [void]$body.Add($line)
+    }
+    [void]$sections.Add(@{ Heading = $heading; Body = ($body -join "`n") })
+    return ,$sections
+}
+
+# 8.5 item 2: a Task contract may change only inside its COMPLETION EVIDENCE section, and stays DONE.
+function Get-PranataTaskFileProblems([string]$Main, [string]$Head) {
+    $problems = New-Object System.Collections.ArrayList
+    if ($Head -cnotmatch '(?m)^STATUS: DONE\r?$') { [void]$problems.Add('STATUS: DONE is missing at PR HEAD') }
+    $before = Split-PranataSections $Main
+    $after = Split-PranataSections $Head
+    if ((@($before | ForEach-Object { $_.Heading }) -join "`n") -cne (@($after | ForEach-Object { $_.Heading }) -join "`n")) {
+        [void]$problems.Add('the section headings changed')
+        return ,$problems
+    }
+    for ($i = 0; $i -lt $before.Count; $i++) {
+        if ($before[$i].Heading -ceq '## COMPLETION EVIDENCE') { continue }
+        if ($before[$i].Body -cne $after[$i].Body) { [void]$problems.Add("changed outside ## COMPLETION EVIDENCE: $($before[$i].Heading)") }
+    }
+    return ,$problems
+}
+
+# 8.5 item 7: a merged PR counts as the publication of entry k only when every condition holds.
+function Test-PranataRemediationEvidence($Pr, [string]$Id, [int]$Number, $Entry) {
+    if (-not $Pr -or -not $Entry) { return $false }
+    $markers = [regex]::Matches([string]$Pr.Body, $script:RemediationMarker)
+    if ($markers.Count -ne 1) { return $false }
+    if ($markers[0].Groups[1].Value -cne $Id -or [int]$markers[0].Groups[2].Value -ne $Number) { return $false }
+    if (-not (Test-PranataRemediationBranch ([string]$Pr.Branch) $Entry.Branch)) { return $false }
+    if ($Pr.DescendsFromActivation -ne $true -or $Pr.AncestorOfMain -ne $true) { return $false }
+    $changed = @(@($Pr.ChangedFiles) | Where-Object { $_ })
+    if ($changed.Count -eq 0) { return $false }
+    return (@($changed | Where-Object { $_ -cnotin $Entry.Paths }).Count -eq 0)
+}
+
+function Get-PranataBlobFact($Map, [string]$Path) {
+    if ($Map -and $Map.ContainsKey($Path) -and $Map[$Path]) { return [string]$Map[$Path] }
+    return $null
+}
+
+# Judges the collected facts of 8.5 items 1-7. Returns the label 'REM-nnn entry N' and the refusals, each labelled.
+function Get-PranataRemediationFailures {
+    param([hashtable]$Facts)
+    $failures = New-Object System.Collections.ArrayList
+    $resolved = Resolve-PranataRemediationEntry -Records $Facts.Records -PrBody $Facts.PrBody -TaskId $Facts.TaskId -Branch $Facts.Branch
+    $prefix = "$($resolved.Label): "
+    foreach ($item in $resolved.Failures) { [void]$failures.Add("$prefix$item") }
+    if (-not $resolved.Entry) { return @{ Label = $resolved.Label; Failures = $failures } }
+    $entry = $resolved.Entry
+    $number = $resolved.Number
+
+    # Item 3: SUPERVISED only, never with -Bootstrap, and a checkpoint that names this Task and this entry.
+    if ($Facts.Mode -cne 'SUPERVISED') { [void]$failures.Add("${prefix}8.5.3 the lane runs only in SUPERVISED mode, mode is '$($Facts.Mode)'") }
+    if ($Facts.Bootstrap) { [void]$failures.Add("${prefix}8.5.3 the lane is refused together with -Bootstrap") }
+    if ([string]$Facts.CheckpointTaskId -cne $entry.Task) { [void]$failures.Add("${prefix}8.5.3 checkpoint task_id is '$($Facts.CheckpointTaskId)', expected '$($entry.Task)'") }
+    $expectedCheckpoint = "$($resolved.Id)/$number"
+    if ([string]$Facts.CheckpointRemediation -cne $expectedCheckpoint) {
+        [void]$failures.Add("${prefix}8.5.3 checkpoint remediation is '$($Facts.CheckpointRemediation)', expected '$expectedCheckpoint'")
+    }
+
+    # Item 2: exact paths, no TASK_PLAN, and a Task contract changed only in COMPLETION EVIDENCE with STATUS DONE kept.
+    $changed = @(@($Facts.ChangedFiles) | Where-Object { $_ })
+    if ($changed.Count -eq 0) { [void]$failures.Add("${prefix}8.5.2 the PR changes no file") }
+    foreach ($file in $changed) {
+        if ($file -cnotin $entry.Paths) { [void]$failures.Add("${prefix}8.5.2 $file is outside the entry paths") }
+    }
+    if ($changed -ccontains 'docs/11-tasks/TASK_PLAN.md') { [void]$failures.Add("${prefix}8.5.2 TASK_PLAN.md must not change") }
+    foreach ($file in @($changed | Where-Object { $_ -cmatch '^docs/11-tasks/TASK-\d{3}\.md$' })) {
+        $pair = $null
+        if ($Facts.TaskFiles -and $Facts.TaskFiles.ContainsKey($file)) { $pair = $Facts.TaskFiles[$file] }
+        if (-not $pair -or $null -eq $pair.Main -or $null -eq $pair.Head) { [void]$failures.Add("${prefix}8.5.2 $file was not compared"); continue }
+        foreach ($problem in (Get-PranataTaskFileProblems $pair.Main $pair.Head)) { [void]$failures.Add("${prefix}8.5.2 ${file}: $problem") }
+    }
+
+    # Item 5: the reviewed SOURCE, proven from blobs (IDENTICAL) or from the recomputed diff digest (DELTA).
+    if ($entry.SourceHead) {
+        $blobs = $Facts.Blobs
+        foreach ($path in $entry.Paths) {
+            $onMain = Get-PranataBlobFact $blobs.Main $path
+            $atBase = Get-PranataBlobFact $blobs.SourceBase $path
+            if (-not $onMain -or -not $atBase) { [void]$failures.Add("${prefix}8.5.5 blobs of $path on main and at SOURCE base were not collected"); continue }
+            if ($onMain -cne $atBase) { [void]$failures.Add("${prefix}8.5.5 $path on main is not the blob of SOURCE base $($entry.SourceBase)") }
+        }
+        $review = $Facts.Review
+        $allowed = @{ 'IDENTICAL' = @('IDENTICAL'); 'DELTA' = @('DELTA'); 'IDENTICAL or DELTA' = @('IDENTICAL', 'DELTA') }[$entry.Equivalence]
+        $claimed = $null
+        if (-not $review) {
+            [void]$failures.Add("${prefix}8.5.5 no review disposition records the equivalence")
+        } else {
+            $claimed = [string]$review.equivalence
+            if ([string]$review.source_sha -cne $entry.SourceHead) {
+                [void]$failures.Add("${prefix}8.5.5 review disposition source_sha is '$($review.source_sha)', expected SOURCE HEAD $($entry.SourceHead)")
+            }
+            if ($claimed -cnotin $allowed) { [void]$failures.Add("${prefix}8.5.5 review disposition equivalence is '$claimed', the entry allows $($entry.Equivalence)") }
+        }
+        if ($claimed -ceq 'IDENTICAL' -and $claimed -cin $allowed) {
+            foreach ($path in $entry.Paths) {
+                $atHead = Get-PranataBlobFact $blobs.Head $path
+                $atSource = Get-PranataBlobFact $blobs.SourceHead $path
+                if (-not $atHead -or -not $atSource) { [void]$failures.Add("${prefix}8.5.5 blobs of $path at PR HEAD and SOURCE HEAD were not collected"); continue }
+                if ($atHead -cne $atSource) { [void]$failures.Add("${prefix}8.5.5 IDENTICAL: $path at PR HEAD is not the blob of SOURCE HEAD $($entry.SourceHead)") }
+            }
+        } elseif ($claimed -ceq 'DELTA' -and $claimed -cin $allowed) {
+            if (-not ($review.delta_verified -is [bool] -and $review.delta_verified)) { [void]$failures.Add("${prefix}8.5.5 DELTA: the diff was not verified independently (delta_verified)") }
+            $recorded = [string]$review.delta_sha256
+            if ($recorded -cnotmatch '^[0-9a-f]{64}$') { [void]$failures.Add("${prefix}8.5.5 DELTA: review disposition delta_sha256 '$recorded' is not a SHA-256") }
+            elseif (-not $Facts.DeltaSha256) { [void]$failures.Add("${prefix}8.5.5 DELTA: the diff digest could not be recomputed") }
+            elseif ($recorded -cne $Facts.DeltaSha256) { [void]$failures.Add("${prefix}8.5.5 DELTA: SHA-256 recorded $recorded, recomputed $($Facts.DeltaSha256)") }
+        }
+    }
+
+    # Item 7: order and single use, from publication evidence after the activation commit only.
+    $publication = $Facts.Publication
+    if (-not $publication) { [void]$failures.Add("${prefix}8.5.7 publication evidence was not collected") }
+    elseif ($publication.Error) { [void]$failures.Add("${prefix}8.5.7 publication evidence could not be read: $($publication.Error)") }
+    elseif (-not $publication.ActivationSha) { [void]$failures.Add("${prefix}8.5.7 no activation commit of $($resolved.Id) in the history of main") }
+    else {
+        if ($publication.CandidateDescends -ne $true) { [void]$failures.Add("${prefix}8.5.7 PR HEAD does not descend from the activation commit $($publication.ActivationSha)") }
+        for ($k = 0; $k -le $number; $k++) {
+            $entryK = $resolved.Record.Entries[$k]
+            $valid = @(@($publication.Prs) | Where-Object { Test-PranataRemediationEvidence $_ $resolved.Id $k $entryK })
+            $numbers = (@($valid | ForEach-Object { "#$($_.Number)" }) -join ', ')
+            if ($k -lt $number -and $valid.Count -eq 0) { [void]$failures.Add("${prefix}8.5.7 entry $k is not published yet; entries run in order") }
+            elseif ($k -lt $number -and $valid.Count -gt 1) { [void]$failures.Add("${prefix}8.5.7 entry $k has $($valid.Count) publication records ($numbers), expected exactly one") }
+            elseif ($k -eq $number -and $valid.Count -gt 0) { [void]$failures.Add("${prefix}8.5.7 entry $number is already published ($numbers); each entry is used once") }
+        }
+    }
+    return @{ Label = $resolved.Label; Failures = $failures }
+}
+
+function Test-PranataAncestor([string]$Root, [string]$Ancestor, [string]$Descendant) {
+    if (-not $Ancestor -or -not $Descendant) { return $false }
+    $ErrorActionPreference = 'Continue'
+    & git -C $Root merge-base --is-ancestor $Ancestor $Descendant 2>$null
+    return ($LASTEXITCODE -eq 0)
+}
+
+# A blob id, '(absent)' when the commit exists without the path, or $null when even the commit is unknown.
+function Get-PranataBlobId([string]$Root, [string]$Sha, [string]$Path) {
+    $ErrorActionPreference = 'Continue'
+    $id = (& git -C $Root rev-parse --verify --quiet "${Sha}:${Path}" 2>$null)
+    if ($LASTEXITCODE -eq 0 -and [string]$id -cmatch '^[0-9a-f]{40}$') { return [string]$id }
+    & git -C $Root cat-file -e "${Sha}^{commit}" 2>$null
+    if ($LASTEXITCODE -eq 0) { return $script:AbsentBlob }
+    return $null
+}
+
+function Get-PranataBlobText([string]$Root, [string]$Sha, [string]$Path) {
+    $ErrorActionPreference = 'Continue'
+    $text = (& git -C $Root cat-file blob "${Sha}:${Path}" 2>$null)
+    if ($LASTEXITCODE -ne 0) { return $null }
+    return (@($text) -join "`n")
+}
+
+# SHA-256 of the canonical diff SOURCE HEAD..PR HEAD on the entry paths. --output keeps the raw bytes away from
+# the PowerShell pipeline, which would re-encode them.
+function Get-PranataRemediationDeltaSha256 {
+    param([string]$Root, [string]$From, [string]$To, [string[]]$Paths, [string]$WorkDir)
+    $file = Join-Path $WorkDir ('remediation-delta-' + [guid]::NewGuid().ToString('N').Substring(0, 8) + '.diff')
+    $ErrorActionPreference = 'Continue'
+    $options = $script:RemediationDiffOptions
+    try {
+        & git -C $Root diff @options "--output=$file" $From $To -- @Paths 2>$null
+        if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $file)) { throw "git diff exited $LASTEXITCODE" }
+        return (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant()
+    } finally {
+        if (Test-Path -LiteralPath $file) { Remove-Item -LiteralPath $file -Force }
+    }
+}
+
+# The activation commit of 8.5 item 7: the earliest commit of main whose APPROVAL_RECORDS holds the record ACTIVE.
+function Get-PranataRemediationActivation([string]$Root, [string]$MainSha, [string]$Id) {
+    $ErrorActionPreference = 'Continue'
+    $commits = @(& git -C $Root log --reverse --format=%H $MainSha -- $script:RemediationRecordsPath 2>$null)
+    if ($LASTEXITCODE -ne 0) { throw 'git log of APPROVAL_RECORDS failed' }
+    foreach ($sha in $commits) {
+        $text = Get-PranataBlobText $Root $sha $script:RemediationRecordsPath
+        if ($null -eq $text) { continue }
+        $records = Get-PranataRemediationRecords $text
+        if (@($records | Where-Object { $_.Id -ceq $Id -and $_.State -ceq 'ACTIVE' }).Count -gt 0) { return $sha }
+    }
+    return $null
+}
+
+function Invoke-PranataGhCommandJson([string[]]$Arguments) {
+    $ErrorActionPreference = 'Continue'
+    $output = & gh @Arguments 2>$null
+    if ($LASTEXITCODE -ne 0) { throw "gh $($Arguments[0]) $($Arguments[1]) exited $LASTEXITCODE" }
+    return (($output -join "`n") | ConvertFrom-Json)
+}
+
+# Merged PRs whose body names this record. Git, not GitHub, decides ancestry and the changed files.
+function Get-PranataRemediationPublication {
+    param([string]$Root, [string]$Repo, [string]$MainSha, [string]$HeadSha, [string]$Id)
+    $result = @{ Error = $null; ActivationSha = $null; CandidateDescends = $false; Prs = @() }
+    $ErrorActionPreference = 'Continue'
+    try {
+        $result.ActivationSha = Get-PranataRemediationActivation $Root $MainSha $Id
+        if (-not $result.ActivationSha) { return $result }
+        $result.CandidateDescends = Test-PranataAncestor $Root $result.ActivationSha $HeadSha
+        $listing = Invoke-PranataGhCommandJson @('pr', 'list', '--repo', $Repo, '--state', 'merged', '--base', 'main', '--limit', '1000', '--json', 'number,headRefName,headRefOid,body')
+        $prs = New-Object System.Collections.ArrayList
+        foreach ($pr in @($listing)) {
+            if (-not $pr -or [string]$pr.body -cnotmatch "(?m)^Remediation: $Id entry ") { continue }
+            $view = Invoke-PranataGhCommandJson @('pr', 'view', [string]$pr.number, '--repo', $Repo, '--json', 'commits')
+            $commits = @(@($view.commits) | Where-Object { $_ })
+            $changed = @()
+            if ($commits.Count -gt 0) {
+                $before = (& git -C $Root rev-parse --verify --quiet "$($commits[0].oid)^" 2>$null)
+                if ($LASTEXITCODE -eq 0 -and $before) {
+                    $changed = @(& git -C $Root diff --name-only $before ([string]$pr.headRefOid) 2>$null)
+                    if ($LASTEXITCODE -ne 0) { $changed = @() }
+                }
+            }
+            [void]$prs.Add(@{
+                Number = $pr.number; Branch = [string]$pr.headRefName; Body = [string]$pr.body; HeadSha = [string]$pr.headRefOid
+                DescendsFromActivation = (Test-PranataAncestor $Root $result.ActivationSha ([string]$pr.headRefOid))
+                AncestorOfMain = (Test-PranataAncestor $Root ([string]$pr.headRefOid) $MainSha)
+                ChangedFiles = $changed
+            })
+        }
+        $result.Prs = $prs.ToArray()
+    } catch {
+        $result.Error = $_.Exception.Message
+    }
+    return $result
+}
+
+# Collects every fact Get-PranataRemediationFailures judges, for the entry the PR body names.
+function Get-PranataRemediationFacts {
+    param(
+        [string]$Root, [string]$Repo, [string]$Records, [string]$PrBody, [string]$TaskId, [string]$Branch, [string]$Mode,
+        [bool]$Bootstrap, $CheckpointTaskId, $CheckpointRemediation, [string[]]$Changed, [string]$MainSha, [string]$HeadSha,
+        $Review, [string]$WorkDir
+    )
+    $facts = @{
+        Records = $Records; PrBody = $PrBody; TaskId = $TaskId; Branch = $Branch; Mode = $Mode; Bootstrap = $Bootstrap
+        CheckpointTaskId = $CheckpointTaskId; CheckpointRemediation = $CheckpointRemediation; ChangedFiles = $Changed
+        TaskFiles = @{}; Blobs = @{ Main = @{}; SourceBase = @{}; SourceHead = @{}; Head = @{} }
+        Review = $Review; DeltaSha256 = $null; Publication = $null
+    }
+    foreach ($file in @(@($Changed) | Where-Object { $_ -cmatch '^docs/11-tasks/TASK-\d{3}\.md$' })) {
+        $facts.TaskFiles[$file] = @{ Main = (Get-PranataBlobText $Root $MainSha $file); Head = (Get-PranataBlobText $Root $HeadSha $file) }
+    }
+    $resolved = Resolve-PranataRemediationEntry -Records $Records -PrBody $PrBody -TaskId $TaskId -Branch $Branch
+    if (-not $resolved.Entry) { return $facts }
+    $entry = $resolved.Entry
+    if ($entry.SourceHead) {
+        foreach ($path in $entry.Paths) {
+            $facts.Blobs.Main[$path] = Get-PranataBlobId $Root $MainSha $path
+            $facts.Blobs.SourceBase[$path] = Get-PranataBlobId $Root $entry.SourceBase $path
+            $facts.Blobs.SourceHead[$path] = Get-PranataBlobId $Root $entry.SourceHead $path
+            $facts.Blobs.Head[$path] = Get-PranataBlobId $Root $HeadSha $path
+        }
+        if ($Review -and [string]$Review.equivalence -ceq 'DELTA') {
+            try { $facts.DeltaSha256 = Get-PranataRemediationDeltaSha256 -Root $Root -From $entry.SourceHead -To $HeadSha -Paths $entry.Paths -WorkDir $WorkDir }
+            catch { $facts.DeltaSha256 = $null }
+        }
+    }
+    $facts.Publication = Get-PranataRemediationPublication -Root $Root -Repo $Repo -MainSha $MainSha -HeadSha $HeadSha -Id $resolved.Id
+    return $facts
 }

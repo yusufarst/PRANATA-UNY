@@ -153,6 +153,251 @@ try {
     Assert (Test-PranataAuthorizationText "## AUTH-013`n- State: **ACTIVE** from x`n## AUTH-012`n" 'TASK-078') 'gate: active authorization read'
     Assert (-not (Test-PranataAuthorizationText "## AUTH-013`n- State: **REVOKED**`n## AUTH-012`n- State: **ACTIVE**`n" 'TASK-010')) 'gate: revoked authorization refused'
     Assert (-not (Test-PranataAuthorizationText "## AUTH-013`n- State: **ACTIVE**`n" 'TASK-079')) 'gate: Task outside the 78 refused'
+
+    # --- Post-DONE remediation lane (EXECUTOR_OPERATING_MODEL 8.5, M1-AC-01 to M1-AC-10), pure judgement.
+    $srcBase = '351ba2f17c1764283e66215f6069ed64872fb97a'
+    $srcHeads = @{ 1 = 'd055d763cb236b71296a2fff5bc06f1218a681c7'; 2 = '0b2ac7b2c8bad1a3c9d96c2816624651c0ca2e6f'; 3 = '161ff74b7c83dd6878c37a9516d26fa70fd8830d'; 4 = 'd1c609fbeb65054cdfb42abe075793fb1811c617' }
+    $remPaths = @{
+        0 = @('scripts/executor/lib/merge-gate.ps1', 'scripts/executor/merge-verified.ps1', 'scripts/executor/tests/scripts.tests.ps1')
+        1 = @('tests/Feature/Access/ProcessAssignmentTest.php')
+        2 = @('resources/js/components/app/files.test.tsx', 'tests/Feature/Files/PrivateFilesTest.php')
+        3 = @('docs/11-tasks/TASK-015.md')
+        4 = @('docs/11-tasks/TASK-016.md', 'docs/handoff/CURRENT_HANDOFF.md')
+    }
+    $remTasks = @{ 0 = 'TASK-001'; 1 = 'TASK-015'; 2 = 'TASK-016'; 3 = 'TASK-015'; 4 = 'TASK-016' }
+    $remFamilies = @{ 0 = 'fix/task-001-post-done-remediation-gate'; 1 = 'fix/task-015-test-integrity'; 2 = 'fix/task-016-test-integrity'; 3 = 'docs/reconcile-task-015'; 4 = 'docs/reconcile-task-016' }
+    $remBranches = @{ 0 = 'fix/task-001-post-done-remediation-gate'; 1 = 'fix/task-015-test-integrity-r2'; 2 = 'fix/task-016-test-integrity-r2'; 3 = 'docs/reconcile-task-015-r3'; 4 = 'docs/reconcile-task-016-r3' }
+    function New-RemBlock([string]$Id = 'REM-001', [string]$State = 'ACTIVE', [string[]]$Skip = @(), [string]$Extra = '') {
+        $lines = @("REMEDIATION: $Id", "STATE: $State", 'MODE: SUPERVISED', 'ORDER: 0, 1, 2, 3, 4')
+        $lines += "ENTRY 0 | TASK-001 | $($remFamilies[0]) | PR: new | SOURCE: none | EQUIVALENCE: none | PATHS: $($remPaths[0] -join ', ') | PURPOSE: gate"
+        $lines += "ENTRY 1 | TASK-015 | $($remFamilies[1]) | PR: #53 | SOURCE: $srcBase..$($srcHeads[1]) | EQUIVALENCE: IDENTICAL | PATHS: $($remPaths[1] -join ', ') | PURPOSE: tests"
+        $lines += "ENTRY 2 | TASK-016 | $($remFamilies[2]) | PR: #52 | SOURCE: $srcBase..$($srcHeads[2]) | EQUIVALENCE: IDENTICAL | PATHS: $($remPaths[2] -join ', ') | PURPOSE: tests"
+        $lines += "ENTRY 3 | TASK-015 | $($remFamilies[3]) | PR: #54 | SOURCE: $srcBase..$($srcHeads[3]) | EQUIVALENCE: IDENTICAL or DELTA | PATHS: $($remPaths[3] -join ', ') | PURPOSE: evidence"
+        $lines += "ENTRY 4 | TASK-016 | $($remFamilies[4]) | PR: #55 | SOURCE: $srcBase..$($srcHeads[4]) | EQUIVALENCE: IDENTICAL or DELTA | PATHS: $($remPaths[4] -join ', ') | PURPOSE: evidence"
+        $lines = @($lines | Where-Object { $line = $_; @($Skip | Where-Object { $line.StartsWith($_) }).Count -eq 0 })
+        if ($Extra) { $lines += $Extra }
+        return "## $Id`n`n- State: **$State**`n`n" + '```text' + "`n" + ($lines -join "`n") + "`n" + '```' + "`n"
+    }
+    $authText = "## AUTH-013`n- State: **ACTIVE** from x`n`n"
+    function New-RemPr([int]$K, [string]$Branch = $remBranches[$K], [hashtable]$Change = @{}) {
+        $pr = @{ Number = 60 + $K; Branch = $Branch; Body = "Ringkasan`r`nRemediation: REM-001 entry $K`r`n"; HeadSha = ('e' * 39) + $K
+            DescendsFromActivation = $true; AncestorOfMain = $true; ChangedFiles = $remPaths[$K] }
+        foreach ($key in $Change.Keys) { $pr[$key] = $Change[$key] }
+        return $pr
+    }
+    $taskText = "# TASK`n`n" + '```text' + "`nSTATUS: DONE`nRISK CLASS: HIGH`n" + '```' + "`n`n## OBJECTIVE`n`nGoal.`n`n## COMPLETION EVIDENCE`n`n- Old evidence.`n`n## SAFE NEXT TASK`n`nNext.`n"
+    $taskEdited = $taskText.Replace('- Old evidence.', "- Old evidence.`n- Correction 2026-11-07 (REM-001).")
+    function New-RemFacts([int]$N) {
+        $facts = @{
+            Records = $authText + (New-RemBlock); PrBody = "Ringkasan`r`n`r`nRemediation: REM-001 entry $N`r`n"; TaskId = $remTasks[$N]; Branch = $remBranches[$N]
+            Mode = 'SUPERVISED'; Bootstrap = $false; CheckpointTaskId = $remTasks[$N]; CheckpointRemediation = "REM-001/$N"
+            ChangedFiles = $remPaths[$N]; TaskFiles = @{}; Blobs = @{ Main = @{}; SourceBase = @{}; SourceHead = @{}; Head = @{} }
+            Review = $null; DeltaSha256 = $null
+            Publication = @{ Error = $null; ActivationSha = ('a' * 40); CandidateDescends = $true; Prs = @(0..($N - 1) | Where-Object { $_ -ge 0 -and $_ -lt $N } | ForEach-Object { New-RemPr $_ }) }
+        }
+        if ($N -ge 1) {
+            foreach ($path in $remPaths[$N]) {
+                $facts.Blobs.Main[$path] = 'base-blob'; $facts.Blobs.SourceBase[$path] = 'base-blob'
+                $facts.Blobs.SourceHead[$path] = "head-blob-$path"; $facts.Blobs.Head[$path] = "head-blob-$path"
+            }
+            $facts.Review = [pscustomobject]@{ sha = 'x'; source_sha = $srcHeads[$N]; equivalence = 'IDENTICAL' }
+        }
+        if ($N -ge 3) {
+            $facts.TaskFiles[$remPaths[$N][0]] = @{ Main = $taskText; Head = $taskEdited }
+            $facts.Review = [pscustomobject]@{ sha = 'x'; source_sha = $srcHeads[$N]; equivalence = 'DELTA'; delta_sha256 = ('f' * 64); delta_verified = $true }
+            $facts.DeltaSha256 = 'f' * 64
+            foreach ($path in $remPaths[$N]) { $facts.Blobs.Head[$path] = 'delta-blob' }
+        }
+        return $facts
+    }
+    function Get-RemFailures([hashtable]$Facts) { return (@((Get-PranataRemediationFailures -Facts $Facts).Failures) -join ' ;; ') }
+    function Assert-RemRefused([hashtable]$Facts, [string]$Pattern, [string]$Name) {
+        $text = Get-RemFailures $Facts
+        Assert ($text -match $Pattern) "remediation: $Name refused ($text)"
+    }
+
+    foreach ($n in 0..4) {
+        $result = Get-PranataRemediationFailures -Facts (New-RemFacts $n)
+        Assert ($result.Failures.Count -eq 0 -and $result.Label -eq "REM-001 entry $n") "remediation: entry $n with every condition met passes ($(@($result.Failures) -join ' ;; '))"
+    }
+    $records = Get-PranataRemediationRecords ($authText + (New-RemBlock))
+    Assert ($records.Count -eq 1 -and $records[0].Entries.Count -eq 5 -and $records[0].Entries[3].Equivalence -eq 'IDENTICAL or DELTA' -and $records[0].Entries[4].Paths.Count -eq 2) 'remediation: the machine block is read entry by entry'
+
+    # M1-AC-01: authorization read from main, exactly one ACTIVE record.
+    $f = New-RemFacts 1; $f.Records = $authText
+    Assert-RemRefused $f 'REM-001 is not recorded on main' 'a missing REM record'
+    foreach ($state in @('PROPOSED', 'CLOSED')) {
+        $f = New-RemFacts 1; $f.Records = $authText + (New-RemBlock -State $state)
+        Assert-RemRefused $f "REM-001 is $state, not ACTIVE" "a $state record"
+    }
+    $f = New-RemFacts 1; $f.Records = $authText + (New-RemBlock) + (New-RemBlock)
+    Assert-RemRefused $f 'REM-001 is recorded 2 times' 'a record written twice'
+    $f = New-RemFacts 1; $f.Records = $authText + (New-RemBlock) + (New-RemBlock -Id 'REM-002')
+    Assert-RemRefused $f '2 ACTIVE remediation records cover TASK-015' 'two ACTIVE records covering the same entry'
+    $f = New-RemFacts 1; $f.Records = $authText + (New-RemBlock) + (New-RemBlock -Id 'REM-002' -State 'CLOSED')
+    Assert ((Get-RemFailures $f) -eq '') 'remediation: a CLOSED record next to the ACTIVE one is ignored'
+    foreach ($case in @(
+        @(@('STATE:'), '', 'STATE missing'), @(@('MODE:'), '', 'MODE missing'), @(@('ORDER:'), '', 'ORDER'), @(@('ENTRY 2'), '', 'entry 2 missing'),
+        @(@(), 'STATE: CLOSED', 'STATE repeated'), @(@(), 'MODE: AUTONOMOUS', 'unexpected line'), @(@(), 'free text', 'unexpected line'),
+        @(@('ENTRY 4'), 'ENTRY 4 | TASK-016 | docs/reconcile-task-016 | PR: #55 | SOURCE: 351ba2f..d1c609f | EQUIVALENCE: DELTA | PATHS: docs/11-tasks/TASK-016.md | PURPOSE: x', 'bad SOURCE'),
+        @(@('ENTRY 4'), 'ENTRY 4 | TASK-016 | docs/reconcile-task-016 | PR: #55 | SOURCE: none | EQUIVALENCE: DELTA | PATHS: docs/11-tasks/TASK-016.md | PURPOSE: x', 'disagree'),
+        @(@('ENTRY 4'), 'ENTRY 4 | TASK-016 | docs/reconcile-task-016 | PR: #55 | SOURCE: none | EQUIVALENCE: none | PATHS: ../x.md | PURPOSE: x', "bad path"),
+        @(@('ENTRY 4'), 'ENTRY 4 | TASK-016 | docs/reconcile-task-016 | PR: #55 | SOURCE: none | EQUIVALENCE: none | PURPOSE: x', 'fields'),
+        @(@(), 'ENTRY 1 | TASK-015 | fix/task-015-test-integrity | PR: #53 | SOURCE: none | EQUIVALENCE: none | PATHS: a.txt | PURPOSE: x', 'entry 1 repeated')
+    )) {
+        $f = New-RemFacts 1; $f.Records = $authText + (New-RemBlock -Skip $case[0] -Extra $case[1])
+        Assert-RemRefused $f "malformed: .*$([regex]::Escape($case[2]))" "a malformed block ($($case[2]))"
+    }
+    $f = New-RemFacts 1; $f.Records = $authText + (New-RemBlock) + (New-RemBlock -Id 'REM-002' -State 'CLOSED' -Skip @('MODE:'))
+    Assert-RemRefused $f 'REM-002 is malformed' 'any malformed record, even a closed one'
+    $f = New-RemFacts 1; $f.Records = $authText + (New-RemBlock).Replace('REMEDIATION: REM-001', 'REMEDIATION: REM-1')
+    Assert-RemRefused $f 'malformed' 'a header without a three-digit id'
+
+    # M1-AC-02: Task, branch family, exact paths, TASK_PLAN, and COMPLETION EVIDENCE only with STATUS DONE kept.
+    $f = New-RemFacts 1; $f.TaskId = 'TASK-016'; $f.Branch = 'fix/task-016-test-integrity-r2'
+    Assert-RemRefused $f 'the entry is for TASK-015' 'a PR for another Task'
+    $f = New-RemFacts 1; $f.PrBody = 'Remediation: REM-001 entry 9'
+    Assert-RemRefused $f 'has no entry 9' 'an entry that is not recorded'
+    foreach ($branch in @('fix/task-015-other', 'fix/task-015-test-integrity-r1', 'fix/task-015-test-integrity-r', 'fix/task-015-test-integrity-r02', 'fix/task-015-test-integrity-r2a', 'fix/task-015-test-integrity-v2', 'fix/task-015-test-integrity-r2-r3')) {
+        $f = New-RemFacts 1; $f.Branch = $branch
+        Assert-RemRefused $f 'is neither' "branch $branch"
+    }
+    foreach ($branch in @('fix/task-015-test-integrity', 'fix/task-015-test-integrity-r2', 'fix/task-015-test-integrity-r10')) {
+        $f = New-RemFacts 1; $f.Branch = $branch
+        Assert ((Get-RemFailures $f) -eq '') "remediation: branch $branch of the family accepted"
+    }
+    $f = New-RemFacts 1; $f.ChangedFiles = @($remPaths[1] + 'app/Other.php')
+    Assert-RemRefused $f 'app/Other.php is outside the entry paths' 'a file outside the entry paths'
+    $f = New-RemFacts 3; $f.ChangedFiles = @($remPaths[3] + 'docs/11-tasks/TASK_PLAN.md')
+    Assert-RemRefused $f 'TASK_PLAN.md must not change' 'a TASK_PLAN change'
+    $f = New-RemFacts 1; $f.ChangedFiles = @()
+    Assert-RemRefused $f 'changes no file' 'a PR without changes'
+    $f = New-RemFacts 3; $f.TaskFiles[$remPaths[3][0]].Head = $taskEdited.Replace('Goal.', 'Another goal.')
+    Assert-RemRefused $f 'changed outside ## COMPLETION EVIDENCE: ## OBJECTIVE' 'a change outside COMPLETION EVIDENCE'
+    $f = New-RemFacts 3; $f.TaskFiles[$remPaths[3][0]].Head = $taskEdited.Replace('Next.', "Next.`r")
+    Assert-RemRefused $f 'changed outside ## COMPLETION EVIDENCE: ## SAFE NEXT TASK' 'a line-ending change outside COMPLETION EVIDENCE'
+    $f = New-RemFacts 3; $f.TaskFiles[$remPaths[3][0]].Head = $taskEdited.Replace('STATUS: DONE', 'STATUS: VERIFYING')
+    Assert-RemRefused $f 'STATUS: DONE is missing at PR HEAD' 'a STATUS change'
+    $f = New-RemFacts 3; $f.TaskFiles[$remPaths[3][0]].Head = $taskEdited.Replace('- Correction', "## NEW`n- Correction")
+    Assert-RemRefused $f 'the section headings changed' 'a new section'
+    $f = New-RemFacts 3; $f.TaskFiles = @{}
+    Assert-RemRefused $f 'was not compared' 'a Task file that was not compared'
+
+    # M1-AC-04 and M1-AC-09: SUPERVISED only, no -Bootstrap, checkpoint Task and entry.
+    $f = New-RemFacts 1; $f.Mode = 'AUTONOMOUS'
+    Assert-RemRefused $f 'only in SUPERVISED mode' 'AUTONOMOUS mode'
+    $f = New-RemFacts 1; $f.Bootstrap = $true
+    Assert-RemRefused $f 'together with -Bootstrap' '-Bootstrap'
+    $f = New-RemFacts 1; $f.CheckpointTaskId = 'TASK-016'
+    Assert-RemRefused $f "checkpoint task_id is 'TASK-016', expected 'TASK-015'" 'a checkpoint for another Task'
+    $f = New-RemFacts 1; $f.CheckpointTaskId = $null
+    Assert-RemRefused $f 'checkpoint task_id' 'a checkpoint without a Task'
+    foreach ($value in @($null, '', 'REM-001/2', 'REM-002/1', 'rem-001/1')) {
+        $f = New-RemFacts 1; $f.CheckpointRemediation = $value
+        Assert-RemRefused $f "checkpoint remediation is '$value', expected 'REM-001/1'" "checkpoint remediation '$value'"
+    }
+
+    # M1-AC-08: SOURCE base on main, IDENTICAL blobs, DELTA digest, disposition bound to SOURCE HEAD.
+    $f = New-RemFacts 1; $f.Blobs.Main[$remPaths[1][0]] = 'moved-blob'
+    Assert-RemRefused $f 'on main is not the blob of SOURCE base' 'main no longer at the SOURCE base blob'
+    $f = New-RemFacts 4; $f.Blobs.Main['docs/handoff/CURRENT_HANDOFF.md'] = 'moved-blob'
+    Assert-RemRefused $f 'CURRENT_HANDOFF.md on main is not the blob of SOURCE base' 'one of two paths moved on main'
+    $f = New-RemFacts 1; $f.Blobs.Head[$remPaths[1][0]] = 'other-blob'
+    Assert-RemRefused $f 'IDENTICAL: .* at PR HEAD is not the blob of SOURCE HEAD' 'an IDENTICAL claim with another HEAD blob'
+    $f = New-RemFacts 2; $f.Blobs.Head[$remPaths[2][1]] = 'other-blob'
+    Assert-RemRefused $f 'IDENTICAL: tests/Feature/Files/PrivateFilesTest.php' 'one of two IDENTICAL paths changed'
+    $f = New-RemFacts 1; $f.Blobs = @{ Main = @{}; SourceBase = @{}; SourceHead = @{}; Head = @{} }
+    Assert-RemRefused $f 'were not collected' 'blobs that were not collected'
+    $f = New-RemFacts 1; $f.Review = [pscustomobject]@{ source_sha = $srcHeads[1]; equivalence = 'DELTA'; delta_sha256 = ('f' * 64); delta_verified = $true }; $f.DeltaSha256 = 'f' * 64
+    Assert-RemRefused $f "equivalence is 'DELTA', the entry allows IDENTICAL" 'a DELTA claim on an IDENTICAL-only entry'
+    $f = New-RemFacts 1; $f.Review = [pscustomobject]@{ source_sha = $srcHeads[1] }
+    Assert-RemRefused $f "equivalence is ''" 'a disposition without equivalence'
+    $f = New-RemFacts 1; $f.Review = $null
+    Assert-RemRefused $f 'no review disposition records the equivalence' 'a missing disposition'
+    $f = New-RemFacts 1; $f.Review.source_sha = $srcHeads[2]
+    Assert-RemRefused $f 'source_sha is .*, expected SOURCE HEAD' 'a disposition for another source_sha'
+    $f = New-RemFacts 3; $f.DeltaSha256 = 'e' * 64
+    Assert-RemRefused $f 'DELTA: SHA-256 recorded f+, recomputed e+' 'a DELTA digest that differs'
+    $f = New-RemFacts 3; $f.DeltaSha256 = $null
+    Assert-RemRefused $f 'could not be recomputed' 'a DELTA digest that could not be recomputed'
+    $f = New-RemFacts 3; $f.Review.delta_verified = $false
+    Assert-RemRefused $f 'not verified independently' 'a DELTA without independent verification'
+    $f = New-RemFacts 3; $f.Review.delta_verified = 'true'
+    Assert-RemRefused $f 'not verified independently' 'a DELTA verification flag that is not a boolean'
+    $f = New-RemFacts 3; $f.Review.delta_sha256 = 'abc'
+    Assert-RemRefused $f 'is not a SHA-256' 'a malformed DELTA digest'
+    $f = New-RemFacts 3; $f.Review = [pscustomobject]@{ source_sha = $srcHeads[3]; equivalence = 'IDENTICAL' }
+    Assert-RemRefused $f 'IDENTICAL: docs/11-tasks/TASK-015.md at PR HEAD' 'an IDENTICAL claim on a changed delta entry'
+
+    # M1-AC-10: activation, order, single use and the publication evidence of earlier entries.
+    $f = New-RemFacts 1; $f.PrBody = 'Ringkasan'
+    Assert-RemRefused $f 'exactly one line' 'a candidate PR without its remediation line'
+    $f = New-RemFacts 1; $f.PrBody = "Remediation: REM-001 entry 1`nRemediation: REM-001 entry 2"
+    Assert-RemRefused $f 'found 2' 'a candidate PR with two remediation lines'
+    $f = New-RemFacts 1; $f.Publication.Prs = @()
+    Assert-RemRefused $f 'entry 0 is not published yet' 'entry 1 before entry 0'
+    $f = New-RemFacts 3; $f.Publication.Prs = @((New-RemPr 0), (New-RemPr 1))
+    Assert-RemRefused $f 'entry 2 is not published yet' 'entry 3 before entry 2'
+    $f = New-RemFacts 0; $f.Publication.Prs = @(New-RemPr 0)
+    Assert-RemRefused $f 'entry 0 is already published \(#60\)' 'entry 0 used again'
+    $f = New-RemFacts 2; $f.Publication.Prs += New-RemPr 2 -Branch 'fix/task-016-test-integrity-r3'
+    Assert-RemRefused $f 'entry 2 is already published' 'entry 2 used again through another successor'
+    $f = New-RemFacts 2; $f.Publication.Prs += New-RemPr 0 -Branch 'fix/task-001-post-done-remediation-gate-r2'
+    Assert-RemRefused $f 'entry 0 has 2 publication records' 'duplicate publication evidence'
+    foreach ($change in @(
+        @{ AncestorOfMain = $false }, @{ DescendsFromActivation = $false }, @{ Body = 'Ringkasan' }, @{ Body = 'Remediation: REM-001 entry 1' },
+        @{ Body = 'Remediation: REM-002 entry 0' }, @{ Body = "Remediation: REM-001 entry 0`nRemediation: REM-001 entry 1" },
+        @{ ChangedFiles = @('scripts/executor/lib/merge-gate.ps1', 'docs/11-tasks/TASK_PLAN.md') }, @{ ChangedFiles = @() }, @{ Branch = 'fix/task-001-other' }
+    )) {
+        $f = New-RemFacts 1; $f.Publication.Prs = @(New-RemPr 0 -Change $change)
+        Assert-RemRefused $f 'entry 0 is not published yet' "evidence not counted: $(($change.Keys | ForEach-Object { "$_=$($change[$_])" }) -join ',')"
+    }
+    $f = New-RemFacts 1; $f.Publication.CandidateDescends = $false
+    Assert-RemRefused $f 'does not descend from the activation commit' 'a candidate that does not descend from the activation commit'
+    $f = New-RemFacts 1; $f.Publication.ActivationSha = $null
+    Assert-RemRefused $f 'no activation commit' 'a record never activated on main'
+    $f = New-RemFacts 1; $f.Publication = @{ Error = 'gh pr list exited 1' }
+    Assert-RemRefused $f 'could not be read: gh pr list exited 1' 'unreadable publication evidence'
+    $f = New-RemFacts 1; $f.Publication = $null
+    Assert-RemRefused $f 'publication evidence was not collected' 'publication evidence that was not collected'
+    # Real history: #49 and #51 were merged before the activation commit and never count.
+    $pr49 = @{ Number = 49; Branch = 'docs/reconcile-task-015'; Body = 'Rekonsiliasi TASK-015'; HeadSha = '06d83a7e2ce0683905c791c7dbad0f1364b252ff'
+        DescendsFromActivation = $false; AncestorOfMain = $true; ChangedFiles = @('docs/11-tasks/TASK-015.md', 'docs/11-tasks/TASK_PLAN.md', 'docs/handoff/CURRENT_HANDOFF.md') }
+    $pr51 = @{ Number = 51; Branch = 'docs/reconcile-task-016'; Body = 'Rekonsiliasi TASK-016'; HeadSha = $srcBase
+        DescendsFromActivation = $false; AncestorOfMain = $true; ChangedFiles = @('docs/11-tasks/TASK-016.md') }
+    $f = New-RemFacts 4; $f.Publication.Prs = @((New-RemPr 0), (New-RemPr 1), (New-RemPr 2), $pr49, $pr51)
+    Assert-RemRefused $f 'entry 3 is not published yet' 'entry 4 without the genuine entry 3, although #49 exists'
+    $f = New-RemFacts 3; $f.Publication.Prs = @((New-RemPr 0), (New-RemPr 1), (New-RemPr 2), $pr49)
+    Assert ((Get-RemFailures $f) -eq '') 'remediation: #49 does not count as an earlier publication of entry 3'
+    $f = New-RemFacts 4; $f.Publication.Prs += $pr51
+    Assert ((Get-RemFailures $f) -eq '') 'remediation: #51 does not count as an earlier publication of entry 4'
+    $forged = $pr49.Clone(); $forged.Body = 'Remediation: REM-001 entry 3'; $forged.ChangedFiles = @('docs/11-tasks/TASK-015.md')
+    $f = New-RemFacts 4; $f.Publication.Prs = @((New-RemPr 0), (New-RemPr 1), (New-RemPr 2), $forged)
+    Assert-RemRefused $f 'entry 3 is not published yet' 'a pre-activation PR carrying a remediation line'
+
+    # The gate: only the DONE check is lifted, and every other 8.1 check still fails on its own (M1-AC-03, M1-AC-05).
+    $goodRem = $good.Clone(); $goodRem.TaskStatus = 'DONE'; $goodRem.Mode = 'SUPERVISED'; $goodRem.Remediation = @{ Label = 'REM-001 entry 1'; Failures = @() }
+    Assert ((Get-PranataMergeFailures -Facts $goodRem).Count -eq 0) 'gate: a DONE Task passes through a satisfied remediation lane'
+    $doneOnly = $goodRem.Clone(); $doneOnly.Remediation = $null
+    Assert (((Get-PranataMergeFailures -Facts $doneOnly) -join ';') -match "status on main is 'DONE'") 'gate: a DONE Task without the lane is refused'
+    $laneFails = $goodRem.Clone(); $laneFails.Remediation = @{ Label = 'REM-001 entry 1'; Failures = @('REM-001 entry 1: 8.5.7 x') }
+    $text = (Get-PranataMergeFailures -Facts $laneFails) -join ';'
+    Assert ($text -match 'REM-001 entry 1: 8\.5\.7 x' -and $text -match "status on main is 'DONE'") 'gate: a lane refusal is reported with its entry and keeps the DONE refusal'
+    $laneMissing = $goodRem.Clone(); $laneMissing.Remediation = @{ Label = 'REM-001 entry 1'; Failures = $null }
+    Assert (((Get-PranataMergeFailures -Facts $laneMissing) -join ';') -match 'not evaluated') 'gate: a lane that was not evaluated is refused'
+    foreach ($status in @('BLOCKED', 'SUPERSEDED', 'done', $null)) {
+        $other = $goodRem.Clone(); $other.TaskStatus = $status
+        Assert (((Get-PranataMergeFailures -Facts $other) -join ';') -match 'task: contract status') "gate: status '$status' stays refused even with a satisfied lane"
+    }
+    # The lane is SUPERVISED only, where guardrail paths pass; their AUTONOMOUS refusal is checked just below.
+    foreach ($row in @($negatives | Where-Object { $_[0] -notin @('TaskStatus', 'GuardPathsTouched') })) {
+        $facts = $goodRem.Clone()
+        $facts[$row[0]] = $row[1]
+        $failures = Get-PranataMergeFailures -Facts $facts
+        Assert (($failures | Where-Object { $_ -like "*$($row[2])*" }).Count -ge 1) "gate: on the remediation lane $($row[0])=$($row[1]) must still fail $($row[2])"
+    }
+    $remAuto = $goodRem.Clone(); $remAuto.Mode = 'AUTONOMOUS'; $remAuto.GuardPathsTouched = @('scripts/executor/merge-verified.ps1')
+    Assert (((Get-PranataMergeFailures -Facts $remAuto) -join ';') -match '8\.1\.6') 'gate: guardrail paths on the remediation lane stay SUPERVISED only'
     # --- Disposable repo with the real commit-msg hook, under the machine autocrlf setting.
     $origin = Join-Path $work 'origin.git'
     $clone = Join-Path $work 'clone'
@@ -509,8 +754,11 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-m","result":"ra
 $dir = Split-Path -Parent $MyInvocation.MyCommand.Path
 if ($args[0] -eq 'api') { Get-Content -LiteralPath (Join-Path $dir 'checks.json') -Raw; exit 0 }
 if ($args -contains '--jq') { Get-Content -LiteralPath (Join-Path $dir 'after.txt') -Raw; exit 0 }
+if ($args[1] -eq 'list') { Get-Content -LiteralPath (Join-Path $dir 'merged.json') -Raw; exit 0 }
+if ($args -contains 'commits') { Get-Content -LiteralPath (Join-Path $dir ('commits-' + $args[2] + '.json')) -Raw; exit 0 }
 Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
 '@
+    Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value '[]'
     function Set-GhFacts([string]$Ci, [string]$Branch = 'chore/task-010-x', [string]$Body = 'Ringkasan') {
         Set-Content -LiteralPath (Join-Path $stubDir 'checks.json') -Encoding ASCII -Value ('{"check_runs":[{"name":"ci-gate","conclusion":"' + $Ci + '"}]}')
         Set-Content -LiteralPath (Join-Path $stubDir 'after.txt') -Encoding ASCII -Value 'MERGED'
@@ -561,6 +809,156 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         $m = Invoke-Script $merge $mergeArgs
         Assert ($m.Code -eq 0 -and $m.Out -match 'MERGED: remote main') "merge: fast-forward performed ($($m.Out))"
         Assert ((& git -C $originM rev-parse refs/heads/main) -eq $shaM) 'merge: remote main equals the verified SHA'
+    } finally { $env:PATH = $savedPath }
+
+    # --- merge-verified.ps1 on the post-DONE remediation lane (8.5): real Git history and blobs, gh stubbed.
+    $originR = Join-Path $work 'origin-r.git'
+    $cloneR = Join-Path $work 'clone-r'
+    & git init --bare --quiet --initial-branch=main $originR
+    & git init --quiet --initial-branch=main $cloneR
+    & git -C $cloneR remote add origin $originR
+    Add-Content -LiteralPath (Join-Path $cloneR '.git\info\exclude') -Value '/.pranata/'
+    function Save-RFile([string]$Path, [string]$Text) {
+        $full = Join-Path $cloneR $Path
+        [void](New-Item -ItemType Directory -Path (Split-Path -Parent $full) -Force)
+        [IO.File]::WriteAllText($full, $Text)
+    }
+    function New-RCommit([string]$Message) {
+        & git -c core.autocrlf=false -C $cloneR add -A 2>$null
+        & git -c core.autocrlf=false -C $cloneR commit --quiet -m $Message
+        return (& git -C $cloneR rev-parse HEAD)
+    }
+    $authR = "## AUTH-013`n- State: **ACTIVE** from x`n`n"
+    Save-RFile 'docs/00-governance/APPROVAL_RECORDS.md' $authR
+    Save-RFile 'docs/11-tasks/TASK-001.md' "STATUS: DONE`nRISK CLASS: HIGH`n"
+    Save-RFile 'docs/11-tasks/TASK-015.md' "STATUS: DONE`nRISK CLASS: HIGH`n"
+    Save-RFile 'tests/a.txt' "old`n"
+    $seedR = New-RCommit 'chore: seed'
+    & git -c core.autocrlf=false -C $cloneR switch --quiet -c src
+    Save-RFile 'tests/a.txt' "new`n"
+    $srcHeadR = New-RCommit 'test(task-015): reviewed source'
+    & git -c core.autocrlf=false -C $cloneR switch --quiet main
+    function Save-RRecords([string]$State) {
+        $block = @("REMEDIATION: REM-001", "STATE: $State", 'MODE: SUPERVISED', 'ORDER: 0, 1',
+            'ENTRY 0 | TASK-001 | fix/task-001-post-done-remediation-gate | PR: new | SOURCE: none | EQUIVALENCE: none | PATHS: scripts/executor/lib/merge-gate.ps1 | PURPOSE: gate',
+            "ENTRY 1 | TASK-015 | fix/task-015-test-integrity | PR: #53 | SOURCE: $seedR..$srcHeadR | EQUIVALENCE: IDENTICAL or DELTA | PATHS: tests/a.txt | PURPOSE: tests")
+        Save-RFile 'docs/00-governance/APPROVAL_RECORDS.md' ($authR + "## REM-001`n`n" + '```text' + "`n" + ($block -join "`n") + "`n" + '```' + "`n")
+    }
+    Save-RRecords 'PROPOSED'
+    [void](New-RCommit 'docs: propose REM-001')
+    Save-RRecords 'ACTIVE'
+    $activationR = New-RCommit 'docs: activate REM-001'
+    & git -C $cloneR push --quiet origin main 2>$null
+    & git -c core.autocrlf=false -C $cloneR switch --quiet -c fix/task-001-post-done-remediation-gate
+    Save-RFile 'scripts/executor/lib/merge-gate.ps1' "gate`n"
+    $e0 = New-RCommit 'fix(task-001): remediation gate'
+
+    $stateR = Initialize-PranataStateDirs $cloneR
+    function Set-RCheckpoint([string]$Task, $Remediation) {
+        $cp = New-PranataCheckpoint
+        $cp.task_id = $Task
+        if ($null -ne $Remediation) { $cp['remediation'] = $Remediation }
+        Save-PranataCheckpoint $cloneR $cp
+    }
+    function Set-RReview([string]$Sha, [string]$Extra = '') {
+        Set-Content -LiteralPath (Join-Path $stateR.Dir "review-$Sha.json") -Encoding ASCII -Value ('{"sha":"' + $Sha + '","status":"PASS","open_blocking_findings":0,"independent_review_done":true,"substitute_review_done":false,"codex_status":"COMPLETED_NO_FINDINGS"' + $Extra + '}')
+    }
+    function Set-RGhFacts([string]$Head, [string]$Branch, [string]$Body) {
+        Set-Content -LiteralPath (Join-Path $stubDir 'checks.json') -Encoding ASCII -Value '{"check_runs":[{"name":"ci-gate","conclusion":"success"}]}'
+        Set-Content -LiteralPath (Join-Path $stubDir 'after.txt') -Encoding ASCII -Value 'MERGED'
+        Set-Content -LiteralPath (Join-Path $stubDir 'pr.json') -Encoding ASCII -Value ('{"state":"OPEN","baseRefName":"main","headRefName":"' + $Branch + '","headRefOid":"' + $Head + '","isDraft":false,"mergeable":"MERGEABLE","title":"Remediasi","body":"' + $Body + '"}')
+    }
+    # A PR merged before activation, with the right branch and line, must never count (the #49 and #51 situation).
+    $historical = '{"number":9,"headRefName":"fix/task-001-post-done-remediation-gate","headRefOid":"' + $seedR + '","body":"Remediation: REM-001 entry 0"}'
+    Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ']')
+    Set-Content -LiteralPath (Join-Path $stubDir 'commits-9.json') -Encoding ASCII -Value ('{"commits":[{"oid":"' + $seedR + '"}]}')
+
+    $env:PATH = "$stubDir;$env:PATH"
+    try {
+        $argsR = @('-Pr', '10', '-VerifiedSha', $e0, '-Root', $cloneR)
+        Set-RCheckpoint 'TASK-001' 'REM-001/0'; Set-RReview $e0
+        Set-RGhFacts $e0 'fix/task-001-post-done-remediation-gate' 'Ringkasan\nRemediation: REM-001 entry 0'
+        $m = Invoke-Script $merge ($argsR + '-DryRun')
+        Assert ($m.Code -eq 0 -and $m.Out -match 'Remediation lane: REM-001 entry 0' -and $m.Out -match 'Gate PASS: TASK-001 \(HIGH\) via REM-001 entry 0') "remediation e2e: entry 0 passes in a dry run, the pre-activation PR not counted ($($m.Out))"
+
+        Set-RGhFacts $e0 'fix/task-001-post-done-remediation-gate' 'Ringkasan'
+        $m = Invoke-Script $merge $argsR
+        Assert ($m.Code -ne 0 -and $m.Out -match 'exactly one line' -and $m.Out -match "status on main is 'DONE'") "remediation e2e: a PR body without the line keeps the DONE refusal ($($m.Out))"
+        Set-RGhFacts $e0 'fix/task-001-post-done-remediation-gate' 'Ringkasan\nRemediation: REM-001 entry 0'
+        Set-RCheckpoint 'TASK-001' 'REM-001/1'
+        $m = Invoke-Script $merge $argsR
+        Assert ($m.Code -ne 0 -and $m.Out -match "REM-001 entry 0: 8\.5\.3 checkpoint remediation is 'REM-001/1'") "remediation e2e: a checkpoint for another entry refused ($($m.Out))"
+        Set-RCheckpoint 'TASK-001' $null
+        $m = Invoke-Script $merge $argsR
+        Assert ($m.Code -ne 0 -and $m.Out -match "checkpoint remediation is ''") 'remediation e2e: a checkpoint without remediation refused'
+        Set-RCheckpoint 'TASK-015' 'REM-001/0'
+        $m = Invoke-Script $merge $argsR
+        Assert ($m.Code -ne 0 -and $m.Out -match 'checkpoint names TASK-015' -and $m.Out -match "checkpoint task_id is 'TASK-015'") 'remediation e2e: a checkpoint for another Task refused'
+        Set-RCheckpoint 'TASK-001' 'REM-001/0'
+        $savedModeR = $env:PRANATA_EXECUTOR_MODE
+        $env:PRANATA_EXECUTOR_MODE = 'AUTONOMOUS'
+        $m = Invoke-Script $merge $argsR
+        $env:PRANATA_EXECUTOR_MODE = $savedModeR
+        Assert ($m.Code -ne 0 -and $m.Out -match 'only in SUPERVISED mode' -and $m.Out -match '8\.1\.6') 'remediation e2e: AUTONOMOUS refused'
+        $m = Invoke-Script $merge ($argsR + '-Bootstrap')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'together with -Bootstrap') 'remediation e2e: -Bootstrap refused'
+        Set-Content -LiteralPath (Join-Path $stubDir 'checks.json') -Encoding ASCII -Value '{"check_runs":[{"name":"ci-gate","conclusion":"failure"}]}'
+        $m = Invoke-Script $merge $argsR
+        Assert ($m.Code -ne 0 -and $m.Out -match '8\.1\.2' -and $m.Out -notmatch "status on main is 'DONE'") 'remediation e2e: a satisfied lane does not hide a failing ci-gate'
+        Set-RGhFacts $e0 'fix/task-001-post-done-remediation-gate' 'Ringkasan\nRemediation: REM-001 entry 0'
+        Assert ((& git -C $originR rev-parse refs/heads/main) -eq $activationR) 'remediation e2e: every refusal left main unchanged'
+        $m = Invoke-Script $merge $argsR
+        Assert ($m.Code -eq 0 -and $m.Out -match 'MERGED: remote main' -and (& git -C $originR rev-parse refs/heads/main) -eq $e0) "remediation e2e: entry 0 merged by fast-forward ($($m.Out))"
+
+        # Entry 1 before entry 0 is recorded as published: refused.
+        & git -c core.autocrlf=false -C $cloneR switch --quiet -c fix/task-015-test-integrity-r2 $e0
+        & git -c core.autocrlf=false -C $cloneR cherry-pick $srcHeadR 2>$null | Out-Null
+        $e1 = (& git -C $cloneR rev-parse HEAD)
+        $argsR1 = @('-Pr', '11', '-VerifiedSha', $e1, '-Root', $cloneR)
+        Set-RCheckpoint 'TASK-015' 'REM-001/1'; Set-RReview $e1 (',"source_sha":"' + $srcHeadR + '","equivalence":"IDENTICAL"')
+        Set-RGhFacts $e1 'fix/task-015-test-integrity-r2' 'Ringkasan\nRemediation: REM-001 entry 1'
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'entry 0 is not published yet') "remediation e2e: entry 1 before the publication of entry 0 refused ($($m.Out))"
+        $published0 = '{"number":10,"headRefName":"fix/task-001-post-done-remediation-gate","headRefOid":"' + $e0 + '","body":"Ringkasan\nRemediation: REM-001 entry 0"}'
+        Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ',' + $published0 + ']')
+        Set-Content -LiteralPath (Join-Path $stubDir 'commits-10.json') -Encoding ASCII -Value ('{"commits":[{"oid":"' + $e0 + '"}]}')
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -eq 0 -and $m.Out -match 'Gate PASS: TASK-015 \(HIGH\) via REM-001 entry 1') "remediation e2e: entry 1 IDENTICAL to its source passes after entry 0 ($($m.Out))"
+        Set-RReview $e1 (',"source_sha":"' + $e0 + '","equivalence":"IDENTICAL"')
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'source_sha is') 'remediation e2e: a disposition for another source refused'
+
+        # The same entry 0 again, on a successor branch: single use.
+        & git -c core.autocrlf=false -C $cloneR switch --quiet -c fix/task-001-post-done-remediation-gate-r2 $e0
+        Save-RFile 'scripts/executor/lib/merge-gate.ps1' "gate again`n"
+        $e0b = New-RCommit 'fix(task-001): remediation gate again'
+        Set-RCheckpoint 'TASK-001' 'REM-001/0'; Set-RReview $e0b
+        Set-RGhFacts $e0b 'fix/task-001-post-done-remediation-gate-r2' 'Ringkasan\nRemediation: REM-001 entry 0'
+        $m = Invoke-Script $merge @('-Pr', '12', '-VerifiedSha', $e0b, '-Root', $cloneR, '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'entry 0 is already published \(#10\)') "remediation e2e: a used entry refused ($($m.Out))"
+
+        # A change on top of the source: IDENTICAL refused, DELTA accepted only with the independently computed digest.
+        & git -c core.autocrlf=false -C $cloneR switch --quiet fix/task-015-test-integrity-r2
+        Save-RFile 'tests/a.txt' "new`nmore`n"
+        $e1d = New-RCommit 'test(task-015): one more line'
+        $argsR1d = @('-Pr', '11', '-VerifiedSha', $e1d, '-Root', $cloneR, '-DryRun')
+        Set-RCheckpoint 'TASK-015' 'REM-001/1'
+        Set-RGhFacts $e1d 'fix/task-015-test-integrity-r2' 'Ringkasan\nRemediation: REM-001 entry 1'
+        Set-RReview $e1d (',"source_sha":"' + $srcHeadR + '","equivalence":"IDENTICAL"')
+        $m = Invoke-Script $merge $argsR1d
+        Assert ($m.Code -ne 0 -and $m.Out -match 'IDENTICAL: tests/a.txt at PR HEAD') 'remediation e2e: IDENTICAL with another blob refused'
+        # Raw bytes through cmd.exe, outside PowerShell and outside the script under test.
+        $diffFile = Join-Path $work 'delta.diff'
+        & cmd.exe /c "git -C `"$cloneR`" diff --no-color --no-ext-diff --no-textconv --no-renames --full-index --binary --diff-algorithm=myers --indent-heuristic -U3 --inter-hunk-context=0 --no-relative --src-prefix=a/ --dst-prefix=b/ $srcHeadR $e1d -- tests/a.txt > `"$diffFile`""
+        $digest = (Get-FileHash -LiteralPath $diffFile -Algorithm SHA256).Hash.ToLowerInvariant()
+        Assert ((Get-Item -LiteralPath $diffFile).Length -gt 0) 'remediation e2e: the independent diff is not empty'
+        Set-RReview $e1d (',"source_sha":"' + $srcHeadR + '","equivalence":"DELTA","delta_sha256":"' + $digest + '","delta_verified":true')
+        $m = Invoke-Script $merge $argsR1d
+        Assert ($m.Code -eq 0 -and $m.Out -match 'via REM-001 entry 1') "remediation e2e: DELTA with the recomputed digest passes ($($m.Out))"
+        Set-RReview $e1d (',"source_sha":"' + $srcHeadR + '","equivalence":"DELTA","delta_sha256":"' + ('0' * 64) + '","delta_verified":true')
+        $m = Invoke-Script $merge $argsR1d
+        Assert ($m.Code -ne 0 -and $m.Out -match "DELTA: SHA-256 recorded 0{64}, recomputed $digest") 'remediation e2e: DELTA with another digest refused'
+        Assert ((& git -C $originR rev-parse refs/heads/main) -eq $e0) 'remediation e2e: dry runs and refusals left main at entry 0'
     } finally { $env:PATH = $savedPath }
     # GOV-09 on this machine: a CRLF working copy of an LF blob must not rewrite the blob.
     $eolRepo = Join-Path $work 'eol'
