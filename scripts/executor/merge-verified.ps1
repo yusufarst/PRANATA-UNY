@@ -64,7 +64,8 @@ if ($Bootstrap -and $script:BootstrapRequiredJobs.ContainsKey([string]$task.Task
     $bootstrapFailures = Get-PranataBootstrapFailures -Run $bootstrapRun -TaskId $task.TaskId -Pr $Pr -HeadSha $prInfo.headRefOid -MainSha $checkedMain -Tree $tree
 }
 $review = Read-PranataJson (Join-Path $paths.Dir "review-$VerifiedSha.json")
-$changed = @(& git -C $Root diff --name-only "$checkedMain...$VerifiedSha")
+# Old and new path of a moved file, unquoted: a rename or a quoted name must not hide a guardrail path (8.1.6).
+$changed = @(Get-PranataChangedFiles $Root @("$checkedMain...$VerifiedSha"))
 $touched = @($changed | Where-Object { $_ -match $script:GuardPathRegex })
 $reconcileOk = (-not $task.Reconcile) -or (Test-PranataReconcileScope $changed $task.TaskId)
 $checkpoint = Get-PranataCheckpoint $Root

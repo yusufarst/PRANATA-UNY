@@ -193,7 +193,8 @@ try {
             Mode = 'SUPERVISED'; Bootstrap = $false; CheckpointTaskId = $remTasks[$N]; CheckpointRemediation = "REM-001/$N"
             ChangedFiles = $remPaths[$N]; TaskFiles = @{}; Blobs = @{ Main = @{}; SourceBase = @{}; SourceHead = @{}; Head = @{} }
             Review = $null; DeltaSha256 = $null
-            Publication = @{ Error = $null; ActivationSha = ('a' * 40); CandidateDescends = $true; Prs = @(0..($N - 1) | Where-Object { $_ -ge 0 -and $_ -lt $N } | ForEach-Object { New-RemPr $_ }) }
+            Publication = @{ Error = $null; ActivationSha = ('a' * 40); CandidateDescends = $true; FamilyPrs = @(); PathCommits = @()
+                Prs = @(0..($N - 1) | Where-Object { $_ -ge 0 -and $_ -lt $N } | ForEach-Object { New-RemPr $_ }) }
         }
         if ($N -ge 1) {
             foreach ($path in $remPaths[$N]) {
@@ -374,6 +375,41 @@ try {
     $forged = $pr49.Clone(); $forged.Body = 'Remediation: REM-001 entry 3'; $forged.ChangedFiles = @('docs/11-tasks/TASK-015.md')
     $f = New-RemFacts 4; $f.Publication.Prs = @((New-RemPr 0), (New-RemPr 1), (New-RemPr 2), $forged)
     Assert-RemRefused $f 'entry 3 is not published yet' 'a pre-activation PR carrying a remediation line'
+    # P2-2: single use does not depend on PR bodies, and incomplete evidence refuses.
+    $f = New-RemFacts 0; $f.Publication.PathCommits = @('b' * 40)
+    Assert-RemRefused $f "entry 0 is already used: its paths changed on main after the activation commit \($('b' * 40)\)" 'entry 0 whose paths changed on main since activation'
+    $f = New-RemFacts 0; $f.Publication.FamilyPrs = @(@{ Number = 70; Branch = $remBranches[0]; HeadSha = ('c' * 40) })
+    Assert-RemRefused $f 'entry 0 is already used: merged PR #70 of branch family fix/task-001-post-done-remediation-gate' 'entry 0 after a family PR whose body lost its line'
+    $f = New-RemFacts 0; $f.Publication.Prs = @(New-RemPr 0 -Change @{ Body = 'Ringkasan (edited)' }); $f.Publication.FamilyPrs = @(@{ Number = 60; Branch = $remBranches[0]; HeadSha = ('e' * 39) + '0' })
+    $text = Get-RemFailures $f
+    Assert ($text -match 'already used: merged PR #60' -and $text -notmatch 'already published') "remediation: an edited PR body does not reopen entry 0 ($text)"
+    foreach ($key in @('PathCommits', 'FamilyPrs')) {
+        $f = New-RemFacts 1; $f.Publication[$key] = $null
+        Assert-RemRefused $f 'publication evidence is incomplete' "publication evidence without $key"
+    }
+    # P3-2: only ASCII digits; a Unicode digit is refused cleanly instead of matching.
+    $arabicThree = [string][char]0x0663
+    $f = New-RemFacts 1; $f.Branch = "fix/task-015-test-integrity-r2$arabicThree"
+    Assert-RemRefused $f 'is neither' 'a branch suffix with a Unicode digit'
+    $f = New-RemFacts 1; $f.PrBody = "Remediation: REM-001 entry $arabicThree"
+    Assert-RemRefused $f 'exactly one line' 'a remediation line with a Unicode digit'
+    $f = New-RemFacts 1; $f.Records = $authText + (New-RemBlock).Replace('ENTRY 4 |', "ENTRY $arabicThree |")
+    Assert-RemRefused $f 'malformed' 'an entry number with a Unicode digit'
+    # Ordinal comparison: invisible characters that culture comparison ignores make a different path, text or branch.
+    $softHyphen = [string][char]0x00AD
+    $disguised = 'tests/Feature/Access/Process' + $softHyphen + 'AssignmentTest.php'
+    $f = New-RemFacts 1; $f.ChangedFiles = @($remPaths[1] + $disguised)
+    Assert-RemRefused $f 'AssignmentTest\.php is outside the entry paths' 'a path disguised with a soft hyphen'
+    $f = New-RemFacts 1; $f.Branch = 'fix/task-015-test-integrity' + $softHyphen
+    Assert-RemRefused $f 'is neither' 'a branch disguised with a soft hyphen'
+    $f = New-RemFacts 2; $f.Publication.Prs = @((New-RemPr 0), (New-RemPr 1 -Change @{ ChangedFiles = @($disguised) }))
+    Assert-RemRefused $f 'entry 1 is not published yet' 'evidence of a disguised path'
+    $f = New-RemFacts 3; $f.TaskFiles[$remPaths[3][0]].Head = ([string][char]0xFEFF) + $taskEdited
+    Assert-RemRefused $f 'changed outside ## COMPLETION EVIDENCE: \(before the first section\)' 'a byte order mark in a Task file'
+    $f = New-RemFacts 3; $f.TaskFiles[$remPaths[3][0]].Head = $taskEdited.Replace('Goal.', "Go${softHyphen}al.")
+    Assert-RemRefused $f 'changed outside ## COMPLETION EVIDENCE: ## OBJECTIVE' 'a soft hyphen outside COMPLETION EVIDENCE'
+    Assert (-not (Test-PranataReconcileScope @("docs/11-tasks/TASK-015${softHyphen}.md") 'TASK-015')) 'gate: 8.3 reconciliation scope compares paths character for character'
+    Assert (Test-PranataReconcileScope @('docs/11-tasks/TASK-015.md', 'docs/handoff/CURRENT_HANDOFF.md') 'TASK-015') 'gate: 8.3 reconciliation scope still accepts its three documents'
 
     # The gate: only the DONE check is lifted, and every other 8.1 check still fails on its own (M1-AC-03, M1-AC-05).
     $goodRem = $good.Clone(); $goodRem.TaskStatus = 'DONE'; $goodRem.Mode = 'SUPERVISED'; $goodRem.Remediation = @{ Label = 'REM-001 entry 1'; Failures = @() }
@@ -398,6 +434,52 @@ try {
     }
     $remAuto = $goodRem.Clone(); $remAuto.Mode = 'AUTONOMOUS'; $remAuto.GuardPathsTouched = @('scripts/executor/merge-verified.ps1')
     Assert (((Get-PranataMergeFailures -Facts $remAuto) -join ';') -match '8\.1\.6') 'gate: guardrail paths on the remediation lane stay SUPERVISED only'
+
+    # P2-1: Task files compared byte for byte from real Git blobs (CR, final newline, BOM, invalid UTF-8).
+    $blobRepo = Join-Path $work 'blobs'
+    & git init --quiet --initial-branch=main $blobRepo
+    $taskPath = 'docs/11-tasks/TASK-015.md'
+    function Save-BlobVariant([byte[]]$Bytes) {
+        $full = Join-Path $blobRepo $taskPath
+        [void](New-Item -ItemType Directory -Path (Split-Path -Parent $full) -Force)
+        [IO.File]::WriteAllBytes($full, $Bytes)
+        & git -c core.autocrlf=false -C $blobRepo add -A 2>$null
+        & git -c core.autocrlf=false -C $blobRepo commit --quiet --allow-empty -m 'chore: variant'
+        return (& git -C $blobRepo rev-parse HEAD)
+    }
+    $ascii = [Text.Encoding]::ASCII
+    $baseBlob = Save-BlobVariant $ascii.GetBytes($taskText)
+    $baseRead = Get-PranataBlobText $blobRepo $baseBlob $taskPath
+    Assert ($baseRead -ceq $taskText) 'blob text: an LF blob is read back byte for byte'
+    $variants = @(
+        @('CRLF in place of LF outside the evidence', $taskEdited.Replace("Goal.`n", "Goal.`r`n"), 'changed outside ## COMPLETION EVIDENCE: ## OBJECTIVE'),
+        @('a lone CR in place of LF', $taskEdited.Replace("Goal.`n", "Goal.`r"), 'changed outside ## COMPLETION EVIDENCE: ## OBJECTIVE'),
+        @('a dropped final newline', $taskEdited.TrimEnd([char]10), 'changed outside ## COMPLETION EVIDENCE: ## SAFE NEXT TASK'),
+        @('a CRLF file', $taskEdited.Replace("`n", "`r`n"), 'the section headings changed')
+    )
+    foreach ($variant in $variants) {
+        $sha = Save-BlobVariant $ascii.GetBytes($variant[1])
+        $problems = (Get-PranataTaskFileProblems $baseRead (Get-PranataBlobText $blobRepo $sha $taskPath)) -join ' ;; '
+        Assert ($problems -match [regex]::Escape($variant[2])) "blob text: $($variant[0]) is detected ($problems)"
+    }
+    $bom = [byte[]](@(0xEF, 0xBB, 0xBF) + $ascii.GetBytes($taskEdited))
+    $sha = Save-BlobVariant $bom
+    $problems = (Get-PranataTaskFileProblems $baseRead (Get-PranataBlobText $blobRepo $sha $taskPath)) -join ' ;; '
+    Assert ($problems -match 'before the first section') "blob text: a byte order mark is detected ($problems)"
+    $sha = Save-BlobVariant $ascii.GetBytes($taskEdited.Replace("- Correction", "- Correction`r"))
+    Assert ((Get-PranataTaskFileProblems $baseRead (Get-PranataBlobText $blobRepo $sha $taskPath)).Count -eq 0) 'blob text: a CR inside COMPLETION EVIDENCE alone is allowed'
+    $sha = Save-BlobVariant $ascii.GetBytes($taskEdited)
+    Assert ((Get-PranataTaskFileProblems $baseRead (Get-PranataBlobText $blobRepo $sha $taskPath)).Count -eq 0) 'blob text: an evidence-only change from a real blob passes'
+    foreach ($bad in @(0xFF, 0xFE)) {
+        $bytes = [byte[]]($ascii.GetBytes($taskEdited.Replace('Goal.', 'Goal?')))
+        $bytes[[Array]::IndexOf($bytes, [byte][char]'?')] = $bad
+        $sha = Save-BlobVariant $bytes
+        Assert ($null -eq (Get-PranataBlobText $blobRepo $sha $taskPath)) "blob text: invalid UTF-8 byte 0x$('{0:X2}' -f $bad) is not decoded"
+    }
+    $facts = New-RemFacts 3; $facts.TaskFiles[$remPaths[3][0]].Head = $null
+    Assert-RemRefused $facts 'was not compared' 'a Task file that is not valid UTF-8'
+    Assert ($null -eq (Get-PranataBlobText $blobRepo $baseBlob 'docs/missing.md')) 'blob text: a missing path gives no text'
+    Assert ($null -eq (Get-PranataBlobText $blobRepo 'HEAD' $taskPath)) 'blob text: only a full SHA is read'
     # --- Disposable repo with the real commit-msg hook, under the machine autocrlf setting.
     $origin = Join-Path $work 'origin.git'
     $clone = Join-Path $work 'clone'
@@ -737,6 +819,8 @@ Write-Output ('{"type":"result","is_error":false,"session_id":"s-m","result":"ra
     [void](New-Item -ItemType Directory -Path (Join-Path $cloneM 'docs\11-tasks') -Force)
     Set-Content -LiteralPath (Join-Path $cloneM 'docs\00-governance\APPROVAL_RECORDS.md') -Value "## AUTH-013`n- State: **ACTIVE** from x`n## AUTH-012" -Encoding ASCII
     Set-Content -LiteralPath (Join-Path $cloneM 'docs\11-tasks\TASK-010.md') -Value "STATUS: READY`nRISK CLASS: HIGH" -Encoding ASCII
+    [void](New-Item -ItemType Directory -Path (Join-Path $cloneM '.githooks') -Force)
+    Set-Content -LiteralPath (Join-Path $cloneM '.githooks\hook.txt') -Value 'guard' -Encoding ASCII
     & git -c core.autocrlf=false -C $cloneM add -A 2>$null
     & git -c core.autocrlf=false -C $cloneM commit --quiet -m 'chore: seed'
     & git -C $cloneM push --quiet origin main 2>$null
@@ -809,6 +893,34 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         $m = Invoke-Script $merge $mergeArgs
         Assert ($m.Code -eq 0 -and $m.Out -match 'MERGED: remote main') "merge: fast-forward performed ($($m.Out))"
         Assert ((& git -C $originM rev-parse refs/heads/main) -eq $shaM) 'merge: remote main equals the verified SHA'
+
+        # Pre-existing P1: a guardrail path moved away, or named with non-ASCII characters, still holds the merge to
+        # SUPERVISED (8.1.6). Without --no-renames and -z the changed-file list hid both.
+        $mergedM = $shaM
+        $savedModeM = $env:PRANATA_EXECUTOR_MODE
+        $env:PRANATA_EXECUTOR_MODE = 'AUTONOMOUS'
+        & git -c core.autocrlf=false -C $cloneM switch --quiet -c chore/task-010-move $mergedM
+        & git -c core.autocrlf=false -C $cloneM mv .githooks/hook.txt docs/hook.txt
+        & git -c core.autocrlf=false -C $cloneM commit --quiet -m 'chore(task-010): move a file'
+        $shaM = (& git -C $cloneM rev-parse HEAD)
+        $reviewFile = Join-Path $stateM.Dir "review-$shaM.json"
+        Set-GhFacts 'success' 'chore/task-010-move'; Set-Review
+        $m = Invoke-Script $merge @('-Pr', '10', '-VerifiedSha', $shaM, '-Root', $cloneM, '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match '8\.1\.6 guardrail paths touched.*\.githooks/hook\.txt') "merge: a guardrail file moved out of its folder stays SUPERVISED only ($($m.Out))"
+        & git -c core.autocrlf=false -C $cloneM switch --quiet -c chore/task-010-name $mergedM
+        $workflowName = 'w' + [string][char]0x00E9 + '.yml'
+        [void](New-Item -ItemType Directory -Path (Join-Path $cloneM '.github\workflows') -Force)
+        Set-Content -LiteralPath (Join-Path $cloneM ".github\workflows\$workflowName") -Value 'on: push' -Encoding ASCII
+        & git -c core.autocrlf=false -C $cloneM add -A 2>$null
+        & git -c core.autocrlf=false -C $cloneM commit --quiet -m 'chore(task-010): add a workflow'
+        $shaM = (& git -C $cloneM rev-parse HEAD)
+        $reviewFile = Join-Path $stateM.Dir "review-$shaM.json"
+        Set-GhFacts 'success' 'chore/task-010-name'; Set-Review
+        $m = Invoke-Script $merge @('-Pr', '10', '-VerifiedSha', $shaM, '-Root', $cloneM, '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match '8\.1\.6 guardrail paths touched, merge is SUPERVISED only: \.github/workflows/w') "merge: a guardrail file with a non-ASCII name stays SUPERVISED only ($($m.Out))"
+        $env:PRANATA_EXECUTOR_MODE = $savedModeM
+        $m = Invoke-Script $merge @('-Pr', '10', '-VerifiedSha', $shaM, '-Root', $cloneM, '-DryRun')
+        Assert ($m.Code -eq 0 -and $m.Out -match 'Gate PASS') "merge: the same change passes in SUPERVISED mode ($($m.Out))"
     } finally { $env:PATH = $savedPath }
 
     # --- merge-verified.ps1 on the post-DONE remediation lane (8.5): real Git history and blobs, gh stubbed.
@@ -831,17 +943,22 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
     $authR = "## AUTH-013`n- State: **ACTIVE** from x`n`n"
     Save-RFile 'docs/00-governance/APPROVAL_RECORDS.md' $authR
     Save-RFile 'docs/11-tasks/TASK-001.md' "STATUS: DONE`nRISK CLASS: HIGH`n"
-    Save-RFile 'docs/11-tasks/TASK-015.md' "STATUS: DONE`nRISK CLASS: HIGH`n"
+    Save-RFile 'docs/11-tasks/TASK-015.md' $taskText
     Save-RFile 'tests/a.txt' "old`n"
+    Save-RFile 'tests/b.txt' "other`n"
     $seedR = New-RCommit 'chore: seed'
     & git -c core.autocrlf=false -C $cloneR switch --quiet -c src
     Save-RFile 'tests/a.txt' "new`n"
     $srcHeadR = New-RCommit 'test(task-015): reviewed source'
+    & git -c core.autocrlf=false -C $cloneR switch --quiet -c src-doc $seedR
+    Save-RFile 'docs/11-tasks/TASK-015.md' $taskEdited
+    $srcDocR = New-RCommit 'docs(task-015): reviewed evidence'
     & git -c core.autocrlf=false -C $cloneR switch --quiet main
     function Save-RRecords([string]$State) {
-        $block = @("REMEDIATION: REM-001", "STATE: $State", 'MODE: SUPERVISED', 'ORDER: 0, 1',
+        $block = @("REMEDIATION: REM-001", "STATE: $State", 'MODE: SUPERVISED', 'ORDER: 0, 1, 2',
             'ENTRY 0 | TASK-001 | fix/task-001-post-done-remediation-gate | PR: new | SOURCE: none | EQUIVALENCE: none | PATHS: scripts/executor/lib/merge-gate.ps1 | PURPOSE: gate',
-            "ENTRY 1 | TASK-015 | fix/task-015-test-integrity | PR: #53 | SOURCE: $seedR..$srcHeadR | EQUIVALENCE: IDENTICAL or DELTA | PATHS: tests/a.txt | PURPOSE: tests")
+            "ENTRY 1 | TASK-015 | fix/task-015-test-integrity | PR: #53 | SOURCE: $seedR..$srcHeadR | EQUIVALENCE: IDENTICAL or DELTA | PATHS: tests/a.txt | PURPOSE: tests",
+            "ENTRY 2 | TASK-015 | docs/reconcile-task-015 | PR: #54 | SOURCE: $seedR..$srcDocR | EQUIVALENCE: IDENTICAL or DELTA | PATHS: docs/11-tasks/TASK-015.md | PURPOSE: evidence")
         Save-RFile 'docs/00-governance/APPROVAL_RECORDS.md' ($authR + "## REM-001`n`n" + '```text' + "`n" + ($block -join "`n") + "`n" + '```' + "`n")
     }
     Save-RRecords 'PROPOSED'
@@ -880,6 +997,16 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         Set-RGhFacts $e0 'fix/task-001-post-done-remediation-gate' 'Ringkasan\nRemediation: REM-001 entry 0'
         $m = Invoke-Script $merge ($argsR + '-DryRun')
         Assert ($m.Code -eq 0 -and $m.Out -match 'Remediation lane: REM-001 entry 0' -and $m.Out -match 'Gate PASS: TASK-001 \(HIGH\) via REM-001 entry 0') "remediation e2e: entry 0 passes in a dry run, the pre-activation PR not counted ($($m.Out))"
+        # P2-3: a file moved from outside the entry into a new entry path still counts as a change of its old path.
+        & git -c core.autocrlf=false -C $cloneR switch --quiet -c fix/task-001-post-done-remediation-gate-r3 $activationR
+        [void](New-Item -ItemType Directory -Path (Join-Path $cloneR 'scripts\executor\lib') -Force)
+        & git -c core.autocrlf=false -C $cloneR mv tests/b.txt scripts/executor/lib/merge-gate.ps1
+        & git -c core.autocrlf=false -C $cloneR commit --quiet -m 'fix(task-001): move a file into the entry'
+        $e0m = (& git -C $cloneR rev-parse HEAD)
+        Set-RReview $e0m
+        Set-RGhFacts $e0m 'fix/task-001-post-done-remediation-gate-r3' 'Ringkasan\nRemediation: REM-001 entry 0'
+        $m = Invoke-Script $merge @('-Pr', '10', '-VerifiedSha', $e0m, '-Root', $cloneR, '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match '8\.5\.2 tests/b\.txt is outside the entry paths') "remediation e2e: a rename into an entry path refused ($($m.Out))"
 
         Set-RGhFacts $e0 'fix/task-001-post-done-remediation-gate' 'Ringkasan'
         $m = Invoke-Script $merge $argsR
@@ -935,7 +1062,33 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         Set-RCheckpoint 'TASK-001' 'REM-001/0'; Set-RReview $e0b
         Set-RGhFacts $e0b 'fix/task-001-post-done-remediation-gate-r2' 'Ringkasan\nRemediation: REM-001 entry 0'
         $m = Invoke-Script $merge @('-Pr', '12', '-VerifiedSha', $e0b, '-Root', $cloneR, '-DryRun')
-        Assert ($m.Code -ne 0 -and $m.Out -match 'entry 0 is already published \(#10\)') "remediation e2e: a used entry refused ($($m.Out))"
+        Assert ($m.Code -ne 0 -and $m.Out -match 'entry 0 is already published \(#10\)' -and $m.Out -match 'entry 0 is already used: its paths changed' -and $m.Out -match 'entry 0 is already used: merged PR #10') "remediation e2e: a used entry refused ($($m.Out))"
+        # P2-2: the body of merged #10 edited afterwards. Entry 0 stays used (Git history and branch family), and
+        # entry 1 loses its evidence of entry 0: both refused.
+        $edited0 = '{"number":10,"headRefName":"fix/task-001-post-done-remediation-gate","headRefOid":"' + $e0 + '","body":"Ringkasan (diedit)"}'
+        Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ',' + $edited0 + ']')
+        $m = Invoke-Script $merge @('-Pr', '12', '-VerifiedSha', $e0b, '-Root', $cloneR, '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'entry 0 is already used: its paths changed' -and $m.Out -match 'entry 0 is already used: merged PR #10' -and $m.Out -notmatch 'already published') "remediation e2e: an edited PR body does not reopen entry 0 ($($m.Out))"
+        Set-RCheckpoint 'TASK-015' 'REM-001/1'; Set-RReview $e1 (',"source_sha":"' + $srcHeadR + '","equivalence":"IDENTICAL"')
+        Set-RGhFacts $e1 'fix/task-015-test-integrity-r2' 'Ringkasan\nRemediation: REM-001 entry 1'
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'entry 0 is not published yet') "remediation e2e: entry 1 after the evidence of entry 0 was edited away refused ($($m.Out))"
+        # Evidence that cannot be trusted refuses: commits that disagree with Git, a listing at its cap, a family PR
+        # whose head Git does not know.
+        Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ',' + $published0 + ']')
+        Set-Content -LiteralPath (Join-Path $stubDir 'commits-10.json') -Encoding ASCII -Value ('{"commits":[{"oid":"' + $seedR + '"}]}')
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'could not be read: the commits of PR #10 on GitHub differ') "remediation e2e: PR commits that disagree with Git refused ($($m.Out))"
+        Set-Content -LiteralPath (Join-Path $stubDir 'commits-10.json') -Encoding ASCII -Value ('{"commits":[{"oid":"' + $e0 + '"}]}')
+        $full = '[' + ((1..1000 | ForEach-Object { '{"number":' + $_ + ',"headRefName":"x/y","headRefOid":"' + ('0' * 40) + '","body":""}' }) -join ',') + ']'
+        Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value $full
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'reached its limit of 1000') "remediation e2e: a listing at its cap refused ($($m.Out))"
+        $unknown = '{"number":13,"headRefName":"fix/task-015-test-integrity-r4","headRefOid":"' + ('d' * 40) + '","body":"Ringkasan"}'
+        Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ',' + $published0 + ',' + $unknown + ']')
+        $m = Invoke-Script $merge ($argsR1 + '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match 'could not be read: git merge-base --is-ancestor') "remediation e2e: a family PR unknown to Git refused ($($m.Out))"
+        Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ',' + $published0 + ']')
 
         # A change on top of the source: IDENTICAL refused, DELTA accepted only with the independently computed digest.
         & git -c core.autocrlf=false -C $cloneR switch --quiet fix/task-015-test-integrity-r2
@@ -947,10 +1100,15 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         Set-RReview $e1d (',"source_sha":"' + $srcHeadR + '","equivalence":"IDENTICAL"')
         $m = Invoke-Script $merge $argsR1d
         Assert ($m.Code -ne 0 -and $m.Out -match 'IDENTICAL: tests/a.txt at PR HEAD') 'remediation e2e: IDENTICAL with another blob refused'
-        # Raw bytes through cmd.exe, outside PowerShell and outside the script under test.
+        # Raw bytes through cmd.exe, outside PowerShell and outside the script under test: the documented command.
         $diffFile = Join-Path $work 'delta.diff'
-        & cmd.exe /c "git -C `"$cloneR`" diff --no-color --no-ext-diff --no-textconv --no-renames --full-index --binary --diff-algorithm=myers --indent-heuristic -U3 --inter-hunk-context=0 --no-relative --src-prefix=a/ --dst-prefix=b/ $srcHeadR $e1d -- tests/a.txt > `"$diffFile`""
-        $digest = (Get-FileHash -LiteralPath $diffFile -Algorithm SHA256).Hash.ToLowerInvariant()
+        $emptyOrder = Join-Path $work 'empty.order'
+        [IO.File]::WriteAllBytes($emptyOrder, [byte[]]@())
+        function Get-IndependentDigest([string]$From, [string]$To, [string]$Paths) {
+            & cmd.exe /c "set GIT_ATTR_NOSYSTEM=1&& git -C `"$cloneR`" --attr-source=$To -c core.attributesFile= -c diff.orderFile=`"$emptyOrder`" -c diff.suppressBlankEmpty=false -c core.bigFileThreshold=512m -c core.quotePath=true diff --no-color --no-ext-diff --no-textconv --no-renames --full-index --binary --diff-algorithm=myers --indent-heuristic -U3 --inter-hunk-context=0 --no-relative --src-prefix=a/ --dst-prefix=b/ $From $To -- $Paths > `"$diffFile`""
+            return (Get-FileHash -LiteralPath $diffFile -Algorithm SHA256).Hash.ToLowerInvariant()
+        }
+        $digest = Get-IndependentDigest $srcHeadR $e1d 'tests/a.txt'
         Assert ((Get-Item -LiteralPath $diffFile).Length -gt 0) 'remediation e2e: the independent diff is not empty'
         Set-RReview $e1d (',"source_sha":"' + $srcHeadR + '","equivalence":"DELTA","delta_sha256":"' + $digest + '","delta_verified":true')
         $m = Invoke-Script $merge $argsR1d
@@ -959,6 +1117,29 @@ Get-Content -LiteralPath (Join-Path $dir 'pr.json') -Raw
         $m = Invoke-Script $merge $argsR1d
         Assert ($m.Code -ne 0 -and $m.Out -match "DELTA: SHA-256 recorded 0{64}, recomputed $digest") 'remediation e2e: DELTA with another digest refused'
         Assert ((& git -C $originR rev-parse refs/heads/main) -eq $e0) 'remediation e2e: dry runs and refusals left main at entry 0'
+
+        # Entry 1 merged, then entry 2: a Task contract compared byte for byte from real blobs (P2-1).
+        Set-RReview $e1d (',"source_sha":"' + $srcHeadR + '","equivalence":"DELTA","delta_sha256":"' + $digest + '","delta_verified":true')
+        $m = Invoke-Script $merge @('-Pr', '11', '-VerifiedSha', $e1d, '-Root', $cloneR)
+        Assert ($m.Code -eq 0 -and (& git -C $originR rev-parse refs/heads/main) -eq $e1d) "remediation e2e: entry 1 merged by fast-forward ($($m.Out))"
+        $published1 = '{"number":11,"headRefName":"fix/task-015-test-integrity-r2","headRefOid":"' + $e1d + '","body":"Ringkasan\nRemediation: REM-001 entry 1"}'
+        Set-Content -LiteralPath (Join-Path $stubDir 'merged.json') -Encoding ASCII -Value ('[' + $historical + ',' + $published0 + ',' + $published1 + ']')
+        Set-Content -LiteralPath (Join-Path $stubDir 'commits-11.json') -Encoding ASCII -Value ('{"commits":[{"oid":"' + $e1 + '"},{"oid":"' + $e1d + '"}]}')
+        & git -c core.autocrlf=false -C $cloneR switch --quiet -c docs/reconcile-task-015-r2 $e1d
+        & git -c core.autocrlf=false -C $cloneR cherry-pick $srcDocR 2>$null | Out-Null
+        $e2 = (& git -C $cloneR rev-parse HEAD)
+        Set-RCheckpoint 'TASK-015' 'REM-001/2'; Set-RReview $e2 (',"source_sha":"' + $srcDocR + '","equivalence":"IDENTICAL"')
+        Set-RGhFacts $e2 'docs/reconcile-task-015-r2' 'Ringkasan\nRemediation: REM-001 entry 2'
+        $m = Invoke-Script $merge @('-Pr', '12', '-VerifiedSha', $e2, '-Root', $cloneR, '-DryRun')
+        Assert ($m.Code -eq 0 -and $m.Out -match 'via REM-001 entry 2') "remediation e2e: entry 2 with an evidence-only Task change passes ($($m.Out))"
+        Save-RFile 'docs/11-tasks/TASK-015.md' $taskEdited.Replace("Goal.`n", "Goal.`r`n")
+        $e2c = New-RCommit 'docs(task-015): line ending outside the evidence'
+        $digestC = Get-IndependentDigest $srcDocR $e2c 'docs/11-tasks/TASK-015.md'
+        Set-RReview $e2c (',"source_sha":"' + $srcDocR + '","equivalence":"DELTA","delta_sha256":"' + $digestC + '","delta_verified":true')
+        Set-RGhFacts $e2c 'docs/reconcile-task-015-r2' 'Ringkasan\nRemediation: REM-001 entry 2'
+        $m = Invoke-Script $merge @('-Pr', '12', '-VerifiedSha', $e2c, '-Root', $cloneR, '-DryRun')
+        Assert ($m.Code -ne 0 -and $m.Out -match '8\.5\.2 docs/11-tasks/TASK-015\.md: changed outside ## COMPLETION EVIDENCE: ## OBJECTIVE' -and $m.Out -notmatch 'DELTA: SHA-256') "remediation e2e: a CRLF-only change outside COMPLETION EVIDENCE refused ($($m.Out))"
+        Assert ((& git -C $originR rev-parse refs/heads/main) -eq $e1d) 'remediation e2e: the entry 2 refusal left main at entry 1'
     } finally { $env:PATH = $savedPath }
     # GOV-09 on this machine: a CRLF working copy of an LF blob must not rewrite the blob.
     $eolRepo = Join-Path $work 'eol'
