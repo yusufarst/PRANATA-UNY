@@ -369,11 +369,11 @@ AUTH-012 is **HISTORICAL / COMPLETED** as of 2026-11-01: every P4–P11 phase is
 - Purpose: publish the Owner-authorized corrections A (evidence) and B (tests) of the TASK-015/TASK-016 procedure audit of 2026-11-07, and the merge-gate change that makes this lane enforceable. Procedure changes (audit item C) are not authorized here.
 - Mode: SUPERVISED only, Owner hold kept active, runner and watcher off, TASK-017 not started.
 - Entries are used once each, strictly in the order 0, 1, 2, 3, 4 (EXECUTOR_OPERATING_MODEL §8.5 item 7); only PRs descending from the REM-001 activation commit and carrying `Remediation: REM-001 entry k` count as publication evidence, so the earlier reconciliations #49 and #51 never count. Branch family: the exact name or a successor `-rN` (N ≥ 2). Paths are exact; a Task file is limited to its `## COMPLETION EVIDENCE` section with `STATUS: DONE` unchanged. `SOURCE` is the immutable reviewed base..HEAD of the original PR; the PR number is provenance only, and a successor PR has a new number and HEAD. `EQUIVALENCE` is what the merge must prove (§8.5 item 5); entry 0 is new work with its own full review.
-- State: **ACTIVE** since the PCR-004 state-transition commit, which is the activation commit of EXECUTOR_OPERATING_MODEL §8.5 item 7. Owner approval: U-015 (2026-11-07), entries 0–4 exactly as recorded, SUPERVISED, Owner hold kept active. CLOSED by Claude Planning after entry 4 is merged.
+- State: **CLOSED** (2026-11-07): entries 0–4 published ([REM-001 closure record](#rem-001-closure-record)). It was ACTIVE from the PCR-004 state-transition commit `85784bb416bc3afb56ba770cea8a25e3a80d1092`, its activation commit under EXECUTOR_OPERATING_MODEL §8.5 item 7, until this closure. Owner approval: U-015 (2026-11-07), entries 0–4 exactly as recorded, SUPERVISED, Owner hold kept active.
 
 ```text
 REMEDIATION: REM-001
-STATE: ACTIVE
+STATE: CLOSED
 MODE: SUPERVISED
 ORDER: 0, 1, 2, 3, 4
 ENTRY 0 | TASK-001 | fix/task-001-post-done-remediation-gate | PR: new | SOURCE: none | EQUIVALENCE: none | PATHS: scripts/executor/lib/merge-gate.ps1, scripts/executor/merge-verified.ps1, scripts/executor/tests/scripts.tests.ps1 | PURPOSE: merge-gate support for this lane (EXECUTOR_OPERATING_MODEL 8.5)
@@ -389,3 +389,23 @@ ENTRY 4 | TASK-016 | docs/reconcile-task-016 | PR: #55 | SOURCE: 351ba2f17c17642
 - PCR-004: **PUBLISHED**. REM-001: **ACTIVE**; this commit is its activation commit. No Task status changed: 16/78 DONE, TASK-015 and TASK-016 DONE, TASK-017 READY and not started. The Owner hold `SHUTDOWN_AFTER_CURRENT_TASK` stays active; runner and watcher stay off.
 - Constraint for the remediation: until entries 3 and 4 are merged, nothing else changes `docs/11-tasks/TASK-015.md`, `docs/11-tasks/TASK-016.md` or `docs/handoff/CURRENT_HANDOFF.md` on `main`, because §8.5 item 5 requires their blobs on `main` to equal the SOURCE base `351ba2f`.
 - This record is effective when `origin/main` contains it (`git merge-base --is-ancestor 807ddc4 origin/main` holds and this file on `origin/main` shows this section).
+
+## REM-001 closure record
+
+- Closed 2026-11-07 (Asia/Jakarta) by Claude Planning, as EXECUTOR_OPERATING_MODEL §8.5 item 1 and REM-001 assign it after the last entry (OD-39, U-015). This is a status and evidence record under FRZ-001: no new Owner decision and no new review.
+- Reason: all five entries are published, once each and in order. Verified on 2026-11-07 against GitHub and `origin/main`: each successor PR is merged, carries `Remediation: REM-001 entry N`, has a HEAD that descends from the activation commit `85784bb` and is an ancestor of `main`, and changes only its entry paths.
+
+| Entry | Task | Successor PR | Branch | Published HEAD | Equivalence |
+|---|---|---|---|---|---|
+| 0 | TASK-001 | #58 | `fix/task-001-post-done-remediation-gate` | `597b9e5203d85507471ea482ecb9ffbe1aa962c3` | New work, reviewed in full |
+| 1 | TASK-015 | #59 (replaces #53) | `fix/task-015-test-integrity-r2` | `f831428bbc42416eefe3f60d0299275e18360beb` | IDENTICAL to `d055d76` (blob equal) |
+| 2 | TASK-016 | #60 (replaces #52) | `fix/task-016-test-integrity-r2` | `7e3d273c91fe8e72277e8d17188907e459f5b92b` | IDENTICAL to `0b2ac7b` (blobs equal) |
+| 3 | TASK-015 | #61 (replaces #54) | `docs/reconcile-task-015-r3` | `ae54ca9f133d6cc09d157375b9ecf4fd6b7ce362` | DELTA from `161ff74`, SHA-256 `42b1c9228f567035ad2d3b4b7a41303a30875883faae1c3f9e0f883cd74940b8` |
+| 4 | TASK-016 | #62 (replaces #55) | `docs/reconcile-task-016-r3` | `cf7ff0e4fd991d64400b57858c5514b290aa7fee` | DELTA from `d1c609f`, SHA-256 `7f9b3706fb60dfdf17122461a1d24c7cba04a2bec3bbf5b4c75aaa854eb336ca`; run 42365388082, attempt 1, success |
+
+- Claude Planning recomputed both DELTA digests with the canonical diff of `scripts/executor/lib/merge-gate.ps1`, and both match. Before entries 3 and 4, the entry blobs on `main` still equalled the SOURCE base `351ba2f`. #49 and #51 (merged before activation) were not counted. #52–#55 are closed unmerged, with their branches and history kept. Review dispositions and Codex substitutes are as the executor recorded them in TASK-015/TASK-016 COMPLETION EVIDENCE and CURRENT_HANDOFF.
+- Final remediation publication HEAD: `cf7ff0e4fd991d64400b57858c5514b290aa7fee`.
+- Effect: once `origin/main` contains this record, no ACTIVE `REM-nnn` record remains and §8.5 accepts no entry. A correction to the published merge gate, or any further post-DONE correction, needs a new `REM-nnn` record approved by the Owner (§8.5 item 8).
+- Unchanged: PCR-004 PUBLISHED; U-015 and OD-39; 78 Tasks; 16/78 DONE; TASK-015 and TASK-016 DONE; TASK-017 READY and not started; Owner hold `SHUTDOWN_AFTER_CURRENT_TASK` active. The executor reports that the runner is stopped, the watcher Disabled and the checkpoint restored to its value before REM-001; Claude Planning did not inspect the local checkpoint.
+- Still open, not resolved by this closure: PI-001–PI-003; audit items C1–C5 and S1–S4; GAP-001–GAP-029; the P3 observations of the REM-001 reviews (eight from entry 0 and two from entry 3, listed in CURRENT_HANDOFF; three from the entry 4 verification, reported by the executor and not yet itemized in the repository).
+- This record is effective when `origin/main` contains it and the REM-001 block above shows `STATE: CLOSED`.
