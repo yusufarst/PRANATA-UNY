@@ -360,8 +360,8 @@ AUTH-012 is **HISTORICAL / COMPLETED** as of 2026-11-01: every P4–P11 phase is
 | PI-002 | TASK-015 P2-2: `AssignmentPanel` (assign, end/revoke dialogs, suggestions, SoD error, conflict dialog) never ran in a browser or under axe | Independent HIGH review of TASK-015, **P2**, open | Claude Planning: E2E-only probe subject type, or a TAC in the first Task that registers a real subject type |
 | PI-003 | Audit listens to events of Files and Access (ARCHITECTURE §5.1, §5.3) while the dependency column of §4 lists only Identity; `tests/Arch/ModuleBoundaryTest.php` stays unchanged until decided | Executor audit (TASK-014 R7, 2026-11-07 S3); not graded | Claude Planning: correct the column or decide another pattern |
 
-- State: **PENDING_SECOND_REVIEW / PENDING_OWNER_APPROVAL / NOT_PUBLISHED**. Review history: `f51b7a6` REVISE (PCR004-SR-P1-01 source binding, PCR004-SR-P2-01 checkpoint alignment, PCR004-SR-P2-02 entry order) → corrected in `80b78b0`; delta review of `80b78b0` REVISE (PCR004-DELTA-P1-01 historical PRs counted as publication evidence) → corrected in the following commit, pending focused delta review. Base `351ba2f17c1764283e66215f6069ed64872fb97a`; branch `docs/pcr-004-post-done-remediation`; handoff [PCR-004_REVIEW_HANDOFF](../handoff/PCR-004_REVIEW_HANDOFF.md).
-- Gate: nothing in this record binds the executor until it is on `origin/main`. Publication: (1) an acceptable focused Second Review verdict; (2) the Owner's explicit approval of PCR-004 and activation of REM-001; (3) verified fast-forward of `main` (PR with `ci-gate`); (4) a state-transition commit, published the same way, that records the verdict and the Owner approval, sets this record to PUBLISHED and REM-001 to ACTIVE.
+- State: **PUBLISHED** (2026-11-07). Review history: `f51b7a6` REVISE (PCR004-SR-P1-01 source binding, PCR004-SR-P2-01 checkpoint alignment, PCR004-SR-P2-02 entry order) → corrected in `80b78b0`; delta review of `80b78b0` REVISE (PCR004-DELTA-P1-01 historical PRs counted as publication evidence) → corrected in `807ddc4`; delta review of `807ddc478985c0eb17fc157ff8e5f0cab0785b97`: **APPROVED**, no new P0/P1/P2, READY FOR OWNER APPROVAL (specification only; the implementation of M1-AC-01–M1-AC-10 must still pass its tests, CI and independent review). Owner approval: [U-015](SOURCE_INVENTORY.md#u-015-owner-approval-of-pcr-004-and-rem-001-of-2026-11-07). Base `351ba2f17c1764283e66215f6069ed64872fb97a`; branch `docs/pcr-004-post-done-remediation`; handoff [PCR-004_REVIEW_HANDOFF](../handoff/PCR-004_REVIEW_HANDOFF.md).
+- Gate (lifted by the publication record below): nothing in this record bound the executor until it was on `origin/main`. Publication: (1) an acceptable focused Second Review verdict; (2) the Owner's explicit approval of PCR-004 and activation of REM-001; (3) verified fast-forward of `main` (PR with `ci-gate`); (4) a state-transition commit, published the same way, that records the verdict and the Owner approval, sets this record to PUBLISHED and REM-001 to ACTIVE.
 
 ## REM-001
 
@@ -369,11 +369,11 @@ AUTH-012 is **HISTORICAL / COMPLETED** as of 2026-11-01: every P4–P11 phase is
 - Purpose: publish the Owner-authorized corrections A (evidence) and B (tests) of the TASK-015/TASK-016 procedure audit of 2026-11-07, and the merge-gate change that makes this lane enforceable. Procedure changes (audit item C) are not authorized here.
 - Mode: SUPERVISED only, Owner hold kept active, runner and watcher off, TASK-017 not started.
 - Entries are used once each, strictly in the order 0, 1, 2, 3, 4 (EXECUTOR_OPERATING_MODEL §8.5 item 7); only PRs descending from the REM-001 activation commit and carrying `Remediation: REM-001 entry k` count as publication evidence, so the earlier reconciliations #49 and #51 never count. Branch family: the exact name or a successor `-rN` (N ≥ 2). Paths are exact; a Task file is limited to its `## COMPLETION EVIDENCE` section with `STATUS: DONE` unchanged. `SOURCE` is the immutable reviewed base..HEAD of the original PR; the PR number is provenance only, and a successor PR has a new number and HEAD. `EQUIVALENCE` is what the merge must prove (§8.5 item 5); entry 0 is new work with its own full review.
-- State: **PROPOSED** (becomes ACTIVE only by the PCR-004 state-transition commit after the Owner's approval; CLOSED by Claude Planning after entry 4 is merged).
+- State: **ACTIVE** since the PCR-004 state-transition commit, which is the activation commit of EXECUTOR_OPERATING_MODEL §8.5 item 7. Owner approval: U-015 (2026-11-07), entries 0–4 exactly as recorded, SUPERVISED, Owner hold kept active. CLOSED by Claude Planning after entry 4 is merged.
 
 ```text
 REMEDIATION: REM-001
-STATE: PROPOSED
+STATE: ACTIVE
 MODE: SUPERVISED
 ORDER: 0, 1, 2, 3, 4
 ENTRY 0 | TASK-001 | fix/task-001-post-done-remediation-gate | PR: new | SOURCE: none | EQUIVALENCE: none | PATHS: scripts/executor/lib/merge-gate.ps1, scripts/executor/merge-verified.ps1, scripts/executor/tests/scripts.tests.ps1 | PURPOSE: merge-gate support for this lane (EXECUTOR_OPERATING_MODEL 8.5)
@@ -382,3 +382,10 @@ ENTRY 2 | TASK-016 | fix/task-016-test-integrity | PR: #52 | SOURCE: 351ba2f17c1
 ENTRY 3 | TASK-015 | docs/reconcile-task-015 | PR: #54 | SOURCE: 351ba2f17c1764283e66215f6069ed64872fb97a..161ff74b7c83dd6878c37a9516d26fa70fd8830d | EQUIVALENCE: IDENTICAL or DELTA | PATHS: docs/11-tasks/TASK-015.md | PURPOSE: correct the completion evidence after the procedure audit
 ENTRY 4 | TASK-016 | docs/reconcile-task-016 | PR: #55 | SOURCE: 351ba2f17c1764283e66215f6069ed64872fb97a..d1c609fbeb65054cdfb42abe075793fb1811c617 | EQUIVALENCE: IDENTICAL or DELTA | PATHS: docs/11-tasks/TASK-016.md, docs/handoff/CURRENT_HANDOFF.md | PURPOSE: correct the completion evidence and record the hold, the audit proposal and the remediation outcome
 ```
+
+## PCR-004 publication record
+
+- Verified on 2026-11-07 with `git ls-remote origin refs/heads/main`: `main` fast-forwarded `351ba2f` → `807ddc4` (PCR-004 as approved; PR #56 passed `ci-gate`; GitHub records PR #56 as merged) → this state-transition commit, published the same way through its own PR with `ci-gate`. Fast-forwards only under the `main` ruleset (linear history, required `ci-gate`, no force push); no merge commit; author and committer of every commit: the Owner.
+- PCR-004: **PUBLISHED**. REM-001: **ACTIVE**; this commit is its activation commit. No Task status changed: 16/78 DONE, TASK-015 and TASK-016 DONE, TASK-017 READY and not started. The Owner hold `SHUTDOWN_AFTER_CURRENT_TASK` stays active; runner and watcher stay off.
+- Constraint for the remediation: until entries 3 and 4 are merged, nothing else changes `docs/11-tasks/TASK-015.md`, `docs/11-tasks/TASK-016.md` or `docs/handoff/CURRENT_HANDOFF.md` on `main`, because §8.5 item 5 requires their blobs on `main` to equal the SOURCE base `351ba2f`.
+- This record is effective when `origin/main` contains it (`git merge-base --is-ancestor 807ddc4 origin/main` holds and this file on `origin/main` shows this section).

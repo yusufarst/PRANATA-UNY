@@ -357,3 +357,11 @@ Recorded 2026-11-02 (Asia/Jakarta) under FRZ-001 change control by the Planning 
 ## OD-38
 
 The Laravel starter kit's self-service account deletion (`profile.destroy`, its controller action and its UI) is **removed, not supported**. An account ends only as **DEACTIVATED**: `status` DEACTIVATED with `deactivated_at` set, every active session of the user revoked, and the event recorded in `audit_events`; the `users` row and its audit history stay. `pranata_app` is not granted DELETE on `users` for this or any other feature, and the database security controls of TASK-008 stay as they are. **Permanent deletion** of accounts or personal data stays unavailable until an official institutional retention and deletion policy is validated (GAP-023 OPEN). Mandatory security and integrity checks stay; no redundant reviews or tests. Source: U-014.
+
+## Owner post-DONE remediation decision of 2026-11-07 — provenance
+
+Recorded 2026-11-07 (Asia/Jakarta) under FRZ-001 change control by the Planning Agent. Source: [U-015](SOURCE_INVENTORY.md#u-015-owner-approval-of-pcr-004-and-rem-001-of-2026-11-07). OD-39 below is **OWNER_APPROVED_DECISION**; it is applied by [PCR-004](APPROVAL_RECORDS.md#pcr-004) and [REM-001](APPROVAL_RECORDS.md#rem-001). It resolves no GAP.
+
+## OD-39
+
+Owner-authorized corrections to a Task that is already DONE are published only through the post-DONE remediation lane of EXECUTOR_OPERATING_MODEL §8.5: an ACTIVE `REM-nnn` record on `main`, approved by the Owner, names each entry's Task, branch family, source PR and reviewed SOURCE, equivalence and exact paths; the lane exempts only the DONE-status check and keeps every other merge gate, CI, review, ruleset and Git rule. It runs in SUPERVISED mode only; the Task stays DONE, the Task count does not change and no other Task is started. Corrections are not merged under another Task's branch. REM-001 covers the merge-gate change (TASK-001) and PR #52–#55 of the 2026-11-07 procedure audit of TASK-015 and TASK-016. The audit's procedure items C1–C5 and S1–S4, PAT permissions and CI rerun authority are not decided by this. Source: U-015.

@@ -24,6 +24,7 @@ In P0, 45 historical files received bounded content inspection and SRC-033/VIS-0
 | U-012 | Owner consolidated directive (2026-11-01); provenance in [U-012](#u-012-owner-consolidated-directive-of-2026-11-01) | APPR-005, APPR-006, AUTH-011, FRZ-001, AUTH-013; answers D-01–D-29; PCR-001 | OWNER_APPROVED_DECISION for the explicit approvals, authorizations and operational decisions; its statements about institutional rules are Owner input, not resolved GAPs |
 | U-013 | Owner directive on Docker-free development (2026-11-01); provenance in [U-013](#u-013-owner-directive-docker-free-development-of-2026-11-01) | OD-37; PCR-002 | OWNER_APPROVED_DECISION for the development and testing topology; changes no business requirement and resolves no GAP |
 | U-014 | Owner decision on account deactivation (2026-11-02); provenance in [U-014](#u-014-owner-account-deactivation-decision-of-2026-11-02) | OD-38; PCR-003 | OWNER_APPROVED_DECISION for account ending and deletion behaviour; resolves no GAP |
+| U-015 | Owner M1 directive and approval of PCR-004 and REM-001 (2026-11-07); provenance in [U-015](#u-015-owner-approval-of-pcr-004-and-rem-001-of-2026-11-07) | OD-39; PCR-004; REM-001 | OWNER_APPROVED_DECISION for the post-DONE remediation lane and the REM-001 entries; resolves no GAP |
 | FW-001 | Unchanged repository AICWDF v4.3 English source | Master operating framework | AUTHORITATIVE_SOURCE for operating rules through Owner adoption; not UNY accounting/procurement authority | Preserved hash and full section map in FRAMEWORK_ADOPTION |
 | STRUCT-001 | GitHub yusufarst/MULTIPLECORP, pinned main a526daf47444d12b4ae5c51e1ae14c9dfe3f4978 | Entry point, adapter, governance/evidence/phase/context/handoff structures | INFERENCE for reusable structural patterns; never PRANATA domain/security/financial truth | Exact inspected paths and excluded content in FRAMEWORK_ADOPTION |
 
@@ -153,6 +154,11 @@ U-004 provenance — the P3 request, its same-scope continuation and the minor-c
 
 - U-014: the Owner's decision of 2026-11-02 on starter-kit account deletion, recorded by the executor in CURRENT_HANDOFF ("TASK PLAN CHANGE proposal — account deletion", published on `main` at `5330ce7`), and the Owner's in-session directive "OWNER DIRECTIVE — ACCOUNT DEACTIVATION PCR" of 2026-11-02 asking Claude Planning to apply it to TASK-010 and TASK-011. Operative content: [DECISION_LOG OD-38](DECISION_LOG.md#od-38) and [APPROVAL_RECORDS PCR-003](APPROVAL_RECORDS.md#pcr-003).
 - Handling: the directive is session-delivered and external to the repository; read only; never published.
+
+## U-015 Owner approval of PCR-004 and REM-001 of 2026-11-07
+
+- U-015: (1) the Owner's in-session directive "PRANATA UNY — OWNER DIRECTIVE: M1 POST-DONE REMEDIATION GOVERNANCE" (**4,653 bytes / SHA-256 `ad0e7ddb393a5804f9e6ad4a7f658b205ba3d13375421fd7e3f857ca0a3771cc`**), asking Claude Planning to design the lane; (2) the Owner's in-session approval of 2026-11-07: "Saya menyetujui PCR-004 di `807ddc478985c0eb17fc157ff8e5f0cab0785b97` dan mengaktifkan REM-001 dengan entri 0–4 persis seperti tercatat, mode SUPERVISED, hold tetap aktif." Operative content: [DECISION_LOG OD-39](DECISION_LOG.md#od-39), [APPROVAL_RECORDS PCR-004](APPROVAL_RECORDS.md#pcr-004) and [REM-001](APPROVAL_RECORDS.md#rem-001).
+- Handling: session-delivered and external to the repository; read only; never published beyond the approval sentence quoted above.
 
 ## Starter Kit reference originals (2026-10-30)
 

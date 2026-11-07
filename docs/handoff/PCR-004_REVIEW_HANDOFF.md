@@ -2,6 +2,8 @@
 
 Status: PCR-004 — lihat [APPROVAL_RECORDS PCR-004](../00-governance/APPROVAL_RECORDS.md#pcr-004) | Updated: 2026-11-07 (Asia/Jakarta) | Custodian: Planning Agent | Untuk: Second Review Agent independen (ChatGPT) dan Owner
 
+> Selesai: review delta atas `807ddc4` memberi verdict APPROVED; Owner menyetujui PCR-004 dan mengaktifkan REM-001 (U-015); PCR-004 terbit di `main` pada 2026-11-07. Handoff ini kini historis.
+
 Review **terfokus dan proporsional** (FRZ-001, GOV-11): hanya delta PCR-004. PR #52–#55 sudah direview atau diperiksa fakta oleh eksekutor dan tidak direview ulang di sini; C1–C5 dan S1–S4 di luar ruang lingkup.
 
 ## 0. Koreksi atas review `f51b7a6` dan review delta `80b78b0` (REVISE)
